@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { CharacterId, clampPoint, DEFAULT_SCENE, HEIGHT, moveTowards, parseScene, Point, Scene, STORAGE_KEY, WIDTH } from './scene';
 import { directionTo, frameForDistance, Motion, STOP_MS, TURN_MS, WALK_SPEED } from './walking';
+import { waveFrameAt } from './wave';
 
 const ids: CharacterId[] = ['max', 'maxine'];
 const names: Record<CharacterId, string> = { max: 'Max', maxine: 'Maxine' };
 const colours: Record<CharacterId, string> = { max: '#13bfc0', maxine: '#ee61ab' };
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
+const WAVE_WIDTH = 245;
 
 function readSaved(): Scene {
   try { return parseScene(localStorage.getItem(STORAGE_KEY)) ?? structuredClone(DEFAULT_SCENE); }
@@ -35,6 +37,7 @@ export default function App() {
   });
   const selectedRef = useRef<CharacterId>('max');
   const playingRef = useRef(false);
+  const waveRef = useRef<{ id: CharacterId; startedAt: number } | null>(null);
   const motionsRef = useRef<Record<CharacterId, Motion>>({
     max: { direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false },
     maxine: { direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false },
@@ -42,6 +45,7 @@ export default function App() {
   const dragRef = useRef<{ id: CharacterId; origin: Point; offset: Point; moved: boolean } | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
   const [playing, setPlaying] = useState(false);
+  const [waving, setWaving] = useState(false);
   const [notice, setNotice] = useState('Drag a character, then click the floor to choose where they walk.');
 
   useEffect(() => {
@@ -58,11 +62,15 @@ export default function App() {
         loadImage(`/art/${id}-side-0.png`),
         ...Array.from({ length: 4 }, (_, frame) => loadImage(`/art/${id}-side-v3-${frame + 1}.png`)),
       ]),
+      ...ids.flatMap(id => Array.from({ length: 3 }, (_, frame) => loadImage(`/art/${id}-wave-${frame + 1}.png`))),
     ]).then(([room, ...sprites]) => {
       if (!active) return;
       const idleImages: Record<CharacterId, HTMLImageElement> = { max: sprites[0], maxine: sprites[1] };
       const sideImages: Record<CharacterId, HTMLImageElement[]> = {
         max: sprites.slice(2, 7), maxine: sprites.slice(7, 12),
+      };
+      const waveImages: Record<CharacterId, HTMLImageElement[]> = {
+        max: sprites.slice(12, 15), maxine: sprites.slice(15, 18),
       };
       const render = (time: number) => {
         const elapsed = Math.min((time - last) / 1000 || 0, 0.05);
@@ -86,6 +94,13 @@ export default function App() {
             }
           }
           if (!activeMotion) { playingRef.current = false; setPlaying(false); setNotice('Walk complete. Reset returns to the saved starting positions.'); }
+        }
+        const wave = waveRef.current;
+        const waveFrame = wave ? waveFrameAt(time - wave.startedAt) : null;
+        if (wave && waveFrame === null) {
+          waveRef.current = null;
+          setWaving(false);
+          setNotice(`${names[wave.id]} finished waving.`);
         }
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.drawImage(room, 0, 0, WIDTH, HEIGHT);
@@ -120,6 +135,8 @@ export default function App() {
             context.scale(motion.direction, 1);
             const width = frame === 0 ? SPRITE_WIDTH : 239;
             context.drawImage(sideImages[id][frame], -width / 2, -SPRITE_HEIGHT - bob, width, SPRITE_HEIGHT);
+          } else if (wave?.id === id && waveFrame !== null && waveFrame > 0) {
+            context.drawImage(waveImages[id][waveFrame - 1], p.x - WAVE_WIDTH / 2, p.y - SPRITE_HEIGHT, WAVE_WIDTH, SPRITE_HEIGHT);
           } else {
             context.drawImage(idleImages[id], p.x - SPRITE_WIDTH / 2, p.y - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT);
           }
@@ -141,6 +158,8 @@ export default function App() {
 
   const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (playingRef.current) return;
+    waveRef.current = null;
+    setWaving(false);
     const point = pointFromEvent(event);
     const hit = [...ids].reverse().find(id => {
       const p = positionsRef.current[id];
@@ -176,6 +195,7 @@ export default function App() {
       const target = destinationsRef.current[id];
       return target && Math.hypot(target.x - positionsRef.current[id].x, target.y - positionsRef.current[id].y) > 1;
     })) { setNotice('Choose a destination for Max or Maxine first.'); return; }
+    waveRef.current = null; setWaving(false);
     const now = performance.now();
     for (const id of ids) {
       const target = destinationsRef.current[id];
@@ -191,8 +211,16 @@ export default function App() {
     playingRef.current = true; setPlaying(true); setNotice('Walking to the selected destinations…');
   };
 
+  const wave = () => {
+    if (playingRef.current || waveRef.current) return;
+    waveRef.current = { id: selectedRef.current, startedAt: performance.now() };
+    setWaving(true);
+    setNotice(`${names[selectedRef.current]} is waving hello!`);
+  };
+
   const reset = () => {
     playingRef.current = false; setPlaying(false);
+    waveRef.current = null; setWaving(false);
     for (const id of ids) { motionsRef.current[id].moving = false; motionsRef.current[id].stopUntil = 0; }
     for (const id of ids) positionsRef.current[id] = { ...savedRef.current.characters[id].start };
     setNotice('Restored the saved starting positions.');
@@ -212,6 +240,7 @@ export default function App() {
     try { scene = parseScene(localStorage.getItem(STORAGE_KEY)); } catch { /* handled below */ }
     if (!scene) { setNotice('No saved scene found on this device yet.'); return; }
     playingRef.current = false; setPlaying(false); savedRef.current = scene;
+    waveRef.current = null; setWaving(false);
     for (const id of ids) { motionsRef.current[id].moving = false; motionsRef.current[id].stopUntil = 0; }
     for (const id of ids) { positionsRef.current[id] = { ...scene.characters[id].start }; destinationsRef.current[id] = scene.characters[id].destination; }
     setNotice('Saved scene reopened.');
@@ -233,6 +262,7 @@ export default function App() {
         <aside className="sidebar">
           <div className="side-heading"><span className="side-number">01</span><div><h2>Characters</h2><p>Pick who you want to move</p></div></div>
           <div className="character-list">{ids.map(id => <button key={id} className={`character-card ${selected === id ? 'active' : ''}`} style={{ '--character-colour': colours[id] } as React.CSSProperties} onClick={() => select(id)} aria-pressed={selected === id}><img src={`/art/${id}-0.png`} alt="" /><span><strong>{names[id]}</strong><small>{selected === id ? 'Selected · ready to move' : 'Click to select'}</small></span><span className="radio-mark" /></button>)}</div>
+          <button className="wave-button" onClick={wave} disabled={playing || waving} aria-label={`Wave ${names[selected]}`}>✋ &nbsp; Wave {names[selected]}</button>
           <div className="divider" />
           <div className="side-heading"><span className="side-number">02</span><div><h2>Make it move</h2><p>Watch your scene come to life</p></div></div>
           <div className="actions"><button className="play-button" onClick={play} disabled={playing}><span>▶</span> {playing ? 'Playing…' : 'Play scene'}</button><button className="reset-button" onClick={reset}>↺ &nbsp; Reset positions</button></div>
