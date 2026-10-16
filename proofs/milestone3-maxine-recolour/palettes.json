@@ -1,0 +1,5 @@
+[
+  {"id": "lily", "name": "Lily", "body": "#F4B6CE", "hair": "#8851B6", "clothing": "#BBA5E8"},
+  {"id": "ruby", "name": "Ruby", "body": "#F4B486", "hair": "#A55235", "clothing": "#43B9B0"},
+  {"id": "daisy", "name": "Daisy", "body": "#A6DCF2", "hair": "#B73979", "clothing": "#EBCB53"}
+]

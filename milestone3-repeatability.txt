@@ -1,0 +1,9 @@
+Milestone 3 generator repeatability
+Command run in two fresh Node processes: node scripts/brightling-digest.mjs
+Oliver specification SHA-256: 5d4c2b4b4ba5e0017ebcfcba0c820e45712d048061154b936b46368f97c35cb6
+Oliver complete frame set SHA-256, process 1: ea559afee1ea9ab54cc8ad148592fa9172506855821a38c8a2d309028591f7d3
+Oliver complete frame set SHA-256, process 2: ea559afee1ea9ab54cc8ad148592fa9172506855821a38c8a2d309028591f7d3
+Temporary variation specification SHA-256: cd903d0dab448dc209cc42fd044b2461f00c7667d9a6f82322de362c76e20462
+Temporary variation complete frame set SHA-256, process 1: ba246b91ae44d62f18d8c9f866d0b523e089e38646e863276839d6821878e534
+Temporary variation complete frame set SHA-256, process 2: ba246b91ae44d62f18d8c9f866d0b523e089e38646e863276839d6821878e534
+All individual frame hashes matched across processes: true

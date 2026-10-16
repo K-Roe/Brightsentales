@@ -16,6 +16,24 @@ describe('local scene', () => {
     expect(parseScene('{broken')).toBeNull();
   });
 
+  it('opens an older Max and Maxine save while adding Oliver at his default start', () => {
+    const oldScene = { version: 1, characters: {
+      max: { start: { x: 325, y: 700 }, destination: null },
+      maxine: { start: { x: 1280, y: 820 }, destination: { x: 900, y: 810 } },
+    } };
+    const reopened = parseScene(JSON.stringify(oldScene));
+    expect(reopened?.characters.max).toEqual(oldScene.characters.max);
+    expect(reopened?.characters.maxine).toEqual(oldScene.characters.maxine);
+    expect(reopened?.characters.oliver).toEqual(DEFAULT_SCENE.characters.oliver);
+  });
+
+  it('saves and reopens Oliver independently from Max and Maxine', () => {
+    const scene = structuredClone(DEFAULT_SCENE);
+    scene.characters.oliver.start = { x: 740, y: 765 };
+    scene.characters.oliver.destination = { x: 1220, y: 810 };
+    expect(parseScene(JSON.stringify(scene))).toEqual(scene);
+  });
+
   it('lands precisely on the destination without overshooting', () => {
     const target = { x: 300, y: 750 };
     let point = { x: 100, y: 680 };

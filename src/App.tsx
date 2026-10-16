@@ -2,13 +2,26 @@ import { useEffect, useRef, useState } from 'react';
 import { CharacterId, clampPoint, DEFAULT_SCENE, HEIGHT, moveTowards, parseScene, Point, Scene, STORAGE_KEY, WIDTH } from './scene';
 import { directionTo, frameForDistance, Motion, STOP_MS, TURN_MS, WALK_SPEED } from './walking';
 import { waveFrameAt } from './wave';
+import { generateBrightlingFrames, OLIVER_SPEC, svgDataUrl } from './brightling';
 
-const ids: CharacterId[] = ['max', 'maxine'];
-const names: Record<CharacterId, string> = { max: 'Max', maxine: 'Maxine' };
-const colours: Record<CharacterId, string> = { max: '#13bfc0', maxine: '#ee61ab' };
+const ids: CharacterId[] = ['max', 'maxine', 'oliver'];
+const names: Record<CharacterId, string> = { max: 'Max', maxine: 'Maxine', oliver: OLIVER_SPEC.name };
+const colours: Record<CharacterId, string> = { max: '#13bfc0', maxine: '#ee61ab', oliver: OLIVER_SPEC.bodyColour };
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
 const WAVE_WIDTH = 245;
+const oliverFrames = generateBrightlingFrames(OLIVER_SPEC);
+const oliverSprites = {
+  idle: svgDataUrl(oliverFrames.idle),
+  side: oliverFrames.side.map(svgDataUrl),
+  wave: oliverFrames.wave.map(svgDataUrl),
+};
+const spriteSource = (id: CharacterId, pose: 'idle' | 'side' | 'wave', frame = 0): string => {
+  if (id === 'oliver') return pose === 'idle' ? oliverSprites.idle : oliverSprites[pose][frame];
+  if (pose === 'idle') return `/art/${id}-0.png`;
+  if (pose === 'side') return frame === 0 ? `/art/${id}-side-0.png` : `/art/${id}-side-v3-${frame}.png`;
+  return `/art/${id}-wave-${frame + 1}.png`;
+};
 
 function readSaved(): Scene {
   try { return parseScene(localStorage.getItem(STORAGE_KEY)) ?? structuredClone(DEFAULT_SCENE); }
@@ -30,10 +43,12 @@ export default function App() {
   const positionsRef = useRef<Record<CharacterId, Point>>({
     max: { ...savedRef.current.characters.max.start },
     maxine: { ...savedRef.current.characters.maxine.start },
+    oliver: { ...savedRef.current.characters.oliver.start },
   });
   const destinationsRef = useRef<Record<CharacterId, Point | null>>({
     max: savedRef.current.characters.max.destination,
     maxine: savedRef.current.characters.maxine.destination,
+    oliver: savedRef.current.characters.oliver.destination,
   });
   const selectedRef = useRef<CharacterId>('max');
   const playingRef = useRef(false);
@@ -41,6 +56,7 @@ export default function App() {
   const motionsRef = useRef<Record<CharacterId, Motion>>({
     max: { direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false },
     maxine: { direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false },
+    oliver: { direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false },
   });
   const dragRef = useRef<{ id: CharacterId; origin: Point; offset: Point; moved: boolean } | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
@@ -55,23 +71,13 @@ export default function App() {
     let active = true;
     let animation = 0;
     let last = 0;
-    Promise.all([
-      loadImage('/art/living-room.png'),
-      ...ids.map(id => loadImage(`/art/${id}-0.png`)),
-      ...ids.flatMap(id => [
-        loadImage(`/art/${id}-side-0.png`),
-        ...Array.from({ length: 4 }, (_, frame) => loadImage(`/art/${id}-side-v3-${frame + 1}.png`)),
-      ]),
-      ...ids.flatMap(id => Array.from({ length: 3 }, (_, frame) => loadImage(`/art/${id}-wave-${frame + 1}.png`))),
-    ]).then(([room, ...sprites]) => {
+    Promise.all([loadImage('/art/living-room.png'), ...ids.map(async id => ({
+      idle: await loadImage(spriteSource(id, 'idle')),
+      side: await Promise.all(Array.from({ length: 5 }, (_, frame) => loadImage(spriteSource(id, 'side', frame)))),
+      wave: await Promise.all(Array.from({ length: 3 }, (_, frame) => loadImage(spriteSource(id, 'wave', frame)))),
+    }))]).then(([room, ...spritePacks]) => {
       if (!active) return;
-      const idleImages: Record<CharacterId, HTMLImageElement> = { max: sprites[0], maxine: sprites[1] };
-      const sideImages: Record<CharacterId, HTMLImageElement[]> = {
-        max: sprites.slice(2, 7), maxine: sprites.slice(7, 12),
-      };
-      const waveImages: Record<CharacterId, HTMLImageElement[]> = {
-        max: sprites.slice(12, 15), maxine: sprites.slice(15, 18),
-      };
+      const packs = Object.fromEntries(ids.map((id, index) => [id, spritePacks[index]])) as Record<CharacterId, (typeof spritePacks)[number]>;
       const render = (time: number) => {
         const elapsed = Math.min((time - last) / 1000 || 0, 0.05);
         last = time;
@@ -133,12 +139,12 @@ export default function App() {
           if (showingSide) {
             context.translate(p.x, p.y);
             context.scale(motion.direction, 1);
-            const width = frame === 0 ? SPRITE_WIDTH : 239;
-            context.drawImage(sideImages[id][frame], -width / 2, -SPRITE_HEIGHT - bob, width, SPRITE_HEIGHT);
+            const width = id === 'oliver' ? 239 : frame === 0 ? SPRITE_WIDTH : 239;
+            context.drawImage(packs[id].side[frame], -width / 2, -SPRITE_HEIGHT - bob, width, SPRITE_HEIGHT);
           } else if (wave?.id === id && waveFrame !== null && waveFrame > 0) {
-            context.drawImage(waveImages[id][waveFrame - 1], p.x - WAVE_WIDTH / 2, p.y - SPRITE_HEIGHT, WAVE_WIDTH, SPRITE_HEIGHT);
+            context.drawImage(packs[id].wave[waveFrame - 1], p.x - WAVE_WIDTH / 2, p.y - SPRITE_HEIGHT, WAVE_WIDTH, SPRITE_HEIGHT);
           } else {
-            context.drawImage(idleImages[id], p.x - SPRITE_WIDTH / 2, p.y - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT);
+            context.drawImage(packs[id].idle, p.x - SPRITE_WIDTH / 2, p.y - SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT);
           }
           context.restore();
         }
@@ -194,7 +200,7 @@ export default function App() {
     if (!ids.some(id => {
       const target = destinationsRef.current[id];
       return target && Math.hypot(target.x - positionsRef.current[id].x, target.y - positionsRef.current[id].y) > 1;
-    })) { setNotice('Choose a destination for Max or Maxine first.'); return; }
+    })) { setNotice('Choose a Brightling destination first.'); return; }
     waveRef.current = null; setWaving(false);
     const now = performance.now();
     for (const id of ids) {
@@ -230,6 +236,7 @@ export default function App() {
     const scene: Scene = { version: 1, characters: {
       max: { start: { ...positionsRef.current.max }, destination: destinationsRef.current.max && { ...destinationsRef.current.max } },
       maxine: { start: { ...positionsRef.current.maxine }, destination: destinationsRef.current.maxine && { ...destinationsRef.current.maxine } },
+      oliver: { start: { ...positionsRef.current.oliver }, destination: destinationsRef.current.oliver && { ...destinationsRef.current.oliver } },
     } };
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(scene)); savedRef.current = scene; setNotice('Scene saved on this device. Reset now returns to these positions.'); }
     catch { setNotice('Could not save the scene in this browser. Check site storage settings.'); }
@@ -252,16 +259,16 @@ export default function App() {
       <span className="local-badge"><span /> Saved in this browser</span>
     </header>
     <main className="main">
-      <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place Max and Maxine, choose where they walk, and press play.</p></div><div className="step-pill">01 <span>Set the scene</span></div></div>
+      <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place Max, Maxine and Oliver, choose where they walk, and press play.</p></div><div className="step-pill">01 <span>Set the scene</span></div></div>
       <div className="workspace">
         <section className="stage-panel" aria-label="Cartoon stage">
           <div className="stage-top"><span><span className="live-dot" /> LIVING ROOM</span><span>Click a character, then the floor</span></div>
-          <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} aria-label="Living room scene with draggable Max and Maxine" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} />
+          <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} aria-label="Living room scene with draggable Max, Maxine and Oliver" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} />
           <div className="stage-bottom"><span>✦ &nbsp; Your scene</span><span>Drag to place · Click to set destination</span></div>
         </section>
         <aside className="sidebar">
           <div className="side-heading"><span className="side-number">01</span><div><h2>Characters</h2><p>Pick who you want to move</p></div></div>
-          <div className="character-list">{ids.map(id => <button key={id} className={`character-card ${selected === id ? 'active' : ''}`} style={{ '--character-colour': colours[id] } as React.CSSProperties} onClick={() => select(id)} aria-pressed={selected === id}><img src={`/art/${id}-0.png`} alt="" /><span><strong>{names[id]}</strong><small>{selected === id ? 'Selected · ready to move' : 'Click to select'}</small></span><span className="radio-mark" /></button>)}</div>
+          <div className="character-list">{ids.map(id => <button key={id} className={`character-card ${selected === id ? 'active' : ''}`} style={{ '--character-colour': colours[id] } as React.CSSProperties} onClick={() => select(id)} aria-pressed={selected === id}><img src={spriteSource(id, 'idle')} alt="" /><span><strong>{names[id]}</strong><small>{selected === id ? 'Selected · ready to move' : 'Click to select'}</small></span><span className="radio-mark" /></button>)}</div>
           <button className="wave-button" onClick={wave} disabled={playing || waving} aria-label={`Wave ${names[selected]}`}>✋ &nbsp; Wave {names[selected]}</button>
           <div className="divider" />
           <div className="side-heading"><span className="side-number">02</span><div><h2>Make it move</h2><p>Watch your scene come to life</p></div></div>

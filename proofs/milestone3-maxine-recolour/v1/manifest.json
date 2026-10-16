@@ -1,0 +1,299 @@
+[
+  {
+    "frame": "maxine-0.png",
+    "palette": "lily",
+    "source_sha256": "0a8be579504df4534b2b074a4e147856ecb99f34246f91fbb04e15236f4da26c",
+    "output_sha256": "7f33c3ed30a7e7498e90d96603447102b49884f2c449a4157d1b8d981158afcb",
+    "size": [
+      434,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-0.png",
+    "palette": "ruby",
+    "source_sha256": "0a8be579504df4534b2b074a4e147856ecb99f34246f91fbb04e15236f4da26c",
+    "output_sha256": "cc81abaef69e4146222dd7285558e6524143793dcd964126adac187cb641c4a7",
+    "size": [
+      434,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-0.png",
+    "palette": "daisy",
+    "source_sha256": "0a8be579504df4534b2b074a4e147856ecb99f34246f91fbb04e15236f4da26c",
+    "output_sha256": "c310f280431cc37dbfe1fb453d5cfba77701347bd38227d45545f1f6827b7390",
+    "size": [
+      434,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-0.png",
+    "palette": "lily",
+    "source_sha256": "5984ee252577e28ff7456356b588eb14920731dfedb477cc2671f71f0fcbf8ea",
+    "output_sha256": "2c083b6ae62194a7376c23ab5c99c7466bcf2b2ea586df891f03a3e530463ac9",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-0.png",
+    "palette": "ruby",
+    "source_sha256": "5984ee252577e28ff7456356b588eb14920731dfedb477cc2671f71f0fcbf8ea",
+    "output_sha256": "9d1286570dab1b06d8e56667497a7e5e7db0995e992d8e7ceabe20676865c139",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-0.png",
+    "palette": "daisy",
+    "source_sha256": "5984ee252577e28ff7456356b588eb14920731dfedb477cc2671f71f0fcbf8ea",
+    "output_sha256": "368fdd38a68fe98f8b905ddc95724d49172244ace9a98b8e6f9e8bc5eea028fe",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-1.png",
+    "palette": "lily",
+    "source_sha256": "10e382323d8ac8b9e04ac64c4bc17260b6cff1a39665ba80216c91752e7c5029",
+    "output_sha256": "ca946982a421b0b22a61b7c4b1678b5a612a160bbc4e7540a9162efece86dc29",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-1.png",
+    "palette": "ruby",
+    "source_sha256": "10e382323d8ac8b9e04ac64c4bc17260b6cff1a39665ba80216c91752e7c5029",
+    "output_sha256": "3d298ef494b633dafd3c9c6231b4039b5daaba0e325a2805b0aabeba6fb7be48",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-1.png",
+    "palette": "daisy",
+    "source_sha256": "10e382323d8ac8b9e04ac64c4bc17260b6cff1a39665ba80216c91752e7c5029",
+    "output_sha256": "8bcee9177602e34fc14fe0a81a891bfeca2a8f451f9fc320256381fb73e2ec4b",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-2.png",
+    "palette": "lily",
+    "source_sha256": "c45137c1da40be94ac290295c454e938090c2bd9e0444bfcb8d10a46669f65bd",
+    "output_sha256": "5186d67bde40fc8fbff90698d28bfc877e8280b6a9d4d2a9ed8d1ed4bc1479cd",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-2.png",
+    "palette": "ruby",
+    "source_sha256": "c45137c1da40be94ac290295c454e938090c2bd9e0444bfcb8d10a46669f65bd",
+    "output_sha256": "281076936c17f8f1f0d2364d4fd49dc10c0d365b6e51b3d497405778dd11110d",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-2.png",
+    "palette": "daisy",
+    "source_sha256": "c45137c1da40be94ac290295c454e938090c2bd9e0444bfcb8d10a46669f65bd",
+    "output_sha256": "232a2f017918a26e279d1f17d8f22b86221ddcabf8f82e628df609576ace8d2b",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-3.png",
+    "palette": "lily",
+    "source_sha256": "efc0784a34ebce796d8fe5a68b50b689a68ae5e5f5eb1a9d72b84174dd89e1d3",
+    "output_sha256": "46f5600bd212ff52b02fc43af50ea62b0c7ad0784922b6dc5f72b4cd40be4999",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-3.png",
+    "palette": "ruby",
+    "source_sha256": "efc0784a34ebce796d8fe5a68b50b689a68ae5e5f5eb1a9d72b84174dd89e1d3",
+    "output_sha256": "8f2ac51aa4f3952dea458cdd9ce32f6f139625efef7020217eceb31183f52ebf",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-3.png",
+    "palette": "daisy",
+    "source_sha256": "efc0784a34ebce796d8fe5a68b50b689a68ae5e5f5eb1a9d72b84174dd89e1d3",
+    "output_sha256": "2d61efdd3c2b9c3346fdae93930d04352ba92eb67b8e09f3c709a07e35e0dc7d",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-4.png",
+    "palette": "lily",
+    "source_sha256": "af768a27b54fa820a8fd28868d1ac35ccee6e62ee71ebe1f32f43a1ec64de6c9",
+    "output_sha256": "25984963a777e512d11d32788f4b19404cd7d4f505f7ebc10643e1d68dbdf4b8",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-4.png",
+    "palette": "ruby",
+    "source_sha256": "af768a27b54fa820a8fd28868d1ac35ccee6e62ee71ebe1f32f43a1ec64de6c9",
+    "output_sha256": "d091d8868e473f323cef9879ab6e8f276b47a93b3542fa6f282d9428b8d86dd9",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-side-v3-4.png",
+    "palette": "daisy",
+    "source_sha256": "af768a27b54fa820a8fd28868d1ac35ccee6e62ee71ebe1f32f43a1ec64de6c9",
+    "output_sha256": "8937a9ebe7d7fc9246c473281bca25244a3d8550b0371d671931d4c4517244ec",
+    "size": [
+      560,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-1.png",
+    "palette": "lily",
+    "source_sha256": "fb126ace2588143871cf13d274eec2e4472f26539d4036ea53af43c0aee39911",
+    "output_sha256": "d44277008d8ee29a956d9e2d748bf91b4a7126637bf5bfa91ba5fb7a0607d935",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-1.png",
+    "palette": "ruby",
+    "source_sha256": "fb126ace2588143871cf13d274eec2e4472f26539d4036ea53af43c0aee39911",
+    "output_sha256": "a58b2617353d073159c513625a25594d9876e2c0b9871b4443979f1f18a12710",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-1.png",
+    "palette": "daisy",
+    "source_sha256": "fb126ace2588143871cf13d274eec2e4472f26539d4036ea53af43c0aee39911",
+    "output_sha256": "6e38020ffd64df91478f045ee64782d3ed34ef14fab0d0c95c37b3227b48d56f",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-2.png",
+    "palette": "lily",
+    "source_sha256": "edda027be4b83f913f752157e8055ef3b4fb5992307db54aa6930b290167bc35",
+    "output_sha256": "c3ee088aaac4bfedb8cb6b96fcb94232b707750607f183f3273d8707366e19f9",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-2.png",
+    "palette": "ruby",
+    "source_sha256": "edda027be4b83f913f752157e8055ef3b4fb5992307db54aa6930b290167bc35",
+    "output_sha256": "b9a26267c23a680a8f77e6cc8e4ce244c1e7c4df7708940507cea600baaea02c",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-2.png",
+    "palette": "daisy",
+    "source_sha256": "edda027be4b83f913f752157e8055ef3b4fb5992307db54aa6930b290167bc35",
+    "output_sha256": "1d7eb7ffe791dc65af06f34fb75642db124c07db842c276d187add30ed759118",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-3.png",
+    "palette": "lily",
+    "source_sha256": "489ed49d4505541c35b4ba434c3c1431c9daa69a2a65654db5a588b8f0e32558",
+    "output_sha256": "4048d7da88ba9346b1ba548fd29542bb304889cdb9924ae9cbdac568dd8fb105",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-3.png",
+    "palette": "ruby",
+    "source_sha256": "489ed49d4505541c35b4ba434c3c1431c9daa69a2a65654db5a588b8f0e32558",
+    "output_sha256": "7f199c7ba5c1b876c82a4b677879f5b6cce42d8b0f3f5b1d1a684b53c6980560",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  },
+  {
+    "frame": "maxine-wave-3.png",
+    "palette": "daisy",
+    "source_sha256": "489ed49d4505541c35b4ba434c3c1431c9daa69a2a65654db5a588b8f0e32558",
+    "output_sha256": "0fef59af85e8033246ed78f1866733f99f174c827d3de310b091c2dc3c6251f3",
+    "size": [
+      500,
+      724
+    ],
+    "alpha_identical": true
+  }
+]
