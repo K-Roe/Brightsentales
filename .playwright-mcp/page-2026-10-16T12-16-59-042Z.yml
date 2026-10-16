@@ -1,0 +1,61 @@
+- generic [ref=f4e3]:
+  - banner [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]: ✦
+      - generic [ref=f4e7]:
+        - strong [ref=f4e8]: BrightSenAppsTales
+        - generic [ref=f4e9]: 2D CARTOON MAKER · MILESTONE 1
+    - generic [ref=f4e10]: Saved in this browser
+  - main [ref=f4e12]:
+    - generic [ref=f4e13]:
+      - generic [ref=f4e14]:
+        - paragraph [ref=f4e15]: THE LITTLE LIVING ROOM
+        - heading [level=1] [ref=f4e16]:
+          - text: Make a moment
+          - emphasis [ref=f4e17]: move.
+        - paragraph [ref=f4e18]: Place Max and Maxine, choose where they walk, and press play.
+      - generic [ref=f4e19]: 01 Set the scene
+    - generic [ref=f4e20]:
+      - region "Cartoon stage" [ref=f4e21]:
+        - generic [ref=f4e22]:
+          - generic [ref=f4e23]: LIVING ROOM
+          - generic [ref=f4e25]: Click a character, then the floor
+        - generic "Living room scene with draggable Max and Maxine" [ref=f4e26]
+        - generic [ref=f4e27]:
+          - generic [ref=f4e28]: ✦ Your scene
+          - generic [ref=f4e29]: Drag to place · Click to set destination
+      - complementary [ref=f4e30]:
+        - generic [ref=f4e31]:
+          - generic [ref=f4e32]: "01"
+          - generic [ref=f4e33]:
+            - heading "Characters" [level=2] [ref=f4e34]
+            - paragraph [ref=f4e35]: Pick who you want to move
+        - generic [ref=f4e36]:
+          - button "Max Selected · ready to move" [pressed] [ref=f4e37] [cursor=pointer]:
+            - generic [ref=f4e38]:
+              - strong [ref=f4e39]: Max
+              - generic [ref=f4e40]: Selected · ready to move
+          - button "Maxine Click to select" [ref=f4e42] [cursor=pointer]:
+            - generic [ref=f4e43]:
+              - strong [ref=f4e44]: Maxine
+              - generic [ref=f4e45]: Click to select
+        - generic [ref=f4e48]:
+          - generic [ref=f4e49]: "02"
+          - generic [ref=f4e50]:
+            - heading "Make it move" [level=2] [ref=f4e51]
+            - paragraph [ref=f4e52]: Watch your scene come to life
+        - generic [ref=f4e53]:
+          - button "▶ Play scene" [ref=f4e54] [cursor=pointer]
+          - button "↺ Reset positions" [ref=f4e55] [cursor=pointer]
+        - generic [ref=f4e57]:
+          - generic [ref=f4e58]: "03"
+          - generic [ref=f4e59]:
+            - heading "Keep your scene" [level=2] [ref=f4e60]
+            - paragraph [ref=f4e61]: Come back to it any time
+        - generic [ref=f4e62]:
+          - button "↓ Save scene" [ref=f4e63] [cursor=pointer]
+          - button "↗ Open saved" [ref=f4e64] [cursor=pointer]
+        - paragraph [ref=f4e65]: Stored locally in this browser as scene JSON.
+    - generic [ref=f4e66]:
+      - generic [ref=f4e67]: ✦
+      - status [ref=f4e68]: Drag a character, then click the floor to choose where they walk.
