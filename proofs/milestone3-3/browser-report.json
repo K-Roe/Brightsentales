@@ -1,0 +1,34 @@
+{
+  "source": {
+    "id": "brightling-7d77a0a9-8c57-4f04-a488-d108aa01aac8",
+    "name": "Backup Charlie",
+    "colours": {
+      "body": "#66DCAA",
+      "hair": "#8740B6",
+      "clothing": "#F18A3A"
+    },
+    "position": {
+      "x": 899.9999697075772,
+      "y": 825.0000498069769
+    }
+  },
+  "restored": {
+    "id": "brightling-7d77a0a9-8c57-4f04-a488-d108aa01aac8",
+    "position": {
+      "x": 899.9999697075772,
+      "y": 825.0000498069769
+    },
+    "sceneIds": [
+      "max",
+      "maxine",
+      "brightling-7d77a0a9-8c57-4f04-a488-d108aa01aac8"
+    ]
+  },
+  "dialogs": [
+    "Restore Studio Backup from 2026-10-16T19:08:27.330Z? This replaces the current custom Brightling library and saved Playground scene with 1 character(s) and a saved scene. Export your current Studio Backup first if you want to keep it."
+  ],
+  "errors": [],
+  "isolatedProfiles": true,
+  "backupFile": "brightsenappstales-studio-2026-10-16.json",
+  "frames": 127
+}

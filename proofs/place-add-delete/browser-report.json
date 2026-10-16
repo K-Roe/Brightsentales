@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "isolatedProfile": true,
+  "customId": "place-f97382ee-0e39-496c-a23f-a973a8056753",
+  "artworkPersistedAndMoved": true,
+  "existingPlaceArtworkUploaded": true,
+  "deletedAfterConfirmation": true,
+  "protectedLivingRoom": true,
+  "mobile": {
+    "scroll": 390,
+    "viewport": 390
+  },
+  "errors": []
+}

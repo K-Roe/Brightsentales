@@ -21,23 +21,9 @@ export function validateBrightling(value: unknown): value is Brightling {
     && (item.template === 'male' || item.template === 'female')
     && hex(item.body) && hex(item.hair) && hex(item.clothing);
 }
-export function parseLibrary(value: string | null): Brightling[] {
-  if (!value) return [];
-  try {
-    const data: unknown = JSON.parse(value);
-    if (!Array.isArray(data)) return [];
-    const seen = new Set<string>();
-    const names = new Set(['max', 'maxine', 'oliver']);
-    return data.filter((item): item is Brightling => {
-      if (!validateBrightling(item) || seen.has(item.id) || names.has(item.name.trim().toLocaleLowerCase())) return false;
-      seen.add(item.id); names.add(item.name.trim().toLocaleLowerCase());
-      return true;
-    });
-  } catch { return []; }
-}
-export function nameAvailable(name: string, library: Brightling[]): boolean {
+export function nameAvailable(name: string, library: Brightling[], excludingId?: string): boolean {
   const normalised = name.trim().toLocaleLowerCase();
-  return !['max', 'maxine', 'oliver', ...library.map(item => item.name.toLocaleLowerCase())].includes(normalised);
+  return !['max', 'maxine', 'oliver', ...library.filter(item => item.id !== excludingId).map(item => item.name.trim().toLocaleLowerCase())].includes(normalised);
 }
 export const sourceName = (template: Template, frame: string) => `${template === 'male' ? 'max' : 'maxine'}-${frame}.png`;
 export const maskUrl = (template: Template, frame: string, region: string) => `/recolour-masks/${template}/${sourceName(template, frame).replace('.png', '')}-${region}.png`;

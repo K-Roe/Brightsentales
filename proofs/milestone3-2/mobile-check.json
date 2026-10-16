@@ -1,0 +1,36 @@
+{
+  "overview": {
+    "active": "✦Characters",
+    "documentWidth": 390,
+    "viewport": 390,
+    "buttons": [
+      "✦Characters",
+      "▧Places",
+      "▤Scenes",
+      "▶Playground"
+    ]
+  },
+  "maker": {
+    "active": "✦Characters",
+    "documentWidth": 390,
+    "viewport": 390,
+    "buttons": [
+      "✦Characters",
+      "▧Places",
+      "▤Scenes",
+      "▶Playground"
+    ]
+  },
+  "playground": {
+    "active": "▶Playground",
+    "documentWidth": 390,
+    "viewport": 390,
+    "buttons": [
+      "✦Characters",
+      "▧Places",
+      "▤Scenes",
+      "▶Playground"
+    ]
+  },
+  "returnedToOverview": true
+}

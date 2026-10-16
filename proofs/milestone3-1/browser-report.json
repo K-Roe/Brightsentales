@@ -1,0 +1,146 @@
+{
+  "createdIds": {
+    "charlieId": "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c",
+    "lilyId": "brightling-0be9a0d5-72f9-411c-9b5e-8d1df828cb08"
+  },
+  "editedId": "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c",
+  "afterDelete": {
+    "library": [
+      {
+        "id": "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c",
+        "name": "Charles",
+        "template": "male",
+        "body": "#66DCAA",
+        "hair": "#274B9C",
+        "clothing": "#F18A3A"
+      }
+    ],
+    "scene": {
+      "version": 1,
+      "characters": {
+        "max": {
+          "start": {
+            "x": 575,
+            "y": 790
+          },
+          "destination": null
+        },
+        "maxine": {
+          "start": {
+            "x": 1090,
+            "y": 790
+          },
+          "destination": null
+        },
+        "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c": {
+          "start": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          },
+          "destination": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          }
+        }
+      }
+    }
+  },
+  "afterMerge": {
+    "library": [
+      {
+        "id": "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c",
+        "name": "Charles",
+        "template": "male",
+        "body": "#66DCAA",
+        "hair": "#274B9C",
+        "clothing": "#F18A3A"
+      },
+      {
+        "id": "brightling-0be9a0d5-72f9-411c-9b5e-8d1df828cb08",
+        "name": "Lily",
+        "template": "female",
+        "body": "#F4B6CE",
+        "hair": "#8851B6",
+        "clothing": "#BBA5E8"
+      }
+    ],
+    "scene": {
+      "version": 1,
+      "characters": {
+        "max": {
+          "start": {
+            "x": 575,
+            "y": 790
+          },
+          "destination": null
+        },
+        "maxine": {
+          "start": {
+            "x": 1090,
+            "y": 790
+          },
+          "destination": null
+        },
+        "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c": {
+          "start": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          },
+          "destination": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          }
+        }
+      }
+    }
+  },
+  "afterReplace": {
+    "library": [
+      {
+        "id": "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c",
+        "name": "Charles",
+        "template": "male",
+        "body": "#66DCAA",
+        "hair": "#274B9C",
+        "clothing": "#F18A3A"
+      }
+    ],
+    "scene": {
+      "version": 1,
+      "characters": {
+        "max": {
+          "start": {
+            "x": 575,
+            "y": 790
+          },
+          "destination": null
+        },
+        "maxine": {
+          "start": {
+            "x": 1090,
+            "y": 790
+          },
+          "destination": null
+        },
+        "brightling-8d6c5118-17f1-418c-a77e-2ad387a8451c": {
+          "start": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          },
+          "destination": {
+            "x": 499.99999086700217,
+            "y": 790.0000310710939
+          }
+        }
+      }
+    }
+  },
+  "dialogs": [
+    "Delete Lily? This also removes them from the saved living room scene.",
+    "Import 2 Brightling(s) and merge these characters into the current library? Matching IDs will be updated.",
+    "Import 1 Brightling(s) and replace the current custom character library? Scene references to characters absent from the backup will be removed."
+  ],
+  "errors": [],
+  "frames": 350,
+  "isolatedProfile": true
+}

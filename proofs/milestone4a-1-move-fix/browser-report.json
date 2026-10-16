@@ -1,0 +1,65 @@
+{
+  "errors": [],
+  "dialogs": [
+    "Restore Studio Backup from 2026-10-16T20:07:21.242Z? This replaces the current custom Brightling library, saved Playground scene and Places folders with 1 character(s), a saved scene and 3 folder(s). Export your current Studio Backup first if you want to keep it."
+  ],
+  "moves": [
+    {
+      "place": "bedroom",
+      "destination": "house",
+      "notice": "Bedroom moved to House."
+    },
+    {
+      "place": "bedroom",
+      "destination": null,
+      "notice": "Bedroom moved to Top-level Places."
+    },
+    {
+      "place": "bedroom",
+      "destination": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+      "notice": "Bedroom moved to Story Places."
+    },
+    {
+      "place": "bedroom",
+      "destination": "house",
+      "notice": "Bedroom moved to House."
+    },
+    {
+      "place": "living-room",
+      "destination": "park",
+      "notice": "Living Room moved to Park."
+    },
+    {
+      "place": "living-room",
+      "destination": "house",
+      "notice": "Living Room moved to House."
+    },
+    {
+      "place": "bedroom",
+      "destination": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+      "notice": "Bedroom moved to Story Places."
+    }
+  ],
+  "isolatedProfiles": true,
+  "source": {
+    "customId": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+    "mobile": {
+      "scrollWidth": 390,
+      "viewport": 390,
+      "options": [
+        "Move to Places (top level)",
+        "Move to House",
+        "Move to Park",
+        "Move to Story Places · Current location",
+        "Cancel"
+      ]
+    },
+    "storageUnchanged": true,
+    "backupVersion": 2
+  },
+  "restored": {
+    "customId": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+    "bedroomFolder": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0"
+  },
+  "frames": 50
+}

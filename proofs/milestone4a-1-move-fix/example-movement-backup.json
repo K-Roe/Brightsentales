@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "createdAt": "2026-10-16T20:07:21.242Z",
+  "characters": [
+    {
+      "id": "brightling-b01addb4-1ed6-494e-91a6-03d49d28adec",
+      "name": "Movement Check",
+      "template": "male",
+      "body": "#66DCAA",
+      "hair": "#8740B6",
+      "clothing": "#F18A3A"
+    }
+  ],
+  "scene": {
+    "version": 1,
+    "characters": {
+      "max": {
+        "start": {
+          "x": 575,
+          "y": 790
+        },
+        "destination": null
+      },
+      "maxine": {
+        "start": {
+          "x": 1090,
+          "y": 790
+        },
+        "destination": null
+      },
+      "brightling-b01addb4-1ed6-494e-91a6-03d49d28adec": {
+        "start": {
+          "x": 720,
+          "y": 780
+        },
+        "destination": null
+      }
+    }
+  },
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      },
+      {
+        "id": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+        "name": "Story Places",
+        "protected": false
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "folder-2afd2992-236e-4358-9d2d-99587ff69ff0",
+      "garden": "house"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "errors": [],
+  "dialogs": [
+    "Delete the empty folder Favourites?",
+    "Restore Studio Backup from 2026-10-16T19:38:27.828Z? This replaces the current custom Brightling library, saved Playground scene and Places folders with 0 character(s), a saved scene and 3 folder(s). Export your current Studio Backup first if you want to keep it.",
+    "Restore Studio Backup from 2026-10-16T19:38:27.828Z? This replaces the current custom Brightling library, saved Playground scene and Places folders with 0 character(s), a saved scene and 2 folder(s). Export your current Studio Backup first if you want to keep it."
+  ],
+  "source": {
+    "folderId": "folder-a09843a1-6767-4de7-bec2-cc0bc0b41e6b",
+    "sceneUnchanged": true,
+    "backupVersion": 2,
+    "mobile": {
+      "width": 390,
+      "viewport": 390
+    }
+  },
+  "restored": {
+    "folderId": "folder-a09843a1-6767-4de7-bec2-cc0bc0b41e6b",
+    "olderBackupDefaulted": true
+  },
+  "isolatedProfiles": true,
+  "frames": 49
+}

@@ -29,7 +29,7 @@ export function parseScene(value: string | null): Scene | null {
     const output: Scene['characters'] = {};
     for (const [id, character] of Object.entries(characters)) {
       if (!/^(max|maxine|oliver|brightling-[a-f0-9-]{36})$/.test(id)) continue;
-      if (!valid(character?.start) || (character.destination != null && !valid(character.destination))) continue;
+      if (!valid(character?.start) || (character.destination != null && !valid(character.destination))) return null;
       output[id] = { start: clampPoint(character.start), destination: character.destination ? clampPoint(character.destination) : null };
     }
     return { version: 1, characters: output };

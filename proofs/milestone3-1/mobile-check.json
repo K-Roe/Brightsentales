@@ -1,0 +1,11 @@
+{
+  "active": "Characters",
+  "documentWidth": 390,
+  "viewport": 390,
+  "buttons": [
+    "Characters",
+    "Places",
+    "Scenes",
+    "Playground"
+  ]
+}

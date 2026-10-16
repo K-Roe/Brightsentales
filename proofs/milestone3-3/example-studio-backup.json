@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-16T19:08:27.330Z",
+  "characters": [
+    {
+      "id": "brightling-7d77a0a9-8c57-4f04-a488-d108aa01aac8",
+      "name": "Backup Charlie",
+      "template": "male",
+      "body": "#66DCAA",
+      "hair": "#8740B6",
+      "clothing": "#F18A3A"
+    }
+  ],
+  "scene": {
+    "version": 1,
+    "characters": {
+      "max": {
+        "start": {
+          "x": 575,
+          "y": 790
+        },
+        "destination": null
+      },
+      "maxine": {
+        "start": {
+          "x": 1090,
+          "y": 790
+        },
+        "destination": null
+      },
+      "brightling-7d77a0a9-8c57-4f04-a488-d108aa01aac8": {
+        "start": {
+          "x": 899.9999697075772,
+          "y": 825.0000498069769
+        },
+        "destination": null
+      }
+    }
+  }
+}

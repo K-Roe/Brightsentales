@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "createdAt": "2026-10-16T19:38:27.828Z",
+  "characters": [],
+  "scene": {
+    "version": 1,
+    "characters": {
+      "max": {
+        "start": {
+          "x": 575,
+          "y": 790
+        },
+        "destination": null
+      },
+      "maxine": {
+        "start": {
+          "x": 1090,
+          "y": 790
+        },
+        "destination": null
+      }
+    }
+  },
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      },
+      {
+        "id": "folder-a09843a1-6767-4de7-bec2-cc0bc0b41e6b",
+        "name": "Travel",
+        "protected": false
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "folder-a09843a1-6767-4de7-bec2-cc0bc0b41e6b"
+    }
+  }
+}

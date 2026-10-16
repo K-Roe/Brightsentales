@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_COLOURS, nameAvailable, parseLibrary, recolourPixels, validateBrightling } from './maker';
+import { DEFAULT_COLOURS, nameAvailable, recolourPixels, validateBrightling } from './maker';
+import { decodeLibrary } from './library';
 import { parseScene } from './scene';
 
 const male = { id: 'brightling-11111111-1111-4111-8111-111111111111', name: 'Charlie', template: 'male' as const, ...DEFAULT_COLOURS.male };
@@ -7,7 +8,7 @@ const male = { id: 'brightling-11111111-1111-4111-8111-111111111111', name: 'Cha
 describe('Brightling Maker storage and artwork', () => {
   it('validates saved specs and ignores corrupt library entries', () => {
     expect(validateBrightling(male)).toBe(true);
-    expect(parseLibrary(JSON.stringify([male, male, { ...male, id: 'bad' }]))).toEqual([male]);
+    expect(decodeLibrary(JSON.stringify([male, male, { ...male, id: 'bad' }])).ok).toBe(false);
     expect(validateBrightling({ ...male, hair: 'not-a-colour' })).toBe(false);
     expect(nameAvailable(' charlie ', [male])).toBe(false);
     expect(nameAvailable('Max', [male])).toBe(false);

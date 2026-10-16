@@ -1,0 +1,42 @@
+{
+  "desktop": {
+    "cards": [
+      {
+        "name": "Living Room",
+        "buttons": [
+          {
+            "text": "Preview",
+            "disabled": false
+          }
+        ],
+        "select": "<select aria-label=\"Move Living Room to folder\"><option value=\"\">Top-level Places</option><option value=\"house\">House</option><option value=\"park\">Park</option></select>"
+      },
+      {
+        "name": "Bedroom",
+        "buttons": [
+          {
+            "text": "Preview",
+            "disabled": true
+          }
+        ],
+        "select": "<select aria-label=\"Move Bedroom to folder\"><option value=\"\">Top-level Places</option><option value=\"house\">House</option><option value=\"park\">Park</option></select>"
+      },
+      {
+        "name": "Garden",
+        "buttons": [
+          {
+            "text": "Preview",
+            "disabled": true
+          }
+        ],
+        "select": "<select aria-label=\"Move Garden to folder\"><option value=\"\">Top-level Places</option><option value=\"house\">House</option><option value=\"park\">Park</option></select>"
+      }
+    ],
+    "scrollWidth": 1500,
+    "viewport": 1500
+  },
+  "mobile": {
+    "scrollWidth": 390,
+    "viewport": 390
+  }
+}

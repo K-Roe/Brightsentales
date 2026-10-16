@@ -1,0 +1,22 @@
+{
+  "result": "passed",
+  "dimensions": {
+    "naturalWidth": 1672,
+    "naturalHeight": 941,
+    "renderedWidth": 1101,
+    "renderedHeight": 619.640625
+  },
+  "mobileOverview": {
+    "scrollWidth": 390,
+    "viewport": 390
+  },
+  "mobilePreview": {
+    "scrollWidth": 390,
+    "viewport": 390
+  },
+  "storageUnchanged": true,
+  "studioBackupExported": true,
+  "frames": 26,
+  "errors": [],
+  "isolatedProfile": true
+}
