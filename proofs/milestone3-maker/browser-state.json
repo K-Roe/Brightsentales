@@ -1,0 +1,23 @@
+{
+  "state": {
+    "cards": [
+      "Max",
+      "Maxine",
+      "Charlie",
+      "Lily"
+    ],
+    "library": "[{\"id\":\"brightling-6faa9df0-7d37-4f97-a747-ecd91ec628e8\",\"name\":\"Charlie\",\"template\":\"male\",\"body\":\"#66DCAA\",\"hair\":\"#8740B6\",\"clothing\":\"#F18A3A\"},{\"id\":\"brightling-fcf3454a-4765-4ad1-8220-9f921a407cfc\",\"name\":\"Lily\",\"template\":\"female\",\"body\":\"#F4B6CE\",\"hair\":\"#8851B6\",\"clothing\":\"#BBA5E8\"}]",
+    "scene": "{\"version\":1,\"characters\":{\"max\":{\"start\":{\"x\":575,\"y\":790},\"destination\":null},\"maxine\":{\"start\":{\"x\":1090,\"y\":790},\"destination\":null},\"brightling-6faa9df0-7d37-4f97-a747-ecd91ec628e8\":{\"start\":{\"x\":330.00000980126595,\"y\":780.0000177125025},\"destination\":{\"x\":330.00000980126595,\"y\":780.0000177125025}},\"brightling-fcf3454a-4765-4ad1-8220-9f921a407cfc\":{\"start\":{\"x\":1079.9999728237626,\"y\":875},\"destination\":{\"x\":700.0000151474111,\"y\":840.0000047497214}}}}",
+    "status": "Saved scene reopened."
+  },
+  "errors": [],
+  "frames": 782,
+  "beforeHashes": {
+    "Charlie": "a8f29da3ed8c067a7eaace4f9d0119b4b45a715fb94611b37d34b4b3475dd413",
+    "Lily": "359bfb7feb0fcaaf7b6f8b5e43bf0135752f1a677e53f84d349efcbcdb0c70b3"
+  },
+  "afterHashes": {
+    "Charlie": "a8f29da3ed8c067a7eaace4f9d0119b4b45a715fb94611b37d34b4b3475dd413",
+    "Lily": "359bfb7feb0fcaaf7b6f8b5e43bf0135752f1a677e53f84d349efcbcdb0c70b3"
+  }
+}

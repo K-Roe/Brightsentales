@@ -1,4 +1,4 @@
-export type CharacterId = 'max' | 'maxine' | 'oliver';
+export type CharacterId = string;
 export type Point = { x: number; y: number };
 export type Character = { start: Point; destination: Point | null };
 export type Scene = { version: 1; characters: Record<CharacterId, Character> };
@@ -11,7 +11,6 @@ export const DEFAULT_SCENE: Scene = {
   characters: {
     max: { start: { x: 575, y: 790 }, destination: null },
     maxine: { start: { x: 1090, y: 790 }, destination: null },
-    oliver: { start: { x: 835, y: 790 }, destination: null },
   },
 };
 
@@ -27,17 +26,13 @@ export function parseScene(value: string | null): Scene | null {
     const characters = data.characters as Record<string, { start?: Point; destination?: Point | null }>;
     const valid = (p: Point | null | undefined): p is Point => !!p && Number.isFinite(p.x) && Number.isFinite(p.y);
     if (!['max', 'maxine'].every(id => valid(characters?.[id]?.start) && (characters[id].destination == null || valid(characters[id].destination)))) return null;
-    if (characters.oliver && (!valid(characters.oliver.start) || (characters.oliver.destination != null && !valid(characters.oliver.destination)))) return null;
-    return {
-      version: 1,
-      characters: {
-        max: { start: clampPoint(characters.max.start!), destination: characters.max.destination ? clampPoint(characters.max.destination) : null },
-        maxine: { start: clampPoint(characters.maxine.start!), destination: characters.maxine.destination ? clampPoint(characters.maxine.destination) : null },
-        oliver: characters.oliver
-          ? { start: clampPoint(characters.oliver.start!), destination: characters.oliver.destination ? clampPoint(characters.oliver.destination) : null }
-          : { ...DEFAULT_SCENE.characters.oliver, start: { ...DEFAULT_SCENE.characters.oliver.start } },
-      },
-    };
+    const output: Scene['characters'] = {};
+    for (const [id, character] of Object.entries(characters)) {
+      if (!/^(max|maxine|oliver|brightling-[a-f0-9-]{36})$/.test(id)) continue;
+      if (!valid(character?.start) || (character.destination != null && !valid(character.destination))) continue;
+      output[id] = { start: clampPoint(character.start), destination: character.destination ? clampPoint(character.destination) : null };
+    }
+    return { version: 1, characters: output };
   } catch { return null; }
 }
 

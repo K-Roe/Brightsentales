@@ -16,7 +16,7 @@ describe('local scene', () => {
     expect(parseScene('{broken')).toBeNull();
   });
 
-  it('opens an older Max and Maxine save while adding Oliver at his default start', () => {
+  it('opens an older Max and Maxine save without adding characters', () => {
     const oldScene = { version: 1, characters: {
       max: { start: { x: 325, y: 700 }, destination: null },
       maxine: { start: { x: 1280, y: 820 }, destination: { x: 900, y: 810 } },
@@ -24,11 +24,12 @@ describe('local scene', () => {
     const reopened = parseScene(JSON.stringify(oldScene));
     expect(reopened?.characters.max).toEqual(oldScene.characters.max);
     expect(reopened?.characters.maxine).toEqual(oldScene.characters.maxine);
-    expect(reopened?.characters.oliver).toEqual(DEFAULT_SCENE.characters.oliver);
+    expect(reopened?.characters.oliver).toBeUndefined();
   });
 
   it('saves and reopens Oliver independently from Max and Maxine', () => {
     const scene = structuredClone(DEFAULT_SCENE);
+    scene.characters.oliver = { start: { x: 835, y: 790 }, destination: null };
     scene.characters.oliver.start = { x: 740, y: 765 };
     scene.characters.oliver.destination = { x: 1220, y: 810 };
     expect(parseScene(JSON.stringify(scene))).toEqual(scene);

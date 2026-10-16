@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "errors": [],
+  "result": {
+    "names": [
+      "Max",
+      "Maxine"
+    ],
+    "status": "Drag a character, then click the floor to choose where they walk.",
+    "scene": {
+      "version": 1,
+      "characters": {
+        "max": {
+          "start": {
+            "x": 325,
+            "y": 700
+          },
+          "destination": null
+        },
+        "maxine": {
+          "start": {
+            "x": 1280,
+            "y": 820
+          },
+          "destination": {
+            "x": 900,
+            "y": 810
+          }
+        }
+      }
+    }
+  }
+}
