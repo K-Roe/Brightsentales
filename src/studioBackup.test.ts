@@ -32,6 +32,22 @@ describe('complete Studio Backup', () => {
     expect(validateStudioBackup({ ...withAudio, audioAssets: [{ ...asset, data: '@@@@' }] }).ok).toBe(false);
     expect(validateStudioBackup({ ...withAudio, version: 4, audioAssets: undefined }).ok).toBe(false);
   });
+  it('preserves character dialogue and episode narration in a version 5 backup', () => {
+    const audioId = '33333333-3333-4333-8333-333333333333';
+    const line = { id: '44444444-4444-4444-8444-444444444444', assetId: audioId, start: 2, trimStart: 0, trimEnd: 2, volume: .8, fadeIn: 0, fadeOut: 0, speakerId: 'max' };
+    const narrator = { ...line, id: '55555555-5555-4555-8555-555555555555', start: 8, speakerId: 'narrator' };
+    const timed = { version: 1 as const, scenes: [{ id: '11111111-1111-4111-8111-111111111111', name: 'Hello', duration: 10, placeId: 'living-room', characters: { max: { x: 600, y: 790 } }, actions: [], audio: [line] }] };
+    const episodes = { version: 1 as const, episodes: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Speech', sceneIds: [timed.scenes[0].id], audio: [narrator] }] };
+    const asset = { id: audioId, name: 'Recorded voice', kind: 'speech' as const, mime: 'audio/wav', duration: 2, size: 2, data: 'AQI=', sha256: 'a'.repeat(64) };
+    const result = validateStudioBackup(createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-17T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, timed, episodes, [asset]));
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.backup.timedScenes?.scenes[0].audio?.[0].speakerId).toBe('max');
+      expect(result.backup.episodes?.episodes[0].audio?.[0].speakerId).toBe('narrator');
+    }
+    const tooLate = createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-17T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, timed, { ...episodes, episodes: [{ ...episodes.episodes[0], audio: [{ ...narrator, start: 9 }] }] }, [asset]);
+    expect(validateStudioBackup(tooLate).ok).toBe(false);
+  });
   it('opens a version 4 episode backup without audio', () => {
     const { audioAssets: _audioAssets, ...older } = backup;
     const result = validateStudioBackup({ ...older, version: 4 });

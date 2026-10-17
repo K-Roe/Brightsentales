@@ -1,0 +1,184 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "audio-library-voices.png",
+    "scene-dialogue.png",
+    "episode-narration.png",
+    "restored-voices.png"
+  ],
+  "initialStorage": 0,
+  "voices": [
+    {
+      "name": "max-hello.wav",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "3.788526"
+        }
+      }
+    },
+    {
+      "name": "narrator.wav",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "format_name": "wav",
+          "duration": "6.372608"
+        }
+      }
+    }
+  ],
+  "imported": [
+    "max-hello.wavSpeech & narration · 3.8sPreviewDelete",
+    "narrator.wavSpeech & narration · 6.4sPreviewDelete"
+  ],
+  "assets": [
+    {
+      "id": "50ea9df0-ea9d-45ff-a4db-ce620ddd436d",
+      "name": "narrator.wav",
+      "kind": "speech",
+      "duration": 6.372604166666667,
+      "mime": "audio/wav",
+      "size": 281078
+    },
+    {
+      "id": "ddbee578-963a-4ce5-b64d-4242e9ce4dc9",
+      "name": "max-hello.wav",
+      "kind": "speech",
+      "duration": 3.788520833333333,
+      "mime": "audio/wav",
+      "size": 167120
+    }
+  ],
+  "narrationWarning": null,
+  "saved": {
+    "scene": [
+      {
+        "id": "e640f9a0-b184-45df-a9ac-e918031eee6e",
+        "assetId": "ddbee578-963a-4ce5-b64d-4242e9ce4dc9",
+        "start": 1,
+        "trimStart": 0.2,
+        "trimEnd": 3.788520833333333,
+        "volume": 0.6,
+        "fadeIn": 0,
+        "fadeOut": 0,
+        "speakerId": "max"
+      }
+    ],
+    "episode": [
+      {
+        "id": "2cf699dd-829b-43f4-a310-8ed4c5c21f72",
+        "assetId": "50ea9df0-ea9d-45ff-a4db-ce620ddd436d",
+        "start": 5,
+        "trimStart": 0,
+        "trimEnd": 6.372604166666667,
+        "volume": 0.65,
+        "fadeIn": 0,
+        "fadeOut": 0,
+        "speakerId": "narrator"
+      }
+    ]
+  },
+  "playbackSamples": [
+    {
+      "clock": "1.1s / 12.0s",
+      "scene": "Hello",
+      "activePlayers": 1
+    },
+    {
+      "clock": "5.6s / 12.0s",
+      "scene": "Hello",
+      "activePlayers": 1
+    },
+    {
+      "clock": "7.8s / 12.0s",
+      "scene": "Listening",
+      "activePlayers": 1
+    },
+    {
+      "clock": "11.3s / 12.0s",
+      "scene": "Listening",
+      "activePlayers": 1
+    }
+  ],
+  "playbackEnd": {
+    "clock": "12.0s / 12.0s",
+    "activePlayers": 0
+  },
+  "recording": {
+    "created": true,
+    "frames": 68
+  },
+  "reopened": {
+    "scene": [
+      {
+        "id": "e640f9a0-b184-45df-a9ac-e918031eee6e",
+        "assetId": "ddbee578-963a-4ce5-b64d-4242e9ce4dc9",
+        "start": 1,
+        "trimStart": 0.2,
+        "trimEnd": 3.788520833333333,
+        "volume": 0.6,
+        "fadeIn": 0,
+        "fadeOut": 0,
+        "speakerId": "max"
+      }
+    ],
+    "episode": [
+      {
+        "id": "2cf699dd-829b-43f4-a310-8ed4c5c21f72",
+        "assetId": "50ea9df0-ea9d-45ff-a4db-ce620ddd436d",
+        "start": 5,
+        "trimStart": 0,
+        "trimEnd": 6.372604166666667,
+        "volume": 0.65,
+        "fadeIn": 0,
+        "fadeOut": 0,
+        "speakerId": "narrator"
+      }
+    ]
+  },
+  "backup": {
+    "version": 5,
+    "assets": [
+      {
+        "name": "narrator.wav",
+        "kind": "speech"
+      },
+      {
+        "name": "max-hello.wav",
+        "kind": "speech"
+      }
+    ],
+    "sceneSpeaker": "max",
+    "episodeSpeaker": "narrator"
+  },
+  "restoreInitialStorage": 0,
+  "restored": {
+    "assets": [
+      "narrator.wav",
+      "max-hello.wav"
+    ],
+    "scene": "max",
+    "episode": "narrator"
+  },
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}

@@ -4,17 +4,18 @@ import { decodeLibrary, ImportMode, prepareImport, pruneScene, withoutCharacter 
 import Characters from './Characters';
 import Places from './Places';
 import SceneMaker from './SceneMaker';
-import EpisodeMaker from './EpisodeMaker';
+import EpisodeMaker, { type EpisodeLeaveGuard } from './EpisodeMaker';
 import AudioLibrary from './AudioLibrary';
 import { type AudioAsset, type AudioKind } from './audio';
-import { audioBackupAssets, decodeAudioBackup, importAudioFile, listAudioAssets, removeAudioAsset, replaceAudioAssets, saveAudioAsset } from './audioStore';
-import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
+import { audioBackupAssets, decodeAudioBackup, importAudioFile, listAudioAssets, removeAudioAsset, saveAudioAsset } from './audioStore';
+import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, speechFitsEpisode, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
 import { decodeTimedLibrary, EMPTY_TIMED_LIBRARY, pruneTimedScenes, TIMED_SCENES_KEY, TimedLibrary, validateTimedLibrary } from './timedScenes';
 import { CharacterId, clampPoint, DEFAULT_SCENE, HEIGHT, moveTowards, parseScene, Point, Scene, STORAGE_KEY, WIDTH } from './scene';
 import { directionTo, frameForDistance, Motion, STOP_MS, TURN_MS, WALK_SPEED } from './walking';
 import { waveFrameAt } from './wave';
 import { generateBrightlingFrames, OLIVER_SPEC, svgDataUrl } from './brightling';
 import { createStudioBackup, recoverStudioRestore, restoreStudioBackup, StudioBackup, validateStudioBackup } from './studioBackup';
+import { restoreStudioWithAudio } from './restoreCoordinator';
 import { decodePlaceOrganisation, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
 import { maxOutfitFrom, maxineOutfitFrom, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 
@@ -43,6 +44,7 @@ type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 
 export default function App() {
   const [recovery] = useState(() => recoverStudioRestore(localStorage, LIBRARY_KEY, STORAGE_KEY));
+  const episodeLeaveGuard = useRef<EpisodeLeaveGuard | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const savedRef = useRef<Scene>(readScene());
   const positionsRef = useRef<Record<string, Point>>(Object.fromEntries(Object.entries(savedRef.current.characters).map(([id, value]) => [id, { ...value.start }])));
@@ -286,19 +288,15 @@ export default function App() {
   };
   const importStudio = async (backup: StudioBackup): Promise<boolean> => {
     if (!recovery.ok) return false;
-    let previousAudio: AudioAsset[] | null = null;
-    let audioReplaced = false;
     try {
       const restoredAudio = backup.audioAssets === null ? null : await decodeAudioBackup(backup.audioAssets);
-      previousAudio = restoredAudio === null ? null : await listAudioAssets();
       await Promise.all(backup.characters.map(item => makePack(item)));
-      if (restoredAudio !== null) { await replaceAudioAssets(restoredAudio); audioReplaced = true; }
-      const result = restoreStudioBackup(localStorage, LIBRARY_KEY, STORAGE_KEY, backup);
+      const result = restoredAudio === null
+        ? restoreStudioBackup(localStorage, LIBRARY_KEY, STORAGE_KEY, backup)
+        : await restoreStudioWithAudio(localStorage, backup, restoredAudio);
       if (!result.ok) {
-        if (previousAudio) { await replaceAudioAssets(previousAudio); audioReplaced = false; }
         setNotice(result.error ?? 'Studio restore failed.'); return false;
       }
-      audioReplaced = false;
       const scene = backup.scene ?? structuredClone(DEFAULT_SCENE);
       savedRef.current = scene; setMaxOutfit(maxOutfitFrom(scene.maxOutfit)); setMaxineOutfit(maxineOutfitFrom(scene.maxineOutfit));
       positionsRef.current = Object.fromEntries(Object.entries(scene.characters).map(([id, value]) => [id, { ...value.start }]));
@@ -315,10 +313,6 @@ export default function App() {
       setNotice('Studio Backup restored. Characters, scenes, episodes and Places library are ready.');
       return true;
     } catch {
-      if (audioReplaced && previousAudio) {
-        try { await replaceAudioAssets(previousAudio); }
-        catch { setAudioIssue('Audio restore rollback failed. Reload the Studio and restore a valid backup.'); setNotice('Audio restore rollback failed. The Studio needs attention.'); return false; }
-      }
       setNotice('Studio restore failed. Existing data was kept.'); return false;
     }
   };
@@ -339,7 +333,7 @@ export default function App() {
   const saveEpisodes = (next: EpisodeLibrary): boolean => {
     if (!recovery.ok || episodeIssue) return false;
     const checked = validateEpisodeLibrary(next);
-    if (!checked.ok) return false;
+    if (!checked.ok || checked.library.episodes.some(item => !speechFitsEpisode(item, timedScenes))) return false;
     try { localStorage.setItem(EPISODES_KEY, JSON.stringify(checked.library)); setEpisodes(checked.library); return true; }
     catch { return false; }
   };
@@ -377,14 +371,14 @@ export default function App() {
     <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
-      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'episodes', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { setRequestedSceneId(null); setActiveTab(tab); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', episodes: '▣', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'episodes', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', episodes: '▣', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
       <span className="local-badge"><span /> Saved in this browser</span>
     </aside>
     <main className="main">
       {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} maxineOutfit={maxineOutfit} onMaxineOutfitChange={saveMaxineOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
       {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} audioAssets={audioAssets} />}
-      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} audioAssets={audioAssets} />}
+      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>

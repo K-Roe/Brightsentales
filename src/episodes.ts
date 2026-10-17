@@ -1,5 +1,5 @@
 import type { TimedLibrary, TimedScene } from './timedScenes';
-import { type AudioClip, validAudioClips } from './audio';
+import { clipLength, type AudioClip, validAudioClips } from './audio';
 
 export const EPISODES_KEY = 'brightsenappstales.episodes.v1';
 export type Episode = { id: string; name: string; sceneIds: string[]; audio?: AudioClip[] };
@@ -29,6 +29,10 @@ export function decodeEpisodeLibrary(raw: string | null): EpisodeResult {
 export type EpisodePosition = { scene: TimedScene; index: number; localTime: number; start: number; total: number };
 export function episodeDuration(episode: Episode, scenes: TimedLibrary): number {
   return episode.sceneIds.reduce((sum, id) => sum + (scenes.scenes.find(scene => scene.id === id)?.duration ?? 0), 0);
+}
+export function speechFitsEpisode(episode: Episode, scenes: TimedLibrary): boolean {
+  const total = episodeDuration(episode, scenes);
+  return (episode.audio ?? []).every(clip => clip.speakerId === undefined || clip.start + clipLength(clip) <= total + 1e-7);
 }
 
 export function missingSceneIds(episode: Episode, scenes: TimedLibrary): string[] {

@@ -2,9 +2,13 @@ import { AUDIO_MIMES, type AudioAsset, type AudioBackupAsset, type AudioKind, va
 
 const DB = 'brightsenappstales.audio.v1';
 const STORE = 'assets';
+const RECOVERY = 'restore-recovery';
 const db = (): Promise<IDBDatabase> => new Promise((resolve, reject) => {
-  const request = indexedDB.open(DB, 1);
-  request.onupgradeneeded = () => request.result.createObjectStore(STORE, { keyPath: 'id' });
+  const request = indexedDB.open(DB, 2);
+  request.onupgradeneeded = () => {
+    if (!request.result.objectStoreNames.contains(STORE)) request.result.createObjectStore(STORE, { keyPath: 'id' });
+    if (!request.result.objectStoreNames.contains(RECOVERY)) request.result.createObjectStore(RECOVERY);
+  };
   request.onsuccess = () => resolve(request.result);
   request.onerror = () => reject(new Error('Audio Library storage is unavailable.'));
 });
@@ -24,6 +28,56 @@ export const listAudioAssets = () => transaction<AudioAsset[]>('readonly', (stor
 export const saveAudioAsset = (asset: AudioAsset) => transaction<void>('readwrite', store => { store.put(asset); });
 export const removeAudioAsset = (id: string) => transaction<void>('readwrite', store => { store.delete(id); });
 export const replaceAudioAssets = (assets: AudioAsset[]) => transaction<void>('readwrite', store => { store.clear(); assets.forEach(asset => store.put(asset)); });
+
+// The snapshot and replacement commit in one IndexedDB transaction. A crash
+// cannot leave half an audio library, and startup can restore the old one.
+export async function replaceAudioAssetsWithSnapshot(assets: AudioAsset[]): Promise<void> {
+  const database = await db();
+  return new Promise((resolve, reject) => {
+    const tx = database.transaction([STORE, RECOVERY], 'readwrite');
+    const current = tx.objectStore(STORE);
+    const recovery = tx.objectStore(RECOVERY);
+    const read = current.getAll();
+    read.onsuccess = () => {
+      recovery.put(read.result, 'pending');
+      current.clear();
+      assets.forEach(asset => current.put(asset));
+    };
+    tx.oncomplete = () => { database.close(); resolve(); };
+    tx.onerror = () => { database.close(); reject(new Error('Audio restore storage failed.')); };
+    tx.onabort = () => { database.close(); reject(new Error('Audio restore was interrupted.')); };
+  });
+}
+
+export async function rollbackAudioRestore(): Promise<void> {
+  const database = await db();
+  return new Promise((resolve, reject) => {
+    const tx = database.transaction([STORE, RECOVERY], 'readwrite');
+    const current = tx.objectStore(STORE);
+    const recovery = tx.objectStore(RECOVERY);
+    const read = recovery.get('pending');
+    read.onsuccess = () => {
+      if (read.result === undefined) return;
+      current.clear();
+      (read.result as AudioAsset[]).forEach(asset => current.put(asset));
+      recovery.delete('pending');
+    };
+    tx.oncomplete = () => { database.close(); resolve(); };
+    tx.onerror = () => { database.close(); reject(new Error('Audio rollback failed.')); };
+    tx.onabort = () => { database.close(); reject(new Error('Audio rollback was interrupted.')); };
+  });
+}
+
+export async function finishAudioRestore(): Promise<void> {
+  const database = await db();
+  return new Promise((resolve, reject) => {
+    const tx = database.transaction(RECOVERY, 'readwrite');
+    tx.objectStore(RECOVERY).delete('pending');
+    tx.oncomplete = () => { database.close(); resolve(); };
+    tx.onerror = () => { database.close(); reject(new Error('Audio restore cleanup failed.')); };
+    tx.onabort = () => { database.close(); reject(new Error('Audio restore cleanup was interrupted.')); };
+  });
+}
 
 const bytesToBase64 = (bytes: Uint8Array) => {
   let output = '';

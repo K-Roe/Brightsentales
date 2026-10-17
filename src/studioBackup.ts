@@ -3,7 +3,7 @@ import { validateLibrary } from './library';
 import { parseScene, Scene } from './scene';
 import { DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
 import { TIMED_SCENES_KEY, TimedLibrary, pruneTimedScenes, validateTimedLibrary } from './timedScenes';
-import { EPISODES_KEY, EpisodeLibrary, validateEpisodeLibrary } from './episodes';
+import { EPISODES_KEY, EpisodeLibrary, speechFitsEpisode, validateEpisodeLibrary } from './episodes';
 import { type AudioBackupAsset, validAudioBackup } from './audio';
 
 export const STUDIO_BACKUP_VERSION = 5;
@@ -46,6 +46,7 @@ export function validateStudioBackup(data: unknown): BackupResult {
   const checkedEpisodes = value.version === 4 || value.version === 5 ? validateEpisodeLibrary(value.episodes) : null;
   if (checkedEpisodes && !checkedEpisodes.ok) return { ok: false, error: checkedEpisodes.error };
   const episodes = checkedEpisodes?.ok ? checkedEpisodes.library : null;
+  if (episodes && timedScenes && episodes.episodes.some(item => !speechFitsEpisode(item, timedScenes))) return { ok: false, error: 'An episode voice clip runs past its duration.' };
   if (value.version === 5 && !validAudioBackup(value.audioAssets)) return { ok: false, error: 'Backup audio files are invalid.' };
   const audioAssets = value.version === 5 ? value.audioAssets as AudioBackupAsset[] : null;
   if (audioAssets === null && (timedScenes?.scenes.some(item => item.audio?.length) || episodes?.episodes.some(item => item.audio?.length))) return { ok: false, error: 'This backup has audio clips but no audio files.' };
@@ -96,7 +97,19 @@ export function recoverStudioRestore(storage: Storage, libraryKey: string, scene
   } catch { return { ok: false, error: 'An unfinished Studio restore could not be recovered. Stored data was left untouched.' }; }
 }
 
-export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY): { ok: boolean; error?: string } {
+export function finalizeStudioRestore(storage: Storage): { ok: boolean; error?: string } {
+  try {
+    const raw = storage.getItem(RESTORE_JOURNAL_KEY);
+    if (raw === null) return { ok: true };
+    const journal = parseJournal(raw);
+    if (!journal || journal.phase !== 'pending') return { ok: false, error: 'Studio restore journal is invalid. Stored data was left untouched.' };
+    storage.setItem(RESTORE_JOURNAL_KEY, JSON.stringify({ ...journal, phase: 'committed' }));
+    try { storage.removeItem(RESTORE_JOURNAL_KEY); } catch { /* A committed journal is safe to clear on launch. */ }
+    return { ok: true };
+  } catch { return { ok: false, error: 'Studio restore could not be finalised. Reload to recover it.' }; }
+}
+
+export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY, deferCommit = false): { ok: boolean; error?: string } {
   const checked = validateStudioBackup(backup);
   if (!checked.ok) return { ok: false, error: checked.error };
   const recovery = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey, timedKey, episodesKey);
@@ -121,8 +134,8 @@ export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneK
     storage.setItem(placesKey, JSON.stringify(checked.backup.places));
     if (nextTimed !== null) storage.setItem(timedKey, JSON.stringify(nextTimed));
     if (checked.backup.episodes !== null) storage.setItem(episodesKey, JSON.stringify(checked.backup.episodes));
-    storage.setItem(RESTORE_JOURNAL_KEY, JSON.stringify({ ...pending, phase: 'committed' }));
-    try { storage.removeItem(RESTORE_JOURNAL_KEY); } catch { /* Committed data is safe; cleanup retries on next launch. */ }
+    if (deferCommit) return { ok: true };
+    if (!finalizeStudioRestore(storage).ok) throw new Error('Could not commit Studio restore.');
     return { ok: true };
   } catch {
     const rollback = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey, timedKey, episodesKey);

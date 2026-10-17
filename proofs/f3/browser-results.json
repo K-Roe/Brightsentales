@@ -1,0 +1,40 @@
+{
+  "tabs": [
+    {
+      "tab": "Characters",
+      "active": "✦Characters",
+      "heading": "Meet your Brightlings."
+    },
+    {
+      "tab": "Places",
+      "active": "▧Places",
+      "heading": "Explore your places."
+    },
+    {
+      "tab": "Scenes",
+      "active": "▤Scenes",
+      "heading": "Make a timed scene."
+    },
+    {
+      "tab": "Episodes",
+      "active": "▣Episodes",
+      "heading": "Your episodes"
+    },
+    {
+      "tab": "Audio",
+      "active": "♫Audio",
+      "heading": "Your sounds"
+    },
+    {
+      "tab": "Playground",
+      "active": "▶Playground",
+      "heading": "Make a moment move."
+    }
+  ],
+  "errors": [],
+  "failedAssets": [],
+  "initialStorage": 0,
+  "defaultTab": "✦Characters",
+  "finalStorage": 0,
+  "profileRemoved": true
+}

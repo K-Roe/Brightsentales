@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "stage": "after audio swap, before local writes",
+      "marker": null,
+      "audio": [
+        "old.mp3"
+      ],
+      "scenes": [],
+      "episodes": []
+    },
+    {
+      "stage": "after local writes, before commit",
+      "marker": null,
+      "audio": [
+        "old.mp3"
+      ],
+      "scenes": [],
+      "episodes": []
+    },
+    {
+      "stage": "after commit, before cleanup",
+      "marker": null,
+      "audio": [
+        "new.ogg"
+      ],
+      "scenes": [
+        "Recovered scene"
+      ],
+      "episodes": [
+        "Recovered episode"
+      ]
+    }
+  ],
+  "errors": [],
+  "failedAssets": [],
+  "fixtures": [
+    {
+      "name": "old.mp3",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3"
+          }
+        ],
+        "format": {
+          "format_name": "mp3"
+        }
+      }
+    },
+    {
+      "name": "new.ogg",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "vorbis"
+          }
+        ],
+        "format": {
+          "format_name": "ogg"
+        }
+      }
+    }
+  ],
+  "setup": {
+    "oldId": "13385614-74a5-4ba4-b1d1-0c252c400929",
+    "newId": "862d97f8-14ad-4a67-8671-552a6267cc36",
+    "oldDuration": 1,
+    "newDuration": 0.9970833333333333
+  },
+  "profileRemoved": true
+}

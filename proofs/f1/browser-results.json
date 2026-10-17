@@ -1,0 +1,86 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "unsaved-indicator.png",
+    "navigation-dialog.png",
+    "navigation-dialog-mobile.png"
+  ],
+  "browserDialogs": [
+    {
+      "type": "beforeunload",
+      "message": ""
+    }
+  ],
+  "initialStorage": 0,
+  "oldEpisodeClean": {
+    "indicator": "Saved",
+    "dialog": false
+  },
+  "playback": "0.6s / 12.0s",
+  "dialogButtons": [
+    "Cancel",
+    "Discard Changes",
+    "Save and Continue"
+  ],
+  "cancel": {
+    "name": "Changed Episode",
+    "dialog": false
+  },
+  "discard": {
+    "name": "Saved Episode",
+    "beforeUnloadBlocked": false
+  },
+  "saveContinueOrder": [
+    "11111111-1111-4111-8111-000000000002",
+    "11111111-1111-4111-8111-000000000001"
+  ],
+  "reopenedOrder": [
+    "Second",
+    "First"
+  ],
+  "cleanBack": {
+    "dialog": false,
+    "library": true
+  },
+  "audioDirty": {
+    "indicator": "Unsaved changes",
+    "volume": "0.25",
+    "trim": "0.5"
+  },
+  "audioSaved": [
+    {
+      "id": "67da9b96-e5d2-4374-b080-b220e0848693",
+      "assetId": "654344f1-5f9f-4fdc-8b81-9328c01d5542",
+      "start": 0,
+      "trimStart": 0.5,
+      "trimEnd": 2,
+      "volume": 0.25,
+      "fadeIn": 0.25,
+      "fadeOut": 0
+    }
+  ],
+  "failedSave": {
+    "dialog": true,
+    "dirty": "Unsaved changes",
+    "name": "Failed Save Draft",
+    "persisted": "Saved Episode",
+    "error": "Episode could not be saved. Existing episodes were kept."
+  },
+  "beforeUnloadHandlerDirty": true,
+  "beforeUnloadDirty": [
+    {
+      "type": "beforeunload",
+      "message": ""
+    }
+  ],
+  "afterDismissedRefresh": "Failed Save Draft",
+  "beforeUnloadHandlerAfterSave": false,
+  "beforeUnloadAfterSave": [],
+  "reloaded": {
+    "name": "Failed Save Draft",
+    "indicator": "Saved",
+    "audio": 1
+  },
+  "profileRemoved": true
+}
