@@ -12,7 +12,8 @@ Karl authorised sequential technical development with visual and listening accep
 | M6.4 — Dialogue and narration | Implemented | **AWAITING KARL'S REVIEW** | [M6.4 report](../proofs/m6-4/REPORT.md) | Listen to the recorded episode; check attribution and speech timing. |
 | M6.5 — Intro Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.5 report](../proofs/m6-5/REPORT.md) | Check titles, styles and animation; listen to the intro recording. |
 | M6.6 — Credits Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.6 report](../proofs/m6-6/REPORT.md) | Check credit readability, scrolling and the unsaved warning. |
-| M6.7 — Episode assembly | In progress | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
+| M6.6A — Music & sound studio | Implemented | **AWAITING KARL'S REVIEW** | [M6.6A report](../proofs/m6-6a/REPORT.md) | Listen to the instruments, effects and a rendered song. |
+| M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
 
 ## F2 — real MP3 and OGG compatibility
 
@@ -42,6 +43,18 @@ Karl authorised sequential technical development with visual and listening accep
 - **Browser evidence:** [F4 report, screenshot and recordings](../proofs/f4/REPORT.md).
 - **Limits:** Browser reload simulates interruption; hardware power loss and persistent storage failure remain outside the test. The audio snapshot temporarily needs additional quota.
 - **Karl's check:** Review the restored library and episode, and confirm the failure message is clear if storage cannot recover.
+- **Approval status:** **AWAITING KARL'S REVIEW**.
+
+## M6.6A — Music & Sound Effects Studio
+
+- **Implementation:** New **Music Studio** extending the Audio Library. A multi-track piano roll (click to add, drag to move, drag the edge to resize, delete) with eight locally synthesised instruments, tempo, bars, looping, master volume, per-track volume/pan/mute/solo, and a soft limiter that is transparent below a 0.7 threshold. Seven sound-effect presets built from oscillators, deterministic noise and envelopes, with pitch, length, volume, decay and a noise toggle. Beginner starter melodies and drum patterns. Finished songs and effects render to 16-bit PCM WAV and become ordinary Audio Library assets.
+- **Architecture:** No new playback engine. Rendered audio is a standard `AudioAsset` played by the existing clock in scenes, episodes, intros and credits; the in-studio preview plays the same rendered bytes through an `HTMLAudioElement`. Rendering uses `OfflineAudioContext` at a fixed sample rate with a seeded noise source, so the future video exporter can re-render identical audio. Everything is local and offline.
+- **Backup change:** Studio Backup is now **version 8** with editable music projects; versions 1–7 remain readable and restoring an older backup keeps existing projects rather than clearing them. The F4 restore journal is extended to version 7.
+- **Changed files:** `src/wav.ts`, `src/instruments.ts`, `src/musicProject.ts`, `src/musicRender.ts`, `src/musicAssets.ts`, `src/MusicStudio.tsx`, `src/previewPlayer.tsx`, `src/studioBackup.ts`, `src/App.tsx`, `src/musicProject.test.ts`, `src/style.css`, `.gitignore`, documentation and `proofs/m6-6a/`.
+- **Tests:** 147/147 across 18 files (32 new) and production build passed; 80 doc links valid. Isolated Chrome created an original three-instrument song (Piano 7 notes, Bass 9 notes, Drums 4 notes) and a custom effect through the real UI, with real captured browser audio at mean ≈ −31 dB / peak ≈ −8 dB both in-studio and through the existing Audio Library. Mixer mute/solo, save/reload/edit and a v8 backup round-trip into an empty profile all passed, and the restored song replayed audibly. Piano roll drawing was verified by reading canvas pixels. Zero console/asset errors; both profiles removed; exit code 0.
+- **Defects fixed in verification:** drum notes were drawn outside the visible pitch range so drum tracks always looked empty (range now starts at MIDI 36 and the roll auto-scrolls); the auto-scroll then needed the note count as a dependency; the soft limiter was boosting quiet mixes ~31% (now transparent below threshold, with a test); and the studio layout clashed with existing Scene Maker styles.
+- **Limits:** imported/previously rendered audio cannot be layered inside the studio — the mixer mixes the project's own instrument tracks (combining generated and imported audio with trim and fades is done via the existing Audio Panel in scenes, intros, episodes and credits). Instruments are synthesised approximations, not samples. Generated WAVs are uncompressed (~1.9 MB for 11.2s stereo). Capped at 12 tracks, 64 bars, 2000 notes per track; the roll shows MIDI 36–84; no per-track meters or loop-region selection.
+- **Karl's check:** Build a song from the starters, listen to all eight instruments and the effect presets, mix two tracks, then render and place the result in a scene, intro or credits. Confirm the instruments and effects sound acceptable as cartoon music and sound.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
 
 ## M6.6 — credits maker

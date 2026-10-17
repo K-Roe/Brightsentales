@@ -1,0 +1,214 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "music-studio-empty.png",
+    "music-maker-tracks.png",
+    "music-piano-roll.png",
+    "music-rendered.png",
+    "effects-editor.png",
+    "music-reopened-edited.png",
+    "music-restored.png"
+  ],
+  "initialStorage": 0,
+  "tracks": [
+    "PianoPiano",
+    "BassBass",
+    "DrumsDrums"
+  ],
+  "noteCounts": [
+    "Piano · 7 notes",
+    "Bass · 9 notes",
+    "Drums · 4 notes"
+  ],
+  "pianoRollPixels": {
+    "width": 850,
+    "height": 882,
+    "notePixels": 320,
+    "scrollTop": 264,
+    "scrollHeight": 882,
+    "clientHeight": 618
+  },
+  "mixerState": {
+    "bass": "0.35",
+    "pianoPan": "-0.3",
+    "master": "0.8"
+  },
+  "musicPreview": {
+    "meanDb": "-31.1",
+    "maxDb": "-8.5",
+    "duration": "5.640000",
+    "players": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "created": true
+  },
+  "songSaveMessage": "Song saved. You can reopen and edit it any time.",
+  "renderMessage": "“Living Room Theme” added to your Audio Library. Use it in any scene, intro or credits.",
+  "renderResult": "Last render: Living Room Theme · 11.2s · peak 0.38 · in your Audio Library",
+  "audioAfterMusic": [
+    {
+      "id": "f44a6fa5-39c5-4833-b745-8c3300b439bb",
+      "name": "Living Room Theme",
+      "kind": "music",
+      "duration": 11.23077097505669,
+      "mime": "audio/wav",
+      "size": 1981152
+    }
+  ],
+  "effectPreview": {
+    "meanDb": "-31.4",
+    "maxDb": "-6.4",
+    "duration": "1.860000",
+    "players": [
+      1,
+      0
+    ],
+    "created": true
+  },
+  "effectMessage": "“Cartoon Door Slam” added to your Audio Library.",
+  "audioAfterEffect": [
+    {
+      "id": "a8808077-e31b-401f-8678-16cf665dcc62",
+      "name": "Cartoon Door Slam",
+      "kind": "effect",
+      "duration": 1.1000226757369616,
+      "mime": "audio/wav",
+      "size": 194088
+    },
+    {
+      "id": "f44a6fa5-39c5-4833-b745-8c3300b439bb",
+      "name": "Living Room Theme",
+      "kind": "music",
+      "duration": 11.23077097505669,
+      "mime": "audio/wav",
+      "size": 1981152
+    }
+  ],
+  "audioLibraryList": [
+    "Living Room ThemeMusic · 11.2sPreviewDelete",
+    "Cartoon Door SlamSound Effect · 1.1sPreviewDelete"
+  ],
+  "librarySongPreview": {
+    "meanDb": "-30.5",
+    "maxDb": "-8.4",
+    "duration": "4.740000",
+    "players": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "created": true
+  },
+  "libraryEffectPreview": {
+    "meanDb": "-31.1",
+    "maxDb": "-6.4",
+    "duration": "1.740000",
+    "players": [
+      1,
+      0
+    ],
+    "created": true
+  },
+  "songAfterReload": {
+    "songs": [
+      {
+        "name": "Living Room Theme",
+        "tempo": 104,
+        "tracks": 3,
+        "notes": 20
+      }
+    ],
+    "effects": [
+      {
+        "name": "Cartoon Door Slam",
+        "preset": "bounce",
+        "pitch": -3
+      }
+    ]
+  },
+  "editedState": {
+    "tempo": "120",
+    "drumsRowClass": "music-track-row  silenced",
+    "drumsLabel": "Drums · 4 notes · muted"
+  },
+  "afterEditSave": [
+    {
+      "tempo": 120,
+      "muted": 1
+    }
+  ],
+  "backup": {
+    "version": 8,
+    "songs": [
+      {
+        "name": "Living Room Theme",
+        "tempo": 120,
+        "tracks": 3,
+        "notes": 20
+      }
+    ],
+    "effects": [
+      "Cartoon Door Slam"
+    ],
+    "audio": [
+      "Cartoon Door Slam:effect",
+      "Living Room Theme:music"
+    ]
+  },
+  "restoreInitialStorage": 0,
+  "restoredProjects": {
+    "songs": [
+      {
+        "name": "Living Room Theme",
+        "tempo": 120,
+        "tracks": 3
+      }
+    ],
+    "effects": [
+      "Cartoon Door Slam"
+    ]
+  },
+  "restoredAudio": [
+    {
+      "id": "a8808077-e31b-401f-8678-16cf665dcc62",
+      "name": "Cartoon Door Slam",
+      "kind": "effect",
+      "duration": 1.1000226757369616,
+      "mime": "audio/wav",
+      "size": 194088
+    },
+    {
+      "id": "f44a6fa5-39c5-4833-b745-8c3300b439bb",
+      "name": "Living Room Theme",
+      "kind": "music",
+      "duration": 11.23077097505669,
+      "mime": "audio/wav",
+      "size": 1981152
+    }
+  ],
+  "restoredPreview": {
+    "meanDb": "-33.4",
+    "maxDb": "-17.0",
+    "duration": "4.740000",
+    "players": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "created": true
+  },
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}
