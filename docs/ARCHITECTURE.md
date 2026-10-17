@@ -11,6 +11,7 @@ This is a local React/TypeScript/Vite application. It has no backend, cloud requ
 | Playground | `App.tsx` uses `scene.ts` for the legacy placement save, `walking.ts` and `wave.ts` for approved timing, and `outfit.ts` for built-in sprite selection. It is separate from timed scenes. |
 | Timed scenes | `timedScenes.ts` validates scene schedules and computes each Brightling's visibility, location and pose with `stateAt(scene, id, time)`. `SceneMaker.tsx`, `SceneTimeline.tsx`, `timelineEditing.ts` and `scenePreview.ts` provide editing and Canvas preview. |
 | Episodes | `episodes.ts` stores ordered stable scene IDs and maps global time to a scene index and local time. `EpisodeMaker.tsx` edits the sequence and reuses `drawScenePreview` rather than creating a second character animation engine. |
+| Intros | `introductions.ts` stores reusable intros as a `TimedScene` plus series/episode title text and a title style, so intros reuse the single `stateAt` animation engine, `drawIntroPreview`, the audio lanes and the playback clock. `IntroMaker.tsx` provides the library and editor. |
 | Audio | `audio.ts` defines clip/asset records and validation; `audioStore.ts` stores blobs in IndexedDB and packs/checks backup bytes; `AudioLibrary.tsx` imports/previews/deletes; `AudioPanel.tsx` edits scene/episode lanes; `audioPlayback.ts` maps the existing clocks to HTMLAudioElements. Scene music volume is halved while episode music is active. |
 | Backups | `studioBackup.ts` validates versioned complete Studio Backups and journals localStorage restores. `restoreCoordinator.ts` coordinates the audio and localStorage transaction with a durable pending/committed marker. `App.tsx` applies restored data; `main.tsx` recovers before mounting the app. `Characters.tsx` presents export/import. |
 
@@ -30,18 +31,19 @@ This is a local React/TypeScript/Vite application. It has no backend, cloud requ
 | Place folders, assignments and user background data | `localStorage`: `brightsenappstales.place-folders.v1` |
 | Timed scenes with optional audio clip metadata | `localStorage`: `brightsenappstales.timed-scenes.v1` |
 | Episodes with ordered scene IDs and optional global audio clips | `localStorage`: `brightsenappstales.episodes.v1` |
+| Reusable intros (timed scene + titles) | `localStorage`: `brightsenappstales.introductions.v1` |
 | Imported audio files and metadata | IndexedDB: `brightsenappstales.audio.v1`, `assets` store |
 | Pending localStorage backup restore | `localStorage`: `brightsenappstales.restore.v1` journal |
 | Cross-store audio restore | `localStorage`: `brightsenappstales.audio-restore.v1` marker; IndexedDB `restore-recovery` snapshot store in database version 2 |
 
-Studio Backup format **5** contains character definitions, legacy Playground scene, Places organisation, timed scenes, episodes and audio files as base64 plus SHA-256. It does not duplicate built-in artwork. Older backup versions are validated and normalised; older scenes and characters retain their IDs. Character-only **Export Library** is not a complete Studio backup. Browser site-data clearing still removes live local data, so a downloaded Studio Backup is the separate recovery copy.
+Studio Backup format **6** contains character definitions, legacy Playground scene, Places organisation, timed scenes, episodes, intros and audio files as base64 plus SHA-256. It does not duplicate built-in artwork. Older backup versions are validated and normalised; older scenes and characters retain their IDs. Restoring a version 5 or older backup carries no intros, so existing local intros are preserved rather than cleared. Character-only **Export Library** is not a complete Studio backup. Browser site-data clearing still removes live local data, so a downloaded Studio Backup is the separate recovery copy.
 
 F4 coordinates restores across IndexedDB and localStorage: one IndexedDB transaction snapshots old audio and installs new audio; a pending/committed localStorage marker determines whether startup rolls both stores back or keeps the new state. Recovery runs before React mounts. The snapshot temporarily needs extra browser storage. On persistent storage failure the app blocks editing rather than loading mismatched data. A downloaded backup remains essential against browser site-data loss.
 
 ## Timing and future extension seams
 
 - Timed scenes store action seconds relative to the scene; an episode stores scene references and uses a global clock. `episodePosition` converts global time to scene-local time. `episodePlaybackClips` offsets scene audio at each occurrence, including repeated scene IDs, while episode music retains its global clock.
-- Speech in M6.4 should add attributed audio clips through the existing asset/clock/backup path and keep non-verbal Brightlings valid. Intro/credits in M6.5–M6.7 should add reusable production references and one global production clock while preserving the existing scene and episode formats.
+- Speech in M6.4 adds attributed audio clips through the existing asset/clock/backup path and keeps non-verbal Brightlings valid. M6.5 introduces intros as a timed scene plus titles rather than a second scene format. Credits in M6.6 and assembly in M6.7 should follow that pattern: reusable saved references and one global production clock while preserving the existing scene, episode and intro formats.
 - Video export in M6.8 must validate a complete playable file with picture and sound. Browser preview or a passing build alone is insufficient evidence.
 
 ## Verification boundaries

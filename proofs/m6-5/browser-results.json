@@ -1,0 +1,173 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "intro-library-empty.png",
+    "intro-editor-titles.png",
+    "intro-editor-full.png",
+    "intro-library-saved.png",
+    "intro-library-empty-fresh.png",
+    "intro-restored.png"
+  ],
+  "initialStorage": 0,
+  "music": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "pcm_s16le",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "format_name": "wav",
+      "duration": "7.356735"
+    }
+  },
+  "library": [
+    "intro-theme.wavMusic · 7.4sPreviewDelete"
+  ],
+  "castAfterAdd": [
+    "Max",
+    "Maxine"
+  ],
+  "introAudio": [
+    "intro-theme.wav"
+  ],
+  "savedMessage": "Intro saved in this browser. Reuse it in any episode.",
+  "saved": {
+    "version": 1,
+    "intros": [
+      {
+        "id": "9911f1de-5db8-453d-95d5-5dd5528f5c82",
+        "name": "Opening Titles",
+        "duration": 8,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 420,
+            "y": 790
+          },
+          "maxine": {
+            "x": 720,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "fda0c015-2a70-4acd-8c81-e27c8ed5eb0c",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 420,
+              "y": 790
+            }
+          },
+          {
+            "id": "2aa6b965-a5c0-4e95-86a7-09108b89a13e",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 720,
+              "y": 790
+            }
+          },
+          {
+            "id": "47baba12-e5b5-45cc-8b4a-3842b88e3897",
+            "characterId": "max",
+            "type": "wave",
+            "start": 0,
+            "duration": 1.62
+          }
+        ],
+        "audio": [
+          {
+            "id": "72010438-dc84-4127-b87b-a100689e4a61",
+            "assetId": "af0b4a18-2bfe-4cc0-9f73-1df32458fb3e",
+            "start": 0,
+            "trimStart": 0,
+            "trimEnd": 7.356729166666667,
+            "volume": 0.35,
+            "fadeIn": 0,
+            "fadeOut": 0
+          }
+        ],
+        "seriesTitle": "Intro Music",
+        "episodeTitle": "Episode One: The New Sofa",
+        "titleStyle": "banner"
+      }
+    ]
+  },
+  "libraryCards": [
+    "Opening Titles"
+  ],
+  "reopened": {
+    "name": "Opening Titles",
+    "series": "Intro Music",
+    "episode": "Episode One: The New Sofa",
+    "cast": [
+      "Max",
+      "Maxine"
+    ],
+    "clips": 1
+  },
+  "playbackSamples": [
+    {
+      "clock": "1.0s / 8.0s",
+      "players": 1
+    },
+    {
+      "clock": "3.0s / 8.0s",
+      "players": 1
+    },
+    {
+      "clock": "5.0s / 8.0s",
+      "players": 1
+    },
+    {
+      "clock": "7.5s / 8.0s",
+      "players": 0
+    }
+  ],
+  "playbackEnd": {
+    "clock": "8.0s / 8.0s",
+    "players": 0
+  },
+  "recording": {
+    "created": true,
+    "frames": 40
+  },
+  "afterReload": [
+    {
+      "name": "Opening Titles",
+      "series": "Intro Music",
+      "episode": "Episode One: The New Sofa",
+      "cast": 2,
+      "actions": 3
+    }
+  ],
+  "backup": {
+    "version": 6,
+    "intro": "Episode One: The New Sofa",
+    "audio": [
+      "intro-theme.wav"
+    ]
+  },
+  "restoreInitialStorage": 0,
+  "restored": [
+    {
+      "name": "Opening Titles",
+      "series": "Intro Music",
+      "episode": "Episode One: The New Sofa",
+      "cast": 2
+    }
+  ],
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}

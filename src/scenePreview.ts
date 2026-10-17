@@ -34,3 +34,48 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     context.restore();
   }
 }
+
+/**
+ * Wraps `drawScenePreview` so an intro keeps the exact scene animation engine and
+ * approved artwork selection, then overlays its own title text. The intro passes
+ * itself as a `TimedScene` because it is one.
+ */
+export function drawIntroPreview(context: CanvasRenderingContext2D, intro: TimedScene, seriesTitle: string, episodeTitle: string, titleStyle: 'plain' | 'banner', opacity: number, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
+  drawScenePreview(context, intro, time, room, packs);
+  if (opacity <= 0.002) return;
+  const shrink = Math.min(1, 0.94 + 0.06 * opacity);
+  context.save();
+  context.globalAlpha = opacity;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  if (titleStyle === 'banner') {
+    const rise = (1 - opacity) * 46;
+    const bandTop = 96 + rise;
+    context.fillStyle = 'rgba(40, 24, 66, .74)';
+    context.beginPath();
+    if (typeof context.roundRect === 'function') context.roundRect(150, bandTop, WIDTH - 300, 226, 34);
+    else context.rect(150, bandTop, WIDTH - 300, 226);
+    context.fill();
+    context.fillStyle = 'rgba(255, 236, 140, .9)';
+    context.font = 'bold 44px Segoe UI';
+    context.fillText(seriesTitle, WIDTH / 2, bandTop + 74, WIDTH - 400);
+    context.fillStyle = '#fffaf0';
+    context.font = 'bold 96px Segoe UI';
+    context.fillText(episodeTitle, WIDTH / 2, bandTop + 166, WIDTH - 340);
+  } else {
+    const rise = (1 - opacity) * 26;
+    context.shadowColor = 'rgba(28, 16, 48, .92)';
+    context.shadowBlur = 18;
+    context.lineJoin = 'round';
+    context.lineWidth = 14;
+    context.strokeStyle = 'rgba(28, 16, 48, .82)';
+    context.fillStyle = '#fffaf0';
+    context.font = `bold ${Math.round(76 * shrink)}px Segoe UI`;
+    context.strokeText(seriesTitle, WIDTH / 2, 168 + rise, WIDTH - 300);
+    context.fillText(seriesTitle, WIDTH / 2, 168 + rise, WIDTH - 300);
+    context.font = `bold ${Math.round(112 * shrink)}px Segoe UI`;
+    context.strokeText(episodeTitle, WIDTH / 2, 286 + rise, WIDTH - 240);
+    context.fillText(episodeTitle, WIDTH / 2, 286 + rise, WIDTH - 240);
+  }
+  context.restore();
+}

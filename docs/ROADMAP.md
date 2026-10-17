@@ -1,6 +1,6 @@
 # BrightSenAppsTales development roadmap
 
-Updated 17 October 2026 after M6.4 technical verification. The source code and [project status](PROJECT_STATUS.md) are the current implementation record. A passing test or an evidence report does not grant Karl's visual or functional approval.
+Updated 17 October 2026 after M6.5 technical verification. The source code and [project status](PROJECT_STATUS.md) are the current implementation record. A passing test or an evidence report does not grant Karl's visual or functional approval.
 
 ## Status key and gate
 
@@ -29,7 +29,8 @@ Karl approved M6.3 in the F1 brief and explicitly approved F1 in the F2 brief. F
 ## Complete cartoon production
 
 - [ ] **M6.4 — IMPLEMENTED — AWAITING KARL'S BATCH REVIEW.** Speech and narration import, Brightling/narrator attribution, Voices lane, trimming, volume, non-verbal characters preserved, and dialogue that cannot be silently truncated. 74/74 tests and production build passed; isolated Chrome verified attributed scene dialogue, episode narration across scenes, real captured speech and Studio Backup round-trip. [M6.4 evidence](../proofs/m6-4/REPORT.md). Karl's approval remains pending.
-- [ ] **M6.5 — IN PROGRESS.** Reusable Intro Maker: series and episode titles, approved background and Brightling artwork, simple animations, duration, music, preview and save. Dependencies: stable episode timing/audio and reviewed design; M6.4 is the default sequence unless Karl reprioritises. Current milestone.
+- [ ] **M6.5 — IMPLEMENTED — AWAITING KARL'S BATCH REVIEW.** New Intros section with series/episode titles, Plain/Banner styles, approved place background, Brightling entrance actions on the existing timeline, Audio Library music, preview, save and reuse by stable ID. Studio Backup is now version 6 and still reads versions 1–5. 89/89 tests and production build passed; isolated Chrome verified titles, animation, real captured sound and a v6 backup round-trip. [M6.5 evidence](../proofs/m6-5/REPORT.md). Karl's approval remains pending.
+- [ ] **M6.6 — IN PROGRESS.** Reusable Credits Maker: creator, character, production and music credits, acknowledgements, static or scrolling presentation, background, music, duration, preview and save. Dependencies: stable music attribution and timing; M6.5 in the default sequence. Current milestone.
 - [ ] **M6.6 — NOT STARTED.** Reusable Credits Maker: creator, character, production and music credits, acknowledgements, static or scrolling presentation, background, music, duration, preview and save. Dependencies: stable music attribution and timing; M6.5 in the default sequence.
 - [ ] **M6.7 — NOT STARTED.** Complete Episode Assembly: intro → scene sequence → credits, continuous global playback, reusable references and sound spanning the production. Dependencies: M6.5 and M6.6, plus M6.4 if dialogue is included in the first finished episode.
 - [ ] **M6.8 — NOT STARTED.** Export picture and synchronised sound, initially targeting 1280×720 at 24 FPS subject to browser capabilities. Investigate formats first; promise MP4 only after a playable MP4 is actually produced. Decode and inspect complete exports. Dependency: M6.7 and accepted playback/audio behaviour.
