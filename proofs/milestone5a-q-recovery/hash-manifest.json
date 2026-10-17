@@ -1,0 +1,158 @@
+{
+  "source_set": "milestone5a-q",
+  "copied_files": [
+    {
+      "source": "proofs/milestone5a-q/frames/max-0.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-0.png",
+      "sha256": "985325be600380ad06aa024f8c2250e592aba7201945593f380abd37b622e89b"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-side-0.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-side-0.png",
+      "sha256": "c73cab7b42425cb5e89e855317a6c9c6ee88048de678027b8f9a8a71c46f7f98"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-side-v3-1.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-side-v3-1.png",
+      "sha256": "02d048bc25cbd1786c4f2e346b3d9a45f4e1845206a8fb8702627d0dc7108f8f"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-side-v3-2.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-side-v3-2.png",
+      "sha256": "b72d40dc6357f280b47ac02a6f0f04a30deb46fe37893c297a3e3dac84f9246b"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-side-v3-3.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-side-v3-3.png",
+      "sha256": "a7c6860744c24a89b0089f5791d03f346fd5b6d0ac525d116182cea6b31849ee"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-side-v3-4.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-side-v3-4.png",
+      "sha256": "682c063c7e00ce9e567587676f4db050a907991753e27cbc2e13f841a0199338"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-wave-1.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-wave-1.png",
+      "sha256": "db7b33d347adaac4b3a4315bbb29254e48a3a6db4b3af9ab3f9f01492934eaa5"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-wave-2.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-wave-2.png",
+      "sha256": "0466a515dc282ddce2da8388f433add3bb9caceaa6ac2f525eb5b310d0fde1da"
+    },
+    {
+      "source": "proofs/milestone5a-q/frames/max-wave-3.png",
+      "review": "proofs/milestone5a-q-recovery/frames/max-wave-3.png",
+      "sha256": "48609616b2dacb1b7f2ad3b86a52abad372dee2c8202ced2972867d5a37f7fd0"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/front-idle-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/front-idle-candidate.png",
+      "sha256": "6398adf1a9d528d58c7da0f3ea86a7bc15e9d1f6041de721542e191e3fe2a49c"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/side-idle-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/side-idle-candidate.png",
+      "sha256": "10288fc1ea4ee4ae7d103f2c730e7b64d6e823f2c35aa4ec65786f996c60009b"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/walk-contact-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/walk-contact-candidate.png",
+      "sha256": "46aab92c106f79b8a82134e03ebac24b03a6b60617840437149ef7262e0e19c8"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/walk-passing-1-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/walk-passing-1-candidate.png",
+      "sha256": "5e719defe2ee8419517f45130f88107f128b88cb1b4b4987d35a90f552bfb9ec"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/walk-contact-2-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/walk-contact-2-candidate.png",
+      "sha256": "8ca3f35ac3ffecfbfc4c7cbd8741894da2a20820f384cd7aa500b5f0456fd0c0"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/walk-passing-2-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/walk-passing-2-candidate.png",
+      "sha256": "030fff8134bfc112e6e8bc4820ad758d0305a3f5bb2fa55ddc070049facc1fdb"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/wave-1-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/wave-1-candidate.png",
+      "sha256": "208e12427e259babfe51699a3025cfc4cf25b9ef544c651d6eb6ec486711dcf6"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/wave-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/wave-candidate.png",
+      "sha256": "efc3b84d8faef6d19b3e3eee61025b9cc9bc5d0951aa705b1c42c7d8fd880c28"
+    },
+    {
+      "source": "proofs/milestone5a-q/candidates/wave-3-candidate.png",
+      "review": "proofs/milestone5a-q-recovery/raw-candidates/wave-3-candidate.png",
+      "sha256": "e36bb8eea34ed73e9549ed04f20bac9dc4edad77db514d74c05e305d2f22a117"
+    },
+    {
+      "source": "proofs/milestone5a-q/walking-preview.gif",
+      "review": "proofs/milestone5a-q-recovery/original-5a-q-evidence/walking-preview.gif",
+      "sha256": "eabe537fa5f6a3ed182e52815e635604bc41962fc937a869714566bb2a2a14f2"
+    },
+    {
+      "source": "proofs/milestone5a-q/waving-preview.gif",
+      "review": "proofs/milestone5a-q-recovery/original-5a-q-evidence/waving-preview.gif",
+      "sha256": "4f24eb49db27fa504198596f8d0d13901e677141d24f86e6d1a8b09ef22b67ff"
+    },
+    {
+      "source": "proofs/milestone5a-q/REPORT.md",
+      "review": "proofs/milestone5a-q-recovery/original-5a-q-evidence/REPORT.md",
+      "sha256": "f42c389b3a42cc0c5edfdaa4c021f0ba2b30f9e3227f1d5801f3dc53632a5769"
+    },
+    {
+      "source": "proofs/milestone5a-q/all-nine-contact-sheet.png",
+      "review": "proofs/milestone5a-q-recovery/original-5a-q-evidence/all-nine-contact-sheet.png",
+      "sha256": "41006ce6a5938cbd92dabb3f4cffdd980ff8c5d61ea947388c56cf4f61cb022e"
+    },
+    {
+      "source": "proofs/milestone5a-q/seam-closeups.png",
+      "review": "proofs/milestone5a-q-recovery/original-5a-q-evidence/seam-closeups.png",
+      "sha256": "c700153f268806bb451dd1e739baef825ff437d3434cc8cea5399eb43ed6ecdd"
+    }
+  ],
+  "approved_originals": [
+    {
+      "path": "public/art/max-0.png",
+      "sha256": "7d1c4a26bebdabd85b2114b8ca61df4e5f83302ab21aa8c895f5438d75a98d24"
+    },
+    {
+      "path": "public/art/max-side-0.png",
+      "sha256": "4a20e1e89c6fedecf85405d1c6965c9719df18c48c70af465e5a90f4a988affd"
+    },
+    {
+      "path": "public/art/max-side-v3-1.png",
+      "sha256": "23c58485e711673d114578eaf1cad7c5eec57b31d45af131765a99433c123141"
+    },
+    {
+      "path": "public/art/max-side-v3-2.png",
+      "sha256": "b0eb6fd9e5a3faa6d332259f2d69060cfbe02a84c75eafe331513a67ba424eef"
+    },
+    {
+      "path": "public/art/max-side-v3-3.png",
+      "sha256": "8f66644e509bc4da661a53c507f7c01b9c4feadeac1ef9070655eca5e92c706e"
+    },
+    {
+      "path": "public/art/max-side-v3-4.png",
+      "sha256": "e96d9c8fc639f8fb84a7b921a7ad77967bd0ab3b889d552ae8612412f14fd2cb"
+    },
+    {
+      "path": "public/art/max-wave-1.png",
+      "sha256": "86d4440c57e5cbef79229b3901045ba602994ccb6b908007ea9ce69eb5ed4fa8"
+    },
+    {
+      "path": "public/art/max-wave-2.png",
+      "sha256": "ab1e4537467be1b6c04186ef40a0822ed52dbdac7580e1065f3d2da81d0011ba"
+    },
+    {
+      "path": "public/art/max-wave-3.png",
+      "sha256": "b4ce3c9c2c5e59cfdf26c5e7f2636931902b48b784523724eec48e8d305b323e"
+    }
+  ]
+}

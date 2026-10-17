@@ -1,0 +1,20 @@
+{
+  "browserErrors": [],
+  "failedRequests": [],
+  "checkpoints": [
+    "01-original-hoodie.png",
+    "02-outfit-selected.png",
+    "03-candidate-idle-thumbnail.png",
+    "04-after-walk.png",
+    "05-wave-raised.png",
+    "05-after-wave.png",
+    "05-after-left-walk.png",
+    "06-after-reload.png",
+    "07-playground-after-reload.png",
+    "08-restored-hoodie.png"
+  ],
+  "savedScene": "{\"version\":1,\"characters\":{\"max\":{\"start\":{\"x\":319.9999893851902,\"y\":754.9999829608585},\"destination\":{\"x\":319.9999893851902,\"y\":754.9999829608585}},\"maxine\":{\"start\":{\"x\":1090,\"y\":790},\"destination\":null}},\"maxOutfit\":\"tshirt-trousers\"}",
+  "restoredScene": "{\"version\":1,\"characters\":{\"max\":{\"start\":{\"x\":319.9999893851902,\"y\":754.9999829608585},\"destination\":{\"x\":319.9999893851902,\"y\":754.9999829608585}},\"maxine\":{\"start\":{\"x\":1090,\"y\":790},\"destination\":null}}}",
+  "recordedFrames": 21,
+  "library": null
+}

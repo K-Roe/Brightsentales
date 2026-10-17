@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Brightling, DEFAULT_COLOURS, LIBRARY_KEY, makeFrame, nameAvailable, PALETTES, Template } from './maker';
 import { backupLibrary, ImportMode, validateLibrary } from './library';
 import { StudioBackup, validateStudioBackup } from './studioBackup';
+import { MAX_OUTFITS, maxSpriteSource, type MaxOutfit } from './outfit';
 
 type Colours = Pick<Brightling, 'body' | 'hair' | 'clothing'>;
 type Props = {
   library: Brightling[];
   thumbnails: Record<string, string>;
   inScene: string[];
+  maxOutfit: MaxOutfit;
+  onMaxOutfitChange: (outfit: MaxOutfit) => boolean;
   storageIssue: string | null;
   sceneIssue: string | null;
   onSave: (item: Brightling) => Promise<boolean>;
@@ -18,7 +21,7 @@ type Props = {
   onImportStudio: (backup: StudioBackup) => Promise<boolean>;
 };
 
-export default function Characters({ library, thumbnails, inScene, storageIssue, sceneIssue, onSave, onDelete, onImport, onAdd, onExportStudio, onImportStudio }: Props) {
+export default function Characters({ library, thumbnails, inScene, maxOutfit, onMaxOutfitChange, storageIssue, sceneIssue, onSave, onDelete, onImport, onAdd, onExportStudio, onImportStudio }: Props) {
   const [view, setView] = useState<'overview' | 'maker'>('overview');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [template, setTemplate] = useState<Template>('male');
@@ -128,7 +131,7 @@ export default function Characters({ library, thumbnails, inScene, storageIssue,
       </div>
       <section className="character-library" aria-label="Brightling library">
         <div className="portrait-grid">
-          <article className="portrait-card default-character"><div className="portrait-art"><img src="/art/max-0.png" alt="Max, front-facing" /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Max</h3><p>Male · Max template</p><span className="portrait-presence">Always in Playground</span></div></article>
+          <article className="portrait-card default-character"><div className="portrait-art"><img src={maxSpriteSource(maxOutfit, 'idle')} alt={`Max, front-facing in ${MAX_OUTFITS.find(option => option.id === maxOutfit)?.label}`} /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Max</h3><p>Male · Max template</p><label className="max-outfit-choice" htmlFor="max-outfit">Outfit<select id="max-outfit" value={maxOutfit} disabled={!!storageIssue || !!sceneIssue} onChange={event => { const outfit = event.target.value as MaxOutfit; setMessage(onMaxOutfitChange(outfit) ? `Max is wearing ${MAX_OUTFITS.find(option => option.id === outfit)?.label}. Outfit saved.` : 'Could not save Max’s outfit. Existing selection was kept.'); }}>{MAX_OUTFITS.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label><span className="portrait-presence">Always in Playground</span></div></article>
           <article className="portrait-card default-character"><div className="portrait-art"><img src="/art/maxine-0.png" alt="Maxine, front-facing" /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Maxine</h3><p>Female · Maxine template</p><span className="portrait-presence">Always in Playground</span></div></article>
           {library.map(item => <article className="portrait-card" key={item.id}>
             <div className="portrait-art">{thumbnails[item.id] ? <img src={thumbnails[item.id]} alt={item.name + ', front-facing'} /> : <span className="art-missing">Artwork unavailable</span>}</div>
@@ -140,7 +143,7 @@ export default function Characters({ library, thumbnails, inScene, storageIssue,
         {library.length === 0 && <p className="overview-empty">Your own Brightlings will appear here after you create one.</p>}
       </section>
       <section className="library-backup overview-backup" aria-label="Library backup">
-        <div><h3>Keep a copy of your characters</h3><p>Export and import custom Brightlings. A library export does not include saved scenes.</p></div>
+        <div><h3>Keep a copy of your characters</h3><p>Export and import custom Brightlings. A library export does not include the saved scene or Max’s outfit; use Studio Backup for both.</p></div>
         <div className="backup-controls"><button onClick={exportLibrary}>{storageIssue ? 'Export Stored Data' : 'Export Library'}</button><label htmlFor="import-mode">Import as<select id="import-mode" value={importMode} onChange={event => setImportMode(event.target.value as ImportMode)}><option value="merge">Merge with library</option><option value="replace">Replace library</option></select></label><label className="import-file">Import Library<input ref={fileRef} type="file" accept=".json,application/json" onChange={event => void importFile(event.target.files?.[0])} /></label></div>
       </section>
       <section className="library-backup overview-backup" aria-label="Studio backup">
