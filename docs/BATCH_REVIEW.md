@@ -11,7 +11,8 @@ Karl authorised sequential technical development with visual and listening accep
 | F4 — Backup reliability | Implemented | **AWAITING KARL'S REVIEW** | [F4 report](../proofs/f4/REPORT.md) | Review recovery behaviour after interrupted restore. |
 | M6.4 — Dialogue and narration | Implemented | **AWAITING KARL'S REVIEW** | [M6.4 report](../proofs/m6-4/REPORT.md) | Listen to the recorded episode; check attribution and speech timing. |
 | M6.5 — Intro Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.5 report](../proofs/m6-5/REPORT.md) | Check titles, styles and animation; listen to the intro recording. |
-| M6.6 — Credits Maker | In progress | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-6/` | Check credit layout and scrolling after implementation. |
+| M6.6 — Credits Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.6 report](../proofs/m6-6/REPORT.md) | Check credit readability, scrolling and the unsaved warning. |
+| M6.7 — Episode assembly | In progress | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
 
 ## F2 — real MP3 and OGG compatibility
 
@@ -41,6 +42,18 @@ Karl authorised sequential technical development with visual and listening accep
 - **Browser evidence:** [F4 report, screenshot and recordings](../proofs/f4/REPORT.md).
 - **Limits:** Browser reload simulates interruption; hardware power loss and persistent storage failure remain outside the test. The audio snapshot temporarily needs additional quota.
 - **Karl's check:** Review the restored library and episode, and confirm the failure message is clear if storage cannot recover.
+- **Approval status:** **AWAITING KARL'S REVIEW**.
+
+## M6.6 — credits maker
+
+- **Implementation:** New **Credits** Studio section producing reusable end credits: add/edit/delete/reorder credit lines with optional headings and roles, one-tap heading suggestions, Static or Scrolling presentation, adjustable duration and scroll speed, automatic slowing so the last credit always ends on stage, a place background, Audio Library music, preview, save/reopen/duplicate/delete, and unsaved-edit protection. Credits are presented through the same scene renderer and audio clock as scenes and intros, so the app still has one animation engine.
+- **Backup change:** Studio Backup is now **version 7** with a `credits` field; versions 1–6 remain readable, and restoring an older backup keeps existing credits rather than clearing them. The F4 restore journal is extended to version 6, and the restore confirmation now reports credits and intros.
+- **Changed files:** `src/credits.ts`, `src/CreditsMaker.tsx`, `src/scenePreview.ts`, `src/studioBackup.ts`, `src/App.tsx`, `src/Characters.tsx`, `src/credits.test.ts`, `src/style.css`, `.gitignore`, documentation and `proofs/m6-6/`.
+- **Tests:** 112/112 across 17 files and production build passed. Isolated Chrome verified four credit lines built through the UI, reorder, credits music on the credits clock, static and scrolling playback each with one active player and captured sound at mean −28.6 dB / max ≈ −12 dB, visible upward scroll between 2.5s and 5.5s, save/reload retention, the unsaved-edit guard, and a v7 backup round-trip into an empty profile. Zero console/asset errors; both profiles removed.
+- **Defect fixed in verification:** the layout counted one row per credit line while the renderer draws a heading and a name row, so long credits scrolled with wrong timing maths. Row counting now matches the renderer.
+- **Browser evidence:** [M6.6 report, screenshots and recordings](../proofs/m6-6/REPORT.md).
+- **Limits:** Text only — no fonts, per-line colours, logos, images or line animations. Uniform scroll speed with no easing. Line height shrinks automatically on very long lists. Credits show no Brightlings and are not yet attached to an episode.
+- **Karl's check:** Create credits, try Static and Scrolling, and listen to [the recorded credits](../proofs/m6-6/scroll-credits.mp4). Confirm text size and readability over the artwork, that the heading suggestions cover what he wants, and that the unsaved-changes warning feels right rather than annoying.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
 
 ## M6.5 — intro maker

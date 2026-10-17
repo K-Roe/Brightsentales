@@ -1,0 +1,230 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "credits-library-empty.png",
+    "credits-editor-static.png",
+    "credits-editor-music.png",
+    "credits-static-preview.png",
+    "credits-library-saved.png",
+    "credits-unsaved-guard.png",
+    "credits-library-empty-fresh.png",
+    "credits-restored.png"
+  ],
+  "initialStorage": 0,
+  "music": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "pcm_s16le",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "format_name": "wav",
+      "duration": "5.224943"
+    }
+  },
+  "lineLabels": [
+    "Created by",
+    "Voices",
+    "Music",
+    "Thanks to"
+  ],
+  "orderAfterMoveUp": [
+    "Created by",
+    "Music",
+    "Voices",
+    "Thanks to"
+  ],
+  "savedMusic": {},
+  "staticSamples": {
+    "samples": [
+      {
+        "clock": "0.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "1.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "2.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "3.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "4.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "5.2s / 12.0s",
+        "players": 0
+      }
+    ],
+    "created": true,
+    "meanDb": "-28.6",
+    "maxDb": "-12.1",
+    "frames": 24
+  },
+  "scrollSamples": {
+    "samples": [
+      {
+        "clock": "0.3s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "1.3s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "2.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "3.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "4.2s / 12.0s",
+        "players": 1
+      },
+      {
+        "clock": "5.2s / 12.0s",
+        "players": 0
+      }
+    ],
+    "created": true,
+    "meanDb": "-28.6",
+    "maxDb": "-12.0",
+    "frames": 24
+  },
+  "scrollState": {
+    "style": "scroll",
+    "speed": "2",
+    "clips": 1
+  },
+  "saveMessage": "Credits saved in this browser. Reuse them in any episode.",
+  "saved": {
+    "version": 1,
+    "credits": [
+      {
+        "id": "2197343b-3e45-4caa-8e13-608cc70dfeba",
+        "name": "Closing Credits",
+        "title": "Thank You",
+        "duration": 12,
+        "placeId": "living-room",
+        "lines": [
+          {
+            "id": "6c4d6857-50df-416e-b4fb-d0b0cb5e7ba1",
+            "heading": "Created by",
+            "name": "Karl",
+            "role": "Story and artwork"
+          },
+          {
+            "id": "43d30bbc-048e-4917-a832-3ed08efd89af",
+            "heading": "Music",
+            "name": "BrightBeats Theme",
+            "role": "Original score"
+          },
+          {
+            "id": "2274330b-62ac-4c6d-ba86-e48e103bfc2d",
+            "heading": "Voices",
+            "name": "Max and Maxine",
+            "role": "Recorded dialogue"
+          },
+          {
+            "id": "892b4c5f-7ac7-4eb3-9a46-6de55d23e2fa",
+            "heading": "Thanks to",
+            "name": "Everyone at home",
+            "role": ""
+          }
+        ],
+        "mode": "scroll",
+        "scrollSpeed": 2,
+        "audio": [
+          {
+            "id": "07a9fce5-138f-49ba-9b78-11ef2cf00a00",
+            "assetId": "d6dbf7f1-92a0-4287-9c72-17ec9ca7021a",
+            "start": 0,
+            "trimStart": 0,
+            "trimEnd": 5.2249375,
+            "volume": 0.35,
+            "fadeIn": 0,
+            "fadeOut": 0
+          }
+        ]
+      }
+    ]
+  },
+  "libraryCards": [
+    "Closing Credits"
+  ],
+  "reopened": {
+    "name": "Closing Credits",
+    "title": "Thank You",
+    "style": "scroll",
+    "lines": [
+      "Created by",
+      "Music",
+      "Voices",
+      "Thanks to"
+    ],
+    "clips": 1,
+    "indicator": "Saved"
+  },
+  "dirtyIndicator": "Unsaved changes",
+  "leaveGuardCancelled": {
+    "stayedOnCredits": true,
+    "title": "Thank You (edited)"
+  },
+  "indicatorAfterSave": "Saved",
+  "leftCleanly": true,
+  "afterReload": [
+    {
+      "name": "Closing Credits",
+      "title": "Thank You (edited)",
+      "mode": "scroll",
+      "lines": 4,
+      "audio": 1
+    }
+  ],
+  "backup": {
+    "version": 7,
+    "credits": "Thank You (edited)",
+    "lines": 4,
+    "audio": [
+      "credits-theme.wav"
+    ]
+  },
+  "restoreInitialStorage": 0,
+  "restoreDiagnostics": {
+    "keys": [
+      "brightsenappstales.episodes.v1",
+      "brightsenappstales.place-folders.v1",
+      "brightsenappstales.brightlings.v1",
+      "brightsenappstales.credits.v1",
+      "brightsenappstales.timed-scenes.v1",
+      "brightsenappstales.introductions.v1"
+    ],
+    "notice": null,
+    "fileInputs": 1
+  },
+  "restored": [
+    {
+      "name": "Closing Credits",
+      "title": "Thank You (edited)",
+      "mode": "scroll",
+      "lines": 4,
+      "audio": 1
+    }
+  ],
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}

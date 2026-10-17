@@ -15,7 +15,7 @@ You are Karl's senior development partner. Work only in this repository. Preserv
 - Extend `timedScenes.ts`, `episodes.ts`, `scenePreview.ts`, `audioPlayback.ts` and existing storage models as appropriate. Avoid parallel scene or animation engines.
 - Do not alter Max/Maxine original or approved outfit sprites, walking/waving timing, Living Room art, or recolouring masks without Karl's separate artwork approval. Do not present generated or recoloured approximations as approved art.
 - Preserve stable character, place, scene, episode and audio IDs. Keep legacy saved data and older Studio Backups readable. Invalid storage must be reported without silently clearing it.
-- Character-only Library Export excludes scenes/audio. Studio Backup v6 includes local audio assets and reusable intros; v1–v5 backups must stay readable, and restoring a v5 backup must keep existing intros rather than clearing them. F4 coordinates crash recovery across IndexedDB and localStorage; review `src/restoreCoordinator.ts` before changing restore order.
+- Character-only Library Export excludes scenes/audio. Studio Backup v7 includes local audio assets, reusable intros and reusable credits; v1–v6 backups must stay readable, and restoring an older backup must keep existing intros and credits rather than clearing them. F4 coordinates crash recovery across IndexedDB and localStorage; review `src/restoreCoordinator.ts` before changing restore order.
 - Keep controls approachable for children and beginners, accessible on desktop and mobile, and free of unrelated feature growth.
 
 ## Verification and handoff
@@ -24,4 +24,4 @@ You are Karl's senior development partner. Work only in this repository. Preserv
 - Use a disposable browser profile and test data. Test actual UI interactions, save/reload and Studio Backup when affected. Capture screenshots/recordings under `proofs/<milestone>/` and disclose anything unverified.
 - Update `docs/ROADMAP.md`, `docs/PROJECT_STATUS.md` and `docs/BATCH_REVIEW.md` after each batch milestone. Keep technical completion distinct from Karl's visual/listening approval. During the temporary batch authorisation, proceed to the next milestone only after the current one is technically verified. Stop on a significant blocker, insufficient verification capacity or Karl's request.
 
-Current gate: **M6.6 — IN PROGRESS** under Karl's temporary batch authorisation. F2, F3, F4, M6.4 and M6.5 are implemented and awaiting Karl's batch review, not approved. Read `docs/BATCH_REVIEW.md`; advance one milestone at a time only after technical verification.
+Current gate: **M6.7 — IN PROGRESS** under Karl's temporary batch authorisation. F2, F3, F4, M6.4, M6.5 and M6.6 are implemented and awaiting Karl's batch review, not approved. Read `docs/BATCH_REVIEW.md`; advance one milestone at a time only after technical verification.

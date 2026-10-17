@@ -2,6 +2,7 @@ import { makePack, type Brightling } from './maker';
 import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { HEIGHT, WIDTH } from './scene';
 import { stateAt, type TimedScene } from './timedScenes';
+import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
@@ -77,5 +78,40 @@ export function drawIntroPreview(context: CanvasRenderingContext2D, intro: Timed
     context.strokeText(episodeTitle, WIDTH / 2, 286 + rise, WIDTH - 240);
     context.fillText(episodeTitle, WIDTH / 2, 286 + rise, WIDTH - 240);
   }
+  context.restore();
+}
+
+/**
+ * Draws end credits over the place background using the same `drawScenePreview`
+ * background pass, so credits and scenes share one renderer and one audio clock.
+ * Text is drawn onto a darkened band to keep contrast readable over any artwork.
+ */
+export function drawCreditsPreview(context: CanvasRenderingContext2D, credits: TimedScene, title: string, lines: CreditLine[], mode: CreditsMode, scrollSpeed: number, time: number, room: HTMLImageElement) {
+  drawScenePreview(context, credits, time, room, {});
+  const fade = Math.min(0.6, credits.duration / 4);
+  const opacity = Math.max(0, Math.min(1, (credits.duration - time) / fade));
+  if (opacity <= 0.002) return;
+  const gradient = context.createLinearGradient(0, 0, 0, HEIGHT);
+  gradient.addColorStop(0, 'rgba(24, 14, 44, .78)');
+  gradient.addColorStop(.5, 'rgba(24, 14, 44, .58)');
+  gradient.addColorStop(1, 'rgba(24, 14, 44, .82)');
+  context.save();
+  context.globalAlpha = opacity;
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, WIDTH, HEIGHT);
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  const draw = (text: string, y: number, size: number, weight: string, colour: string) => {
+    if (!text || y < -90 || y > HEIGHT + 90) return;
+    context.font = `${weight} ${size}px Segoe UI`;
+    context.lineJoin = 'round';
+    context.lineWidth = 8;
+    context.strokeStyle = 'rgba(18, 10, 34, .85)';
+    context.strokeText(text, WIDTH / 2, y, WIDTH - 180);
+    context.fillStyle = colour;
+    context.fillText(text, WIDTH / 2, y, WIDTH - 180);
+  };
+  const rows = creditRowsAt({ title, mode, duration: credits.duration, scrollSpeed, lines }, time);
+  for (const row of rows.rows) draw(row.text, row.y, row.size, row.weight, row.colour);
   context.restore();
 }

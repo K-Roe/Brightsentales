@@ -12,6 +12,8 @@ import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, speechFitsEp
 import { decodeTimedLibrary, EMPTY_TIMED_LIBRARY, pruneTimedScenes, TIMED_SCENES_KEY, TimedLibrary, validateTimedLibrary } from './timedScenes';
 import IntroMaker from './IntroMaker';
 import { decodeIntroLibrary, EMPTY_INTRO_LIBRARY, INTROS_KEY, validateIntroLibrary, type IntroLibrary } from './introductions';
+import CreditsMaker, { type CreditsLeaveGuard } from './CreditsMaker';
+import { CREDITS_KEY, decodeCreditsLibrary, EMPTY_CREDITS_LIBRARY, validateCreditsLibrary, type CreditsLibrary } from './credits';
 import { CharacterId, clampPoint, DEFAULT_SCENE, HEIGHT, moveTowards, parseScene, Point, Scene, STORAGE_KEY, WIDTH } from './scene';
 import { directionTo, frameForDistance, Motion, STOP_MS, TURN_MS, WALK_SPEED } from './walking';
 import { waveFrameAt } from './wave';
@@ -47,6 +49,7 @@ type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 export default function App() {
   const [recovery] = useState(() => recoverStudioRestore(localStorage, LIBRARY_KEY, STORAGE_KEY));
   const episodeLeaveGuard = useRef<EpisodeLeaveGuard | null>(null);
+  const creditsLeaveGuard = useRef<CreditsLeaveGuard | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const savedRef = useRef<Scene>(readScene());
   const positionsRef = useRef<Record<string, Point>>(Object.fromEntries(Object.entries(savedRef.current.characters).map(([id, value]) => [id, { ...value.start }])));
@@ -72,10 +75,13 @@ export default function App() {
   const [initialIntros] = useState(() => { try { return decodeIntroLibrary(localStorage.getItem(INTROS_KEY), placesInReady(initialPlaces.ok ? initialPlaces.organisation : DEFAULT_PLACE_ORGANISATION)); } catch { return { ok: false as const, error: 'Browser intro storage is unavailable.' }; } });
   const [intros, setIntros] = useState<IntroLibrary>(initialIntros.ok ? initialIntros.library : structuredClone(EMPTY_INTRO_LIBRARY));
   const [introIssue, setIntroIssue] = useState<string | null>(initialIntros.ok ? null : initialIntros.error);
+  const [initialCredits] = useState(() => { try { return decodeCreditsLibrary(localStorage.getItem(CREDITS_KEY), placesInReady(initialPlaces.ok ? initialPlaces.organisation : DEFAULT_PLACE_ORGANISATION)); } catch { return { ok: false as const, error: 'Browser credits storage is unavailable.' }; } });
+  const [credits, setCredits] = useState<CreditsLibrary>(initialCredits.ok ? initialCredits.library : structuredClone(EMPTY_CREDITS_LIBRARY));
+  const [creditsIssue, setCreditsIssue] = useState<string | null>(initialCredits.ok ? null : initialCredits.error);
   const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
   const [audioIssue, setAudioIssue] = useState<string | null>(null);
   const [sceneIssue, setSceneIssue] = useState<string | null>(() => { try { const raw = localStorage.getItem(STORAGE_KEY); return raw !== null && !parseScene(raw) ? 'Saved scene JSON is invalid. It has not been overwritten.' : null; } catch { return 'Browser scene storage is unavailable.'; } });
-  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'intros' | 'episodes' | 'audio' | 'playground'>('characters');
+  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'intros' | 'episodes' | 'credits' | 'audio' | 'playground'>('characters');
   const [requestedSceneId, setRequestedSceneId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
   const [maxOutfit, setMaxOutfit] = useState<MaxOutfit>(() => maxOutfitFrom(savedRef.current.maxOutfit));
@@ -276,7 +282,7 @@ export default function App() {
     setSceneIds([...sceneIds, item.id]); select(item.id); setActiveTab('playground'); setNotice(`${item.name} added. Drag to place, then save the scene.`);
   };
   const exportStudio = async (): Promise<StudioBackup | null> => {
-    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue || timedIssue || episodeIssue || introIssue || audioIssue) return null;
+    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue || timedIssue || episodeIssue || introIssue || creditsIssue || audioIssue) return null;
     try {
       const storedLibrary = readLibrary();
       const storedPlaces = decodePlaceOrganisation(localStorage.getItem(PLACE_FOLDERS_KEY));
@@ -285,9 +291,10 @@ export default function App() {
       const storedTimed = decodeTimedLibrary(localStorage.getItem(TIMED_SCENES_KEY), placesInReady(storedPlaces.organisation));
       const storedEpisodes = decodeEpisodeLibrary(localStorage.getItem(EPISODES_KEY));
       const storedIntros = decodeIntroLibrary(localStorage.getItem(INTROS_KEY), placesInReady(storedPlaces.organisation));
-      if (!storedTimed.ok || !storedEpisodes.ok || !storedIntros.ok) return null;
+      const storedCredits = decodeCreditsLibrary(localStorage.getItem(CREDITS_KEY), placesInReady(storedPlaces.organisation));
+      if (!storedTimed.ok || !storedEpisodes.ok || !storedIntros.ok || !storedCredits.ok) return null;
       const currentAudio = await listAudioAssets();
-      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation, storedTimed.library, storedEpisodes.library, await audioBackupAssets(currentAudio), storedIntros.library);
+      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation, storedTimed.library, storedEpisodes.library, await audioBackupAssets(currentAudio), storedIntros.library, storedCredits.library);
       const checked = validateStudioBackup(candidate);
       return checked.ok ? checked.backup : null;
     } catch { return null; }
@@ -317,6 +324,8 @@ export default function App() {
       if (restoredEpisodes.ok) { setEpisodes(restoredEpisodes.library); setEpisodeIssue(null); }
       const restoredIntros = decodeIntroLibrary(localStorage.getItem(INTROS_KEY), placesInReady(backup.places));
       if (restoredIntros.ok) { setIntros(restoredIntros.library); setIntroIssue(null); }
+      const restoredCredits = decodeCreditsLibrary(localStorage.getItem(CREDITS_KEY), placesInReady(backup.places));
+      if (restoredCredits.ok) { setCredits(restoredCredits.library); setCreditsIssue(null); }
       if (restoredAudio !== null) { setAudioAssets(restoredAudio); setAudioIssue(null); }
       setNotice('Studio Backup restored. Characters, scenes, episodes and Places library are ready.');
       return true;
@@ -353,6 +362,13 @@ export default function App() {
     try { localStorage.setItem(INTROS_KEY, JSON.stringify(checked.library)); setIntros(checked.library); return true; }
     catch { return false; }
   };
+  const saveCredits = (next: CreditsLibrary): boolean => {
+    if (!recovery.ok || creditsIssue) return false;
+    const checked = validateCreditsLibrary(next, placesInReady(places));
+    if (!checked.ok) return false;
+    try { localStorage.setItem(CREDITS_KEY, JSON.stringify(checked.library)); setCredits(checked.library); return true; }
+    catch { return false; }
+  };
   const addAudio = async (file: File, kind: AudioKind) => {
     if (audioIssue) throw new Error(audioIssue);
     const asset = await importAudioFile(file, kind);
@@ -360,30 +376,34 @@ export default function App() {
     setAudioAssets(previous => [...previous, asset]);
   };
   const deleteAudio = async (id: string) => {
-    if (timedIssue || episodeIssue || introIssue) throw new Error('Scene, intro or episode storage needs repair before deleting audio.');
+    if (timedIssue || episodeIssue || introIssue || creditsIssue) throw new Error('Scene, intro, credits or episode storage needs repair before deleting audio.');
     const asset = audioAssets.find(item => item.id === id);
     if (!asset) return;
     const affectedScenes = timedScenes.scenes.filter(item => item.audio?.some(clip => clip.assetId === id)).map(item => item.name);
     const affectedSceneIds = new Set(timedScenes.scenes.filter(item => item.audio?.some(clip => clip.assetId === id)).map(item => item.id));
     const affectedIntros = intros.intros.filter(item => item.audio?.some(clip => clip.assetId === id)).map(item => item.name);
+    const affectedCredits = credits.credits.filter(item => item.audio?.some(clip => clip.assetId === id)).map(item => item.name);
     const affectedEpisodes = episodes.episodes.filter(item => item.audio?.some(clip => clip.assetId === id) || item.sceneIds.some(sceneId => affectedSceneIds.has(sceneId))).map(item => item.name);
-    const usage = [...affectedScenes.map(name => `Scene: ${name}`), ...affectedIntros.map(name => `Intro: ${name}`), ...affectedEpisodes.map(name => `Episode: ${name}`)];
+    const usage = [...affectedScenes.map(name => `Scene: ${name}`), ...affectedIntros.map(name => `Intro: ${name}`), ...affectedCredits.map(name => `Credits: ${name}`), ...affectedEpisodes.map(name => `Episode: ${name}`)];
     if (!window.confirm(`Delete “${asset.name}”?${usage.length ? ` This also removes its clips from:\n${usage.join('\n')}` : ''}`)) return;
     const nextTimed = { ...timedScenes, scenes: timedScenes.scenes.map(item => ({ ...item, audio: item.audio?.filter(clip => clip.assetId !== id) })) };
     const nextIntros = { ...intros, intros: intros.intros.map(item => ({ ...item, audio: item.audio?.filter(clip => clip.assetId !== id) })) };
+    const nextCredits = { ...credits, credits: credits.credits.map(item => ({ ...item, audio: item.audio?.filter(clip => clip.assetId !== id) })) };
     const nextEpisodes = { ...episodes, episodes: episodes.episodes.map(item => ({ ...item, audio: item.audio?.filter(clip => clip.assetId !== id) })) };
-    const beforeTimed = localStorage.getItem(TIMED_SCENES_KEY), beforeIntros = localStorage.getItem(INTROS_KEY), beforeEpisodes = localStorage.getItem(EPISODES_KEY);
+    const beforeTimed = localStorage.getItem(TIMED_SCENES_KEY), beforeIntros = localStorage.getItem(INTROS_KEY), beforeCredits = localStorage.getItem(CREDITS_KEY), beforeEpisodes = localStorage.getItem(EPISODES_KEY);
     try {
       localStorage.setItem(TIMED_SCENES_KEY, JSON.stringify(nextTimed));
       localStorage.setItem(INTROS_KEY, JSON.stringify(nextIntros));
+      localStorage.setItem(CREDITS_KEY, JSON.stringify(nextCredits));
       localStorage.setItem(EPISODES_KEY, JSON.stringify(nextEpisodes));
       await removeAudioAsset(id);
-      setTimedScenes(nextTimed); setIntros(nextIntros); setEpisodes(nextEpisodes); setAudioAssets(previous => previous.filter(item => item.id !== id));
+      setTimedScenes(nextTimed); setIntros(nextIntros); setCredits(nextCredits); setEpisodes(nextEpisodes); setAudioAssets(previous => previous.filter(item => item.id !== id));
     } catch {
       if (beforeTimed === null) localStorage.removeItem(TIMED_SCENES_KEY); else localStorage.setItem(TIMED_SCENES_KEY, beforeTimed);
       if (beforeIntros === null) localStorage.removeItem(INTROS_KEY); else localStorage.setItem(INTROS_KEY, beforeIntros);
+      if (beforeCredits === null) localStorage.removeItem(CREDITS_KEY); else localStorage.setItem(CREDITS_KEY, beforeCredits);
       if (beforeEpisodes === null) localStorage.removeItem(EPISODES_KEY); else localStorage.setItem(EPISODES_KEY, beforeEpisodes);
-      throw new Error('Audio could not be deleted. Saved scenes, intros and episodes were kept.');
+      throw new Error('Audio could not be deleted. Saved scenes, intros, credits and episodes were kept.');
     }
   };
 
@@ -391,7 +411,7 @@ export default function App() {
     <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
-      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section'); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
       <span className="local-badge"><span /> Saved in this browser</span>
     </aside>
     <main className="main">
@@ -399,6 +419,7 @@ export default function App() {
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
       {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} audioAssets={audioAssets} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
+      {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
       {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
