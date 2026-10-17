@@ -1,7 +1,8 @@
 import type { TimedLibrary, TimedScene } from './timedScenes';
+import { type AudioClip, validAudioClips } from './audio';
 
 export const EPISODES_KEY = 'brightsenappstales.episodes.v1';
-export type Episode = { id: string; name: string; sceneIds: string[] };
+export type Episode = { id: string; name: string; sceneIds: string[]; audio?: AudioClip[] };
 export type EpisodeLibrary = { version: 1; episodes: Episode[] };
 export const EMPTY_EPISODE_LIBRARY: EpisodeLibrary = { version: 1, episodes: [] };
 export type EpisodeResult = { ok: true; library: EpisodeLibrary } | { ok: false; error: string };
@@ -13,7 +14,7 @@ export function validateEpisodeLibrary(value: unknown): EpisodeResult {
   if (episodes.length > 100) return { ok: false, error: 'Too many episodes.' };
   const ids = new Set<string>();
   for (const episode of episodes) {
-    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id))) return { ok: false, error: 'An episode has invalid details.' };
+    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id)) || episode.audio !== undefined && !validAudioClips(episode.audio, 360000)) return { ok: false, error: 'An episode has invalid details.' };
     ids.add(episode.id);
   }
   return { ok: true, library: value as EpisodeLibrary };

@@ -1,11 +1,12 @@
 import { HEIGHT, Point, WIDTH } from './scene';
 import { directionTo, frameForDistance, TURN_MS } from './walking';
 import { WAVE_DURATION_MS, waveFrameAt } from './wave';
+import { type AudioClip, validAudioClips } from './audio';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
 export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear';
 export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point };
-export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[] };
+export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[] };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
 export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1 };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
@@ -22,7 +23,7 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
   if (scenes.length > 100) return { ok: false, error: 'Too many timed scenes.' };
   const seen = new Set<string>();
   for (const scene of scenes) {
-    if (!scene || typeof scene !== 'object' || !uuidId.test(scene.id) || seen.has(scene.id) || typeof scene.name !== 'string' || !scene.name.trim() || scene.name !== scene.name.trim() || scene.name.length > 80 || !finite(scene.duration) || scene.duration <= 0 || scene.duration > 3600 || !availablePlaces.includes(scene.placeId) || !scene.characters || typeof scene.characters !== 'object' || Array.isArray(scene.characters) || !Array.isArray(scene.actions)) return { ok: false, error: 'A timed scene has invalid details.' };
+    if (!scene || typeof scene !== 'object' || !uuidId.test(scene.id) || seen.has(scene.id) || typeof scene.name !== 'string' || !scene.name.trim() || scene.name !== scene.name.trim() || scene.name.length > 80 || !finite(scene.duration) || scene.duration <= 0 || scene.duration > 3600 || !availablePlaces.includes(scene.placeId) || !scene.characters || typeof scene.characters !== 'object' || Array.isArray(scene.characters) || !Array.isArray(scene.actions) || scene.audio !== undefined && !validAudioClips(scene.audio, scene.duration)) return { ok: false, error: 'A timed scene has invalid details.' };
     seen.add(scene.id);
     const ids = Object.keys(scene.characters);
     if (ids.length > 30 || ids.some(id => !characterId.test(id) || !point(scene.characters[id])) || scene.actions.length > 500) return { ok: false, error: 'A timed scene has invalid characters or positions.' };

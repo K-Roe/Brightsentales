@@ -1,3 +1,15 @@
 node_modules/
 dist/
 *.tsbuildinfo
+
+# Local configuration and disposable browser/test data
+.env
+.env.*
+!.env.example
+*.local
+*.log
+*isolated-profile*/
+proofs/m6-3/downloads/
+proofs/m6-3/test-audio/
+proofs/m6-3/frame-*.png
+proofs/m6-3/*-audio-inspect.wav

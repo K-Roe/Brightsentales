@@ -22,6 +22,22 @@ class TestStorage {
 }
 
 describe('complete Studio Backup', () => {
+  it('includes audio metadata and rejects missing clip assets or malformed audio bytes', () => {
+    const audioId = '33333333-3333-4333-8333-333333333333';
+    const asset = { id: audioId, name: 'Bell', kind: 'effect' as const, mime: 'audio/wav', duration: 1, size: 2, data: 'AAAA', sha256: '0'.repeat(64) };
+    const timed = { version: 1 as const, scenes: [{ id: '11111111-1111-4111-8111-111111111111', name: 'Scene', duration: 10, placeId: 'living-room', characters: {}, actions: [], audio: [{ id: '44444444-4444-4444-8444-444444444444', assetId: audioId, start: 1, trimStart: 0, trimEnd: 1, volume: .5, fadeIn: 0, fadeOut: 0 }] }] };
+    const withAudio = createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-16T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, timed, { version: 1, episodes: [] }, [asset]);
+    expect(validateStudioBackup(withAudio).ok).toBe(true);
+    expect(validateStudioBackup({ ...withAudio, audioAssets: [] }).ok).toBe(false);
+    expect(validateStudioBackup({ ...withAudio, audioAssets: [{ ...asset, data: '@@@@' }] }).ok).toBe(false);
+    expect(validateStudioBackup({ ...withAudio, version: 4, audioAssets: undefined }).ok).toBe(false);
+  });
+  it('opens a version 4 episode backup without audio', () => {
+    const { audioAssets: _audioAssets, ...older } = backup;
+    const result = validateStudioBackup({ ...older, version: 4 });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.backup.audioAssets).toBeNull();
+  });
   it('restores episodes and referenced timed scenes together, with stable IDs', () => {
     const timed: TimedLibrary = { version: 1, scenes: [{ id: '11111111-1111-4111-8111-111111111111', name: 'Hello', duration: 10, placeId: 'living-room', characters: {}, actions: [] }] };
     const episodes = { version: 1 as const, episodes: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Episode', sceneIds: [timed.scenes[0].id, timed.scenes[0].id] }] };

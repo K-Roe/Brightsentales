@@ -1,0 +1,86 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "audio-library-desktop.png",
+    "scene-audio-timeline.png",
+    "episode-audio-timeline.png",
+    "backup-restored-audio.png"
+  ],
+  "initialStorage": 0,
+  "imported": [
+    "music-33s.wav",
+    "chime-one.wav",
+    "chime-two.wav",
+    "scene-music.wav"
+  ],
+  "clips": {
+    "scene": [
+      1,
+      2,
+      0
+    ],
+    "episode": 1
+  },
+  "paused": "5.4s / 33.0s",
+  "end": {
+    "clock": "33.0s / 33.0s",
+    "button": "Play"
+  },
+  "recording": {
+    "frames": 174,
+    "created": true
+  },
+  "trimmed": "1",
+  "volume": "0.25",
+  "seekBefore": {
+    "clock": "20.0s / 33.0s",
+    "button": "Play",
+    "disabled": true
+  },
+  "seekCaptureStarted": true,
+  "seekPlayStarted": true,
+  "seekAfter": {
+    "clock": "21.8s / 33.0s",
+    "button": "Pause"
+  },
+  "seeked": "21.8s / 33.0s",
+  "restartButton": "Pause",
+  "restarted": "0.5s / 33.0s",
+  "backup": {
+    "version": 5,
+    "assets": 4,
+    "sceneClips": [
+      1,
+      2,
+      0
+    ],
+    "episodeClips": 1
+  },
+  "restoreInitialStorage": 0,
+  "deletionWarning": "Delete “chime-one.wav”? This also removes its clips from:\nScene: Max Arrives\nEpisode: Our First Episode",
+  "restored": {
+    "scenes": 3,
+    "episodes": 1
+  },
+  "restoredAudio": [
+    "chime-one.wav",
+    "scene-music.wav",
+    "chime-two.wav",
+    "music-33s.wav"
+  ],
+  "afterCancelledDelete": 4,
+  "afterConfirmedDelete": {
+    "assets": 3,
+    "sceneClips": [
+      0,
+      2,
+      0
+    ],
+    "episodeClips": 1
+  },
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}

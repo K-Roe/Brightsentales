@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { Brightling } from './maker';
 import { makePack } from './maker';
 import SceneTimeline from './SceneTimeline';
+import AudioPanel from './AudioPanel';
+import type { AudioAsset } from './audio';
+import { scenePlaybackClips, useAudioPlayback } from './audioPlayback';
 import { HEIGHT, Point, WIDTH } from './scene';
 import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
@@ -9,7 +12,7 @@ import { advanceSceneTime, stateAt, validateTimedLibrary, waveDurationSeconds, t
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
-type Props = { library: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: TimedLibrary) => boolean; requestedSceneId?: string | null };
+type Props = { library: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: TimedLibrary) => boolean; requestedSceneId?: string | null; audioAssets?: AudioAsset[] };
 const loadImage = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = url; });
 const builtInPack = async (id: 'max' | 'maxine', max: MaxOutfit, maxine: MaxineOutfit): Promise<Pack> => {
   const source = (pose: 'idle' | 'side' | 'wave', frame = 0) => id === 'max' ? maxSpriteSource(max, pose, frame) : maxineSpriteSource(maxine, pose, frame);
@@ -22,7 +25,7 @@ const actionNames: Record<ActionType, string> = { appear: 'Appear', walk: 'Walk 
 const fmt = (time: number) => `${time.toFixed(1)}s`;
 const stagePoint = (event: React.PointerEvent<HTMLCanvasElement>): Point => { const box = event.currentTarget.getBoundingClientRect(); return { x: Math.round((event.clientX - box.left) * WIDTH / box.width), y: Math.round((event.clientY - box.top) * HEIGHT / box.height) }; };
 
-export default function SceneMaker({ library, characters, places, maxOutfit, maxineOutfit, issue, onSave, requestedSceneId }: Props) {
+export default function SceneMaker({ library, characters, places, maxOutfit, maxineOutfit, issue, onSave, requestedSceneId, audioAssets = [] }: Props) {
   const readyPlaces = placesIn(places).filter(place => place.artworkAvailable && place.background);
   const [scene, setScene] = useState<TimedScene | null>(null);
   const [time, setTime] = useState(0);
@@ -41,6 +44,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const update = (change: (current: TimedScene) => TimedScene) => { setPlaying(false); setScene(current => current ? change(current) : null); };
   const validation = scene ? validateTimedLibrary({ version: 1, scenes: [scene] }, readyPlaces.map(place => place.id)) : null;
   const activeAction = scene?.actions.find(action => action.id === selectedAction) ?? null;
+  const audio = useAudioPlayback(scenePlaybackClips(scene?.audio), audioAssets, time, playing, setMessage);
 
   useEffect(() => {
     if (!scene) return;
@@ -166,7 +170,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   return <section className="scene-maker scene-visual"><div className="scene-heading"><button onClick={() => { setPlaying(false); setScene(null); }}>← All scenes</button><h1>{scene.name}</h1><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button></div>
     <div className="scene-setup"><label>Scene name<input aria-label="Scene name" maxLength={80} value={scene.name} onChange={event => update(value => ({ ...value, name: event.target.value }))} /></label><label>Place<select aria-label="Scene place" value={scene.placeId} onChange={event => update(value => ({ ...value, placeId: event.target.value }))}>{readyPlaces.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select></label><label>Duration (seconds)<input aria-label="Scene duration" type="number" min="1" max="3600" step="1" value={scene.duration} onChange={event => update(value => ({ ...value, duration: Number(event.target.value) }))} /></label></div>
     <div className="scene-stage-main"><div className="scene-stage"><div className="scene-stage-caption"><strong>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Scene'}</strong><span>{targetAction ? 'Click the stage to set the position' : time === 0 ? 'Click a Brightling, then drag to place' : 'Select a Brightling or scrub to a new time'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} aria-label="Timed scene stage: select Brightlings, drag at zero seconds, or click a walking destination" />
-      <div className="scene-playback"><button onClick={() => setPlaying(value => !value)} disabled={!validation?.ok || time >= scene.duration && !playing}>{playing ? 'Pause' : 'Play'}</button><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
+      <div className="scene-playback"><button onClick={() => { if (!playing) audio.startAt(time); setPlaying(value => !value); }} disabled={!validation?.ok || time >= scene.duration && !playing}>{playing ? 'Pause' : 'Play'}</button><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
       <aside className="scene-director"><h2>Direct your Brightlings</h2><label>Add Brightling<select aria-label="Add Brightling" value="" onChange={event => { const id = event.target.value; if (!id) return; const point = initialPoint(Object.keys(scene.characters).length); update(value => ({ ...value, characters: { ...value.characters, [id]: point }, actions: [...value.actions, { id: crypto.randomUUID(), characterId: id, type: 'appear', start: 0, duration: 0, point }] })); setSelectedCharacter(id); setSelectedAction(null); setTime(0); setMessage(`Drag ${characterName(id)} on the stage to set the starting position.`); }}><option value="">Choose a Brightling…</option>{cast.filter(item => !Object.hasOwn(scene.characters, item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
         <div className="director-cast">{Object.keys(scene.characters).map(id => <button key={id} className={selectedCharacter === id ? 'active' : ''} onClick={() => { setSelectedCharacter(id); setSelectedAction(null); setTargetAction(null); }}>{characterName(id)}</button>)}</div>
         {selectedCharacter ? <><p className="director-tip">{time === 0 ? `Drag ${characterName(selectedCharacter)} on the stage to place them.` : `Direct ${characterName(selectedCharacter)} at ${fmt(time)}.`}</p><div className="director-actions">{(Object.keys(actionNames) as ActionType[]).map(type => <button key={type} onClick={() => addAction(type)}>{actionNames[type]}</button>)}</div>
@@ -181,6 +185,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     </section>}
     {selectedPosition && !activeAction && <details className="advanced-position scene-initial-advanced"><summary>Advanced starting position for {characterName(selectedCharacter!)}</summary><div><label>X<input aria-label={`${characterName(selectedCharacter!)} initial X`} type="number" value={selectedPosition.x} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, x: Number(event.target.value) })} /></label><label>Y<input aria-label={`${characterName(selectedCharacter!)} initial Y`} type="number" value={selectedPosition.y} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, y: Number(event.target.value) })} /></label></div></details>}
     <SceneTimeline scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} name={characterName} onSeek={value => { setPlaying(false); setTime(value); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} />
+    <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onSeek={value => { setPlaying(false); setTime(value); }} />
     {validation && !validation.ok && <p role="alert" className="storage-alert">{validation.error}</p>}<p role="status" className="scene-status">{message}</p>
   </section>;
 }

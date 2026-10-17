@@ -19,7 +19,7 @@ type Props = {
   onDelete: (id: string) => boolean;
   onImport: (items: Brightling[], mode: ImportMode) => boolean;
   onAdd: (item: Brightling) => void;
-  onExportStudio: () => StudioBackup | null;
+  onExportStudio: () => Promise<StudioBackup | null>;
   onImportStudio: (backup: StudioBackup) => Promise<boolean>;
 };
 
@@ -95,9 +95,9 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Invalid backup file.'); }
     finally { if (fileRef.current) fileRef.current.value = ''; }
   };
-  const exportStudio = () => {
+  const exportStudio = async () => {
     try {
-      const backup = onExportStudio();
+      const backup = await onExportStudio();
       if (!backup) throw new Error('Stored characters or scene could not be read. Existing data was left unchanged.');
       const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
       const link = document.createElement('a'); link.href = url; link.download = `brightsenappstales-studio-${backup.createdAt.slice(0, 10)}.json`; link.click();
@@ -108,12 +108,12 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
   const importStudio = async (file: File | undefined) => {
     if (!file) return;
     try {
-      if (file.size > 20_000_000) throw new Error('The Studio Backup is too large.');
+      if (file.size > 100_000_000) throw new Error('The Studio Backup is too large.');
       const result = validateStudioBackup(JSON.parse(await file.text()));
       if (!result.ok) throw new Error(result.error);
-      if (!window.confirm(`Restore Studio Backup from ${result.backup.createdAt}? This replaces the current custom Brightling library, saved Playground scene and Places library with ${result.backup.characters.length} character(s), ${result.backup.scene ? 'a saved scene' : 'no saved scene'}, ${result.backup.places.folders.length} folder(s) and ${result.backup.places.customPlaces.length} custom place(s). ${result.backup.timedScenes ? `It also restores ${result.backup.timedScenes.scenes.length} timed scene(s).` : 'This older backup has no timed scenes; existing compatible timed scenes are kept.'} ${result.backup.episodes ? `It replaces saved episodes with ${result.backup.episodes.episodes.length} episode(s).` : 'This older backup has no episodes; existing episodes are kept.'} Export your current Studio Backup first if you want to keep it.`)) return;
+      if (!window.confirm(`Restore Studio Backup from ${result.backup.createdAt}? This replaces the current custom Brightling library, saved Playground scene and Places library with ${result.backup.characters.length} character(s), ${result.backup.scene ? 'a saved scene' : 'no saved scene'}, ${result.backup.places.folders.length} folder(s) and ${result.backup.places.customPlaces.length} custom place(s). ${result.backup.timedScenes ? `It also restores ${result.backup.timedScenes.scenes.length} timed scene(s).` : 'This older backup has no timed scenes; existing compatible timed scenes are kept.'} ${result.backup.episodes ? `It replaces saved episodes with ${result.backup.episodes.episodes.length} episode(s).` : 'This older backup has no episodes; existing episodes are kept.'} ${result.backup.audioAssets ? `It replaces the Audio Library with ${result.backup.audioAssets.length} file(s).` : 'This older backup has no audio library; existing audio is kept.'} Export your current Studio Backup first if you want to keep it.`)) return;
       if (!await onImportStudio(result.backup)) throw new Error('Studio restore failed. Check browser storage and artwork.');
-      resetForm(); setMessage('Studio Backup restored. Characters, scenes and Places library are ready.');
+      resetForm(); setMessage('Studio Backup restored. Characters, scenes, episodes and audio are ready.');
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Invalid Studio Backup.'); }
     finally { if (studioFileRef.current) studioFileRef.current.value = ''; }
   };
@@ -149,8 +149,8 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
         <div className="backup-controls"><button onClick={exportLibrary}>{storageIssue ? 'Export Stored Data' : 'Export Library'}</button><label htmlFor="import-mode">Import as<select id="import-mode" value={importMode} onChange={event => setImportMode(event.target.value as ImportMode)}><option value="merge">Merge with library</option><option value="replace">Replace library</option></select></label><label className="import-file">Import Library<input ref={fileRef} type="file" accept=".json,application/json" onChange={event => void importFile(event.target.files?.[0])} /></label></div>
       </section>
       <section className="library-backup overview-backup" aria-label="Studio backup">
-        <div><h3>Back up the whole Studio</h3><p>Includes custom Brightlings, timed scenes, episodes, the saved Playground scene, Places folders and uploaded artwork. Keep the downloaded file somewhere safe; clearing browser data removes local copies.</p></div>
-        <div className="backup-controls"><button onClick={exportStudio}>Export Studio Backup</button><label className="import-file">Import Studio Backup<input ref={studioFileRef} type="file" accept=".json,application/json" onChange={event => void importStudio(event.target.files?.[0])} /></label></div>
+        <div><h3>Back up the whole Studio</h3><p>Includes custom Brightlings, timed scenes, episodes, audio files, the saved Playground scene, Places folders and uploaded artwork. Keep the downloaded file somewhere safe; clearing browser data removes local copies.</p></div>
+        <div className="backup-controls"><button onClick={() => void exportStudio()}>Export Studio Backup</button><label className="import-file">Import Studio Backup<input ref={studioFileRef} type="file" accept=".json,application/json" onChange={event => void importStudio(event.target.files?.[0])} /></label></div>
       </section>
     </> : <section className="maker-panel character-maker" ref={formRef} aria-label="Brightling Maker">
       <div className="maker-fields">
