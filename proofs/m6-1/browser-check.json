@@ -1,0 +1,252 @@
+{
+  "profile": "isolated temporary Chrome profile",
+  "screenshots": [
+    "stage-before-placement.png",
+    "stage-after-placement.png",
+    "walk-path.png",
+    "timeline-before-edit.png",
+    "timeline-after-edit.png",
+    "timeline-seek-15.png",
+    "timeline-playhead-dragged.png",
+    "reopened-desktop.png",
+    "editor-mobile.png",
+    "timeline-mobile.png",
+    "backup-restored.png",
+    "legacy-m6-opened.png"
+  ],
+  "errors": [],
+  "initialStorage": 0,
+  "placed": [
+    "1100",
+    "820"
+  ],
+  "editedWalk": "Max Walk To at 2 seconds",
+  "seekLabel": "15.0s / 30.0s",
+  "draggedPlayheadLabel": "20.0s / 30.0s",
+  "editFrameCount": 27,
+  "editRecordingCreated": true,
+  "saved": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "c75a2781-3c59-428d-9fe9-aed4491425d3",
+        "name": "A thirty-second hello",
+        "duration": 30,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 300,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1100,
+            "y": 820
+          }
+        },
+        "actions": [
+          {
+            "id": "4c1f3b14-a3f9-4dfd-b5e7-3af95f0aebe9",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 300,
+              "y": 790
+            }
+          },
+          {
+            "id": "7b27c4c6-dccc-4d72-8f22-31e2be8427b7",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1100,
+              "y": 820
+            }
+          },
+          {
+            "id": "5d864f7e-3ea6-46d4-a48a-0847043b1541",
+            "characterId": "max",
+            "type": "walk",
+            "start": 2,
+            "duration": 4,
+            "point": {
+              "x": 820,
+              "y": 790
+            }
+          },
+          {
+            "id": "53af2e59-0b83-472c-8aaf-c89f2b6d1e76",
+            "characterId": "max",
+            "type": "wave",
+            "start": 8,
+            "duration": 1.62
+          },
+          {
+            "id": "3742b7b5-3568-4794-9822-1ce5d11c47e3",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 4,
+            "duration": 4,
+            "point": {
+              "x": 910,
+              "y": 820
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "reopened": "A thirty-second hello",
+  "endTime": "30.0s / 30.0s",
+  "endButton": "Play",
+  "recordingCreated": true,
+  "restored": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "c75a2781-3c59-428d-9fe9-aed4491425d3",
+        "name": "A thirty-second hello",
+        "duration": 30,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 300,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1100,
+            "y": 820
+          }
+        },
+        "actions": [
+          {
+            "id": "4c1f3b14-a3f9-4dfd-b5e7-3af95f0aebe9",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 300,
+              "y": 790
+            }
+          },
+          {
+            "id": "7b27c4c6-dccc-4d72-8f22-31e2be8427b7",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1100,
+              "y": 820
+            }
+          },
+          {
+            "id": "5d864f7e-3ea6-46d4-a48a-0847043b1541",
+            "characterId": "max",
+            "type": "walk",
+            "start": 2,
+            "duration": 4,
+            "point": {
+              "x": 820,
+              "y": 790
+            }
+          },
+          {
+            "id": "53af2e59-0b83-472c-8aaf-c89f2b6d1e76",
+            "characterId": "max",
+            "type": "wave",
+            "start": 8,
+            "duration": 1.62
+          },
+          {
+            "id": "3742b7b5-3568-4794-9822-1ce5d11c47e3",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 4,
+            "duration": 4,
+            "point": {
+              "x": 910,
+              "y": 820
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "legacyCard": "Max says hello",
+  "legacySaved": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "dec3ee4d-6ae1-4599-9bb5-d829c5d9efc7",
+        "name": "Max says hello",
+        "duration": 10,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 520,
+            "y": 790
+          },
+          "maxine": {
+            "x": 750,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "e4b9befb-1673-4fec-93ab-22beafbddad5",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 520,
+              "y": 790
+            }
+          },
+          {
+            "id": "f4a4fe99-b43a-4f28-96dd-a9e1a0172c06",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 750,
+              "y": 790
+            }
+          },
+          {
+            "id": "957c5d2f-00f6-4997-9e99-bcebe4919836",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0,
+            "duration": 3,
+            "point": {
+              "x": 950,
+              "y": 790
+            }
+          },
+          {
+            "id": "00076149-2842-4f83-828a-a31f0b4d8dd4",
+            "characterId": "max",
+            "type": "wave",
+            "start": 4,
+            "duration": 1.62
+          },
+          {
+            "id": "28b29e5d-3548-4c57-ba84-ef23513382ad",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 2,
+            "duration": 1.62
+          }
+        ]
+      }
+    ]
+  },
+  "profileRemoved": true
+}

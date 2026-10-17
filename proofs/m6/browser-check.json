@@ -1,0 +1,135 @@
+{
+  "screenshots": [
+    "scenes-empty.png",
+    "action-editor.png",
+    "action-controls.png",
+    "time-0.png",
+    "time-2-5.png",
+    "time-5.png",
+    "time-10.png",
+    "playback-end.png",
+    "scene-maxine-alternative-outfit.png",
+    "editor-mobile.png",
+    "restored-scenes-mobile.png"
+  ],
+  "errors": [],
+  "profile": "isolated Chrome profile",
+  "initialStorage": 0,
+  "validation": null,
+  "actionRows": [
+    {
+      "name": "Max",
+      "type": "appear",
+      "start": "0"
+    },
+    {
+      "name": "Maxine",
+      "type": "appear",
+      "start": "0"
+    },
+    {
+      "name": "Max",
+      "type": "walk",
+      "start": "0",
+      "duration": "3"
+    },
+    {
+      "name": "Maxine",
+      "type": "wave",
+      "start": "2",
+      "duration": "1.62"
+    },
+    {
+      "name": "Max",
+      "type": "wave",
+      "start": "4",
+      "duration": "1.62"
+    }
+  ],
+  "saveMessage": "Scene saved in this browser.",
+  "savedData": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "dec3ee4d-6ae1-4599-9bb5-d829c5d9efc7",
+        "name": "Max says hello",
+        "duration": 10,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 520,
+            "y": 790
+          },
+          "maxine": {
+            "x": 750,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "e4b9befb-1673-4fec-93ab-22beafbddad5",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 520,
+              "y": 790
+            }
+          },
+          {
+            "id": "f4a4fe99-b43a-4f28-96dd-a9e1a0172c06",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 750,
+              "y": 790
+            }
+          },
+          {
+            "id": "957c5d2f-00f6-4997-9e99-bcebe4919836",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0,
+            "duration": 3,
+            "point": {
+              "x": 950,
+              "y": 790
+            }
+          },
+          {
+            "id": "00076149-2842-4f83-828a-a31f0b4d8dd4",
+            "characterId": "max",
+            "type": "wave",
+            "start": 4,
+            "duration": 1.62
+          },
+          {
+            "id": "28b29e5d-3548-4c57-ba84-ef23513382ad",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 2,
+            "duration": 1.62
+          }
+        ]
+      }
+    ]
+  },
+  "pausedTime": "0.3s / 10.0s",
+  "pausedTimeAfterWait": "0.3s / 10.0s",
+  "playbackTime": "10.0s / 10.0s",
+  "playButton": "Play",
+  "reopenedCard": "Max says hello",
+  "reopenedName": "Max says hello",
+  "outfitSaved": "tshirt-leggings",
+  "backupSceneCount": 1,
+  "restoredSceneCount": 1,
+  "restoredOutfit": "tshirt-leggings",
+  "editedIdStable": true,
+  "countAfterDuplicate": 2,
+  "countAfterDelete": 1,
+  "recordingCreated": true,
+  "profileRemoved": true
+}

@@ -1,0 +1,203 @@
+{
+  "version": 4,
+  "createdAt": "2026-10-17T12:10:15.589Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "11111111-1111-4111-8111-000000000001",
+        "name": "Max Arrives",
+        "duration": 10,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 300,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "11111111-1111-4111-8111-000000000011",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 300,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000012",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0,
+            "duration": 6,
+            "point": {
+              "x": 900,
+              "y": 790
+            }
+          }
+        ]
+      },
+      {
+        "id": "11111111-1111-4111-8111-000000000002",
+        "name": "Maxine Joins",
+        "duration": 15,
+        "placeId": "living-room",
+        "characters": {
+          "maxine": {
+            "x": 1100,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "11111111-1111-4111-8111-000000000021",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1100,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000022",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 1,
+            "duration": 5,
+            "point": {
+              "x": 720,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000023",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 7,
+            "duration": 3
+          }
+        ]
+      },
+      {
+        "id": "11111111-1111-4111-8111-000000000003",
+        "name": "Goodbye",
+        "duration": 8,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 300,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1100,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "11111111-1111-4111-8111-000000000031",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 300,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000032",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1100,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000033",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0,
+            "duration": 7,
+            "point": {
+              "x": 1820,
+              "y": 790
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000034",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 0,
+            "duration": 7,
+            "point": {
+              "x": 1820,
+              "y": 820
+            }
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000035",
+            "characterId": "max",
+            "type": "disappear",
+            "start": 8,
+            "duration": 0
+          },
+          {
+            "id": "11111111-1111-4111-8111-000000000036",
+            "characterId": "maxine",
+            "type": "disappear",
+            "start": 8,
+            "duration": 0
+          }
+        ]
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "6be85050-44ea-43a8-925d-ab6b15f5b9a5",
+        "name": "Our First Episode",
+        "sceneIds": [
+          "11111111-1111-4111-8111-000000000001",
+          "11111111-1111-4111-8111-000000000002",
+          "11111111-1111-4111-8111-000000000003"
+        ]
+      }
+    ]
+  }
+}

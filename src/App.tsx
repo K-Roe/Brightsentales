@@ -3,13 +3,17 @@ import { Brightling, LIBRARY_KEY, makeFrame, makePack } from './maker';
 import { decodeLibrary, ImportMode, prepareImport, pruneScene, withoutCharacter } from './library';
 import Characters from './Characters';
 import Places from './Places';
+import SceneMaker from './SceneMaker';
+import EpisodeMaker from './EpisodeMaker';
+import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
+import { decodeTimedLibrary, EMPTY_TIMED_LIBRARY, pruneTimedScenes, TIMED_SCENES_KEY, TimedLibrary, validateTimedLibrary } from './timedScenes';
 import { CharacterId, clampPoint, DEFAULT_SCENE, HEIGHT, moveTowards, parseScene, Point, Scene, STORAGE_KEY, WIDTH } from './scene';
 import { directionTo, frameForDistance, Motion, STOP_MS, TURN_MS, WALK_SPEED } from './walking';
 import { waveFrameAt } from './wave';
 import { generateBrightlingFrames, OLIVER_SPEC, svgDataUrl } from './brightling';
 import { createStudioBackup, recoverStudioRestore, restoreStudioBackup, StudioBackup, validateStudioBackup } from './studioBackup';
-import { decodePlaceOrganisation, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, validatePlaceOrganisation } from './placeFolders';
-import { maxOutfitFrom, maxSpriteSource, type MaxOutfit } from './outfit';
+import { decodePlaceOrganisation, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
+import { maxOutfitFrom, maxineOutfitFrom, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
@@ -19,8 +23,10 @@ const legacySprites = { idle: svgDataUrl(legacyFrames.idle), side: legacyFrames.
 const emptyMotion = (): Motion => ({ direction: 1, distance: 0, turnUntil: 0, stopUntil: 0, moving: false });
 const readScene = (): Scene => { try { return parseScene(localStorage.getItem(STORAGE_KEY)) ?? structuredClone(DEFAULT_SCENE); } catch { return structuredClone(DEFAULT_SCENE); } };
 const readLibrary = () => { try { return decodeLibrary(localStorage.getItem(LIBRARY_KEY)); } catch { return { ok: false as const, error: 'Browser storage is unavailable.' }; } };
-const spriteSource = (id: string, pose: 'idle' | 'side' | 'wave', frame = 0, maxOutfit: MaxOutfit = 'original'): string => {
+const placesInReady = (organisation: PlaceOrganisation) => placesIn(organisation).filter(place => place.artworkAvailable && place.background).map(place => place.id);
+const spriteSource = (id: string, pose: 'idle' | 'side' | 'wave', frame = 0, maxOutfit: MaxOutfit = 'original', maxineOutfit: MaxineOutfit = 'original'): string => {
   if (id === 'max') return maxSpriteSource(maxOutfit, pose, frame);
+  if (id === 'maxine') return maxineSpriteSource(maxineOutfit, pose, frame);
   if (id === 'oliver') return pose === 'idle' ? legacySprites.idle : legacySprites[pose][frame];
   if (pose === 'idle') return `/art/${id}-0.png`;
   if (pose === 'side') return frame === 0 ? `/art/${id}-side-0.png` : `/art/${id}-side-v3-${frame}.png`;
@@ -50,10 +56,18 @@ export default function App() {
   const [placesIssue, setPlacesIssue] = useState<string | null>(initialPlaces.ok ? null : initialPlaces.error);
   const [library, setLibrary] = useState<Brightling[]>(initialLibrary.ok ? initialLibrary.characters : []);
   const [libraryIssue, setLibraryIssue] = useState<string | null>(initialLibrary.ok ? null : initialLibrary.error);
+  const [initialTimed] = useState(() => { try { return decodeTimedLibrary(localStorage.getItem(TIMED_SCENES_KEY), placesInReady(initialPlaces.ok ? initialPlaces.organisation : DEFAULT_PLACE_ORGANISATION)); } catch { return { ok: false as const, error: 'Browser timed scene storage is unavailable.' }; } });
+  const [timedScenes, setTimedScenes] = useState<TimedLibrary>(initialTimed.ok ? initialTimed.library : structuredClone(EMPTY_TIMED_LIBRARY));
+  const [timedIssue, setTimedIssue] = useState<string | null>(initialTimed.ok ? null : initialTimed.error);
+  const [initialEpisodes] = useState(() => { try { return decodeEpisodeLibrary(localStorage.getItem(EPISODES_KEY)); } catch { return { ok: false as const, error: 'Browser episode storage is unavailable.' }; } });
+  const [episodes, setEpisodes] = useState<EpisodeLibrary>(initialEpisodes.ok ? initialEpisodes.library : structuredClone(EMPTY_EPISODE_LIBRARY));
+  const [episodeIssue, setEpisodeIssue] = useState<string | null>(initialEpisodes.ok ? null : initialEpisodes.error);
   const [sceneIssue, setSceneIssue] = useState<string | null>(() => { try { const raw = localStorage.getItem(STORAGE_KEY); return raw !== null && !parseScene(raw) ? 'Saved scene JSON is invalid. It has not been overwritten.' : null; } catch { return 'Browser scene storage is unavailable.'; } });
-  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'playground'>('characters');
+  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'episodes' | 'playground'>('characters');
+  const [requestedSceneId, setRequestedSceneId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
   const [maxOutfit, setMaxOutfit] = useState<MaxOutfit>(() => maxOutfitFrom(savedRef.current.maxOutfit));
+  const [maxineOutfit, setMaxineOutfit] = useState<MaxineOutfit>(() => maxineOutfitFrom(savedRef.current.maxineOutfit));
   const [playing, setPlaying] = useState(false);
   const [waving, setWaving] = useState(false);
   const [notice, setNotice] = useState('Drag a character, then click the floor to choose where they walk.');
@@ -78,7 +92,7 @@ export default function App() {
     Promise.all([loadImage('/art/living-room.png'), ...ids.map(async id => {
       const item = library.find(character => character.id === id);
       if (item) return makePack(item).catch(error => { if (active) setUnavailable(previous => previous.includes(id) ? previous : [...previous, id]); throw error; });
-      return { idle: await loadImage(spriteSource(id, 'idle', 0, maxOutfit)), side: await Promise.all(Array.from({ length: 5 }, (_, frame) => loadImage(spriteSource(id, 'side', frame, maxOutfit)))), wave: await Promise.all(Array.from({ length: 3 }, (_, frame) => loadImage(spriteSource(id, 'wave', frame, maxOutfit)))) };
+      return { idle: await loadImage(spriteSource(id, 'idle', 0, maxOutfit, maxineOutfit)), side: await Promise.all(Array.from({ length: 5 }, (_, frame) => loadImage(spriteSource(id, 'side', frame, maxOutfit, maxineOutfit)))), wave: await Promise.all(Array.from({ length: 3 }, (_, frame) => loadImage(spriteSource(id, 'wave', frame, maxOutfit, maxineOutfit)))) };
     })]).then(([room, ...packs]) => {
       if (!active) return;
       const sprites = Object.fromEntries(ids.map((id, index) => [id, packs[index]])) as Record<string, Pack>;
@@ -131,7 +145,7 @@ export default function App() {
       animation = requestAnimationFrame(render);
     }).catch(() => { if (active) setNotice('Artwork could not load. Check the local assets and refresh.'); });
     return () => { active = false; cancelAnimationFrame(animation); };
-  }, [sceneIds, library, unavailable, maxOutfit]);
+  }, [sceneIds, library, unavailable, maxOutfit, maxineOutfit]);
 
   const pointFromEvent = (event: React.PointerEvent<HTMLCanvasElement>): Point => { const box = event.currentTarget.getBoundingClientRect(); return { x: (event.clientX - box.left) * WIDTH / box.width, y: (event.clientY - box.top) * HEIGHT / box.height }; };
   const select = (id: CharacterId) => { selectedRef.current = id; setSelected(id); setNotice(`${name(id)} selected. Drag to position, then click the floor for a destination.`); };
@@ -153,7 +167,7 @@ export default function App() {
   };
   const wave = () => { if (playingRef.current || waveRef.current) return; waveRef.current = { id: selectedRef.current, startedAt: performance.now() }; setWaving(true); setNotice(`${name(selectedRef.current)} is waving hello!`); };
   const reset = () => { playingRef.current = false; setPlaying(false); waveRef.current = null; setWaving(false); for (const id of sceneIds) { motionsRef.current[id].moving = false; motionsRef.current[id].stopUntil = 0; positionsRef.current[id] = { ...savedRef.current.characters[id].start }; } setNotice('Restored the saved starting positions.'); };
-  const save = () => { if (!recovery.ok || sceneIssue) { setNotice(recovery.error ?? sceneIssue ?? 'Studio storage is unavailable.'); return; } const scene: Scene = { version: 1, characters: Object.fromEntries(sceneIds.map(id => [id, { start: { ...positionsRef.current[id] }, destination: destinationsRef.current[id] && { ...destinationsRef.current[id] } }])), ...(maxOutfit === 'original' ? {} : { maxOutfit }) }; try { localStorage.setItem(STORAGE_KEY, JSON.stringify(scene)); savedRef.current = scene; setNotice('Scene saved on this device. Reset now returns to these positions.'); } catch { setNotice('Could not save the scene in this browser. Check site storage settings.'); } };
+  const save = () => { if (!recovery.ok || sceneIssue) { setNotice(recovery.error ?? sceneIssue ?? 'Studio storage is unavailable.'); return; } const scene: Scene = { version: 1, characters: Object.fromEntries(sceneIds.map(id => [id, { start: { ...positionsRef.current[id] }, destination: destinationsRef.current[id] && { ...destinationsRef.current[id] } }])), ...(maxOutfit === 'original' ? {} : { maxOutfit }), ...(maxineOutfit === 'original' ? {} : { maxineOutfit }) }; try { localStorage.setItem(STORAGE_KEY, JSON.stringify(scene)); savedRef.current = scene; setNotice('Scene saved on this device. Reset now returns to these positions.'); } catch { setNotice('Could not save the scene in this browser. Check site storage settings.'); } };
   const saveMaxOutfit = (outfit: MaxOutfit): boolean => {
     if (!recovery.ok || sceneIssue) return false;
     const scene: Scene = { ...savedRef.current, ...(outfit === 'original' ? {} : { maxOutfit: outfit }) };
@@ -164,10 +178,20 @@ export default function App() {
       return true;
     } catch { return false; }
   };
+  const saveMaxineOutfit = (outfit: MaxineOutfit): boolean => {
+    if (!recovery.ok || sceneIssue) return false;
+    const scene: Scene = { ...savedRef.current, ...(outfit === 'original' ? {} : { maxineOutfit: outfit }) };
+    if (outfit === 'original') delete scene.maxineOutfit;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(scene));
+      savedRef.current = scene; setMaxineOutfit(outfit);
+      return true;
+    } catch { return false; }
+  };
   const open = () => {
     let scene: Scene | null = null; try { scene = parseScene(localStorage.getItem(STORAGE_KEY)); } catch { /* storage unavailable */ }
     if (!scene) { setNotice(sceneIssue ?? 'No saved scene found on this device yet.'); return; }
-    playingRef.current = false; setPlaying(false); waveRef.current = null; setWaving(false); savedRef.current = scene; setMaxOutfit(maxOutfitFrom(scene.maxOutfit));
+    playingRef.current = false; setPlaying(false); waveRef.current = null; setWaving(false); savedRef.current = scene; setMaxOutfit(maxOutfitFrom(scene.maxOutfit)); setMaxineOutfit(maxineOutfitFrom(scene.maxineOutfit));
     const entries = Object.entries(scene.characters);
     for (const [id, character] of entries) { motionsRef.current[id] = emptyMotion(); positionsRef.current[id] = { ...character.start }; destinationsRef.current[id] = character.destination; }
     setSceneIds(entries.map(([id]) => id));
@@ -176,16 +200,20 @@ export default function App() {
   };
   const commitLibrary = (next: Brightling[], nextScene?: Scene): boolean => {
     try {
-      const oldLibrary = localStorage.getItem(LIBRARY_KEY), oldScene = localStorage.getItem(STORAGE_KEY);
+      const oldLibrary = localStorage.getItem(LIBRARY_KEY), oldScene = localStorage.getItem(STORAGE_KEY), oldTimed = localStorage.getItem(TIMED_SCENES_KEY);
+      const nextTimed = nextScene ? pruneTimedScenes(timedScenes, next.map(item => item.id)) : timedScenes;
       try {
         localStorage.setItem(LIBRARY_KEY, JSON.stringify(next));
         if (nextScene && oldScene !== null) localStorage.setItem(STORAGE_KEY, JSON.stringify(nextScene));
+        if (nextScene && oldTimed !== null) localStorage.setItem(TIMED_SCENES_KEY, JSON.stringify(nextTimed));
       } catch {
         if (oldLibrary === null) localStorage.removeItem(LIBRARY_KEY); else localStorage.setItem(LIBRARY_KEY, oldLibrary);
         if (oldScene === null) localStorage.removeItem(STORAGE_KEY); else localStorage.setItem(STORAGE_KEY, oldScene);
+        if (oldTimed === null) localStorage.removeItem(TIMED_SCENES_KEY); else localStorage.setItem(TIMED_SCENES_KEY, oldTimed);
         return false;
       }
       setLibrary(next); setLibraryIssue(null);
+      if (nextScene) setTimedScenes(nextTimed);
       return true;
     } catch { return false; }
   };
@@ -203,7 +231,7 @@ export default function App() {
     } catch { return false; }
   };
   const deleteBrightling = (id: string): boolean => {
-    if (!recovery.ok || libraryIssue || sceneIssue || !library.some(item => item.id === id)) return false;
+    if (!recovery.ok || libraryIssue || sceneIssue || timedIssue || !library.some(item => item.id === id)) return false;
     const next = library.filter(item => item.id !== id);
     const nextScene = withoutCharacter(persistedScene() ?? savedRef.current, id);
     if (!commitLibrary(next, nextScene)) return false;
@@ -213,7 +241,7 @@ export default function App() {
     return true;
   };
   const importBrightlings = (incoming: Brightling[], mode: ImportMode): boolean => {
-    if (!recovery.ok || sceneIssue || (libraryIssue && mode !== 'replace')) return false;
+    if (!recovery.ok || sceneIssue || timedIssue || (libraryIssue && mode !== 'replace')) return false;
     const result = prepareImport(library, incoming, mode);
     if (!result.ok) { setNotice(result.error); return false; }
     const nextScene = mode === 'replace' ? pruneScene(persistedScene() ?? savedRef.current, result.characters) : savedRef.current;
@@ -235,13 +263,16 @@ export default function App() {
     setSceneIds([...sceneIds, item.id]); select(item.id); setActiveTab('playground'); setNotice(`${item.name} added. Drag to place, then save the scene.`);
   };
   const exportStudio = (): StudioBackup | null => {
-    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue) return null;
+    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue || timedIssue || episodeIssue) return null;
     try {
       const storedLibrary = readLibrary();
       const storedPlaces = decodePlaceOrganisation(localStorage.getItem(PLACE_FOLDERS_KEY));
       const sceneRaw = localStorage.getItem(STORAGE_KEY);
       if (!storedLibrary.ok || !storedPlaces.ok) return null;
-      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation);
+      const storedTimed = decodeTimedLibrary(localStorage.getItem(TIMED_SCENES_KEY), placesInReady(storedPlaces.organisation));
+      const storedEpisodes = decodeEpisodeLibrary(localStorage.getItem(EPISODES_KEY));
+      if (!storedTimed.ok || !storedEpisodes.ok) return null;
+      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation, storedTimed.library, storedEpisodes.library);
       const checked = validateStudioBackup(candidate);
       return checked.ok ? checked.backup : null;
     } catch { return null; }
@@ -253,20 +284,40 @@ export default function App() {
       const result = restoreStudioBackup(localStorage, LIBRARY_KEY, STORAGE_KEY, backup);
       if (!result.ok) { setNotice(result.error ?? 'Studio restore failed.'); return false; }
       const scene = backup.scene ?? structuredClone(DEFAULT_SCENE);
-      savedRef.current = scene; setMaxOutfit(maxOutfitFrom(scene.maxOutfit));
+      savedRef.current = scene; setMaxOutfit(maxOutfitFrom(scene.maxOutfit)); setMaxineOutfit(maxineOutfitFrom(scene.maxineOutfit));
       positionsRef.current = Object.fromEntries(Object.entries(scene.characters).map(([id, value]) => [id, { ...value.start }]));
       destinationsRef.current = Object.fromEntries(Object.entries(scene.characters).map(([id, value]) => [id, value.destination]));
       motionsRef.current = Object.fromEntries(Object.keys(scene.characters).map(id => [id, emptyMotion()]));
       selectedRef.current = 'max'; setSelected('max'); playingRef.current = false; setPlaying(false); waveRef.current = null; setWaving(false);
       setSceneIds(Object.keys(scene.characters)); setLibrary(backup.characters); setLibraryIssue(null); setSceneIssue(null); setUnavailable([]);
       setPlaces(backup.places); setPlacesIssue(null);
-      setNotice('Studio Backup restored. Characters, saved scene and Places library are ready.');
+      const restoredTimed = decodeTimedLibrary(localStorage.getItem(TIMED_SCENES_KEY), placesInReady(backup.places));
+      if (restoredTimed.ok) { setTimedScenes(restoredTimed.library); setTimedIssue(null); }
+      const restoredEpisodes = decodeEpisodeLibrary(localStorage.getItem(EPISODES_KEY));
+      if (restoredEpisodes.ok) { setEpisodes(restoredEpisodes.library); setEpisodeIssue(null); }
+      setNotice('Studio Backup restored. Characters, scenes, episodes and Places library are ready.');
       return true;
     } catch { setNotice('Studio restore failed while checking artwork. Existing data was kept.'); return false; }
   };
   const savePlaces = (next: PlaceOrganisation): boolean => {
     if (!recovery.ok || placesIssue || !validatePlaceOrganisation(next).ok) return false;
+    if (timedScenes.scenes.some(scene => !placesInReady(next).includes(scene.placeId))) return false;
     try { localStorage.setItem(PLACE_FOLDERS_KEY, JSON.stringify(next)); setPlaces(next); return true; }
+    catch { return false; }
+  };
+  const saveTimedScenes = (next: TimedLibrary): boolean => {
+    if (!recovery.ok || timedIssue) return false;
+    const checked = validateTimedLibrary(next, placesInReady(places));
+    if (!checked.ok) return false;
+    if (next.scenes.some(scene => Object.keys(scene.characters).some(id => id.startsWith('brightling-') && !library.some(item => item.id === id)))) return false;
+    try { localStorage.setItem(TIMED_SCENES_KEY, JSON.stringify(checked.library)); setTimedScenes(checked.library); return true; }
+    catch { return false; }
+  };
+  const saveEpisodes = (next: EpisodeLibrary): boolean => {
+    if (!recovery.ok || episodeIssue) return false;
+    const checked = validateEpisodeLibrary(next);
+    if (!checked.ok) return false;
+    try { localStorage.setItem(EPISODES_KEY, JSON.stringify(checked.library)); setEpisodes(checked.library); return true; }
     catch { return false; }
   };
 
@@ -274,18 +325,19 @@ export default function App() {
     <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
-      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'playground'] as const).map(tab => <button key={tab} onClick={() => setActiveTab(tab)} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'episodes', 'playground'] as const).map(tab => <button key={tab} onClick={() => { setRequestedSceneId(null); setActiveTab(tab); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', episodes: '▣', playground: '▶' } as const)[tab]}</span><span>{tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
       <span className="local-badge"><span /> Saved in this browser</span>
     </aside>
     <main className="main">
-      {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
+      {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} maxineOutfit={maxineOutfit} onMaxineOutfitChange={saveMaxineOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
-      <section hidden={activeTab !== 'scenes'} className="coming-soon" aria-label="scenes Coming Soon"><span className="coming-star">✦</span><p className="eyebrow">BRIGHTSENAPPS STUDIO</p><h1>Scenes</h1><strong>Coming Soon</strong><p>A home for future cartoon scenes.</p></section>
+      {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} />}
+      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>
       {sceneIssue && <p className="storage-alert" role="alert">{sceneIssue}</p>}
       <div className="workspace"><section className="stage-panel" aria-label="Cartoon stage"><div className="stage-top"><span><span className="live-dot" /> LIVING ROOM</span><span>Click a character, then the floor</span></div><canvas ref={canvasRef} width={WIDTH} height={HEIGHT} aria-label="Living room scene with draggable Brightlings" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} /><div className="stage-bottom"><span>✦ &nbsp; Your scene</span><span>Drag to place · Click to set destination</span></div></section>
-        <aside className="sidebar"><div className="side-heading"><span className="side-number">01</span><div><h2>Characters</h2><p>Pick who you want to move</p></div></div><div className="character-list">{ids.map(id => <button key={id} className={`character-card ${selected === id ? 'active' : ''}`} style={{ '--character-colour': colour(id) } as React.CSSProperties} onClick={() => select(id)} aria-pressed={selected === id}><img src={custom(id) ? thumbnails[id] : spriteSource(id, 'idle', 0, maxOutfit)} alt="" /><span><strong>{name(id)}</strong><small>{selected === id ? 'Selected · ready to move' : 'Click to select'}</small></span><span className="radio-mark" /></button>)}</div><button className="wave-button" onClick={wave} disabled={playing || waving} aria-label={`Wave ${name(selected)}`}>✋ &nbsp; Wave {name(selected)}</button>
+        <aside className="sidebar"><div className="side-heading"><span className="side-number">01</span><div><h2>Characters</h2><p>Pick who you want to move</p></div></div><div className="character-list">{ids.map(id => <button key={id} className={`character-card ${selected === id ? 'active' : ''}`} style={{ '--character-colour': colour(id) } as React.CSSProperties} onClick={() => select(id)} aria-pressed={selected === id}><img src={custom(id) ? thumbnails[id] : spriteSource(id, 'idle', 0, maxOutfit, maxineOutfit)} alt="" /><span><strong>{name(id)}</strong><small>{selected === id ? 'Selected · ready to move' : 'Click to select'}</small></span><span className="radio-mark" /></button>)}</div><button className="wave-button" onClick={wave} disabled={playing || waving} aria-label={`Wave ${name(selected)}`}>✋ &nbsp; Wave {name(selected)}</button>
           {library.length > 0 && <div className="library"><h3>Saved Brightlings</h3>{library.map(item => <button key={item.id} onClick={() => addBrightling(item)} disabled={!thumbnails[item.id] || unavailable.includes(item.id)}><img src={thumbnails[item.id]} alt="" /><span>{item.name}<small>{unavailable.includes(item.id) || !thumbnails[item.id] ? 'Artwork unavailable' : sceneIds.includes(item.id) ? 'In scene · select' : 'Add to scene'}</small></span><b>{sceneIds.includes(item.id) ? '✓' : '+'}</b></button>)}</div>}
           <div className="divider" /><div className="side-heading"><span className="side-number">02</span><div><h2>Make it move</h2><p>Watch your scene come to life</p></div></div><div className="actions"><button className="play-button" onClick={play} disabled={playing}><span>▶</span> {playing ? 'Playing…' : 'Play scene'}</button><button className="reset-button" onClick={reset}>↺ &nbsp; Reset positions</button></div><div className="divider" /><div className="side-heading"><span className="side-number">03</span><div><h2>Keep your scene</h2><p>Come back to it any time</p></div></div><div className="save-actions"><button onClick={save}>↓ &nbsp; Save scene</button><button onClick={open}>↗ &nbsp; Open saved</button></div><p className="storage-note">Stored locally in this browser as scene JSON.</p></aside></div><div className="tip"><span>✦</span><p role="status">{notice}</p></div>
       </div>

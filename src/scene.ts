@@ -1,8 +1,8 @@
 export type CharacterId = string;
 export type Point = { x: number; y: number };
 export type Character = { start: Point; destination: Point | null };
-import { maxOutfitFrom, type MaxOutfit } from './outfit';
-export type Scene = { version: 1; characters: Record<CharacterId, Character>; maxOutfit?: MaxOutfit };
+import { maxOutfitFrom, maxineOutfitFrom, type MaxOutfit, type MaxineOutfit } from './outfit';
+export type Scene = { version: 1; characters: Record<CharacterId, Character>; maxOutfit?: MaxOutfit; maxineOutfit?: MaxineOutfit };
 
 export const WIDTH = 1672;
 export const HEIGHT = 941;
@@ -34,7 +34,8 @@ export function parseScene(value: string | null): Scene | null {
       output[id] = { start: clampPoint(character.start), destination: character.destination ? clampPoint(character.destination) : null };
     }
     const maxOutfit = maxOutfitFrom((data as { maxOutfit?: unknown }).maxOutfit);
-    return { version: 1, characters: output, ...(maxOutfit === 'original' ? {} : { maxOutfit }) };
+    const maxineOutfit = maxineOutfitFrom((data as { maxineOutfit?: unknown }).maxineOutfit);
+    return { version: 1, characters: output, ...(maxOutfit === 'original' ? {} : { maxOutfit }), ...(maxineOutfit === 'original' ? {} : { maxineOutfit }) };
   } catch { return null; }
 }
 

@@ -1,0 +1,75 @@
+{
+  "profile": "isolated temporary Chrome profile",
+  "screenshots": [
+    "characters-original-desktop.png",
+    "characters-alternative-outfits-desktop.png",
+    "playground-alternative-outfits.png",
+    "maxine-waving.png",
+    "maxine-walking-right.png",
+    "maxine-walking-left.png",
+    "characters-after-reload.png",
+    "characters-mobile.png"
+  ],
+  "errors": [],
+  "defaultTab": "✦Characters",
+  "initialStorage": 0,
+  "maxChange": "tshirt-trousers",
+  "maxineChange": "tshirt-leggings",
+  "savedScene": {
+    "version": 1,
+    "characters": {
+      "max": {
+        "start": {
+          "x": 575,
+          "y": 790
+        },
+        "destination": null
+      },
+      "maxine": {
+        "start": {
+          "x": 1090,
+          "y": 790
+        },
+        "destination": null
+      }
+    },
+    "maxOutfit": "tshirt-trousers",
+    "maxineOutfit": "tshirt-leggings"
+  },
+  "cardImages": [
+    "/art/max-tshirt/max-0.png",
+    "/art/maxine-tshirt/maxine-0.png"
+  ],
+  "playgroundImages": [
+    "/art/max-tshirt/max-0.png",
+    "/art/maxine-tshirt/maxine-0.png"
+  ],
+  "waveReturnNotice": "Maxine finished waving.",
+  "rightDestinationNotice": "Maxine's walking destination is set. Press Play.",
+  "reloadedScene": {
+    "version": 1,
+    "characters": {
+      "max": {
+        "start": {
+          "x": 575,
+          "y": 790
+        },
+        "destination": null
+      },
+      "maxine": {
+        "start": {
+          "x": 719.9999673036682,
+          "y": 799.9999629779827
+        },
+        "destination": {
+          "x": 719.9999673036682,
+          "y": 799.9999629779827
+        }
+      }
+    },
+    "maxOutfit": "tshirt-trousers",
+    "maxineOutfit": "tshirt-leggings"
+  },
+  "reloadedMaxineCard": "/art/maxine-tshirt/maxine-0.png",
+  "profileRemoved": true
+}

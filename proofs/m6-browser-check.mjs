@@ -1,0 +1,125 @@
+// Disposable Chrome profile, browser-driven scene editor proof.
+import { spawn, spawnSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+
+const root = resolve('proofs/m6'); mkdirSync(root, { recursive: true });
+const profile = mkdtempSync(join(tmpdir(), 'brightsen-m6-isolated-'));
+const browser = spawn('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', `--user-data-dir=${profile}`, '--remote-debugging-port=0', '--window-size=1440,960', 'about:blank'], { stdio: 'ignore' });
+let ws, nextId = 1;
+const pending = new Map(), errors = [], findings = { screenshots: [], errors, profile: 'isolated Chrome profile' };
+const send = (method, params = {}) => new Promise((resolveCall, rejectCall) => { const id = nextId++; pending.set(id, { resolveCall, rejectCall }); ws.send(JSON.stringify({ id, method, params })); });
+const evaluate = async expression => { const result = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (result.exceptionDetails) throw Error(result.exceptionDetails.text); return result.result.value; };
+const screenshot = async name => { const result = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); writeFileSync(join(root, name), Buffer.from(result.data, 'base64')); findings.screenshots.push(name); };
+const setSelect = async (selector, value) => evaluate(`(() => { const s=document.querySelector(${JSON.stringify(selector)}); s.value=${JSON.stringify(value)}; s.dispatchEvent(new Event('change',{bubbles:true})); return s.value; })()`);
+const setInput = async (selector, value) => evaluate(`(() => { const s=document.querySelector(${JSON.stringify(selector)}); const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; setter.call(s,${JSON.stringify(String(value))}); s.dispatchEvent(new Event('input',{bubbles:true})); return s.value; })()`);
+const click = async selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+
+try {
+  const portFile = join(profile, 'DevToolsActivePort');
+  for (let i = 0; i < 100 && !existsSync(portFile); i++) await delay(100);
+  if (!existsSync(portFile)) throw Error('Chrome debugging port did not open');
+  const port = Number(readFileSync(portFile, 'utf8').split('\n')[0]);
+  const targets = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
+  ws = new WebSocket(targets.find(item => item.type === 'page').webSocketDebuggerUrl);
+  await new Promise((done, fail) => { ws.addEventListener('open', done, { once: true }); ws.addEventListener('error', fail, { once: true }); });
+  ws.addEventListener('message', event => { const item = JSON.parse(event.data); if (item.id) { const call = pending.get(item.id); if (call) { pending.delete(item.id); item.error ? call.rejectCall(Error(item.error.message)) : call.resolveCall(item.result); } } else if (item.method === 'Runtime.exceptionThrown') errors.push(item.params.exceptionDetails.text); else if (item.method === 'Runtime.consoleAPICalled' && item.params.type === 'error') errors.push(item.params.args.map(arg => arg.value ?? arg.description).join(' ')); });
+  await send('Page.enable'); await send('Runtime.enable');
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 960, deviceScaleFactor: 1, mobile: false });
+  await send('Page.navigate', { url: 'http://127.0.0.1:4174/' });
+  for (let i = 0; i < 30 && !(await evaluate(`!!document.querySelector('.studio-nav')`)); i++) await delay(200);
+  findings.initialStorage = await evaluate('localStorage.length');
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Scenes')).click()`);
+  await delay(300); await screenshot('scenes-empty.png');
+  await click('.scene-primary'); await delay(300);
+  await setInput('input[aria-label="Scene name"]', 'Max says hello');
+  await setInput('input[aria-label="Scene duration"]', 10);
+  await setSelect('select[aria-label="Add Brightling"]', 'max'); await delay(200);
+  await setSelect('select[aria-label="Add Brightling"]', 'maxine'); await delay(200);
+  await setSelect('#scene-add-character', 'max'); await setSelect('#scene-add-type', 'walk'); await click('.scene-add-action button'); await delay(200);
+  await setInput('.scene-action-row:last-of-type input[aria-label="Action duration"]', 3);
+  await setInput('.scene-action-row:last-of-type input[aria-label="Destination X"]', 950);
+  await setSelect('#scene-add-type', 'wave'); await click('.scene-add-action button'); await delay(200);
+  await setInput('.scene-action-row:last-of-type input[aria-label="Start time"]', 4);
+  await setSelect('#scene-add-character', 'maxine'); await setSelect('#scene-add-type', 'wave'); await click('.scene-add-action button'); await delay(200);
+  await evaluate(`(() => { const row=[...document.querySelectorAll('.scene-action-row')].find(r=>r.querySelector('strong')?.textContent==='Maxine' && r.querySelector('select[aria-label="Action"]')?.value==='wave'); const input=row.querySelector('input[aria-label="Start time"]'); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'2'); input.dispatchEvent(new Event('input',{bubbles:true})); })()`);
+  findings.validation = await evaluate(`document.querySelector('.scene-action-editor [role=alert]')?.textContent ?? null`);
+  findings.actionRows = await evaluate(`[...document.querySelectorAll('.scene-action-row')].map(r=>({name:r.querySelector('strong')?.textContent,type:r.querySelector('select[aria-label="Action"]')?.value,start:r.querySelector('input[aria-label="Start time"]')?.value,duration:r.querySelector('input[aria-label="Action duration"]')?.value}))`);
+  await screenshot('action-editor.png');
+  await evaluate(`document.querySelector('.scene-action-editor').scrollIntoView({block:'start'})`); await delay(150); await screenshot('action-controls.png');
+  await evaluate(`window.scrollTo(0,0)`);
+  await click('.scene-heading .scene-primary'); await delay(200);
+  findings.saveMessage = await evaluate(`document.querySelector('.scene-action-editor [role=status]')?.textContent`);
+  findings.savedData = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.timed-scenes.v1'))`);
+  for (const [time, name] of [[0, 'time-0.png'], [2.5, 'time-2-5.png'], [5, 'time-5.png'], [10, 'time-10.png']]) {
+    await setInput('input[aria-label="Scene time"]', time); await delay(150); await screenshot(name);
+  }
+  await click('.scene-playback button:nth-child(2)'); await click('.scene-playback button:first-child'); await delay(500); await click('.scene-playback button:first-child');
+  findings.pausedTime = await evaluate(`document.querySelector('.scene-playback strong')?.textContent`);
+  await delay(250);
+  findings.pausedTimeAfterWait = await evaluate(`document.querySelector('.scene-playback strong')?.textContent`);
+  await click('.scene-playback button:nth-child(2)'); await click('.scene-playback button:first-child');
+  const frames = [];
+  for (let i = 0; i < 55; i++) { await delay(200); const result = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); const file = `record-${String(i).padStart(3, '0')}.png`; writeFileSync(join(root, file), Buffer.from(result.data, 'base64')); frames.push(file); }
+  findings.playbackTime = await evaluate(`document.querySelector('.scene-playback strong')?.textContent`);
+  findings.playButton = await evaluate(`document.querySelector('.scene-playback button:first-child')?.textContent`);
+  await screenshot('playback-end.png');
+  await send('Page.reload', { ignoreCache: true }); await delay(600);
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Scenes')).click()`); await delay(200);
+  findings.reopenedCard = await evaluate(`document.querySelector('.scene-library article h2')?.textContent`);
+  await click('.scene-library article button:first-child'); await delay(350);
+  findings.reopenedName = await evaluate(`document.querySelector('input[aria-label="Scene name"]')?.value`);
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Characters')).click()`); await delay(200);
+  await setSelect('#maxine-outfit', 'tshirt-leggings'); await delay(200);
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Scenes')).click()`); await delay(200);
+  await click('.scene-library article button:first-child'); await delay(500);
+  await screenshot('scene-maxine-alternative-outfit.png');
+  findings.outfitSaved = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.scene.v1'))?.maxineOutfit`);
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true }); await delay(200); await screenshot('editor-mobile.png');
+  const downloads = join(profile, 'downloads'); mkdirSync(downloads);
+  await send('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Characters')).click()`); await delay(200);
+  await click('section[aria-label="Studio backup"] button');
+  let downloaded;
+  for (let i = 0; i < 30; i++) { await delay(100); downloaded = readdirSync(downloads).find(name => name.endsWith('.json')); if (downloaded) break; }
+  if (!downloaded) throw Error('Studio Backup did not download');
+  const exported = readFileSync(join(downloads, downloaded), 'utf8');
+  writeFileSync(join(root, 'example-studio-backup.json'), exported);
+  findings.backupSceneCount = JSON.parse(exported).timedScenes?.scenes.length;
+  await evaluate(`localStorage.clear()`); await send('Page.reload', { ignoreCache: true }); await delay(500);
+  await evaluate(`window.confirm=()=>true`);
+  const document = await send('DOM.getDocument');
+  const input = await send('DOM.querySelector', { nodeId: document.root.nodeId, selector: 'section[aria-label="Studio backup"] input[type=file]' });
+  await send('DOM.setFileInputFiles', { nodeId: input.nodeId, files: [join(root, 'example-studio-backup.json')] });
+  await delay(500);
+  findings.restoredSceneCount = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.timed-scenes.v1'))?.scenes.length`);
+  findings.restoredOutfit = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.scene.v1'))?.maxineOutfit`);
+  await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Scenes')).click()`); await delay(200); await screenshot('restored-scenes-mobile.png');
+  await click('.scene-library article button:first-child'); await delay(150);
+  await setInput('input[aria-label="Scene name"]', 'Max says hello edited'); await click('.scene-heading .scene-primary'); await delay(150);
+  findings.editedIdStable = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.timed-scenes.v1')).scenes[0].id === ${JSON.stringify(findings.savedData.scenes[0].id)}`);
+  await click('.scene-heading button:first-child'); await delay(150);
+  await click('.scene-library article .scene-actions button:nth-child(2)'); await delay(150);
+  await click('.scene-heading .scene-primary'); await delay(150);
+  findings.countAfterDuplicate = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.timed-scenes.v1')).scenes.length`);
+  await click('.scene-heading button:first-child'); await delay(150);
+  await click('.scene-library article:last-child .scene-actions button:nth-child(3)'); await delay(150);
+  findings.countAfterDelete = await evaluate(`JSON.parse(localStorage.getItem('brightsenappstales.timed-scenes.v1')).scenes.length`);
+  const ffmpeg = spawnSync('ffmpeg', ['-y', '-framerate', '5', '-i', join(root, 'record-%03d.png'), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', join(root, 'scene-playback.mp4')], { encoding: 'utf8' });
+  findings.recordingCreated = ffmpeg.status === 0;
+  if (ffmpeg.status !== 0) findings.recordingError = ffmpeg.stderr?.slice(-600);
+  if (ffmpeg.status === 0) frames.forEach(file => unlinkSync(join(root, file)));
+} catch (error) { findings.failure = String(error); console.error(error); process.exitCode = 1; }
+finally {
+  if (ws) ws.close();
+  const resolved = resolve(profile), allowed = resolve(tmpdir()) + '\\brightsen-m6-isolated-';
+  if (!resolved.startsWith(allowed)) throw Error('Unexpected browser profile path');
+  const literal = resolved.replaceAll("'", "''");
+  const cleanup = `$profilePath='${literal}'; Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'chrome.exe' -and $_.CommandLine -like '*${literal.split('\\').pop()}*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep -Milliseconds 600; Remove-Item -LiteralPath $profilePath -Recurse -Force -ErrorAction Stop`;
+  const result = spawnSync('powershell.exe', ['-NoProfile', '-Command', cleanup], { encoding: 'utf8' });
+  findings.profileRemoved = result.status === 0 && !existsSync(resolved);
+  if (!findings.profileRemoved) process.exitCode = 1;
+  writeFileSync(join(root, 'browser-check.json'), JSON.stringify(findings, null, 2));
+}

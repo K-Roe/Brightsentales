@@ -1,0 +1,109 @@
+{
+  "profile": "isolated temporary Chrome profile",
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "episode-library-empty-desktop.png",
+    "episode-editor-three-scenes-desktop.png",
+    "three-scene-sequence-desktop.png",
+    "playback-scene-2.png",
+    "playback-scene-3.png",
+    "playback-scene-1.png",
+    "episode-library-saved-desktop.png",
+    "episode-editor-mobile.png",
+    "episode-playback-end.png",
+    "backup-restored-episode.png",
+    "episode-updated-scene.png",
+    "episode-missing-scene-warning.png"
+  ],
+  "initialStorage": 0,
+  "total": "33.0s total",
+  "sequence": [
+    "Max Arrives",
+    "Maxine Joins",
+    "Goodbye"
+  ],
+  "seek10": "Maxine JoinsLiving Room · Scene 2 of 3 · 0.0s / 15.0s",
+  "seek25": "GoodbyeLiving Room · Scene 3 of 3 · 0.0s / 8.0s",
+  "seek5": "Max ArrivesLiving Room · Scene 1 of 3 · 5.0s / 10.0s",
+  "reordered": [
+    "Maxine Joins",
+    "Max Arrives",
+    "Goodbye"
+  ],
+  "duplicateTotal": "43.0s total",
+  "reloadedSequence": [
+    "Max Arrives",
+    "Maxine Joins",
+    "Goodbye"
+  ],
+  "pauseAt": "4.1s / 33.0s",
+  "pausedAt": "4.1s / 33.0s",
+  "end": {
+    "clock": "33.0s / 33.0s",
+    "button": "Play"
+  },
+  "recording": {
+    "frames": 174,
+    "created": true
+  },
+  "savedEpisodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "6be85050-44ea-43a8-925d-ab6b15f5b9a5",
+        "name": "Our First Episode",
+        "sceneIds": [
+          "11111111-1111-4111-8111-000000000001",
+          "11111111-1111-4111-8111-000000000002",
+          "11111111-1111-4111-8111-000000000003"
+        ]
+      }
+    ]
+  },
+  "savedScenes": 3,
+  "backupExport": {
+    "file": "brightsenappstales-studio-2026-10-17.json",
+    "version": 4,
+    "scenes": 3,
+    "episodes": 1,
+    "episodeId": "6be85050-44ea-43a8-925d-ab6b15f5b9a5",
+    "references": [
+      "11111111-1111-4111-8111-000000000001",
+      "11111111-1111-4111-8111-000000000002",
+      "11111111-1111-4111-8111-000000000003"
+    ]
+  },
+  "restoreInitialStorage": 0,
+  "restored": {
+    "scenes": 3,
+    "episodes": 1,
+    "episodeId": "6be85050-44ea-43a8-925d-ab6b15f5b9a5",
+    "order": [
+      "Max Arrives",
+      "Maxine Joins",
+      "Goodbye"
+    ],
+    "total": "33.0s total"
+  },
+  "editSceneOpened": "Max Arrives",
+  "updatedSceneTotal": "35.0s total",
+  "missingScene": {
+    "warning": "This episode refers to 1 missing scene. Playback is paused until you remove the missing block or restore the scene from a backup.",
+    "playDisabled": true,
+    "blocks": [
+      "Max Arrives",
+      "Missing scene",
+      "Goodbye"
+    ]
+  },
+  "duplicateEpisodes": [
+    "Our First Episode",
+    "Our First Episode copy"
+  ],
+  "afterDeleteEpisodes": [
+    "Our First Episode"
+  ],
+  "profileRemoved": true,
+  "restoreProfileRemoved": true
+}

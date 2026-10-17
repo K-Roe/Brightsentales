@@ -1,20 +1,22 @@
 import { Brightling } from './maker';
 import { validateLibrary } from './library';
 import { parseScene, Scene } from './scene';
-import { DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, validatePlaceOrganisation } from './placeFolders';
+import { DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
+import { TIMED_SCENES_KEY, TimedLibrary, pruneTimedScenes, validateTimedLibrary } from './timedScenes';
+import { EPISODES_KEY, EpisodeLibrary, validateEpisodeLibrary } from './episodes';
 
-export const STUDIO_BACKUP_VERSION = 2;
+export const STUDIO_BACKUP_VERSION = 4;
 export const RESTORE_JOURNAL_KEY = 'brightsenappstales.restore.v1';
-export type StudioBackup = { version: 2; createdAt: string; characters: Brightling[]; scene: Scene | null; places: PlaceOrganisation };
+export type StudioBackup = { version: 4; createdAt: string; characters: Brightling[]; scene: Scene | null; places: PlaceOrganisation; timedScenes: TimedLibrary | null; episodes: EpisodeLibrary | null };
 export type BackupResult = { ok: true; backup: StudioBackup } | { ok: false; error: string };
-type Before = { library: string | null; scene: string | null; places?: string | null };
-type Journal = { version: 1 | 2; phase: 'pending' | 'committed'; before: Before };
+type Before = { library: string | null; scene: string | null; places?: string | null; timedScenes?: string | null; episodes?: string | null };
+type Journal = { version: 1 | 2 | 3 | 4; phase: 'pending' | 'committed'; before: Before; restoreTimed?: boolean; restoreEpisodes?: boolean };
 type Storage = Pick<globalThis.Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
 export function validateStudioBackup(data: unknown): BackupResult {
   if (!data || typeof data !== 'object') return { ok: false, error: 'This is not a Studio Backup.' };
   const value = data as Record<string, unknown>;
-  if (value.version !== 1 && value.version !== STUDIO_BACKUP_VERSION) return { ok: false, error: 'Unsupported Studio Backup version.' };
+  if (![1, 2, 3, STUDIO_BACKUP_VERSION].includes(value.version as number)) return { ok: false, error: 'Unsupported Studio Backup version.' };
   if (typeof value.createdAt !== 'string' || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(value.createdAt) || Number.isNaN(Date.parse(value.createdAt))) return { ok: false, error: 'The backup timestamp is invalid.' };
   const library = validateLibrary(value.characters);
   if (!library.ok) return { ok: false, error: library.error };
@@ -32,11 +34,24 @@ export function validateStudioBackup(data: unknown): BackupResult {
   }
   const places = value.version === 1 ? validatePlaceOrganisation(structuredClone(DEFAULT_PLACE_ORGANISATION)) : validatePlaceOrganisation(value.places);
   if (!places.ok) return { ok: false, error: places.error };
-  return { ok: true, backup: { version: 2, createdAt: value.createdAt, characters: library.characters, scene, places: places.organisation } };
+  const timed = (value.version === 3 || value.version === 4) && value.timedScenes !== null ? validateTimedLibrary(value.timedScenes, [
+    ...places.organisation.customPlaces.filter(place => !!places.organisation.artwork[place.id]).map(place => place.id),
+    'living-room', ...['bedroom', 'garden'].filter(id => !!places.organisation.artwork[id]),
+  ]) : null;
+  if (timed && !timed.ok) return { ok: false, error: timed.error };
+  const timedScenes = timed?.ok ? timed.library : null;
+  if (timedScenes && timedScenes.scenes.some(item => Object.keys(item.characters).some(id => id.startsWith('brightling-') && !library.characters.some(character => character.id === id)))) return { ok: false, error: 'A timed scene refers to a Brightling missing from this backup.' };
+  if (value.version === 4 && (!('episodes' in value) || !('timedScenes' in value))) return { ok: false, error: 'This Studio Backup is missing episode or timed scene data.' };
+  const checkedEpisodes = value.version === 4 ? validateEpisodeLibrary(value.episodes) : null;
+  if (checkedEpisodes && !checkedEpisodes.ok) return { ok: false, error: checkedEpisodes.error };
+  const episodes = checkedEpisodes?.ok ? checkedEpisodes.library : null;
+  // Keep missing references intact. The Episode Maker marks them and blocks playback,
+  // allowing a later backup to restore the original scene ID without losing the episode.
+  return { ok: true, backup: { version: 4, createdAt: value.createdAt, characters: library.characters, scene, places: places.organisation, timedScenes, episodes } };
 }
 
-export function createStudioBackup(characters: Brightling[], scene: Scene | null, date = new Date(), places: PlaceOrganisation = structuredClone(DEFAULT_PLACE_ORGANISATION)): StudioBackup {
-  return { version: 2, createdAt: date.toISOString(), characters, scene, places };
+export function createStudioBackup(characters: Brightling[], scene: Scene | null, date = new Date(), places: PlaceOrganisation = structuredClone(DEFAULT_PLACE_ORGANISATION), timedScenes: TimedLibrary = { version: 1, scenes: [] }, episodes: EpisodeLibrary = { version: 1, episodes: [] }): StudioBackup {
+  return { version: 4, createdAt: date.toISOString(), characters, scene, places, timedScenes, episodes };
 }
 
 function writeOriginal(storage: Storage, key: string, value: string | null) {
@@ -50,12 +65,12 @@ function parseJournal(raw: string): Journal | null {
     if (!value || typeof value !== 'object') return null;
     const journal = value as Partial<Journal>;
     const before = journal.before;
-    if (journal.version !== 1 && journal.version !== 2 || !['pending', 'committed'].includes(journal.phase ?? '') || !before || (before.library !== null && typeof before.library !== 'string') || (before.scene !== null && typeof before.scene !== 'string') || journal.version === 2 && before.places !== null && typeof before.places !== 'string') return null;
+    if (![1, 2, 3, 4].includes(journal.version ?? 0) || !['pending', 'committed'].includes(journal.phase ?? '') || !before || (before.library !== null && typeof before.library !== 'string') || (before.scene !== null && typeof before.scene !== 'string') || journal.version !== 1 && before.places !== null && typeof before.places !== 'string' || (journal.version === 3 || journal.version === 4) && before.timedScenes !== null && typeof before.timedScenes !== 'string' || journal.version === 4 && before.episodes !== null && typeof before.episodes !== 'string') return null;
     return journal as Journal;
   } catch { return null; }
 }
 
-export function recoverStudioRestore(storage: Storage, libraryKey: string, sceneKey: string, placesKey = PLACE_FOLDERS_KEY): { ok: boolean; error?: string } {
+export function recoverStudioRestore(storage: Storage, libraryKey: string, sceneKey: string, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY): { ok: boolean; error?: string } {
   try {
     const raw = storage.getItem(RESTORE_JOURNAL_KEY);
     if (raw === null) return { ok: true };
@@ -64,32 +79,45 @@ export function recoverStudioRestore(storage: Storage, libraryKey: string, scene
     if (journal.phase === 'pending') {
       writeOriginal(storage, libraryKey, journal.before.library);
       writeOriginal(storage, sceneKey, journal.before.scene);
-      if (journal.version === 2) writeOriginal(storage, placesKey, journal.before.places ?? null);
+      if (journal.version !== 1) writeOriginal(storage, placesKey, journal.before.places ?? null);
+      if ((journal.version === 3 || journal.version === 4) && journal.restoreTimed) writeOriginal(storage, timedKey, journal.before.timedScenes ?? null);
+      if (journal.version === 4 && journal.restoreEpisodes) writeOriginal(storage, episodesKey, journal.before.episodes ?? null);
     }
     storage.removeItem(RESTORE_JOURNAL_KEY);
     return { ok: true };
   } catch { return { ok: false, error: 'An unfinished Studio restore could not be recovered. Stored data was left untouched.' }; }
 }
 
-export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY): { ok: boolean; error?: string } {
+export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY): { ok: boolean; error?: string } {
   const checked = validateStudioBackup(backup);
   if (!checked.ok) return { ok: false, error: checked.error };
-  const recovery = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey);
+  const recovery = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey, timedKey, episodesKey);
   if (!recovery.ok) return recovery;
   let before: Before;
-  try { before = { library: storage.getItem(libraryKey), scene: storage.getItem(sceneKey), places: storage.getItem(placesKey) }; }
+  try { before = { library: storage.getItem(libraryKey), scene: storage.getItem(sceneKey), places: storage.getItem(placesKey), timedScenes: storage.getItem(timedKey), episodes: storage.getItem(episodesKey) }; }
   catch { return { ok: false, error: 'Browser storage could not be read. Nothing was changed.' }; }
-  const pending: Journal = { version: 2, phase: 'pending', before };
+  let nextTimed = checked.backup.timedScenes;
+  if (nextTimed === null && before.timedScenes !== null) {
+    try {
+      const placeIds = placesIn(checked.backup.places).filter(place => place.artworkAvailable && place.background).map(place => place.id);
+      const current = validateTimedLibrary(JSON.parse(before.timedScenes!), placeIds);
+      if (!current.ok) return { ok: false, error: 'This older backup cannot safely preserve existing timed scenes with its Places data. Nothing was changed.' };
+      nextTimed = pruneTimedScenes(current.library, checked.backup.characters.map(item => item.id));
+    } catch { return { ok: false, error: 'Existing timed scenes are invalid. Nothing was changed.' }; }
+  }
+  const pending: Journal = { version: 4, phase: 'pending', before, restoreTimed: nextTimed !== null, restoreEpisodes: checked.backup.episodes !== null };
   try {
     storage.setItem(RESTORE_JOURNAL_KEY, JSON.stringify(pending));
     storage.setItem(libraryKey, JSON.stringify(checked.backup.characters));
     writeOriginal(storage, sceneKey, checked.backup.scene === null ? null : JSON.stringify(checked.backup.scene));
     storage.setItem(placesKey, JSON.stringify(checked.backup.places));
+    if (nextTimed !== null) storage.setItem(timedKey, JSON.stringify(nextTimed));
+    if (checked.backup.episodes !== null) storage.setItem(episodesKey, JSON.stringify(checked.backup.episodes));
     storage.setItem(RESTORE_JOURNAL_KEY, JSON.stringify({ ...pending, phase: 'committed' }));
     try { storage.removeItem(RESTORE_JOURNAL_KEY); } catch { /* Committed data is safe; cleanup retries on next launch. */ }
     return { ok: true };
   } catch {
-    const rollback = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey);
-    return { ok: false, error: rollback.ok ? 'Studio restore failed. Previous characters, scene and places were restored.' : rollback.error };
+    const rollback = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey, timedKey, episodesKey);
+    return { ok: false, error: rollback.ok ? 'Studio restore failed. Previous characters, scenes and places were restored.' : rollback.error };
   }
 }

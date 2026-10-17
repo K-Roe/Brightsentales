@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Brightling, DEFAULT_COLOURS, LIBRARY_KEY, makeFrame, nameAvailable, PALETTES, Template } from './maker';
 import { backupLibrary, ImportMode, validateLibrary } from './library';
 import { StudioBackup, validateStudioBackup } from './studioBackup';
-import { MAX_OUTFITS, maxSpriteSource, type MaxOutfit } from './outfit';
+import { MAX_OUTFITS, MAXINE_OUTFITS, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 
 type Colours = Pick<Brightling, 'body' | 'hair' | 'clothing'>;
 type Props = {
@@ -11,6 +11,8 @@ type Props = {
   inScene: string[];
   maxOutfit: MaxOutfit;
   onMaxOutfitChange: (outfit: MaxOutfit) => boolean;
+  maxineOutfit: MaxineOutfit;
+  onMaxineOutfitChange: (outfit: MaxineOutfit) => boolean;
   storageIssue: string | null;
   sceneIssue: string | null;
   onSave: (item: Brightling) => Promise<boolean>;
@@ -21,7 +23,7 @@ type Props = {
   onImportStudio: (backup: StudioBackup) => Promise<boolean>;
 };
 
-export default function Characters({ library, thumbnails, inScene, maxOutfit, onMaxOutfitChange, storageIssue, sceneIssue, onSave, onDelete, onImport, onAdd, onExportStudio, onImportStudio }: Props) {
+export default function Characters({ library, thumbnails, inScene, maxOutfit, onMaxOutfitChange, maxineOutfit, onMaxineOutfitChange, storageIssue, sceneIssue, onSave, onDelete, onImport, onAdd, onExportStudio, onImportStudio }: Props) {
   const [view, setView] = useState<'overview' | 'maker'>('overview');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [template, setTemplate] = useState<Template>('male');
@@ -109,9 +111,9 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
       if (file.size > 20_000_000) throw new Error('The Studio Backup is too large.');
       const result = validateStudioBackup(JSON.parse(await file.text()));
       if (!result.ok) throw new Error(result.error);
-      if (!window.confirm(`Restore Studio Backup from ${result.backup.createdAt}? This replaces the current custom Brightling library, saved Playground scene and Places library with ${result.backup.characters.length} character(s), ${result.backup.scene ? 'a saved scene' : 'no saved scene'}, ${result.backup.places.folders.length} folder(s) and ${result.backup.places.customPlaces.length} custom place(s). Export your current Studio Backup first if you want to keep it.`)) return;
+      if (!window.confirm(`Restore Studio Backup from ${result.backup.createdAt}? This replaces the current custom Brightling library, saved Playground scene and Places library with ${result.backup.characters.length} character(s), ${result.backup.scene ? 'a saved scene' : 'no saved scene'}, ${result.backup.places.folders.length} folder(s) and ${result.backup.places.customPlaces.length} custom place(s). ${result.backup.timedScenes ? `It also restores ${result.backup.timedScenes.scenes.length} timed scene(s).` : 'This older backup has no timed scenes; existing compatible timed scenes are kept.'} ${result.backup.episodes ? `It replaces saved episodes with ${result.backup.episodes.episodes.length} episode(s).` : 'This older backup has no episodes; existing episodes are kept.'} Export your current Studio Backup first if you want to keep it.`)) return;
       if (!await onImportStudio(result.backup)) throw new Error('Studio restore failed. Check browser storage and artwork.');
-      resetForm(); setMessage('Studio Backup restored. Characters, Playground scene and Places library are ready.');
+      resetForm(); setMessage('Studio Backup restored. Characters, scenes and Places library are ready.');
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Invalid Studio Backup.'); }
     finally { if (studioFileRef.current) studioFileRef.current.value = ''; }
   };
@@ -132,7 +134,7 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
       <section className="character-library" aria-label="Brightling library">
         <div className="portrait-grid">
           <article className="portrait-card default-character"><div className="portrait-art"><img src={maxSpriteSource(maxOutfit, 'idle')} alt={`Max, front-facing in ${MAX_OUTFITS.find(option => option.id === maxOutfit)?.label}`} /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Max</h3><p>Male · Max template</p><label className="max-outfit-choice" htmlFor="max-outfit">Outfit<select id="max-outfit" value={maxOutfit} disabled={!!storageIssue || !!sceneIssue} onChange={event => { const outfit = event.target.value as MaxOutfit; setMessage(onMaxOutfitChange(outfit) ? `Max is wearing ${MAX_OUTFITS.find(option => option.id === outfit)?.label}. Outfit saved.` : 'Could not save Max’s outfit. Existing selection was kept.'); }}>{MAX_OUTFITS.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label><span className="portrait-presence">Always in Playground</span></div></article>
-          <article className="portrait-card default-character"><div className="portrait-art"><img src="/art/maxine-0.png" alt="Maxine, front-facing" /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Maxine</h3><p>Female · Maxine template</p><span className="portrait-presence">Always in Playground</span></div></article>
+          <article className="portrait-card default-character"><div className="portrait-art"><img src={maxineSpriteSource(maxineOutfit, 'idle')} alt={`Maxine, front-facing in ${MAXINE_OUTFITS.find(option => option.id === maxineOutfit)?.label}`} /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Maxine</h3><p>Female · Maxine template</p><label className="max-outfit-choice" htmlFor="maxine-outfit">Outfit<select id="maxine-outfit" value={maxineOutfit} disabled={!!storageIssue || !!sceneIssue} onChange={event => { const outfit = event.target.value as MaxineOutfit; setMessage(onMaxineOutfitChange(outfit) ? `Maxine is wearing ${MAXINE_OUTFITS.find(option => option.id === outfit)?.label}. Outfit saved.` : 'Could not save Maxine’s outfit. Existing selection was kept.'); }}>{MAXINE_OUTFITS.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label><span className="portrait-presence">Always in Playground</span></div></article>
           {library.map(item => <article className="portrait-card" key={item.id}>
             <div className="portrait-art">{thumbnails[item.id] ? <img src={thumbnails[item.id]} alt={item.name + ', front-facing'} /> : <span className="art-missing">Artwork unavailable</span>}</div>
             <div className="portrait-info"><span className="portrait-tag">Custom Brightling</span><h3>{item.name}</h3><p>{item.template === 'male' ? 'Male · Max template' : 'Female · Maxine template'}</p>
@@ -143,11 +145,11 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
         {library.length === 0 && <p className="overview-empty">Your own Brightlings will appear here after you create one.</p>}
       </section>
       <section className="library-backup overview-backup" aria-label="Library backup">
-        <div><h3>Keep a copy of your characters</h3><p>Export and import custom Brightlings. A library export does not include the saved scene or Max’s outfit; use Studio Backup for both.</p></div>
+        <div><h3>Keep a copy of your characters</h3><p>Export and import custom Brightlings. A library export does not include the saved scene or Max and Maxine’s outfits; use Studio Backup for both.</p></div>
         <div className="backup-controls"><button onClick={exportLibrary}>{storageIssue ? 'Export Stored Data' : 'Export Library'}</button><label htmlFor="import-mode">Import as<select id="import-mode" value={importMode} onChange={event => setImportMode(event.target.value as ImportMode)}><option value="merge">Merge with library</option><option value="replace">Replace library</option></select></label><label className="import-file">Import Library<input ref={fileRef} type="file" accept=".json,application/json" onChange={event => void importFile(event.target.files?.[0])} /></label></div>
       </section>
       <section className="library-backup overview-backup" aria-label="Studio backup">
-        <div><h3>Back up the whole Studio</h3><p>Includes custom Brightlings, the saved Playground scene, Places folders and uploaded artwork. Keep the downloaded file somewhere safe; clearing browser data removes local copies.</p></div>
+        <div><h3>Back up the whole Studio</h3><p>Includes custom Brightlings, timed scenes, episodes, the saved Playground scene, Places folders and uploaded artwork. Keep the downloaded file somewhere safe; clearing browser data removes local copies.</p></div>
         <div className="backup-controls"><button onClick={exportStudio}>Export Studio Backup</button><label className="import-file">Import Studio Backup<input ref={studioFileRef} type="file" accept=".json,application/json" onChange={event => void importStudio(event.target.files?.[0])} /></label></div>
       </section>
     </> : <section className="maker-panel character-maker" ref={formRef} aria-label="Brightling Maker">

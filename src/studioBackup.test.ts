@@ -3,6 +3,8 @@ import { DEFAULT_COLOURS, LIBRARY_KEY, type Brightling } from './maker';
 import { DEFAULT_SCENE, STORAGE_KEY } from './scene';
 import { addPlace, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, removePlace, setPlaceArtwork } from './placeFolders';
 import { createStudioBackup, recoverStudioRestore, RESTORE_JOURNAL_KEY, restoreStudioBackup, validateStudioBackup } from './studioBackup';
+import { EPISODES_KEY } from './episodes';
+import { TIMED_SCENES_KEY, type TimedLibrary } from './timedScenes';
 
 const character: Brightling = { id: 'brightling-11111111-1111-4111-8111-111111111111', name: 'Charlie', template: 'male', ...DEFAULT_COLOURS.male };
 const scene = structuredClone(DEFAULT_SCENE);
@@ -20,6 +22,30 @@ class TestStorage {
 }
 
 describe('complete Studio Backup', () => {
+  it('restores episodes and referenced timed scenes together, with stable IDs', () => {
+    const timed: TimedLibrary = { version: 1, scenes: [{ id: '11111111-1111-4111-8111-111111111111', name: 'Hello', duration: 10, placeId: 'living-room', characters: {}, actions: [] }] };
+    const episodes = { version: 1 as const, episodes: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Episode', sceneIds: [timed.scenes[0].id, timed.scenes[0].id] }] };
+    const complete = createStudioBackup([character], scene, new Date('2026-10-16T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, timed, episodes);
+    const storage = new TestStorage();
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, complete).ok).toBe(true);
+    expect(JSON.parse(storage.getItem(TIMED_SCENES_KEY)!)).toEqual(timed);
+    expect(JSON.parse(storage.getItem(EPISODES_KEY)!)).toEqual(episodes);
+    expect(validateStudioBackup({ ...complete, timedScenes: { version: 1, scenes: [] } }).ok).toBe(true); // Missing scene stays repairable by ID.
+    expect(validateStudioBackup({ ...complete, episodes: { version: 1, episodes: [{ ...episodes.episodes[0], sceneIds: ['not-an-id'] }] } }).ok).toBe(false);
+  });
+  it('rolls back an interrupted episode restore and keeps older backups compatible', () => {
+    const storage = new TestStorage();
+    storage.data.set(EPISODES_KEY, 'old episodes'); storage.data.set(TIMED_SCENES_KEY, 'old timed scenes');
+    storage.failAt = 6;
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, backup).ok).toBe(false);
+    expect(storage.getItem(EPISODES_KEY)).toBe('old episodes');
+    expect(storage.getItem(TIMED_SCENES_KEY)).toBe('old timed scenes');
+    const older = { ...backup, version: 3, episodes: undefined };
+    expect(validateStudioBackup(older).ok).toBe(true);
+    storage.failAt = 0;
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, older as never).ok).toBe(true);
+    expect(storage.getItem(EPISODES_KEY)).toBe('old episodes');
+  });
   it('preserves identity, colours, scene references and positions', () => {
     expect(validateStudioBackup(JSON.parse(JSON.stringify(backup)))).toEqual({ ok: true, backup });
     const storage = new TestStorage();

@@ -1,0 +1,103 @@
+{
+  "version": 3,
+  "createdAt": "2026-10-17T11:49:14.603Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "c75a2781-3c59-428d-9fe9-aed4491425d3",
+        "name": "A thirty-second hello",
+        "duration": 30,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 300,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1100,
+            "y": 820
+          }
+        },
+        "actions": [
+          {
+            "id": "4c1f3b14-a3f9-4dfd-b5e7-3af95f0aebe9",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 300,
+              "y": 790
+            }
+          },
+          {
+            "id": "7b27c4c6-dccc-4d72-8f22-31e2be8427b7",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1100,
+              "y": 820
+            }
+          },
+          {
+            "id": "5d864f7e-3ea6-46d4-a48a-0847043b1541",
+            "characterId": "max",
+            "type": "walk",
+            "start": 2,
+            "duration": 4,
+            "point": {
+              "x": 820,
+              "y": 790
+            }
+          },
+          {
+            "id": "53af2e59-0b83-472c-8aaf-c89f2b6d1e76",
+            "characterId": "max",
+            "type": "wave",
+            "start": 8,
+            "duration": 1.62
+          },
+          {
+            "id": "3742b7b5-3568-4794-9822-1ce5d11c47e3",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 4,
+            "duration": 4,
+            "point": {
+              "x": 910,
+              "y": 820
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
