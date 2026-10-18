@@ -1,26 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Brightling } from './maker';
-import { makePack } from './maker';
 import SceneTimeline from './SceneTimeline';
 import AudioPanel from './AudioPanel';
 import type { AudioAsset } from './audio';
 import { scenePlaybackClips, useAudioPlayback } from './audioPlayback';
 import { HEIGHT, Point, WIDTH } from './scene';
-import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
+import { type MaxOutfit, type MaxineOutfit } from './outfit';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { advanceSceneTime, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
 import { renderSceneVideo } from './sceneVideoExport';
-import { drawScenePreview } from './scenePreview';
+import { drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
 import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
 
-type Sprite = HTMLImageElement | HTMLCanvasElement;
-type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 type Props = { library: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: TimedLibrary) => boolean; requestedSceneId?: string | null; audioAssets?: AudioAsset[] };
 const loadImage = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = url; });
-const builtInPack = async (id: 'max' | 'maxine', max: MaxOutfit, maxine: MaxineOutfit): Promise<Pack> => {
-  const source = (pose: 'idle' | 'side' | 'wave', frame = 0) => id === 'max' ? maxSpriteSource(max, pose, frame) : maxineSpriteSource(maxine, pose, frame);
-  return { idle: await loadImage(source('idle')), side: await Promise.all(Array.from({ length: 5 }, (_, i) => loadImage(source('side', i)))), wave: await Promise.all(Array.from({ length: 3 }, (_, i) => loadImage(source('wave', i)))) };
-};
 const initialPoint = (index: number): Point => ({ x: 520 + index * 230, y: 790 });
 const clone = (scene: TimedScene): TimedScene => structuredClone(scene);
 const newScene = (placeId: string): TimedScene => ({ id: crypto.randomUUID(), name: 'My Scene', duration: 30, placeId, characters: {}, actions: [] });
@@ -40,7 +33,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [targetAction, setTargetAction] = useState<string | null>(null);
   const [selectedPhoneId, setSelectedPhoneId] = useState<string | null>(null);
-  const [packs, setPacks] = useState<Record<string, Pack>>({});
+  const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const drag = useRef<{ id: string; down: Point; moved: boolean } | null>(null);
@@ -65,10 +58,9 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     if (!scene) return;
     let live = true;
     Promise.all(Object.keys(scene.characters).map(async id => {
-      const custom = characters.find(item => item.id === id);
-      const pack = custom ? await makePack(custom) : id === 'max' || id === 'maxine' ? await builtInPack(id, maxOutfit, maxineOutfit) : null;
+      const pack = await previewPack(id, characters, maxOutfit, maxineOutfit);
       return [id, pack] as const;
-    })).then(entries => { if (live) setPacks(Object.fromEntries(entries.filter((entry): entry is readonly [string, Pack] => entry[1] !== null))); }).catch(() => { if (live) setMessage('A Brightling sprite could not load.'); });
+    })).then(entries => { if (live) setPacks(Object.fromEntries(entries.filter((entry): entry is readonly [string, PreviewPack] => entry[1] !== null))); }).catch(() => { if (live) setMessage('A Brightling sprite could not load.'); });
     return () => { live = false; };
   }, [scene && Object.keys(scene.characters).join('|'), characters, maxOutfit, maxineOutfit]);
 
@@ -185,7 +177,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const addPhoneAction = (type: PhoneActionType) => {
     if (!scene || !selectedCharacter) return;
     const existing = phoneActions;
-    const hand = (existing.find(item => item.hand)?.hand ?? 'right') as PhoneHand;
+    const hand = (existing.find(item => item.hand)?.hand ?? (selectedCharacter === 'max' && maxOutfit === 'original' ? 'left' : 'right')) as PhoneHand;
     const held = phoneStateAt(scene, selectedCharacter, time).held;
     if ((type === 'hold' || type === 'tap' || type === 'communicate') && !held) { setMessage(`Take out ${characterName(selectedCharacter)}'s phone first.`); return; }
     if (type === 'take-out' && held) { setMessage(`${characterName(selectedCharacter)} is already holding the phone.`); return; }
@@ -242,6 +234,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
             <p className="director-tip">{phoneNow?.held ? `${characterName(selectedCharacter)} is holding the phone in the ${phoneNow.hand} hand.` : `${characterName(selectedCharacter)} is not holding a phone.`}</p>
             <div className="director-actions">{(['take-out', 'hold', 'tap', 'communicate', 'put-away'] as PhoneActionType[]).map(type => <button key={type} onClick={() => addPhoneAction(type)}>{phoneActionNames[type]}</button>)}</div>
             <label className="phone-carry">Start this shot with the phone already in hand<select aria-label="Phone already in hand" value={scene.phoneIn ?? ''} onChange={event => update(value => ({ ...value, phoneIn: event.target.value === '' ? null : event.target.value as PhoneHand }))}><option value="">No — put it away</option><option value="right">Yes — right hand</option><option value="left">Yes — left hand</option></select></label>
+            <p className="director-tip">Illustrated holding and tapping is available for Max in his original hoodie, standing still, with the phone in his left hand. Other poses use the existing phone prop.</p>
             {phoneActions.length > 0 && <ul className="phone-list" aria-label="Phone interactions">{phoneActions.map(action => <li key={action.id}><button className={selectedPhoneId === action.id ? 'active' : ''} onClick={() => { setSelectedPhoneId(action.id); setTime(action.start); setPlaying(false); }}>{phoneActionNames[action.type]} · {fmt(action.start)}</button></li>)}</ul>}
           </div>
           <button className="director-remove" onClick={() => { if (!window.confirm(`Remove ${characterName(selectedCharacter)} from this scene?`)) return; const id = selectedCharacter; update(value => { const next = clone(value); delete next.characters[id]; next.actions = next.actions.filter(action => action.characterId !== id); next.phone = (next.phone ?? []).filter(action => action.characterId !== id); return next; }); setSelectedCharacter(null); setSelectedAction(null); }}>Remove Brightling</button>

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   PHONE_RAISE_SECONDS,
   PHONE_SPEECH_LEAD_SECONDS,
+  illustratedPhoneFrameAt,
   isPhonePosition,
   isPhoneSymbol,
   phoneActionNames,
@@ -138,6 +139,20 @@ describe('phone state over scene time', () => {
     expect(state.hand).toBe('right');
     const away = phoneStateAt(base([action({ id: uuid('1'), type: 'put-away', start: 2, duration: 0.5 })], 'right'), 'max', 4);
     expect(away.held).toBe(false);
+  });
+
+  it('selects complete illustrated poses across take-out, tap, return, and carry-in', () => {
+    const scene = base([
+      action({ id: uuid('1'), type: 'take-out', start: 1, duration: 0.55, hand: 'left' }),
+      action({ id: uuid('2'), type: 'tap', start: 2, duration: 0.5 }),
+      action({ id: uuid('3'), type: 'put-away', start: 3, duration: 0.55 }),
+    ]);
+    const frame = (time: number) => illustratedPhoneFrameAt(scene, 'max', time, phoneStateAt(scene, 'max', time));
+    expect([0, 1.25, 1.5, 2.02, 2.05, 2.12, 2.18, 2.26, 2.36, 2.4, 2.45, 2.48, 2.6, 3.3, 3.6].map(frame)).toEqual([
+      'idle', 'enter', 'hold', 'hold', 'tap-start', 'tap-mid', 'raise', 'touch', 'raise', 'tap-mid', 'tap-start', 'hold', 'hold', 'enter', 'idle',
+    ]);
+    const carried = base([], 'left');
+    expect(illustratedPhoneFrameAt(carried, 'max', 0, phoneStateAt(carried, 'max', 0))).toBe('hold');
   });
 });
 

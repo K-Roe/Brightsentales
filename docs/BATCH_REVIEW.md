@@ -19,9 +19,13 @@ Karl authorised sequential technical development with visual and listening accep
 | Beginner Note Preview | Implemented; technical checks passed | **AWAITING KARL'S SPEAKER REVIEW** | [Note Preview report](../proofs/note-preview/REPORT.md) | Hear C4, switch instruments, add and drag notes, then check the preview volume and feel. |
 | Voice Maker V1 | Implemented; technical checks passed | **AWAITING KARL'S MICROPHONE/SPEAKER REVIEW** | [Voice Maker report](../proofs/voice-maker/REPORT.md) | Record a voice, compare original/effects, listen to generated speech and the rendered scene in both themes. |
 | Voice Maker V1.1 — automatic voice service | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [V1.1 report](../proofs/voice-maker-v1-1/REPORT.md) | Open BrightTales normally, go to Voice Maker, confirm the engine says Ready without any second terminal, then generate a line and record his own voice. |
-| Max Phone Interaction V1.2 | **Partially delivered; blocked on artwork** | **AWAITING KARL'S DECISION** | [V1.2 report](../proofs/max-phone-v1-2/REPORT.md) | Pop-up work is done and verified. The holding/tapping animation needs three new Max frames — see the decision question. |
+| Max Phone Interaction V1.2 | **Complete; technical checks passed** | **HUMAN VISUAL ACCEPTANCE PASSED** — Karl approved holding, tapping and overall appearance on 18 October 2026. Physical audio hardware check pending. | [Completion report](../proofs/max-phone-v1-2/COMPLETION.md), [video](../proofs/max-phone-v1-2/max-asks-for-food-v1-2.webm) | No further visual action. Listen through physical speakers when convenient. |
 | Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
 | M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
+
+## Max Phone Interaction V1.2 completion
+
+Six whole-body phone frames are integrated for standing Max in his original hoodie with a left-hand hold. Karl reviewed the exported [V1.2 acceptance video](../proofs/max-phone-v1-2/max-asks-for-food-v1-2.webm) and marked the holding pose, tapping animation and overall appearance **PASSED**. [Holding](../proofs/max-phone-v1-2/holding-closeup.png) and [tapping](../proofs/max-phone-v1-2/tapping-closeup.png) closeups remain as evidence. The device voice is encoded and attributed to no Brightling; physical speaker/listening verification remains **PENDING**. [Technical report](../proofs/max-phone-v1-2/COMPLETION.md).
 
 ## Max Phone Native2D cut-out rig — built, proven, blocked
 
@@ -31,7 +35,9 @@ Karl authorised sequential technical development with visual and listening accep
 - **Unblock:** one additive "arms-removed torso" fill layer (new pixels only, no approved pixel changed), and optionally the pointing-hand asset.
 - **Tests:** 184/184 and the production build pass; the app is unaffected. Close-up evidence of shoulders, hands and the star is in `proofs/max-phone-v1-3/`.
 
-## Max Phone Interaction V1.2 — pop-up improvements, artwork blocked
+## Max Phone Interaction V1.2 — first attempt (historical)
+
+The notes below describe the earlier blocked attempt. The completion above supersedes its artwork decision request.
 
 - **Delivered and verified:** the Bright Speak pop-up is larger (235→348 px), nearer Max and the device (gap 130→42 px), with larger text (~24→~34 px) and a larger symbol (~64→~92 px). It is provably clear of the face and inside the frame at every position, asserted in tests. Message, device speech timing and fades are unchanged.
 - **Blocked, and why:** the holding/tapping animation. The approved artwork has no holding or tapping pose (idle, five walk, three wave, per outfit; the sheets contain only those already extracted), the character pipeline only recolours existing frames, and the sibling Native2D repository holds a **different Max** — a pale-skinned, brown-haired, blue-hoodied 3D character whose own critique states it is "not recognisably Max". Posing that rig would redesign Karl's approved character, so nothing was changed there. Scripted arm re-posing in this repository was attempted three times and rejected as visibly unconvincing — the rejected frames are archived as evidence rather than shipped.

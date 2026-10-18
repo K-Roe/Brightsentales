@@ -51,6 +51,7 @@ export type PhoneState = {
   tapping: boolean;
   popup: PhonePopup | null;
 };
+export type IllustratedPhoneFrame = 'idle' | 'enter' | 'hold' | 'tap-start' | 'tap-mid' | 'raise' | 'touch';
 
 /** A take-out, tap or put-away is a short gesture; the pop-up lingers long enough to read. */
 export const PHONE_RAISE_SECONDS = 0.55;
@@ -209,6 +210,21 @@ export function phoneStateAt(scene: { phone?: PhoneAction[]; phoneIn?: PhoneHand
     }
   }
   return { held: held || raise > 0, hand, raise, tapping, popup };
+}
+
+/** Whole-body Max artwork selection. The phone position is baked into each pose. */
+export function illustratedPhoneFrameAt(scene: { phone?: PhoneAction[] }, characterId: string, time: number, phone: PhoneState): IllustratedPhoneFrame {
+  if (!phone.held && phone.raise <= 0) return 'idle';
+  if (phone.raise < 0.12) return 'idle';
+  if (phone.raise < 0.68) return 'enter';
+  const tap = (scene.phone ?? []).find(action => action.characterId === characterId && action.type === 'tap' && time >= action.start && time < action.start + Math.min(action.duration, PHONE_TAP_SECONDS));
+  if (!tap) return 'hold';
+  const phase = (time - tap.start) / Math.min(tap.duration, PHONE_TAP_SECONDS);
+  if (phase < 0.08 || phase >= 0.94) return 'hold';
+  if (phase < 0.2 || phase >= 0.86) return 'tap-start';
+  if (phase < 0.32 || phase >= 0.76) return 'tap-mid';
+  if (phase < 0.42 || phase >= 0.66) return 'raise';
+  return 'touch';
 }
 
 type Anchor = { x: number; y: number };

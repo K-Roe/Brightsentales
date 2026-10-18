@@ -3,11 +3,11 @@ import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit 
 import { HEIGHT, WIDTH } from './scene';
 import { stateAt, type TimedScene } from './timedScenes';
 import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
-import { PHONE_POPUP_HEIGHT, PHONE_POPUP_SCALE, PHONE_POPUP_WIDTH, phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
+import { PHONE_POPUP_HEIGHT, PHONE_POPUP_SCALE, PHONE_POPUP_WIDTH, illustratedPhoneFrameAt, phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
 import { drawCommunicationPopup, drawPhone } from './phoneArt';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
-export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
+export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[]; phone?: { enter: Sprite; hold: Sprite; 'tap-start': Sprite; 'tap-mid': Sprite; raise: Sprite; touch: Sprite } };
 const image = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const item = new Image(); item.onload = () => resolve(item); item.onerror = reject; item.src = url; });
 /** Source pixel size of the approved frames, used to map a measured hand anchor onto the stage. */
 const SOURCE = { idle: { width: 434, height: 724 }, moving: { width: 500, height: 724 } };
@@ -18,7 +18,12 @@ export async function previewPack(id: string, characters: Brightling[], maxOutfi
   if (custom) return makePack(custom);
   if (id !== 'max' && id !== 'maxine') return null;
   const source = (pose: 'idle' | 'side' | 'wave', frame = 0) => id === 'max' ? maxSpriteSource(maxOutfit, pose, frame) : maxineSpriteSource(maxineOutfit, pose, frame);
-  return { idle: await image(source('idle')), side: await Promise.all(Array.from({ length: 5 }, (_, i) => image(source('side', i)))), wave: await Promise.all(Array.from({ length: 3 }, (_, i) => image(source('wave', i)))) };
+  const phone = id === 'max' && maxOutfit === 'original' ? {
+    enter: await image('/art/phone/max-phone-enter.png'), hold: await image('/art/phone/max-phone-hold.png'),
+    'tap-start': await image('/art/phone/max-phone-tap-start.png'), 'tap-mid': await image('/art/phone/max-phone-tap-mid.png'),
+    raise: await image('/art/phone/max-phone-raise.png'), touch: await image('/art/phone/max-phone-touch.png'),
+  } : undefined;
+  return { idle: await image(source('idle')), side: await Promise.all(Array.from({ length: 5 }, (_, i) => image(source('side', i)))), wave: await Promise.all(Array.from({ length: 3 }, (_, i) => image(source('wave', i)))), phone };
 }
 
 export function drawScenePreview(context: CanvasRenderingContext2D, scene: TimedScene, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
@@ -36,13 +41,17 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     const source = state.pose === 'idle' ? SOURCE.idle : SOURCE.moving;
     const top = y - height - (state.pose === 'side' && state.frame > 0 && state.frame % 2 === 0 ? 3 : 0);
     const left = x - width / 2;
-    if (state.pose === 'side') {
+    const illustrated = id === 'max' && state.pose === 'idle' && phone.hand === 'left' && pack.phone && (phone.held || phone.raise > 0);
+    const phonePose = illustrated ? illustratedPhoneFrameAt(scene, id, time, phone) : 'idle';
+    const phoneFrame: Sprite | null = illustrated ? phonePose === 'idle' ? pack.idle : pack.phone![phonePose] : null;
+    if (phoneFrame) context.drawImage(phoneFrame, left, top, width, height);
+    else if (state.pose === 'side') {
       context.translate(x, y); context.scale(state.direction, 1);
       context.drawImage(pack.side[state.frame], -width / 2, -height - (state.frame > 0 && state.frame % 2 === 0 ? 3 : 0), width, height);
     } else if (state.pose === 'wave') context.drawImage(pack.wave[state.frame - 1], left, top, width, height);
     else context.drawImage(pack.idle, left, top, width, height);
     context.restore();
-    if (phone.held || phone.raise > 0) {
+    if (!illustrated && (phone.held || phone.raise > 0)) {
       const anchor = phoneAnchor(id, state.pose, state.pose === 'idle' ? 0 : state.pose === 'wave' ? state.frame : state.frame, phone.hand, {
         x: left, y: top, width, height, sourceWidth: source.width, sourceHeight: source.height, direction: state.pose === 'side' ? state.direction : 1,
       });

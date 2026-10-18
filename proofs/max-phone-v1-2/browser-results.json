@@ -1,0 +1,163 @@
+{
+  "origin": "http://127.0.0.1:4178/",
+  "steps": [
+    {
+      "name": "studio loaded",
+      "detail": "http://127.0.0.1:4178/"
+    },
+    {
+      "name": "phone line generated with a local AI voice",
+      "detail": "Piper/Kokoro through the Voice Maker service"
+    },
+    {
+      "name": "phone line saved to the Audio Library",
+      "detail": "Narrator dialogue"
+    },
+    {
+      "name": "scene created with Max",
+      "detail": "Max is the only Brightling in the shot"
+    },
+    {
+      "name": "phone interaction sequence authored",
+      "detail": "Take Out Phone · 0.4s | Tap Phone · 2.6s | Communicate Message · 3.2s | Put Away Phone · 8.2s"
+    },
+    {
+      "name": "interactions pinned to their story beats",
+      "detail": "Take Out Phone · 0.6s | Tap Phone · 2.6s | Communicate Message · 3.4s | Put Away Phone · 8.6s"
+    },
+    {
+      "name": "communication configured",
+      "detail": "message \"I'm hungry!\", food symbol, voice \"Narrator dialogue\""
+    },
+    {
+      "name": "scene saved",
+      "detail": "saved=true"
+    },
+    {
+      "name": "scene video exported",
+      "detail": "Max_asks_for_food.webm (3033231 bytes)"
+    },
+    {
+      "name": "phone speech saved as a scene clip",
+      "detail": "1 clip(s), speakerId=[null]"
+    },
+    {
+      "name": "second shot starts holding the phone with no take-out",
+      "detail": "phone interactions authored in shot 2: 0"
+    },
+    {
+      "name": "saved scenes keep the carried-in phone state",
+      "detail": "[{\"name\":\"Max asks for food\",\"phoneIn\":null,\"phone\":4},{\"name\":\"Max still has the phone\",\"phoneIn\":\"left\",\"phone\":0}]"
+    }
+  ],
+  "frames": [
+    {
+      "name": "01-no-phone",
+      "at": 0.2,
+      "shown": "0.2s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\01-no-phone.png"
+    },
+    {
+      "name": "02-taking-out",
+      "at": 0.75,
+      "shown": "0.8s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\02-taking-out.png"
+    },
+    {
+      "name": "03-phone-held",
+      "at": 1.8,
+      "shown": "1.8s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\03-phone-held.png"
+    },
+    {
+      "name": "04-tap",
+      "at": 2.8,
+      "shown": "2.8s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\04-tap.png"
+    },
+    {
+      "name": "05-popup",
+      "at": 4.2,
+      "shown": "4.2s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\05-popup.png"
+    },
+    {
+      "name": "06-popup-fading",
+      "at": 5.6,
+      "shown": "5.6s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\06-popup-fading.png"
+    },
+    {
+      "name": "07-put-away",
+      "at": 8.5,
+      "shown": "8.5s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\07-put-away.png"
+    },
+    {
+      "name": "08-phone-away",
+      "at": 10.5,
+      "shown": "10.5s / 12.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\08-phone-away.png"
+    },
+    {
+      "name": "09-continuity-carried-in",
+      "at": 0.5,
+      "shown": "0.5s / 6.0s",
+      "file": "proofs\\max-phone-v1-2\\frames\\09-continuity-carried-in.png"
+    }
+  ],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "phoneList": [
+    "Take Out Phone · 0.4s",
+    "Tap Phone · 2.6s",
+    "Communicate Message · 3.2s",
+    "Put Away Phone · 8.2s"
+  ],
+  "phoneTimeline": [
+    "Take Out Phone · 0.6s",
+    "Tap Phone · 2.6s",
+    "Communicate Message · 3.4s",
+    "Put Away Phone · 8.6s"
+  ],
+  "phoneVoicePanel": "configured",
+  "canvas": {
+    "w": 1672,
+    "h": 941
+  },
+  "video": {
+    "name": "Max_asks_for_food.webm",
+    "bytes": 3033231,
+    "copiedTo": "proofs/max-phone-v1-2/max-asks-for-food-v1-2.webm"
+  },
+  "sceneAudioClips": [
+    {
+      "id": "8667f1eb-8089-4ba2-9731-acd980592342",
+      "assetId": "9553fba5-f1bb-4cd0-b5e5-c32f800096a1",
+      "start": 3.62,
+      "trimStart": 0,
+      "trimEnd": 1.3013333333333332,
+      "volume": 1,
+      "fadeIn": 0.02,
+      "fadeOut": 0.08
+    }
+  ],
+  "continuity": {
+    "phoneListLength": 0
+  },
+  "savedScenes": [
+    {
+      "name": "Max asks for food",
+      "phoneIn": null,
+      "phone": 4
+    },
+    {
+      "name": "Max still has the phone",
+      "phoneIn": "left",
+      "phone": 0
+    }
+  ],
+  "consoleErrorCount": 0,
+  "failedRequestCount": 0,
+  "profileRemoved": true
+}
