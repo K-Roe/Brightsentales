@@ -1,0 +1,50 @@
+import { spawn } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+
+let ws, serial = 1;
+const pending = new Map();
+const send = (m, p = {}) => new Promise((ok, fail) => { const id = serial++; pending.set(id, { ok, fail }); ws.send(JSON.stringify({ id, method: m, params: p })); });
+const evaluate = async e => { const v = await send('Runtime.evaluate', { expression: e, returnByValue: true, awaitPromise: true }); if (v.exceptionDetails) throw Error(v.exceptionDetails.exception?.description ?? v.exceptionDetails.text); return v.result.value; };
+const onMessage = ev => { const m = JSON.parse(ev.data); if (!m.id) return; const c = pending.get(m.id); if (!c) return; pending.delete(m.id); m.error ? c.fail(Error(m.error.message)) : c.ok(m.result); };
+
+const p = mkdtempSync(join(tmpdir(), 'probe-music-'));
+spawn(String.raw`C:\Program Files\Google\Chrome\Application\chrome.exe`, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--autoplay-policy=no-user-gesture-required', `--user-data-dir=${p}`, '--remote-debugging-port=0', '--window-size=1500,1100', 'about:blank'], { stdio: 'ignore' });
+const pf = join(p, 'DevToolsActivePort');
+for (let i = 0; i < 100 && !existsSync(pf); i++) await delay(100);
+const port = Number(readFileSync(pf, 'utf8').split('\n')[0]);
+const t = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
+ws = new WebSocket(t.find(x => x.type === 'page').webSocketDebuggerUrl);
+await new Promise((ok, fail) => { ws.addEventListener('open', ok, { once: true }); ws.addEventListener('error', fail, { once: true }); });
+ws.addEventListener('message', onMessage);
+await send('Page.enable'); await send('Runtime.enable');
+await send('Page.navigate', { url: 'http://127.0.0.1:4177/' });
+for (let i = 0; i < 60 && !(await evaluate('!!document.querySelector(".studio-nav")')); i++) await delay(100);
+await evaluate(`[...document.querySelectorAll('.studio-nav button')].find(b=>b.textContent.includes('Music Studio')).click()`);
+await delay(400);
+await evaluate(`document.querySelector('.music-big-button').click()`);
+await delay(600);
+await evaluate(`document.querySelector('.music-add-instrument').click()`);
+await delay(400);
+await evaluate(`document.querySelector('button[aria-label="Add Piano instrument"]').click()`);
+await delay(600);
+const info = await evaluate(`(()=>{
+  const s=document.querySelector('.piano-roll-scroll');
+  s.scrollTop=0;
+  const c=s.querySelector('canvas');
+  const r=c.getBoundingClientRect();
+  const cx=r.x+760/ c.width * r.width, cy=r.y+320;
+  const hit=document.elementFromPoint(cx,cy);
+  return {scrollRect:{x:r.x,y:r.y,w:r.width,h:r.height}, canvasW:c.width, canvasH:c.height, scrollH:s.scrollHeight, clientH:s.clientHeight, target:{x:Math.round(cx),y:Math.round(cy)}, hitTag:hit?.tagName, hitClass:hit?.className?.toString?.().slice(0,60), insideCanvasY: cy>=r.y && cy<=r.y+r.height};
+})()`);
+console.log(JSON.stringify(info, null, 2));
+// Try a click and report the note count afterwards.
+const before = await evaluate(`document.querySelectorAll('.music-track-card').length`);
+await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: info.target.x, y: info.target.y, button: 'left', clickCount: 1 });
+await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: info.target.x, y: info.target.y, button: 'left', clickCount: 1 });
+await delay(400);
+console.log('notes after:', await evaluate(`document.querySelectorAll('.music-track-card')[0].querySelector('.music-track-meta small').textContent`));
+console.log('chip:', await evaluate(`document.querySelector('.music-note-chip')?.textContent??null`));
+process.exit(0);

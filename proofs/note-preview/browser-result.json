@@ -1,0 +1,91 @@
+{
+  "pianoVoices": [
+    {
+      "type": "triangle",
+      "frequency": 261.6255798339844
+    },
+    {
+      "type": "sine",
+      "frequency": 523.2511596679688
+    },
+    {
+      "type": "sine",
+      "frequency": 784.876708984375
+    }
+  ],
+  "guitarVoices": [
+    {
+      "type": "sawtooth",
+      "frequency": 261.6255798339844
+    },
+    {
+      "type": "square",
+      "frequency": 523.2511596679688
+    }
+  ],
+  "initial": {
+    "save": "Unsaved changes",
+    "notes": 0,
+    "scale": "C major"
+  },
+  "key": {
+    "active": "60",
+    "save": "Unsaved changes",
+    "notes": 0,
+    "voices": 3
+  },
+  "keyboard": "Note editor for Piano. Selected keyboard key C♯4 / D♭4. Arrow keys choose a pitch; Enter or Space plays it.",
+  "keyFromKeyboard": "61",
+  "switchedVoices": [
+    {
+      "type": "sawtooth",
+      "frequency": 261.6255798339844
+    },
+    {
+      "type": "square",
+      "frequency": 523.2511596679688
+    }
+  ],
+  "added": {
+    "notes": 1,
+    "active": "60",
+    "pitch": 60
+  },
+  "dragged": {
+    "pitch": 61,
+    "active": "61"
+  },
+  "undoPitch": 60,
+  "redoPitch": 61,
+  "heard": "61",
+  "guidedPixel": [
+    105,
+    217,
+    205,
+    61
+  ],
+  "unguidedPixel": [
+    177,
+    177,
+    255,
+    13
+  ],
+  "guideOff": true,
+  "guideOn": "C major",
+  "reopened": 1,
+  "savedBeforeAudition": "Saved",
+  "savedAfterAudition": "Saved",
+  "afterRelease": "",
+  "playback": {
+    "state": "Playing",
+    "audition": ""
+  },
+  "exported": true,
+  "backupCheck": {
+    "version": 8,
+    "songs": 1,
+    "assets": 1
+  },
+  "restored": true,
+  "errors": []
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "requested": "dark",
+    "section": "✦Characters",
+    "theme": "dark",
+    "bodyWidth": 1569,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "▧Places",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "▤Scenes",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "★Intros",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "▣Episodes",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "❖Credits",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "♪Music Studio",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "♫Audio",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "dark",
+    "section": "▶Playground",
+    "theme": "dark",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(16, 14, 33)",
+    "text": "rgb(244, 241, 255)"
+  },
+  {
+    "requested": "light",
+    "section": "✦Characters",
+    "theme": "light",
+    "bodyWidth": 1569,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "▧Places",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "▤Scenes",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "★Intros",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "▣Episodes",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "❖Credits",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "♪Music Studio",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "♫Audio",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  },
+  {
+    "requested": "light",
+    "section": "▶Playground",
+    "theme": "light",
+    "bodyWidth": 1584,
+    "viewport": 1584,
+    "background": "rgb(248, 249, 252)",
+    "text": "rgb(41, 44, 80)"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "persisted": {
+    "theme": "light",
+    "choice": "light"
+  },
+  "systemDark": "dark",
+  "systemLight": "light",
+  "legacy": "light",
+  "defaultTheme": "dark",
+  "mobile": {
+    "width": 390,
+    "viewport": 390
+  }
+}

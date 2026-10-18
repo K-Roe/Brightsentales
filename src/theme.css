@@ -1,0 +1,29 @@
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ui-page:#100e21;--ui-surface:#1d1935;--ui-surface-soft:#282242;--ui-surface-translucent:#24203bd9;
+  --ui-border:#50476f;--ui-text:#f4f1ff;--ui-muted:#c3badc;--ui-faint:#a99fc8;
+  --ui-accent:#b7a7ff;--ui-accent-strong:#8e7bea;--ui-accent-soft:#352b5a;--ui-on-accent:#1a1231;
+  --ui-pink:#ff9bc6;--ui-teal:#67d8cb;--ui-danger:#ff9dae;--ui-warning:#ffd68b;
+  --ui-shadow:#04020c70;--ui-overlay:#05040bd9;--ui-key-white:#e8e4ff;--ui-key-ink:#30265f;--ui-key-black:#282242;
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --ui-page:#f8f9fc;--ui-surface:#ffffff;--ui-surface-soft:#f3f1fb;--ui-surface-translucent:#ffffffd9;
+  --ui-border:#dedbea;--ui-text:#292c50;--ui-muted:#626982;--ui-faint:#6b7088;
+  --ui-accent:#685bcc;--ui-accent-strong:#7164db;--ui-accent-soft:#eeeaff;--ui-on-accent:#ffffff;
+  --ui-pink:#bd387c;--ui-teal:#207d80;--ui-danger:#b53959;--ui-warning:#8a5300;
+  --ui-shadow:#353d721c;--ui-overlay:#171229a8;--ui-key-white:#ffffff;--ui-key-ink:#39346b;--ui-key-black:#d4cdeb;
+}
+:root{background:var(--ui-page);color:var(--ui-text)}
+body,.app-shell{background:var(--ui-page);color:var(--ui-text)}
+select,input,textarea,button{font:inherit}
+select,input,textarea{color-scheme:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--ui-teal);outline-offset:2px}
+*{scrollbar-color:var(--ui-border) var(--ui-surface-soft)}
+*::-webkit-scrollbar{width:11px;height:11px}
+*::-webkit-scrollbar-track{background:var(--ui-surface-soft)}
+*::-webkit-scrollbar-thumb{background:var(--ui-border);border:2px solid var(--ui-surface-soft);border-radius:99px}
+.appearance-control{display:grid;gap:7px;margin:22px 8px 10px;color:var(--ui-muted);font-size:12px;font-weight:800}
+.appearance-control select{width:100%;min-height:39px;padding:8px 10px;border:1px solid var(--ui-border);border-radius:11px;background:var(--ui-surface-soft);color:var(--ui-text)}
+@media(max-width:900px){.appearance-control{margin:10px 0 0;max-width:220px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

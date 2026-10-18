@@ -24,6 +24,7 @@ import { createStudioBackup, recoverStudioRestore, restoreStudioBackup, StudioBa
 import { restoreStudioWithAudio } from './restoreCoordinator';
 import { decodePlaceOrganisation, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
 import { maxOutfitFrom, maxineOutfitFrom, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
+import { readAppearance, resolveAppearance, saveAppearance, type Appearance } from './appearance';
 
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
@@ -49,6 +50,18 @@ type Sprite = HTMLImageElement | HTMLCanvasElement;
 type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 
 export default function App() {
+  const [appearance, setAppearance] = useState<Appearance>(() => readAppearance());
+  const [systemDark, setSystemDark] = useState(() => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true);
+  const resolvedTheme = resolveAppearance(appearance, systemDark);
+  useEffect(() => {
+    const query = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (!query) return;
+    const update = () => setSystemDark(query.matches);
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+  useEffect(() => { document.documentElement.dataset.theme = resolvedTheme; }, [resolvedTheme]);
+  const chooseAppearance = (next: Appearance) => { setAppearance(next); saveAppearance(next); document.documentElement.dataset.theme = resolveAppearance(next, systemDark); };
   const [recovery] = useState(() => recoverStudioRestore(localStorage, LIBRARY_KEY, STORAGE_KEY));
   const episodeLeaveGuard = useRef<EpisodeLeaveGuard | null>(null);
   const creditsLeaveGuard = useRef<CreditsLeaveGuard | null>(null);
@@ -436,16 +449,17 @@ export default function App() {
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
       <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'music', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section'); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', music: '♪', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab === 'music' ? 'Music Studio' : tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <label className="appearance-control">Appearance<select aria-label="Appearance" value={appearance} onChange={event => chooseAppearance(event.target.value as Appearance)}><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></label>
       <span className="local-badge"><span /> Saved in this browser</span>
     </aside>
-    <main className="main">
+    <main className={`main ${activeTab === 'music' ? 'main-music' : ''}`}>
       {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} maxineOutfit={maxineOutfit} onMaxineOutfitChange={saveMaxineOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
       {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} audioAssets={audioAssets} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
       {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
-      {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} />}
+      {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>

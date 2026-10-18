@@ -13,6 +13,10 @@ Karl authorised sequential technical development with visual and listening accep
 | M6.5 — Intro Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.5 report](../proofs/m6-5/REPORT.md) | Check titles, styles and animation; listen to the intro recording. |
 | M6.6 — Credits Maker | Implemented | **AWAITING KARL'S REVIEW** | [M6.6 report](../proofs/m6-6/REPORT.md) | Check credit readability, scrolling and the unsaved warning. |
 | M6.6A — Music & sound studio | Implemented | **AWAITING KARL'S REVIEW** | [M6.6A report](../proofs/m6-6a/REPORT.md) | Listen to the instruments, effects and a rendered song. |
+| M6.6B — Music Studio UI redesign | Implemented; song byte equality unresolved | **AWAITING KARL'S REVIEW** | [M6.6B report](../proofs/m6-6b/REPORT.md) | Compare dark/light screenshots, check the note editor and listen to the rendered song/effect. |
+| UI Package A — Music Studio polish | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Package A report](../proofs/ui-package-a/REPORT.md) | Check the wide editor, collapse and note editing; listen to playback. |
+| UI Package B — Global themes | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Package B report](../proofs/ui-package-b/REPORT.md) | Review all sections in Dark and Light and the shared appearance control. |
+| Beginner Note Preview | Implemented; technical checks passed | **AWAITING KARL'S SPEAKER REVIEW** | [Note Preview report](../proofs/note-preview/REPORT.md) | Hear C4, switch instruments, add and drag notes, then check the preview volume and feel. |
 | M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
 
 ## F2 — real MP3 and OGG compatibility
@@ -44,6 +48,13 @@ Karl authorised sequential technical development with visual and listening accep
 - **Limits:** Browser reload simulates interruption; hardware power loss and persistent storage failure remain outside the test. The audio snapshot temporarily needs additional quota.
 - **Karl's check:** Review the restored library and episode, and confirm the failure message is clear if storage cannot recover.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
+
+## M6.6B — Music Studio UI redesign
+
+- **Implementation:** Dark and light themes scoped to Music Studio, with dark as the default and a locally saved preference; illustrated inline SVG instrument/effect cards, three piano-roll zoom levels, named drum rows, styled overlays/forms/scrollbars/tooltips, large transport and replacement confirmation. The M6.6A synthesis and saved-song/Backup v8 formats were preserved. Beat Blocks remain deferred to M7.0; M6.7 was not started.
+- **Tests:** 147/147 Vitest tests and production build passed. Isolated Chrome checked song/effect editing and previews, Audio Library export/replay, both themes, focus and reduced motion, narrow layout and a fresh-profile Backup v8 restore with zero console/asset errors.
+- **Audio boundary:** The effect rendered byte-identically before/after. The song failed the requested SHA-256 equality check; 278/1,023,120 PCM samples differed by one 16-bit step, and two runs of the redesigned build also differed. No audio engine code was changed. See [comparison and screenshots](../proofs/m6-6b/REPORT.md).
+- **Karl's check:** Review the [dark piano roll](../proofs/m6-6b/05-note-added-dark.png), [dark drum roll](../proofs/m6-6b/03-drum-track-dark.png), [light piano roll](../proofs/m6-6b/14b-roll-light.png), [light effects](../proofs/m6-6b/13-effects-light.png) and the full M6.6B report. Visual and listening acceptance is pending.
 
 ## M6.6A — Music & Sound Effects Studio
 

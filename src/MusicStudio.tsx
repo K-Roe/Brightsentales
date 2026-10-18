@@ -1,64 +1,640 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AudioAsset } from './audio';
-import { INSTRUMENT_NAMES, INSTRUMENTS, noteName, type InstrumentId } from './instruments';
-import { effectDuration, peakOf, renderEffect, renderMusic, renderNotePreview } from './musicRender';
-import { wavBlob } from './wav';
+import { INSTRUMENTS, INSTRUMENT_NAMES, type InstrumentId } from './instruments';
+import { effectDuration, peakOf, renderEffect, renderMusic } from './musicRender';
 import { renderEffectToAsset, renderMusicToAsset } from './musicAssets';
 import {
   applyDrumPattern, applyStarter, BEATS_PER_BAR, clampNote, DRUM_PATTERN_NAMES, EFFECT_PRESET_NAMES, EFFECT_PRESETS,
   MUSIC_BARS_MAX, MUSIC_BARS_MIN, MUSIC_MAX_TRACKS, MUSIC_TEMPO_MAX, MUSIC_TEMPO_MIN, newEffect, newMusicProject, newTrack,
   projectSeconds, snapToStep, STARTER_NAMES, trackIsAudible, type EffectPreset, type EffectProject, type MusicProject, type Note, type StudioProjects, type Track,
 } from './musicProject';
-import { PlayButton } from './previewPlayer';
+import {
+  BEGINNER_STEPS, DRUM_NAMES, DRUM_PATTERN_BLURBS, EFFECT_BLURBS, EFFECT_COLOURS, EFFECT_ICONS, Icon, INSTRUMENT_BLURBS, INSTRUMENT_COLOURS,
+  INSTRUMENT_ICONS, noteLabel, STARTER_BLURBS, zoomById, ZOOM_LEVELS, type MusicTheme, type ZoomId,
+} from './musicDesign';
+import { PlayButton, playEffectPreview, useMusicPreview } from './previewPlayer';
+import { emptyNoteHistory, recordNoteEdit, stepNoteHistory, type NoteHistory } from './musicNoteHistory';
+import { beginnerPitchName, MUSIC_SCALES, pitchInScale, type MusicScale } from './musicGuidance';
+import { useNoteAudition } from './useNoteAudition';
 
 type Tab = 'music' | 'effects';
+type RenderedInfo = { kind: Tab; name: string; peak: number; duration: number };
 type Props = {
   projects: StudioProjects;
   issue: string | null;
   audioAssets: AudioAsset[];
   onSaveProjects: (next: StudioProjects) => boolean;
   onAddAsset: (asset: AudioAsset) => void;
+  theme: MusicTheme;
+  onThemeChange: (theme: MusicTheme) => void;
 };
 
-const BEAT_WIDTH = 46;
-const ROW_HEIGHT = 18;
-// The visible window must include the drum range (MIDI 36-51), otherwise a
-// drum pattern is placed off-canvas and looks empty.
+const KEY_WIDTH = 96;
 const LOW_PITCH = 36;
 const HIGH_PITCH = 84;
 const ROWS = HIGH_PITCH - LOW_PITCH + 1;
-const ROLL_HEIGHT = ROWS * ROW_HEIGHT;
-const LABEL_WIDTH = 54;
 const NOTE_MIN = 0.25;
+const DRUM_RANGE = [36, 51];
 
 const fmt = (seconds: number) => `${seconds.toFixed(1)}s`;
-const rollWidth = (project: MusicProject) => LABEL_WIDTH + project.bars * BEATS_PER_BAR * BEAT_WIDTH + 60;
-const beatFromX = (x: number, project: MusicProject) => Math.max(0, Math.min(project.bars * BEATS_PER_BAR - NOTE_MIN, snapToStep((x - LABEL_WIDTH) / BEAT_WIDTH)));
-const pitchFromY = (y: number) => Math.max(LOW_PITCH, Math.min(HIGH_PITCH, HIGH_PITCH - Math.floor(y / ROW_HEIGHT)));
+const isDrumInstrument = (instrument: InstrumentId) => instrument === 'drums';
 
-/** Small note preview using the same HTMLAudioElement the Studio already uses. */
-function useNoteAudition() {
-  const [busy, setBusy] = useState(false);
-  const run = async (instrument: InstrumentId, pitch: number) => {
-    setBusy(true);
-    try {
-      const result = await renderNotePreview(instrument, pitch);
-      const url = URL.createObjectURL(wavBlob(result.channels, result.sampleRate));
-      const element = new Audio(url);
-      element.volume = 0.6;
-      try { await element.play(); } catch { /* preview is best effort */ }
-      setTimeout(() => { URL.revokeObjectURL(url); }, 1200);
-    } finally { setBusy(false); }
-  };
-  return { busy, run };
+/* -------------------------------------------------------------------------- */
+/* Shared shell                                                               */
+/* -------------------------------------------------------------------------- */
+
+function StudioShell({ children }: { children: React.ReactNode }) {
+  return <div className="music-studio">
+    <div className="music-studio-top">
+      <div className="music-studio-brand">
+        <span className="music-studio-mark" aria-hidden="true">♪</span>
+        <div><p className="eyebrow">BRIGHTTALES STUDIO</p><h1>Make your own music &amp; sounds</h1></div>
+      </div>
+    </div>
+    {children}
+  </div>;
 }
 
-export default function MusicStudio({ projects, issue, audioAssets, onSaveProjects, onAddAsset }: Props) {
+/* -------------------------------------------------------------------------- */
+/* Music Maker                                                                */
+/* -------------------------------------------------------------------------- */
+
+function MusicMaker({
+  projects, open, change, setOpen, save, message, renderToLibrary, rendering, rendered, audioAssets, onSaveProjects, theme,
+}: {
+  projects: StudioProjects;
+  open: MusicProject | null;
+  change: (change: (current: MusicProject) => MusicProject) => void;
+  setOpen: (project: MusicProject | null) => void;
+  save: () => void;
+  message: (text: string) => void;
+  renderToLibrary: (project: MusicProject) => void;
+  rendering: boolean;
+  rendered: { name: string; peak: number; duration: number } | null;
+  audioAssets: AudioAsset[];
+  onSaveProjects: (next: StudioProjects) => boolean;
+  theme: MusicTheme;
+}) {
+  const [savedSnapshot, setSavedSnapshot] = useState<string | null>(null);
+  const [selectedNote, setSelectedNote] = useState<string | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+  const [picking, setPicking] = useState(false);
+  const [zoom, setZoom] = useState<ZoomId>('normal');
+  const [beginnerMode, setBeginnerMode] = useState(true);
+  const [musicScale, setMusicScale] = useState<MusicScale>('C major');
+  const [keyboardPitch, setKeyboardPitch] = useState(60);
+  const [expandedTracks, setExpandedTracks] = useState<string[]>([]);
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const history = useRef<NoteHistory>(emptyNoteHistory());
+  const openRef = useRef(open);
+  openRef.current = open;
+  const [confirming, setConfirming] = useState<{ kind: 'starter' | 'pattern'; name: string } | null>(null);
+  const drag = useRef<{ id: string; mode: 'move' | 'resize'; x: number; y: number; base: Note; before: Note[]; trackId: string; lastPreviewPitch: number; lastPreviewAt: number } | null>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const roll = useRef<HTMLDivElement>(null);
+
+  const scale = zoomById(zoom);
+  const preview = useMusicPreview(open, message);
+  const notePreview = useNoteAudition();
+  const track = open?.tracks.find(item => item.id === selectedTrack) ?? open?.tracks[0] ?? null;
+  const noteCount = track?.notes.length ?? 0;
+
+  useEffect(() => { setSelectedTrack(open?.tracks[0]?.id ?? null); setSelectedNote(null); setExpandedTracks([]); history.current = emptyNoteHistory(); setHistoryVersion(v => v + 1); }, [open?.id]);
+  useEffect(() => {
+    const saved = projects.music.find(item => item.id === open?.id);
+    setSavedSnapshot(saved ? JSON.stringify(saved) : null);
+  }, [open?.id, projects.music]);
+  const dirty = !!open && (savedSnapshot === null || JSON.stringify(open) !== savedSnapshot);
+
+  const beats = open ? open.bars * BEATS_PER_BAR : 16;
+  const rollWidth = KEY_WIDTH + beats * scale.beat + 40;
+  const rollHeight = ROWS * scale.row;
+  const duration = open ? projectSeconds(open) : 0;
+  const progress = preview.duration > 0 ? Math.min(1, preview.position / preview.duration) : 0;
+  const activeColour = track ? INSTRUMENT_COLOURS[track.instrument] : '#9d8bff';
+  const editNotes = (trackId: string, notes: Note[], label: string) => {
+    const current = openRef.current;
+    const before = current?.tracks.find(item => item.id === trackId)?.notes;
+    if (!before) return;
+    const bounded = notes.map(note => clampNote(note, current!.bars));
+    const next = recordNoteEdit(history.current, { trackId, before, after: bounded, label });
+    if (next === history.current) return;
+    history.current = next;
+    setHistoryVersion(v => v + 1);
+    change(value => ({ ...value, tracks: value.tracks.map(item => item.id === trackId ? { ...item, notes: bounded } : item) }));
+  };
+  const historyStep = (direction: 'undo' | 'redo') => {
+    if (!openRef.current) return;
+    const result = stepNoteHistory(openRef.current, history.current, direction);
+    if (!result) return;
+    history.current = result.history;
+    setHistoryVersion(v => v + 1);
+    change(() => result.project);
+    message(`${direction === 'undo' ? 'Undid' : 'Redid'} ${result.label.toLowerCase()}.`);
+  };
+  void historyVersion;
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.altKey || event.key.toLowerCase() !== 'z' && event.key.toLowerCase() !== 'y') return;
+      if (!(event.target instanceof Element) || !event.target.closest('.music-editor-panel')) return;
+      if ((event.target as Element).closest('input,textarea,[contenteditable]')) return;
+      event.preventDefault();
+      historyStep(event.shiftKey || event.key.toLowerCase() === 'y' ? 'redo' : 'undo');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
+  const beatFromX = (x: number) => Math.max(0, Math.min(beats - NOTE_MIN, snapToStep((x - KEY_WIDTH) / scale.beat)));
+  const pitchFromY = (y: number) => Math.max(LOW_PITCH, Math.min(HIGH_PITCH, HIGH_PITCH - Math.floor(y / scale.row)));
+
+  const audition = (instrument: InstrumentId, pitch: number, velocity = 0.75) => {
+    if (preview.status === 'playing' || preview.status === 'preparing') return;
+    void notePreview.audition(instrument, pitch, velocity);
+  };
+  useEffect(() => { if (preview.status === 'playing' || preview.status === 'preparing') notePreview.stop(); }, [preview.status]);
+
+  const draw = () => {
+    const element = canvas.current;
+    if (!element || !open) return;
+    const context = element.getContext('2d');
+    if (!context) return;
+    const styles = getComputedStyle(element);
+    const tone = (name: string, fallback: string) => styles.getPropertyValue(name).trim() || fallback;
+    context.clearRect(0, 0, rollWidth, rollHeight);
+
+    for (let pitch = LOW_PITCH; pitch <= HIGH_PITCH; pitch++) {
+      const y = (HIGH_PITCH - pitch) * scale.row;
+      const isOctave = pitch % 12 === 0;
+      context.fillStyle = beginnerMode && track?.instrument !== 'drums' && pitchInScale(pitch, musicScale)
+        ? tone('--ms-roll-scale', 'rgba(78,205,196,.13)')
+        : isOctave ? tone('--ms-roll-octave', 'rgba(157,139,255,.09)') : tone('--ms-roll-row', 'rgba(157,139,255,.03)');
+      context.fillRect(KEY_WIDTH, y, rollWidth - KEY_WIDTH, scale.row);
+      if (pitch === 60 && track?.instrument !== 'drums') {
+        context.fillStyle = tone('--ms-roll-middle', 'rgba(255,209,102,.22)');
+        context.fillRect(KEY_WIDTH, y, rollWidth - KEY_WIDTH, scale.row);
+      }
+    }
+    for (let beat = 0; beat <= beats; beat++) {
+      const x = KEY_WIDTH + beat * scale.beat;
+      const isBar = beat % BEATS_PER_BAR === 0;
+      context.strokeStyle = isBar ? tone('--ms-roll-bar', 'rgba(157,139,255,.55)') : tone('--ms-roll-beat', 'rgba(157,139,255,.2)');
+      context.lineWidth = isBar ? 2 : 1;
+      context.beginPath(); context.moveTo(x, 0); context.lineTo(x, rollHeight); context.stroke();
+    }
+
+    // Piano keyboard column.
+    context.fillStyle = tone('--ms-roll-keys', 'rgba(10,7,26,.72)');
+    context.fillRect(0, 0, KEY_WIDTH, rollHeight);
+    for (let pitch = HIGH_PITCH; pitch >= LOW_PITCH; pitch--) {
+      const y = (HIGH_PITCH - pitch) * scale.row;
+      const isBlack = [1, 3, 6, 8, 10].includes(((pitch % 12) + 12) % 12);
+      const isDrum = !!track && isDrumInstrument(track.instrument);
+      context.fillStyle = isBlack ? tone('--ms-roll-black', 'rgba(28,20,56,.95)') : tone('--ms-roll-white', 'rgba(232,228,255,.94)');
+      const h = isBlack ? scale.row * 0.62 : scale.row;
+      context.fillRect(0, y, KEY_WIDTH, h);
+      if (beginnerMode && !isDrum && pitchInScale(pitch, musicScale)) {
+        context.fillStyle = tone('--ms-roll-scale', 'rgba(78,205,196,.13)');
+        context.fillRect(0, y, KEY_WIDTH, h);
+      }
+      if (pitch === 60 && !isDrum) {
+        context.fillStyle = tone('--ms-roll-middle', 'rgba(255,209,102,.22)');
+        context.fillRect(0, y, KEY_WIDTH, h);
+      }
+      if (notePreview.activePitch === pitch) {
+        context.fillStyle = tone('--ms-roll-audition', 'rgba(78,205,196,.65)');
+        context.fillRect(0, y, KEY_WIDTH, h);
+      }
+      if (keyboardPitch === pitch && !isDrum) {
+        context.strokeStyle = tone('--ms-roll-focus', '#b28cff');
+        context.lineWidth = 2;
+        context.strokeRect(1, y + 1, KEY_WIDTH - 2, h - 2);
+      }
+      context.fillStyle = isBlack ? tone('--ms-roll-black-text', 'rgba(214,206,255,.75)') : tone('--ms-roll-white-text', 'rgba(58,44,110,.85)');
+      context.font = `700 ${Math.min(11, scale.row - 5)}px 'Segoe UI',sans-serif`;
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      const label = isDrum ? (DRUM_RANGE[0] <= pitch && pitch <= DRUM_RANGE[1] ? DRUM_NAMES[pitch] ?? '' : '') : pitch === 60 ? 'C4 · Middle C' : beginnerPitchName(pitch);
+      if (label) context.fillText(label, KEY_WIDTH / 2, y + (isBlack ? h / 2 : scale.row / 2));
+    }
+
+    if (!track) return;
+    // Notes from other tracks, dimmed.
+    for (const other of open.tracks) {
+      if (other.id === track.id) continue;
+      context.fillStyle = tone('--ms-roll-ghost', 'rgba(157,139,255,.16)');
+      for (const n of other.notes) context.fillRect(KEY_WIDTH + n.start * scale.beat, (HIGH_PITCH - n.pitch) * scale.row + 2, Math.max(3, n.duration * scale.beat - 2), scale.row - 4);
+    }
+    for (const n of track.notes) {
+      const x = KEY_WIDTH + n.start * scale.beat;
+      const y = (HIGH_PITCH - n.pitch) * scale.row;
+      const width = Math.max(4, n.duration * scale.beat - 2);
+      const selected = n.id === selectedNote;
+      context.fillStyle = activeColour;
+      context.fillRect(x, y + 2, width, scale.row - 4);
+      // Velocity reads as a brightness bar along the top of the block.
+      context.fillStyle = 'rgba(255,255,255,.6)';
+      context.fillRect(x, y + 2, Math.max(2, width * n.velocity), 3);
+      if (selected) {
+        context.strokeStyle = tone('--ms-roll-selection', '#fff'); context.lineWidth = 2;
+        context.strokeRect(x - 1, y + 1, width + 2, scale.row - 2);
+      }
+    }
+    // Playhead.
+    if (preview.playing && preview.duration > 0) {
+      const beatNow = (preview.position / 60) * open.tempo;
+      const x = KEY_WIDTH + beatNow * scale.beat;
+      context.strokeStyle = tone('--ms-roll-playhead', '#ff8fab'); context.lineWidth = 2;
+      context.beginPath(); context.moveTo(x, 0); context.lineTo(x, rollHeight); context.stroke();
+    }
+  };
+
+  useEffect(() => { draw(); }, [theme, open, selectedNote, zoom, preview.position, selectedTrack, beginnerMode, musicScale, keyboardPitch, notePreview.activePitch]);
+  useEffect(() => {
+    const box = roll.current;
+    if (!box || !track || !track.notes.length) return;
+    const highest = Math.max(...track.notes.map(n => n.pitch));
+    box.scrollTop = Math.max(0, (HIGH_PITCH - highest) * scale.row - scale.row * 4);
+  }, [track?.id, noteCount, open?.id, zoom]);
+
+  const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!open || !track) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    const factor = rollWidth / box.width;
+    const x = (event.clientX - box.left) * factor;
+    const y = (event.clientY - box.top) * (rollHeight / box.height);
+    if (x < KEY_WIDTH) {
+      const pitch = pitchFromY(y);
+      setKeyboardPitch(pitch);
+      void audition(track.instrument, pitch);
+      message(`${isDrumInstrument(track.instrument) ? noteLabel(pitch, true) : beginnerPitchName(pitch)} on ${INSTRUMENT_NAMES[track.instrument]}.`);
+      return;
+    }
+    const hit = [...track.notes].reverse().find(n => {
+      const nx = KEY_WIDTH + n.start * scale.beat;
+      return x >= nx && x <= nx + n.duration * scale.beat && Math.abs(y - (HIGH_PITCH - n.pitch) * scale.row) < scale.row;
+    });
+    if (hit) {
+      const onEdge = x >= KEY_WIDTH + (hit.start + hit.duration) * scale.beat - 7;
+      setSelectedNote(hit.id);
+      drag.current = { id: hit.id, mode: onEdge ? 'resize' : 'move', x: event.clientX, y: event.clientY, base: { ...hit }, before: structuredClone(track.notes), trackId: track.id, lastPreviewPitch: hit.pitch, lastPreviewAt: 0 };
+      event.currentTarget.setPointerCapture(event.pointerId);
+      return;
+    }
+    const created: Note = { id: crypto.randomUUID(), pitch: pitchFromY(y), start: beatFromX(x), duration: 1, velocity: 0.8 };
+    editNotes(track.id, [...track.notes, created], 'Add note');
+    audition(track.instrument, created.pitch, created.velocity);
+    setSelectedNote(created.id);
+    message('Note added. Drag to move it, drag the right edge to change its length.');
+  };
+  const pointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const state = drag.current;
+    if (!state || !track) return;
+    const beatDelta = Math.round(((event.clientX - state.x) / scale.beat) * 4) / 4;
+    const pitchDelta = -Math.round((event.clientY - state.y) / scale.row);
+    const nextPitch = Math.max(LOW_PITCH, Math.min(HIGH_PITCH, state.base.pitch + pitchDelta));
+    if (state.mode === 'move' && nextPitch !== state.lastPreviewPitch && performance.now() - state.lastPreviewAt >= 90) {
+      audition(track.instrument, nextPitch, state.base.velocity);
+      state.lastPreviewPitch = nextPitch;
+      state.lastPreviewAt = performance.now();
+    }
+    change(value => ({ ...value, tracks: value.tracks.map(item => item.id === track.id ? {
+      ...item,
+      notes: item.notes.map(n => n.id === state.id
+        ? clampNote(state.mode === 'move' ? { ...n, start: state.base.start + beatDelta, pitch: nextPitch } : { ...n, duration: state.base.duration + beatDelta }, value.bars)
+        : n),
+    } : item) }));
+  };
+  const pointerUp = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const state = drag.current;
+    if (state && openRef.current) {
+      const beatDelta = Math.round(((event.clientX - state.x) / scale.beat) * 4) / 4;
+      const pitchDelta = -Math.round((event.clientY - state.y) / scale.row);
+      const nextPitch = Math.max(LOW_PITCH, Math.min(HIGH_PITCH, state.base.pitch + pitchDelta));
+      const after = state.before.map(note => note.id === state.id
+        ? clampNote(state.mode === 'move' ? { ...state.base, start: state.base.start + beatDelta, pitch: nextPitch } : { ...state.base, duration: state.base.duration + beatDelta }, openRef.current!.bars)
+        : note);
+      if (state.mode === 'move' && nextPitch !== state.lastPreviewPitch) audition(track?.instrument ?? 'piano', nextPitch, state.base.velocity);
+      change(value => ({ ...value, tracks: value.tracks.map(item => item.id === state.trackId ? { ...item, notes: after } : item) }));
+      history.current = recordNoteEdit(history.current, { trackId: state.trackId, before: state.before, after, label: state.mode === 'move' ? 'Move note' : 'Resize note' });
+      setHistoryVersion(v => v + 1);
+    }
+    drag.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+  const keyboardKey = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+    if (!track) return;
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      const next = Math.max(LOW_PITCH, Math.min(HIGH_PITCH, keyboardPitch + (event.key === 'ArrowUp' ? 1 : -1)));
+      setKeyboardPitch(next);
+      const rowTop = (HIGH_PITCH - next) * scale.row;
+      roll.current?.scrollTo({ top: Math.max(0, rowTop - 100), behavior: 'instant' });
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      audition(track.instrument, keyboardPitch);
+    }
+  };
+
+  const addTrack = (instrument: InstrumentId) => {
+    if (!open) return;
+    if (open.tracks.length >= MUSIC_MAX_TRACKS) { message(`You can have up to ${MUSIC_MAX_TRACKS} instruments in one song.`); return; }
+    const created = newTrack(instrument, INSTRUMENT_NAMES[instrument]);
+    change(value => ({ ...value, tracks: [...value.tracks, created] }));
+    setSelectedTrack(created.id);
+    setPicking(false);
+    message(`${INSTRUMENT_NAMES[instrument]} added.`);
+  };
+  const applyPreset = (name: string, kind: 'starter' | 'pattern', confirmed = false) => {
+    if (!track) return;
+    const replace = () => {
+      const notes = kind === 'starter' ? applyStarter(track, name) : applyDrumPattern(track, name);
+      editNotes(track.id, notes, 'Replace notes');
+      setSelectedNote(null);
+      setConfirming(null);
+      message(`“${name}” added to ${track.name}.`);
+    };
+    // Never overwrite existing notes without asking.
+    if (track.notes.length && !confirmed) setConfirming({ kind, name });
+    else replace();
+  };
+  const removeSelected = () => {
+    if (!track || !selectedNote) return;
+    editNotes(track.id, track.notes.filter(n => n.id !== selectedNote), 'Delete note');
+    setSelectedNote(null);
+    message('Note removed.');
+  };
+  const selected = track?.notes.find(n => n.id === selectedNote) ?? null;
+  const savedAsset = rendered && audioAssets.some(asset => asset.kind === 'music' && asset.name === rendered.name);
+
+  if (!open) return <StudioShell>
+    <div className="music-beginner-path">
+      <h2>How to make a song</h2>
+      <ol>{BEGINNER_STEPS.map((step, index) => <li key={step}><span className="music-step-number">{index + 1}</span>{step}</li>)}</ol>
+    </div>
+    <div className="music-empty">
+      <span className="music-empty-icon" aria-hidden="true">🎵</span>
+      <h2>No songs yet</h2>
+      <p>Press the big button to start your first song. You will pick an instrument and can play a tune straight away.</p>
+      <button className="music-big-button" onClick={() => { setOpen(newMusicProject()); message('Now choose an instrument to begin.'); }}>+ Create a song</button>
+    </div>
+    <div className="scene-library">{projects.music.map(item => <article key={item.id}>
+      <h2>{item.name}</h2>
+      <p>{item.tempo} BPM · {item.bars} bars · {item.tracks.length} instruments · {item.tracks.reduce((sum, t) => sum + t.notes.length, 0)} notes</p>
+      <div className="scene-actions">
+        <button onClick={() => setOpen(structuredClone(item))}>Open</button>
+        <button onClick={() => { const copy = { ...structuredClone(item), id: crypto.randomUUID(), name: `${item.name} copy` }; if (onSaveProjects({ ...projects, music: [...projects.music, copy] })) message('Song duplicated.'); }}>Duplicate</button>
+        <button onClick={() => { if (window.confirm(`Delete “${item.name}”?`)) message(onSaveProjects({ ...projects, music: projects.music.filter(other => other.id !== item.id) }) ? 'Song deleted.' : 'Could not delete the song.'); }}>Delete</button>
+      </div>
+    </article>)}</div>
+  </StudioShell>;
+
+  return <StudioShell>
+
+    <header className="music-song-header">
+      <button className="music-back" onClick={() => { if (dirty && !window.confirm('Leave without saving your song changes?')) return; preview.stop(); setOpen(null); }}>← All songs</button>
+      <input className="music-song-name" aria-label="Song name" maxLength={80} value={open.name} onChange={event => change(value => ({ ...value, name: event.target.value }))} />
+      <span className={`music-save-pill ${dirty ? 'unsaved' : 'saved'}`}>{dirty ? 'Unsaved changes' : 'Saved'}</span>
+      <div className="music-header-actions">
+        <button className="music-save-button" onClick={save}><span aria-hidden="true">💾</span> Save Song</button>
+        <button className="music-export-button" disabled={rendering} onClick={() => renderToLibrary(open)} data-tooltip="Finish this song and make it available in your Audio Library">
+          <span aria-hidden="true">✨</span> {rendering ? 'Making audio…' : 'Add to Audio Library'}
+        </button>
+      </div>
+    </header>
+
+    <section className="music-transport" aria-label="Playback controls">
+      <PlayButton playing={preview.playing} status={preview.status} disabled={preview.status === 'preparing'} canStop={preview.status !== 'stopped'} onPlay={() => void preview.play()} onStop={preview.stop} />
+      <span className="music-playback-state" role="status">{preview.status === 'preparing' ? 'Preparing audio' : preview.status === 'playing' ? 'Playing' : preview.status === 'paused' ? 'Paused' : 'Stopped'}</span>
+      <div className="music-progress">
+        <div className="music-progress-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)} aria-label="Song progress">
+          <div className="music-progress-fill" style={{ width: `${progress * 100}%` }} />
+        </div>
+        <span className="music-progress-time">{fmt(preview.position)} / {fmt(preview.duration || duration)}</span>
+      </div>
+      <div className="music-transport-fields">
+        <label className="music-stepper"><span>Tempo</span>
+          <input aria-label="Song tempo" type="number" min={MUSIC_TEMPO_MIN} max={MUSIC_TEMPO_MAX} value={open.tempo}
+            onChange={event => change(value => ({ ...value, tempo: Math.max(MUSIC_TEMPO_MIN, Math.min(MUSIC_TEMPO_MAX, Number(event.target.value))) }))} />
+          <small>BPM</small>
+        </label>
+        <label className="music-stepper"><span>Bars</span>
+          <input aria-label="Song bars" type="number" min={MUSIC_BARS_MIN} max={MUSIC_BARS_MAX} value={open.bars}
+            onChange={event => change(value => ({ ...value, bars: Math.max(MUSIC_BARS_MIN, Math.min(MUSIC_BARS_MAX, Number(event.target.value))) }))} />
+          <small>{beats} beats</small>
+        </label>
+        <label className="music-toggle"><input aria-label="Loop song" type="checkbox" checked={open.loop} onChange={event => change(value => ({ ...value, loop: event.target.checked }))} /><span>Loop</span></label>
+        <label className="music-master"><span>Master volume</span>
+          <input aria-label="Master volume" type="range" min="0" max="1" step="0.05" value={open.masterVolume} onChange={event => change(value => ({ ...value, masterVolume: Number(event.target.value) }))} />
+          <small>{Math.round(open.masterVolume * 100)}%</small>
+        </label>
+      </div>
+    </section>
+
+    <div className="music-workspace">
+    <section className="music-panel music-instrument-panel" aria-label="Instruments in this song">
+      <div className="music-panel-heading">
+        <div><h2>Your instruments</h2><p>Each instrument has its own colour. Tap one to edit its notes.</p></div>
+        <button className="music-add-instrument" onClick={() => setPicking(true)}><span aria-hidden="true">＋</span> Add Instrument</button>
+      </div>
+      <div className="music-track-cards">
+        {open.tracks.map(item => {
+          const colour = INSTRUMENT_COLOURS[item.instrument];
+          const audible = trackIsAudible(open.tracks, item);
+          return <article key={item.id} className={`music-track-card ${item.id === track?.id ? 'active' : ''} ${audible ? '' : 'silenced'}`} style={{ '--track-colour': colour } as React.CSSProperties}>
+            <button className="music-track-select" onClick={() => { setSelectedTrack(item.id); setSelectedNote(null); }} aria-pressed={item.id === track?.id}>
+              <span className="music-track-icon" style={{ background: `${colour}26`, color: colour }}><Icon path={INSTRUMENT_ICONS[item.instrument]} colour={colour} size={26} /></span>
+              <span className="music-track-meta"><strong>{item.name}</strong><small>{audible ? `${item.notes.length} notes` : `${item.notes.length} notes · silent`}</small></span>
+            </button>
+            <button className="music-track-expand" aria-expanded={expandedTracks.includes(item.id)} aria-controls={`music-track-controls-${item.id}`} onClick={() => setExpandedTracks(value => value.includes(item.id) ? value.filter(id => id !== item.id) : [...value, item.id])}>{expandedTracks.includes(item.id) ? 'Hide controls' : 'Show controls'} <span aria-hidden="true">{expandedTracks.includes(item.id) ? '−' : '+'}</span></button>
+            {expandedTracks.includes(item.id) && <div id={`music-track-controls-${item.id}`}>
+            <div className="music-track-controls">
+              <label>Volume<input aria-label={`${item.name} volume`} type="range" min="0" max="1" step="0.05" value={item.volume} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, volume: Number(event.target.value) } : t) }))} /><small>{Math.round(item.volume * 100)}%</small></label>
+              <label>Pan<input aria-label={`${item.name} pan`} type="range" min="-1" max="1" step="0.1" value={item.pan} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, pan: Number(event.target.value) } : t) }))} /><small>{item.pan === 0 ? 'Middle' : item.pan < 0 ? `Left ${Math.round(Math.abs(item.pan) * 100)}%` : `Right ${Math.round(item.pan * 100)}%`}</small></label>
+            </div>
+            <div className="music-track-toggles">
+              <button aria-pressed={item.muted} onClick={() => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, muted: !t.muted } : t) }))} data-tooltip="Mute this instrument">Mute</button>
+              <button aria-pressed={item.solo} onClick={() => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, solo: !t.solo } : t) }))} data-tooltip="Play only this instrument">Solo</button>
+              <button onClick={() => { if (window.confirm(`Remove “${item.name}” and all its notes?`)) { change(value => ({ ...value, tracks: value.tracks.filter(t => t.id !== item.id) })); history.current = emptyNoteHistory(); setHistoryVersion(v => v + 1); if (selectedTrack === item.id) setSelectedTrack(null); } }} data-tooltip="Remove this instrument">Remove</button>
+            </div>
+            </div>}
+          </article>;
+        })}
+        {open.tracks.length === 0 && <p className="music-panel-empty">No instruments yet. Press <strong>Add Instrument</strong> above to begin.</p>}
+      </div>
+    </section>
+
+    {track && <section className="music-panel music-editor-panel" aria-label="Note editor">
+      <div className="music-panel-heading">
+        <div><h2>Notes for {track.name}</h2><p>Click empty space to add a note. Drag a note to move it. Drag the right edge to change its length. Click a key on the left to hear it.</p></div>
+        <div className="music-zoom" role="group" aria-label="Editor zoom">
+          {ZOOM_LEVELS.map(level => <button key={level.id} className={zoom === level.id ? 'active' : ''} aria-pressed={zoom === level.id} onClick={() => setZoom(level.id)}>{level.label}</button>)}
+        </div>
+      </div>
+      <div className="music-guidance">
+        <label><input type="checkbox" checked={beginnerMode} onChange={event => setBeginnerMode(event.target.checked)} /> Beginner scale guide</label>
+        {beginnerMode && track.instrument !== 'drums' && <><label>Scale <select aria-label="Musical scale" value={musicScale} onChange={event => setMusicScale(event.target.value as MusicScale)}>{Object.keys(MUSIC_SCALES).map(name => <option key={name}>{name}</option>)}</select></label><span>Highlighted notes commonly work together. Every note is yours to try.</span></>}
+        <span>Click a key, or focus the keyboard and use ↑/↓ then Enter or Space.</span>
+      </div>
+      <div className="music-history-actions" role="group" aria-label="Note edit history">
+        <button onClick={() => historyStep('undo')} disabled={!history.current.past.length}>↶ Undo note edit</button>
+        <button onClick={() => historyStep('redo')} disabled={!history.current.future.length}>↷ Redo note edit</button>
+      </div>
+      <div className="music-starters" role="group" aria-label="Starter tunes">
+        {STARTER_NAMES.map(name => <button key={name} className="music-preset-card" onClick={() => applyPreset(name, 'starter')}>
+          <strong>{name}</strong><small>{STARTER_BLURBS[name]}</small>
+        </button>)}
+        {track.instrument === 'drums' && DRUM_PATTERN_NAMES.map(name => <button key={name} className="music-preset-card drums" onClick={() => applyPreset(name, 'pattern')}>
+          <strong>{name}</strong><small>{DRUM_PATTERN_BLURBS[name]}</small>
+        </button>)}
+      </div>
+      <div className="piano-roll-scroll" ref={roll}>
+        <canvas ref={canvas} width={rollWidth} height={rollHeight} style={{ width: rollWidth, height: rollHeight }}
+          onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp}
+          onKeyDown={keyboardKey} tabIndex={0} role="application" aria-label={`Note editor for ${track.name}. Selected keyboard key ${beginnerPitchName(keyboardPitch)}. Arrow keys choose a pitch; Enter or Space plays it.`} data-audition-pitch={notePreview.activePitch ?? ''} />
+      </div>
+      <div className="music-note-editor" aria-label="Selected note">
+      {selected ? <>
+        <strong className="music-note-chip" style={{ background: activeColour }}>{isDrumInstrument(track.instrument) ? noteLabel(selected.pitch, true) : beginnerPitchName(selected.pitch)}</strong>
+        <button className="music-hear-note" onClick={() => audition(track.instrument, selected.pitch, selected.velocity)}>♪ Hear note</button>
+        <label>Pitch<input aria-label="Note pitch" type="number" min={LOW_PITCH} max={HIGH_PITCH} step="1" value={selected.pitch} onChange={event => { const pitch = Math.max(LOW_PITCH, Math.min(HIGH_PITCH, Number(event.target.value))); editNotes(track.id, track.notes.map(n => n.id === selected.id ? { ...n, pitch } : n), 'Change pitch'); if (pitch !== selected.pitch) audition(track.instrument, pitch, selected.velocity); }} /><small>{isDrumInstrument(track.instrument) ? noteLabel(selected.pitch, true) : beginnerPitchName(selected.pitch)}</small></label>
+        <label>Start<input aria-label="Note start" type="number" min="0" max={beats - NOTE_MIN} step="0.25" value={selected.start} onChange={event => editNotes(track.id, track.notes.map(n => n.id === selected.id ? { ...n, start: Number(event.target.value) } : n), 'Change start')} /><small>beats</small></label>
+        <label>Length<input aria-label="Note length" type="number" min="0.25" max="16" step="0.25" value={selected.duration} onChange={event => editNotes(track.id, track.notes.map(n => n.id === selected.id ? { ...n, duration: Number(event.target.value) } : n), 'Change length')} /><small>beats</small></label>
+        <label>Softness<input aria-label="Note velocity" type="range" min="0.05" max="1" step="0.05" value={selected.velocity} onChange={event => editNotes(track.id, track.notes.map(n => n.id === selected.id ? { ...n, velocity: Number(event.target.value) } : n), 'Change softness')} /><small>{Math.round(selected.velocity * 100)}%</small></label>
+        <button className="music-delete-note" onClick={removeSelected}>Delete note</button>
+      </> : <p>Select a note in the roll or the list below to edit its pitch, start, length and softness.</p>}
+      </div>
+      <div className="music-note-list" aria-label="Notes on this instrument">{track.notes.map((note, index) => <button key={note.id} aria-pressed={selectedNote === note.id} onClick={() => setSelectedNote(note.id)}>{index + 1}. {noteLabel(note.pitch, isDrumInstrument(track.instrument))} at beat {note.start + 1}</button>)}</div>
+    </section>}
+    </div>
+
+    {confirming && <div className="music-confirm" role="dialog" aria-modal="true" aria-label="Replace notes?">
+      <div>
+        <h2>Replace the notes in {track?.name}?</h2>
+        <p>“{confirming.name}” will <strong>replace</strong> the {track?.notes.length} notes in this instrument. Anything already there will be removed.</p>
+        <div className="music-confirm-actions">
+          <button onClick={() => setConfirming(null)}>Keep my notes</button>
+          <button className="danger" onClick={() => confirming && applyPreset(confirming.name, confirming.kind, true)}>Replace them</button>
+        </div>
+      </div>
+    </div>}
+
+    {picking && <div className="music-picker" role="dialog" aria-modal="true" aria-label="Choose an instrument" onClick={() => setPicking(false)}>
+      <div onClick={event => event.stopPropagation()}>
+        <h2>Pick an instrument</h2>
+        <p>Each one sounds different. You can change your mind later.</p>
+        <div className="music-picker-grid">
+          {INSTRUMENTS.map(instrument => <div key={instrument} className="music-picker-choice" style={{ '--tile-colour': INSTRUMENT_COLOURS[instrument] } as React.CSSProperties}><button className="music-picker-tile" aria-label={`Add ${INSTRUMENT_NAMES[instrument]} instrument`} onClick={() => addTrack(instrument)}>
+            <span className="music-picker-icon"><Icon path={INSTRUMENT_ICONS[instrument]} colour={INSTRUMENT_COLOURS[instrument]} size={30} /></span>
+            <strong>{INSTRUMENT_NAMES[instrument]}</strong>
+            <small>{INSTRUMENT_BLURBS[instrument]}</small>
+          </button><button className="music-picker-try" onClick={() => audition(instrument, instrument === 'drums' ? 38 : 60)}>♪ Try {INSTRUMENT_NAMES[instrument]}</button></div>)}
+        </div>
+        <button className="music-picker-close" onClick={() => setPicking(false)}>Close</button>
+      </div>
+    </div>}
+
+    {rendered && <p className="music-render-result">Made <strong>{rendered.name}</strong> · {fmt(rendered.duration)} · peak {rendered.peak.toFixed(2)}{savedAsset ? ' · it is in your Audio Library' : ''}</p>}
+  </StudioShell>;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sound Effects Maker                                                         */
+/* -------------------------------------------------------------------------- */
+
+function EffectsMaker({
+  projects, open, change, setOpen, save, message, renderToLibrary, rendering, rendered, onSaveProjects,
+}: {
+  projects: StudioProjects;
+  open: EffectProject | null;
+  change: (change: (current: EffectProject) => EffectProject) => void;
+  setOpen: (project: EffectProject | null) => void;
+  save: () => void;
+  message: (text: string) => void;
+  renderToLibrary: (effect: EffectProject) => void;
+  rendering: boolean;
+  rendered: { name: string; peak: number; duration: number } | null;
+  onSaveProjects: (next: StudioProjects) => boolean;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  const previewEffect = async (effect: EffectProject) => {
+    setBusy(true);
+    try {
+      const result = await renderEffect(effect);
+      await playEffectPreview(async () => result);
+    } catch (error) { message(error instanceof Error ? error.message : 'Preview failed.'); }
+    finally { setBusy(false); }
+  };
+
+  if (!open) return <StudioShell>
+    <div className="music-empty">
+      <span className="music-empty-icon" aria-hidden="true">🔊</span>
+      <h2>Make a cartoon sound</h2>
+      <p>Pick a sound, change how it feels, and add it to your Audio Library.</p>
+      <button className="music-big-button" onClick={() => { setOpen(newEffect()); message('Choose a sound and press Preview.'); }}>+ Create a sound effect</button>
+    </div>
+    <div className="scene-library">{projects.effects.map(item => <article key={item.id}>
+      <h2>{item.name}</h2><p>{EFFECT_PRESET_NAMES[item.preset]} · {item.duration.toFixed(1)}s</p>
+      <div className="scene-actions">
+        <button onClick={() => setOpen(structuredClone(item))}>Open</button>
+        <button onClick={() => { const copy = { ...structuredClone(item), id: crypto.randomUUID(), name: `${item.name} copy` }; if (onSaveProjects({ ...projects, effects: [...projects.effects, copy] })) message('Sound effect duplicated.'); }}>Duplicate</button>
+        <button onClick={() => { if (window.confirm(`Delete “${item.name}”?`)) message(onSaveProjects({ ...projects, effects: projects.effects.filter(other => other.id !== item.id) }) ? 'Sound effect deleted.' : 'Could not delete the effect.'); }}>Delete</button>
+      </div>
+    </article>)}</div>
+  </StudioShell>;
+
+  return <StudioShell>
+    <header className="music-song-header">
+      <button className="music-back" onClick={() => setOpen(null)}>← All effects</button>
+      <input className="music-song-name" aria-label="Effect name" maxLength={80} value={open.name} onChange={event => change(value => ({ ...value, name: event.target.value }))} />
+      <div className="music-header-actions">
+        <button className="music-save-button" onClick={save}><span aria-hidden="true">💾</span> Save Effect</button>
+        <button className="music-export-button" disabled={rendering} onClick={() => renderToLibrary(open)} data-tooltip="Finish this sound and make it available in your Audio Library">
+          <span aria-hidden="true">✨</span> {rendering ? 'Making audio…' : 'Add to Audio Library'}
+        </button>
+      </div>
+    </header>
+
+    <section className="music-panel" aria-label="Choose a sound">
+      <div className="music-panel-heading"><div><h2>Choose a sound</h2><p>Tap a card to hear what it sounds like.</p></div></div>
+      <div className="music-effect-cards">
+        {EFFECT_PRESETS.map(preset => <button key={preset} className={`music-effect-card ${open.preset === preset ? 'active' : ''}`} style={{ '--tile-colour': EFFECT_COLOURS[preset] } as React.CSSProperties} onClick={() => change(value => ({ ...value, preset }))}>
+          <span className="music-effect-icon"><Icon path={EFFECT_ICONS[preset]} colour={EFFECT_COLOURS[preset]} size={28} /></span>
+          <strong>{EFFECT_PRESET_NAMES[preset]}</strong>
+          <small>{EFFECT_BLURBS[preset]}</small>
+        </button>)}
+      </div>
+    </section>
+
+    <section className="music-panel" aria-label="Sound controls">
+      <div className="music-panel-heading"><div><h2>Make it yours</h2><p>Change how {EFFECT_PRESET_NAMES[open.preset].toLowerCase()} sounds.</p></div>
+        <button className="music-preview-button" onClick={() => void previewEffect(open)} disabled={busy}>{busy ? 'Playing…' : '▶ Preview'}</button>
+      </div>
+      <div className="music-effect-controls">
+        <label>Pitch<input aria-label="Effect pitch" type="range" min="-12" max="12" step="1" value={open.pitch} onChange={event => change(value => ({ ...value, pitch: Number(event.target.value) }))} /><small>{open.pitch > 0 ? `+${open.pitch}` : open.pitch} semitones</small></label>
+        <label>Length<input aria-label="Effect duration" type="number" min="0.1" max="4" step="0.1" value={open.duration} onChange={event => change(value => ({ ...value, duration: Number(event.target.value) }))} /><small>seconds</small></label>
+        <label>Volume<input aria-label="Effect volume" type="range" min="0" max="1" step="0.05" value={open.volume} onChange={event => change(value => ({ ...value, volume: Number(event.target.value) }))} /><small>{Math.round(open.volume * 100)}%</small></label>
+        <label>Tail<input aria-label="Effect decay" type="range" min="0" max="1" step="0.05" value={open.decay} onChange={event => change(value => ({ ...value, decay: Number(event.target.value) }))} /><small>{Math.round(open.decay * 100)}%</small></label>
+        <label className="music-toggle"><input aria-label="Effect noise" type="checkbox" checked={open.noise} onChange={event => change(value => ({ ...value, noise: event.target.checked }))} /><span>Add a noisy layer</span></label>
+      </div>
+    </section>
+    {rendered && <p className="music-render-result">Made <strong>{rendered.name}</strong> · {fmt(rendered.duration)} · peak {rendered.peak.toFixed(2)}</p>}
+    <p className="music-hint">This sound lasts about {effectDuration(open).toFixed(1)} seconds including its tail.</p>
+  </StudioShell>;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section container                                                          */
+/* -------------------------------------------------------------------------- */
+
+export default function MusicStudio({ projects, issue, audioAssets, onSaveProjects, onAddAsset, theme, onThemeChange }: Props) {
   const [tab, setTab] = useState<Tab>('music');
   const [openMusic, setOpenMusic] = useState<MusicProject | null>(null);
   const [openEffect, setOpenEffect] = useState<EffectProject | null>(null);
   const [message, setMessage] = useState('Open a song or a sound effect, or create one.');
-  const audition = useNoteAudition();
+  const [rendering, setRendering] = useState(false);
+  const [rendered, setRendered] = useState<RenderedInfo | null>(null);
 
   const changeMusic = (change: (current: MusicProject) => MusicProject) => setOpenMusic(current => current ? change(current) : null);
   const changeEffect = (change: (current: EffectProject) => EffectProject) => setOpenEffect(current => current ? change(current) : null);
@@ -76,330 +652,50 @@ export default function MusicStudio({ projects, issue, audioAssets, onSaveProjec
     setMessage(onSaveProjects(next) ? 'Sound effect saved.' : 'Sound effect could not be saved. Existing effects were kept.');
   };
 
-  const [rendering, setRendering] = useState(false);
-  const [rendered, setRendered] = useState<{ name: string; peak: number; duration: number } | null>(null);
-  const renderToLibrary = async (project: MusicProject) => {
-    if (!project.tracks.some(track => track.notes.length)) { setMessage('Add some notes before rendering. Try a starter melody.'); return; }
+  const renderMusicToLibrary = async (project: MusicProject) => {
+    if (!project.tracks.some(track => track.notes.length)) { setMessage('Add some notes before making audio. Try a starter tune.'); return; }
     setRendering(true);
     try {
-      const asset = await renderMusicToAsset(project);
       const check = await renderMusic(project);
       const peak = peakOf(check.channels);
-      if (peak < 0.001) { setMessage('That render was silent. Check every track is unmuted and has notes.'); return; }
+      if (peak < 0.001) { setMessage('That was silent. Check every instrument is unmuted and has notes.'); return; }
+      const asset = await renderMusicToAsset(project);
       onAddAsset(asset);
-      setRendered({ name: asset.name, peak, duration: asset.duration });
-      setMessage(`“${asset.name}” added to your Audio Library. Use it in any scene, intro or credits.`);
-    } catch {
-      setMessage('The song could not be rendered in this browser.');
-    } finally { setRendering(false); }
+      setRendered({ kind: 'music', name: asset.name, peak, duration: asset.duration });
+      setMessage(`“${asset.name}” is now in your Audio Library. You can use it in any scene, intro or credits.`);
+    } catch { setMessage('The song could not be made in this browser.'); }
+    finally { setRendering(false); }
   };
   const renderEffectToLibrary = async (effect: EffectProject) => {
     setRendering(true);
     try {
-      const asset = await renderEffectToAsset(effect);
       const check = await renderEffect(effect);
       const peak = peakOf(check.channels);
-      if (peak < 0.001) { setMessage('That effect was silent. Try a different preset or volume.'); return; }
+      if (peak < 0.001) { setMessage('That was silent. Try a different sound or a higher volume.'); return; }
+      const asset = await renderEffectToAsset(effect);
       onAddAsset(asset);
-      setRendered({ name: asset.name, peak, duration: asset.duration });
-      setMessage(`“${asset.name}” added to your Audio Library.`);
-    } catch {
-      setMessage('The sound effect could not be rendered in this browser.');
-    } finally { setRendering(false); }
+      setRendered({ kind: 'effects', name: asset.name, peak, duration: asset.duration });
+      setMessage(`“${asset.name}” is now in your Audio Library.`);
+    } catch { setMessage('The sound effect could not be made in this browser.'); }
+    finally { setRendering(false); }
   };
 
-  return <section className="music-studio">
-    <div className="intro"><div><p className="eyebrow">MUSIC &amp; SOUND STUDIO</p><h1>Make your own music and sounds.</h1><p>Everything stays on this device. Finished songs go straight into your Audio Library.</p></div></div>
-    {issue && <p role="alert" className="storage-alert">{issue}</p>}
-    <div className="music-tabs"><button className={tab === 'music' ? 'active' : ''} onClick={() => setTab('music')}>Music Maker</button><button className={tab === 'effects' ? 'active' : ''} onClick={() => setTab('effects')}>Sound Effects</button></div>
+  const activeIssue = issue;
+  return <div className="music-studio-wrap">
+    {activeIssue && <p role="alert" className="storage-alert">{activeIssue}</p>}
+    <div className="music-studio-switcher">
+      <button className={tab === 'music' ? 'active' : ''} onClick={() => { setTab('music'); setMessage('Music Maker is ready.'); }} aria-pressed={tab === 'music'}><span aria-hidden="true">♪</span> Music Maker</button>
+      <button className={tab === 'effects' ? 'active' : ''} onClick={() => { setTab('effects'); setMessage('Sound Effects Maker is ready.'); }} aria-pressed={tab === 'effects'}><span aria-hidden="true">🔊</span> Sound Effects</button>
+      <button className="music-theme-toggle-inline" onClick={() => onThemeChange(theme === 'dark' ? 'light' : 'dark')} aria-pressed={theme === 'light'}>
+        <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span> {theme === 'dark' ? 'Light' : 'Dark'}
+      </button>
+    </div>
     {tab === 'music'
-      ? <MusicMaker projects={projects} open={openMusic} change={changeMusic} setOpen={setOpenMusic} save={saveMusic} message={setMessage} renderToLibrary={renderToLibrary} rendering={rendering} rendered={rendered} audioAssets={audioAssets} audition={audition} onSaveProjects={onSaveProjects} />
-      : <EffectsMaker projects={projects} open={openEffect} change={changeEffect} setOpen={setOpenEffect} save={saveEffect} message={setMessage} renderToLibrary={renderEffectToLibrary} rendering={rendering} rendered={rendered} onSaveProjects={onSaveProjects} />}
-    <p role="status" className="scene-status">{message}</p>
-  </section>;
-}
-
-type MusicMakerProps = {
-  projects: StudioProjects;
-  open: MusicProject | null;
-  change: (change: (current: MusicProject) => MusicProject) => void;
-  setOpen: (project: MusicProject | null) => void;
-  save: () => void;
-  message: (text: string) => void;
-  renderToLibrary: (project: MusicProject) => void;
-  rendering: boolean;
-  rendered: { name: string; peak: number; duration: number } | null;
-  audioAssets: AudioAsset[];
-  audition: { busy: boolean; run: (instrument: InstrumentId, pitch: number) => void };
-  onSaveProjects: (next: StudioProjects) => boolean;
-};
-
-function MusicMaker({ projects, open, change, setOpen, save, message, renderToLibrary, rendering, rendered, audioAssets, audition, onSaveProjects }: MusicMakerProps) {
-  const [selectedNote, setSelectedNote] = useState<string | null>(null);
-  const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
-  const [playing, setPlaying] = useState<MusicProject | null>(null);
-  const drag = useRef<{ id: string; mode: 'move' | 'resize'; x: number; y: number; base: Note } | null>(null);
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const roll = useRef<HTMLDivElement>(null);
-  const player = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => () => { const element = player.current; if (element) { element.pause(); element.removeAttribute('src'); } }, []);
-
-  const track = open?.tracks.find(item => item.id === selectedTrack) ?? open?.tracks[0] ?? null;
-  useEffect(() => { setSelectedTrack(open?.tracks[0]?.id ?? null); setSelectedNote(null); }, [open?.id]);
-
-  const duration = open ? projectSeconds(open) : 0;
-
-  // Preview plays the same rendered WAV that gets saved, through an HTMLAudioElement.
-  const play = async () => {
-    if (!open || !open.tracks.some(item => item.notes.length)) { message('Add some notes first. Try a starter melody.'); return; }
-    setPlaying(open);
-    try {
-      const result = await renderMusic(open);
-      const url = URL.createObjectURL(wavBlob(result.channels, result.sampleRate));
-      const element = new Audio(url);
-      element.loop = open.loop;
-      player.current?.pause();
-      player.current = element;
-      try { await element.play(); } catch { message('Playback was blocked. Press Play again after clicking the page.'); }
-      element.onended = () => { if (!open.loop) setPlaying(null); URL.revokeObjectURL(url); };
-    } catch { message('This song could not be previewed in this browser.'); }
-  };
-  const stop = () => { player.current?.pause(); setPlaying(null); };
-
-  const draw = () => {
-    const element = canvas.current;
-    if (!element || !open) return;
-    const context = element.getContext('2d');
-    if (!context) return;
-    const width = rollWidth(open);
-    context.clearRect(0, 0, width, ROLL_HEIGHT);
-    context.fillStyle = '#fbfaff';
-    context.fillRect(0, 0, width, ROLL_HEIGHT);
-    // Bar and beat guides.
-    for (let beat = 0; beat <= open.bars * BEATS_PER_BAR; beat++) {
-      const x = LABEL_WIDTH + beat * BEAT_WIDTH;
-      context.strokeStyle = beat % BEATS_PER_BAR === 0 ? '#c9c2ea' : '#eae7f6';
-      context.lineWidth = beat % BEATS_PER_BAR === 0 ? 2 : 1;
-      context.beginPath(); context.moveTo(x, 0); context.lineTo(x, ROLL_HEIGHT); context.stroke();
-    }
-    // Pitch labels, and clicking one auditions that note.
-    context.font = '11px Segoe UI';
-    for (let pitch = LOW_PITCH; pitch <= HIGH_PITCH; pitch++) {
-      const y = (HIGH_PITCH - pitch) * ROW_HEIGHT;
-      if (pitch % 12 === 0) {
-        context.fillStyle = '#f2f0fb';
-        context.fillRect(0, y, width, ROW_HEIGHT);
-        context.fillStyle = '#55527a';
-        context.fillText(noteName(pitch), 6, y + 13);
-      }
-      context.strokeStyle = '#f0eef8';
-      context.beginPath(); context.moveTo(0, y + ROW_HEIGHT - 0.5); context.lineTo(width, y + ROW_HEIGHT - 0.5); context.stroke();
-    }
-    if (!track) return;
-    // Existing notes, dimmed when another track is selected.
-    for (const other of open.tracks) {
-      if (other.id !== track.id) {
-        context.fillStyle = 'rgba(112, 91, 223, .18)';
-        for (const n of other.notes) context.fillRect(LABEL_WIDTH + n.start * BEAT_WIDTH, (HIGH_PITCH - n.pitch) * ROW_HEIGHT + 2, n.duration * BEAT_WIDTH - 2, ROW_HEIGHT - 4);
-      }
-    }
-    for (const n of track.notes) {
-      const x = LABEL_WIDTH + n.start * BEAT_WIDTH;
-      const y = (HIGH_PITCH - n.pitch) * ROW_HEIGHT;
-      const isSelected = n.id === selectedNote;
-      context.fillStyle = isSelected ? '#4b3fb8' : '#705bdf';
-      context.fillRect(x, y + 2, Math.max(4, n.duration * BEAT_WIDTH - 2), ROW_HEIGHT - 4);
-      // Velocity is shown as bar brightness, so quiet notes are visibly quiet.
-      context.fillStyle = 'rgba(255,255,255,.45)';
-      context.fillRect(x, y + 2, Math.max(2, (n.duration * BEAT_WIDTH - 2) * n.velocity), 3);
-      if (isSelected) {
-        context.strokeStyle = '#2b2160'; context.lineWidth = 2;
-        context.strokeRect(x, y + 2, Math.max(4, n.duration * BEAT_WIDTH - 2), ROW_HEIGHT - 4);
-      }
-    }
-  };
-
-  useEffect(() => { draw(); }, [open, track?.id, selectedNote]);
-  // Bring the selected track's notes into view, so a drum track is never hidden below the fold.
-  const noteCount = track?.notes.length ?? 0;
-  useEffect(() => {
-    const box = roll.current;
-    if (!box || !track || !track.notes.length) return;
-    const highestPitch = Math.max(...track.notes.map(n => n.pitch));
-    const y = (HIGH_PITCH - highestPitch) * ROW_HEIGHT;
-    box.scrollTop = Math.max(0, y - ROW_HEIGHT * 4);
-  }, [track?.id, noteCount, open?.id]);
-
-  if (!open) return <div className="music-library">
-    <button className="scene-primary" onClick={() => { setOpen(newMusicProject()); message('Add a track, pick an instrument, then try a starter melody.'); }}>+ Create a song</button>
-    <div className="scene-library">{projects.music.map(item => <article key={item.id}><h2>{item.name}</h2><p>{item.tempo} BPM · {item.bars} bars · {item.tracks.length} tracks · {item.tracks.reduce((sum, t) => sum + t.notes.length, 0)} notes</p><div className="scene-actions">
-      <button onClick={() => setOpen(structuredClone(item))}>Open</button>
-      <button onClick={() => { const copy = { ...structuredClone(item), id: crypto.randomUUID(), name: `${item.name} copy` }; if (onSaveProjects({ ...projects, music: [...projects.music, copy] })) message('Song duplicated.'); }}>Duplicate</button>
-      <button onClick={() => { if (window.confirm(`Delete “${item.name}”?`)) message(onSaveProjects({ ...projects, music: projects.music.filter(other => other.id !== item.id) }) ? 'Song deleted.' : 'Could not delete the song.'); }}>Delete</button>
-    </div></article>)}</div>
-    {projects.music.length === 0 && <p className="scene-empty">No songs yet. Create one to begin.</p>}
+      ? <MusicMaker projects={projects} open={openMusic} change={changeMusic} setOpen={project => { setRendered(null); setOpenMusic(project); }} save={saveMusic} message={setMessage}
+          renderToLibrary={renderMusicToLibrary} rendering={rendering} rendered={rendered?.kind === 'music' ? rendered : null} audioAssets={audioAssets}
+          onSaveProjects={onSaveProjects} theme={theme} />
+      : <EffectsMaker projects={projects} open={openEffect} change={changeEffect} setOpen={project => { setRendered(null); setOpenEffect(project); }} save={saveEffect} message={setMessage}
+          renderToLibrary={renderEffectToLibrary} rendering={rendering} rendered={rendered?.kind === 'effects' ? rendered : null} onSaveProjects={onSaveProjects} />}
+    <p role="status" className="music-status">{message}</p>
   </div>;
-
-  const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!track) return;
-    const box = event.currentTarget.getBoundingClientRect();
-    const scale = rollWidth(open) / box.width;
-    const x = (event.clientX - box.left) * scale;
-    const y = (event.clientY - box.top) * (ROLL_HEIGHT / box.height);
-    if (x < LABEL_WIDTH) {
-      const pitch = pitchFromY(y);
-      audition.run(track.instrument, pitch);
-      message(`${noteName(pitch)} on ${INSTRUMENT_NAMES[track.instrument]}.`);
-      return;
-    }
-    const hit = [...track.notes].reverse().find(n => {
-      const nx = LABEL_WIDTH + n.start * BEAT_WIDTH;
-      return x >= nx && x <= nx + n.duration * BEAT_WIDTH && Math.abs(y - (HIGH_PITCH - n.pitch) * ROW_HEIGHT) < ROW_HEIGHT;
-    });
-    if (hit) {
-      const onEdge = x >= LABEL_WIDTH + (hit.start + hit.duration) * BEAT_WIDTH - 6;
-      setSelectedNote(hit.id);
-      drag.current = { id: hit.id, mode: onEdge ? 'resize' : 'move', x: event.clientX, y: event.clientY, base: { ...hit } };
-      event.currentTarget.setPointerCapture(event.pointerId);
-      return;
-    }
-    // Empty space adds a note, which is the fastest way for a beginner to start.
-    const pitch = pitchFromY(y);
-    const created: Note = { id: crypto.randomUUID(), pitch, start: beatFromX(x, open), duration: 1, velocity: 0.8 };
-    change(value => ({ ...value, tracks: value.tracks.map(item => item.id === track.id ? { ...item, notes: [...item.notes, clampNote(created, value.bars)] } : item) }));
-    setSelectedNote(created.id);
-    message(`Added ${noteName(pitch)}. Drag to move, drag the right edge to shorten, press Delete to remove.`);
-  };
-  const pointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    const state = drag.current;
-    if (!state || !track) return;
-    const beatDelta = Math.round(((event.clientX - state.x) / BEAT_WIDTH) * 4) / 4;
-    change(value => ({ ...value, tracks: value.tracks.map(item => item.id === track.id ? {
-      ...item,
-      notes: item.notes.map(n => n.id === state.id
-        ? clampNote(state.mode === 'move' ? { ...n, start: state.base.start + beatDelta, pitch: state.base.pitch } : { ...n, duration: state.base.duration + beatDelta }, value.bars)
-        : n),
-    } : item) }));
-  };
-  const pointerUp = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    drag.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-  };
-
-  const deleteSelected = () => {
-    if (!track || !selectedNote) return;
-    change(value => ({ ...value, tracks: value.tracks.map(item => item.id === track.id ? { ...item, notes: item.notes.filter(n => n.id !== selectedNote) } : item) }));
-    setSelectedNote(null);
-    message('Note removed.');
-  };
-
-  const selectedNoteData = track?.notes.find(n => n.id === selectedNote) ?? null;
-  const savedAsset = rendered && audioAssets.some(asset => asset.name === rendered.name);
-
-  return <>
-    <div className="scene-heading"><button onClick={() => { stop(); setOpen(null); }}>← All songs</button><h1>{open.name}</h1><button className="scene-primary" onClick={save}>Save Song</button><button className="scene-primary" disabled={rendering} onClick={() => renderToLibrary(open)}>{rendering ? 'Rendering…' : 'Add to Audio Library'}</button></div>
-    <div className="music-setup">
-      <label>Song name<input aria-label="Song name" maxLength={80} value={open.name} onChange={event => change(value => ({ ...value, name: event.target.value }))} /></label>
-      <label>Tempo (BPM)<input aria-label="Song tempo" type="number" min={MUSIC_TEMPO_MIN} max={MUSIC_TEMPO_MAX} step="1" value={open.tempo} onChange={event => change(value => ({ ...value, tempo: Math.max(MUSIC_TEMPO_MIN, Math.min(MUSIC_TEMPO_MAX, Number(event.target.value))) }))} /></label>
-      <label>Bars<input aria-label="Song bars" type="number" min={MUSIC_BARS_MIN} max={MUSIC_BARS_MAX} step="1" value={open.bars} onChange={event => change(value => ({ ...value, bars: Math.max(MUSIC_BARS_MIN, Math.min(MUSIC_BARS_MAX, Number(event.target.value))) }))} /></label>
-      <label>Master volume<input aria-label="Master volume" type="range" min="0" max="1" step="0.05" value={open.masterVolume} onChange={event => change(value => ({ ...value, masterVolume: Number(event.target.value) }))} /><span>{Math.round(open.masterVolume * 100)}%</span></label>
-      <label className="music-toggle">Loop<input aria-label="Loop song" type="checkbox" checked={open.loop} onChange={event => change(value => ({ ...value, loop: event.target.checked }))} /></label>
-    </div>
-    <div className="music-transport"><PlayButton playing={!!playing} onPlay={play} onStop={stop} /><strong>{fmt(duration)}</strong><span>{playing ? 'Playing preview' : `Loops for ${open.bars} bars`}</span></div>
-    <div className="music-tracks">
-      <div className="music-track-list">
-        <h2>Tracks</h2>
-        {open.tracks.map(item => <div key={item.id} className={`music-track-row ${item.id === track?.id ? 'active' : ''} ${trackIsAudible(open.tracks, item) ? '' : 'silenced'}`}>
-          <button className="music-track-name" onClick={() => setSelectedTrack(item.id)}>{item.name}<small>{INSTRUMENT_NAMES[item.instrument]} · {item.notes.length} notes{trackIsAudible(open.tracks, item) ? '' : ' · muted'}</small></button>
-          <label>Vol<input aria-label={`${item.name} volume`} type="range" min="0" max="1" step="0.05" value={item.volume} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, volume: Number(event.target.value) } : t) }))} /></label>
-          <label>Pan<input aria-label={`${item.name} pan`} type="range" min="-1" max="1" step="0.1" value={item.pan} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, pan: Number(event.target.value) } : t) }))} /></label>
-          <button aria-pressed={item.muted} onClick={() => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, muted: !t.muted } : t) }))}>M</button>
-          <button aria-pressed={item.solo} onClick={() => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === item.id ? { ...t, solo: !t.solo } : t) }))}>S</button>
-          <button onClick={() => { if (window.confirm(`Remove track “${item.name}” and its notes?`)) { change(value => ({ ...value, tracks: value.tracks.filter(t => t.id !== item.id) })); if (selectedTrack === item.id) setSelectedTrack(null); } }}>×</button>
-        </div>)}
-        <div className="music-add-track">
-          <select aria-label="New track instrument" value="" onChange={event => { const instrument = event.target.value as InstrumentId; if (!instrument) return; const created = newTrack(instrument, INSTRUMENT_NAMES[instrument]); change(value => value.tracks.length >= MUSIC_MAX_TRACKS ? value : { ...value, tracks: [...value.tracks, created] }); setSelectedTrack(created.id); event.currentTarget.value = ''; }}>
-            <option value="">Add a track…</option>{INSTRUMENTS.map(instrument => <option key={instrument} value={instrument}>{INSTRUMENT_NAMES[instrument]}</option>)}
-          </select>
-          {track && <>
-            <div className="music-starters">
-              <span>Starter melody:</span>{STARTER_NAMES.map(name => <button key={name} onClick={() => { const notes = applyStarter(track, name); change(value => ({ ...value, tracks: value.tracks.map(t => t.id === track.id ? { ...t, notes } : t) })); setSelectedNote(null); message(`Added “${name}”. Click empty space to add more notes.`); }}>{name}</button>)}
-            </div>
-            {track.instrument === 'drums' && <div className="music-starters"><span>Drum pattern:</span>{DRUM_PATTERN_NAMES.map(name => <button key={name} onClick={() => { const notes = applyDrumPattern(track, name); change(value => ({ ...value, tracks: value.tracks.map(t => t.id === track.id ? { ...t, notes } : t) })); setSelectedNote(null); message(`Added “${name}”.`); }}>{name}</button>)}</div>}
-          </>}
-        </div>
-      </div>
-      <div className="piano-roll-wrap">
-        <div className="piano-roll-scroll" ref={roll}><canvas ref={canvas} width={rollWidth(open)} height={ROLL_HEIGHT} style={{ width: rollWidth(open), height: ROLL_HEIGHT }} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} aria-label="Piano roll note editor" /></div>
-        <p className="music-hint">Click empty space to add a note · drag a note to move it · drag the right edge to change length · click a note name on the left to hear it · {open.bars * BEATS_PER_BAR} beats at {open.tempo} BPM</p>
-      </div>
-    </div>
-    {selectedNoteData && track && <div className="music-note-editor">
-      <strong>{noteName(selectedNoteData.pitch)}</strong>
-      <label>Length<input aria-label="Note length" type="number" min="0.25" max="16" step="0.25" value={selectedNoteData.duration} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === track.id ? { ...t, notes: t.notes.map(n => n.id === selectedNoteData.id ? { ...n, duration: Number(event.target.value) } : n) } : t) }))} /></label>
-      <label>Velocity<input aria-label="Note velocity" type="range" min="0.05" max="1" step="0.05" value={selectedNoteData.velocity} onChange={event => change(value => ({ ...value, tracks: value.tracks.map(t => t.id === track.id ? { ...t, notes: t.notes.map(n => n.id === selectedNoteData.id ? { ...n, velocity: Number(event.target.value) } : n) } : t) }))} /><span>{Math.round(selectedNoteData.velocity * 100)}%</span></label>
-      <button onClick={deleteSelected}>Delete note</button>
-    </div>}
-    {rendered && <p className="music-render-result">Last render: <strong>{rendered.name}</strong> · {fmt(rendered.duration)} · peak {rendered.peak.toFixed(2)}{savedAsset ? ' · in your Audio Library' : ''}</p>}
-  </>;
-}
-
-type EffectsProps = {
-  projects: StudioProjects;
-  open: EffectProject | null;
-  change: (change: (current: EffectProject) => EffectProject) => void;
-  setOpen: (project: EffectProject | null) => void;
-  save: () => void;
-  message: (text: string) => void;
-  renderToLibrary: (effect: EffectProject) => void;
-  rendering: boolean;
-  rendered: { name: string; peak: number; duration: number } | null;
-  onSaveProjects: (next: StudioProjects) => boolean;
-};
-
-function EffectsMaker({ projects, open, change, setOpen, save, message, renderToLibrary, rendering, rendered, onSaveProjects }: EffectsProps) {
-  const [auditioning, setAuditioning] = useState(false);
-  const player = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => () => { const element = player.current; if (element) { element.pause(); element.removeAttribute('src'); } }, []);
-
-  const preview = async () => {
-    if (!open) return;
-    setAuditioning(true);
-    try {
-      const result = await renderEffect(open);
-      const url = URL.createObjectURL(wavBlob(result.channels, result.sampleRate));
-      const element = new Audio(url);
-      player.current?.pause();
-      player.current = element;
-      try { await element.play(); } catch { message('Playback was blocked. Press Preview again after clicking the page.'); }
-      element.onended = () => URL.revokeObjectURL(url);
-    } catch { message('This effect could not be previewed in this browser.'); }
-    finally { setAuditioning(false); }
-  };
-
-  if (!open) return <div className="music-library">
-    <button className="scene-primary" onClick={() => { setOpen(newEffect()); message('Choose a preset, then press Preview.'); }}>+ Create a sound effect</button>
-    <div className="scene-library">{projects.effects.map(item => <article key={item.id}><h2>{item.name}</h2><p>{EFFECT_PRESET_NAMES[item.preset]} · {item.duration.toFixed(1)}s</p><div className="scene-actions">
-      <button onClick={() => setOpen(structuredClone(item))}>Open</button>
-      <button onClick={() => { const copy = { ...structuredClone(item), id: crypto.randomUUID(), name: `${item.name} copy` }; if (onSaveProjects({ ...projects, effects: [...projects.effects, copy] })) message('Sound effect duplicated.'); }}>Duplicate</button>
-      <button onClick={() => { if (window.confirm(`Delete “${item.name}”?`)) message(onSaveProjects({ ...projects, effects: projects.effects.filter(other => other.id !== item.id) }) ? 'Sound effect deleted.' : 'Could not delete the effect.'); }}>Delete</button>
-    </div></article>)}</div>
-    {projects.effects.length === 0 && <p className="scene-empty">No sound effects yet. Create one to begin.</p>}
-  </div>;
-
-  return <>
-    <div className="scene-heading"><button onClick={() => { player.current?.pause(); setOpen(null); }}>← All effects</button><h1>{open.name}</h1><button className="scene-primary" onClick={save}>Save Effect</button><button className="scene-primary" disabled={rendering} onClick={() => renderToLibrary(open)}>{rendering ? 'Rendering…' : 'Add to Audio Library'}</button></div>
-    <div className="music-setup">
-      <label>Name<input aria-label="Effect name" maxLength={80} value={open.name} onChange={event => change(value => ({ ...value, name: event.target.value }))} /></label>
-      <label>Sound<select aria-label="Effect preset" value={open.preset} onChange={event => change(value => ({ ...value, preset: event.target.value as EffectPreset }))}>{EFFECT_PRESETS.map(preset => <option key={preset} value={preset}>{EFFECT_PRESET_NAMES[preset]}</option>)}</select></label>
-      <label>Pitch<input aria-label="Effect pitch" type="range" min="-12" max="12" step="1" value={open.pitch} onChange={event => change(value => ({ ...value, pitch: Number(event.target.value) }))} /><span>{open.pitch > 0 ? `+${open.pitch}` : open.pitch}</span></label>
-      <label>Length (s)<input aria-label="Effect duration" type="number" min="0.1" max="4" step="0.1" value={open.duration} onChange={event => change(value => ({ ...value, duration: Number(event.target.value) }))} /></label>
-      <label>Volume<input aria-label="Effect volume" type="range" min="0" max="1" step="0.05" value={open.volume} onChange={event => change(value => ({ ...value, volume: Number(event.target.value) }))} /><span>{Math.round(open.volume * 100)}%</span></label>
-      <label>Tail<input aria-label="Effect decay" type="range" min="0" max="1" step="0.05" value={open.decay} onChange={event => change(value => ({ ...value, decay: Number(event.target.value) }))} /><span>{Math.round(open.decay * 100)}%</span></label>
-      <label className="music-toggle">Add noise<input aria-label="Effect noise" type="checkbox" checked={open.noise} onChange={event => change(value => ({ ...value, noise: event.target.checked }))} /></label>
-    </div>
-    <div className="music-transport"><PlayButton playing={auditioning} onPlay={preview} onStop={() => player.current?.pause()} /><strong>{effectDuration(open).toFixed(1)}s</strong><span>{EFFECT_PRESET_NAMES[open.preset]}</span></div>
-    {rendered && <p className="music-render-result">Last render: <strong>{rendered.name}</strong> · {rendered.duration.toFixed(1)}s · peak {rendered.peak.toFixed(2)}</p>}
-  </>;
 }

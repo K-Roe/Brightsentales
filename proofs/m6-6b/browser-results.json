@@ -1,0 +1,216 @@
+{
+  "errors": [],
+  "failedAssets": [],
+  "screenshots": [
+    "01-library-dark.png",
+    "02-legacy-song-dark.png",
+    "03-drum-track-dark.png",
+    "04-piano-roll-dark.png",
+    "05-note-added-dark.png",
+    "06-playing-dark.png",
+    "07-mixer-dark.png",
+    "08-instrument-picker-dark.png",
+    "09-overwrite-confirm-dark.png",
+    "10-rendered-dark.png",
+    "11-effects-dark.png",
+    "12-effects-controls-dark.png",
+    "13-effects-light.png",
+    "14-song-light.png",
+    "14b-roll-light.png",
+    "15-picker-light.png",
+    "16-narrow-light.png",
+    "17-restored-dark.png"
+  ],
+  "initialStorage": 0,
+  "defaultTheme": "dark",
+  "themeStoredBeforeToggle": null,
+  "legacySong": {
+    "name": "Legacy M6.6A Song",
+    "cards": 2,
+    "labels": [
+      "4 notes",
+      "4 notes · silent"
+    ],
+    "notes": [
+      4,
+      4
+    ]
+  },
+  "tooltipDark": true,
+  "drumTrack": {
+    "canvasPresent": true
+  },
+  "rollGeometry": {
+    "x": 342.515625,
+    "y": 220.390625,
+    "w": 872,
+    "h": 882,
+    "cw": 872,
+    "viewportH": 1005
+  },
+  "countBeforeAdd": "4 notes",
+  "countAfterAdd": "5 notes",
+  "chipVisible": true,
+  "chipText": "G4",
+  "noteAdded": {
+    "chipVisible": true,
+    "position": {
+      "start": 14.5,
+      "pitch": 67,
+      "duration": 1
+    }
+  },
+  "noteMoved": {
+    "start": 15.9375
+  },
+  "noteResize": "2.5",
+  "noteVelocity": "0.45",
+  "noteDeleteClearedEditor": false,
+  "keyPreviewPlayers": 1,
+  "playing": {
+    "label": "❚❚Playing",
+    "progress": "12.7121%",
+    "time": "1.3s / 10.6s"
+  },
+  "paused": "1.4s / 10.6s",
+  "stopped": "0.0s / 10.6s",
+  "loopOn": true,
+  "previewAudio": {
+    "meanDb": "-40.2",
+    "maxDb": "-20.8",
+    "players": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "created": true
+  },
+  "mixer": {
+    "volume": "0.4",
+    "pan": "-0.5",
+    "panLabel": "Left 50%",
+    "mutedPressed": "true",
+    "soloPressed": "true",
+    "silencedCards": 2,
+    "pill": "Unsaved changes"
+  },
+  "pickerTiles": [
+    "Add Piano instrument",
+    "Add Guitar instrument",
+    "Add Violin instrument",
+    "Add Flute instrument",
+    "Add Xylophone instrument",
+    "Add Bass instrument",
+    "Add Drums instrument",
+    "Add Synth instrument"
+  ],
+  "tracksAfterPick": 3,
+  "zoom": {
+    "Compact": 616,
+    "Big": 1224,
+    "Normal": 872
+  },
+  "overwritePromptShown": true,
+  "overwritePromptText": "Replace the notes in Piano?“Happy bouncy” will replace the 4 notes in this instrument. Anything already there will be removed.Keep my notesReplace the",
+  "overwriteKept": true,
+  "overwriteApplied": true,
+  "notesAfterReplace": "7 notes",
+  "savedStatus": "Song saved. You can reopen and edit it any time.",
+  "savedPill": "Saved",
+  "renderResult": "Made Legacy M6.6A Song · 10.6s · peak 0.06 · it is in your Audio Library",
+  "audioAfterExport": [
+    "Legacy M6.6A Song:music:audio/wav"
+  ],
+  "libraryReplay": {
+    "meanDb": "-42.9",
+    "maxDb": "-24.2",
+    "players": [
+      1,
+      1,
+      1
+    ],
+    "created": true
+  },
+  "libraryRows": [
+    "Legacy M6.6A SongMusic · 10.6sStopDelete"
+  ],
+  "afterReloadEdit": {
+    "songs": 1,
+    "tracks": 3,
+    "tempo": 132
+  },
+  "effectCards": [
+    "Footstep",
+    "Pop",
+    "Bounce",
+    "Sparkle",
+    "Whoosh",
+    "Bell",
+    "Cartoon transition"
+  ],
+  "effectPreviewPlayers": 1,
+  "effectExported": [
+    "Cartoon Sparkle",
+    "Legacy M6.6A Song"
+  ],
+  "lightTheme": "light",
+  "crossTabResultHidden": true,
+  "tooltipLight": true,
+  "themePersisted": "light",
+  "keyboard": {
+    "focused": true,
+    "focusableButtons": 27,
+    "focusableInputs": 11
+  },
+  "reducedMotion": "0s",
+  "narrowNoHorizontalScroll": true,
+  "backToDark": "dark",
+  "backup": {
+    "version": 8,
+    "songs": [
+      "Legacy M6.6A Song/3 tracks"
+    ],
+    "effects": [
+      "Legacy Pop",
+      "Cartoon Sparkle"
+    ],
+    "audio": [
+      "Cartoon Sparkle",
+      "Legacy M6.6A Song"
+    ]
+  },
+  "restoreInitialStorage": 0,
+  "restoredProjects": {
+    "songs": [
+      "Legacy M6.6A Song"
+    ],
+    "tracks": 3,
+    "effects": [
+      "Legacy Pop",
+      "Cartoon Sparkle"
+    ]
+  },
+  "restoredTheme": null,
+  "restoredAudio": [
+    "Cartoon Sparkle",
+    "Legacy M6.6A Song"
+  ],
+  "restoredThemeApplied": "dark",
+  "checks": {
+    "defaultDark": true,
+    "noteEditing": true,
+    "transport": true,
+    "zoom": true,
+    "overwrite": true,
+    "renderAndReplay": true,
+    "themes": true,
+    "backup": true,
+    "layout": true
+  },
+  "profilesRemoved": [
+    true,
+    true
+  ]
+}
