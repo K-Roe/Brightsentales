@@ -23,6 +23,34 @@ class TestStorage {
 }
 
 describe('complete Studio Backup', () => {
+  it('keeps phone interactions through a backup and restore without changing the schema', () => {
+    const phoneScene: TimedLibrary = {
+      version: 1,
+      scenes: [{
+        id: '22222222-2222-4222-8222-222222222222', name: 'Max asks for food', duration: 12, placeId: 'living-room',
+        characters: { max: { x: 700, y: 790 } },
+        actions: [{ id: '33333333-3333-4333-8333-333333333333', characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 700, y: 790 } }],
+        phoneIn: 'right',
+        phone: [
+          { id: '44444444-4444-4444-8444-444444444444', characterId: 'max', type: 'take-out', start: 0.6, duration: 0.55, hand: 'right' },
+          { id: '55555555-5555-4555-8555-555555555555', characterId: 'max', type: 'communicate', start: 3.4, duration: 3, message: "I'm hungry!", symbol: 'food', position: 'above-right' },
+        ],
+      }],
+    };
+    const storage = new TestStorage();
+    const made = createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-18T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, phoneScene);
+    const checked = validateStudioBackup(made);
+    expect(checked.ok).toBe(true);
+    if (!checked.ok) return;
+    expect(checked.backup.version).toBe(8);
+    expect(checked.backup.timedScenes?.scenes[0].phone).toHaveLength(2);
+    expect(checked.backup.timedScenes?.scenes[0].phoneIn).toBe('right');
+    storage.setItem(TIMED_SCENES_KEY, JSON.stringify({ version: 1, scenes: [] }));
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, checked.backup).ok).toBe(true);
+    const restored = JSON.parse(storage.getItem(TIMED_SCENES_KEY)!) as TimedLibrary;
+    expect(restored.scenes[0].phone?.[1]).toMatchObject({ type: 'communicate', message: "I'm hungry!", symbol: 'food' });
+  });
+
   it('restores voice defaults and presets in Backup v8 while preserving settings for old backups', () => {
     const settings = emptyVoiceSettings();
     settings.presets.push({ id: '11111111-1111-4111-8111-111111111111', name: 'Cartoon', effect: BUILTIN_VOICE_PRESETS[1].effect });

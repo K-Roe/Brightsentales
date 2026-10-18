@@ -46,6 +46,19 @@ Episode music uses the full episode clock and continues across scene boundaries.
 4. In **Voice Editor**, choose an effect preset or adjust trim, cuts, pitch, speed, tone, volume, normalization, fades, echo or reverb. Use **Preview edited voice**, Undo/Redo, then **Save as new voice**. Save your effect as a custom preset to use on later recordings. Your original stays in the Voice Library.
 5. In **Scenes > Music & sound**, choose the saved voice and **Add Speech**. Select the speaker, play the scene, and save it. Adding speech can extend the scene to fit. **Export scene video (WebM)** includes saved voice, music and effect clips for scenes up to two minutes.
 
+## Show Max communicating with his phone
+
+Max does not speak. His phone speaks for him, and a Bright Speak pop-up shows the audience what he means.
+
+1. In **Scenes**, open a scene, add Max, and choose him in the **Direct your Brightlings** panel.
+2. Under **Phone & Bright Speak**, press the buttons in story order: **Take Out Phone**, then **Hold Phone**, **Tap Phone**, **Communicate Message**, then **Put Away Phone**. The panel lists what you have added; click an entry to change it.
+3. Choose **Communicate Message** to set the message, pick a quick message, choose a symbol such as Food or Help, choose where the pop-up appears, and choose how long it stays up (at least 0.8 seconds, up to 12).
+4. For the phone's voice, first make the line in **Voice Maker** (AI Voices or Record Voice) and save it, then choose that saved voice under **Phone voice**. The line starts a moment after the tap, so the audience sees Max tap before they hear the device. The device voice is not attributed to Max: it is a communication aid, not Max talking.
+5. Press **Play** to preview, or export the scene video as usual — the phone and pop-up are included in the export along with the speech.
+6. To continue into the next shot, set **Start this shot with the phone already in hand**. The next scene then opens with Max still holding the phone, so it is never put away between shots by accident.
+
+The phone follows Max's hand while he stands and walks. It is drawn over his existing artwork, so his arms do not move on their own; new holding and tapping artwork is a separate artwork review.
+
 ## Keep a backup
 
 In **Characters**, use **Export Studio Backup** to download custom Brightlings, the Playground scene, Places organisation and uploaded artwork, timed scenes, episodes, audio assets and Voice Maker presets/defaults. **Import Studio Backup** validates the file and asks before replacing current Studio data. Keep the downloaded JSON somewhere safe. Browser site-data clearing removes the live library. F4 protects an interrupted restore across audio and other data; if recovery cannot finish because storage is unavailable, the Studio blocks editing and asks you to reload and retry.

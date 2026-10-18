@@ -19,7 +19,20 @@ Karl authorised sequential technical development with visual and listening accep
 | Beginner Note Preview | Implemented; technical checks passed | **AWAITING KARL'S SPEAKER REVIEW** | [Note Preview report](../proofs/note-preview/REPORT.md) | Hear C4, switch instruments, add and drag notes, then check the preview volume and feel. |
 | Voice Maker V1 | Implemented; technical checks passed | **AWAITING KARL'S MICROPHONE/SPEAKER REVIEW** | [Voice Maker report](../proofs/voice-maker/REPORT.md) | Record a voice, compare original/effects, listen to generated speech and the rendered scene in both themes. |
 | Voice Maker V1.1 — automatic voice service | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [V1.1 report](../proofs/voice-maker-v1-1/REPORT.md) | Open BrightTales normally, go to Voice Maker, confirm the engine says Ready without any second terminal, then generate a line and record his own voice. |
+| Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
 | M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
+
+## Max's Phone & Bright Speak V1
+
+- **Implementation:** Max can take out a phone, hold it, tap it and show a Bright Speak communication pop-up with a symbol and message while the **phone** speaks the line. Max stays non-verbal and nothing animates his mouth. The phone voice is chosen from saved Audio Library speech (generate it in Voice Maker first), starts a fraction after the tap, and carries no speaker attribution so it is never presented as Max's own voice. Scenes can start with the phone already in hand, so a held phone survives a shot change. Authored from the Scene Maker's **Phone & Bright Speak** director panel with sensible defaults; included in scene video export.
+- **Scope honesty:** Brightlings in this project are whole-body sprite frames, not a rig, so this is a composited prop anchored at hand positions measured from the approved frames. Arms do not animate, and no new artwork was generated. The Native2D rig and Director named in the brief live in the sibling `BrightTales` repo, which is outside this project's working rules.
+- **Changed files:** `src/phone.ts`, `src/phoneArt.ts`, `src/phone.test.ts`, `src/scenePreview.ts`, `src/timedScenes.ts`, `src/SceneMaker.tsx`, `src/studioBackup.test.ts`, `src/style.css`, documentation and `proofs/max-phone-v1/`.
+- **Also fixed:** the Scene Maker kept a duplicate copy of the scene drawing loop, so the editor preview could not show what the exporter rendered. It now calls the shared `drawScenePreview` and adds only its selection ring.
+- **Tests:** 183/183 across 23 files, 11/11 service lifecycle tests, 5/5 Python audio tests and the production build passed. The earlier Voice Maker flow and the ten-section regression smoke still pass with zero console errors.
+- **Browser evidence:** [report, stage frames, exported WebM and decoded video frames](../proofs/max-phone-v1/REPORT.md).
+- **Limits:** no arm/hand animation or "look at phone" pose until new artwork is approved; the far hand in one walking frame has no visible artwork so the phone is not drawn there; phone interactions are not yet on timeline lanes; one phone per Brightling at a time; the acceptance scene uses the Living Room because no kitchen background is approved.
+- **Karl's check:** watch `proofs/max-phone-v1/max-asks-for-food.webm` and judge the phone against Max's hand and the pop-up's readability; then build a two-scene sequence and use "Start this shot with the phone already in hand" to check the continuity feels natural.
+- **Approval status:** **AWAITING KARL'S REVIEW**.
 
 ## Voice Maker V1.1 — automatic voice service management
 

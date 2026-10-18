@@ -2,11 +2,17 @@ import { HEIGHT, Point, WIDTH } from './scene';
 import { directionTo, frameForDistance, TURN_MS } from './walking';
 import { WAVE_DURATION_MS, waveFrameAt } from './wave';
 import { type AudioClip, validAudioClips } from './audio';
+import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHand } from './phone';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
 export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear';
 export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point };
-export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[] };
+/**
+ * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
+ * unchanged. `phoneIn` carries the prop across a shot boundary: a scene that starts with the
+ * phone already in hand means the previous shot did not put it away.
+ */
+export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
 export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1 };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
@@ -38,6 +44,9 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
       list.sort((a, b) => a.start - b.start || scene.actions.indexOf(a) - scene.actions.indexOf(b));
       for (let i = 1; i < list.length; i++) if (list[i].start < ends(list[i - 1]) - 1e-7) return { ok: false, error: 'Actions overlap for one Brightling.' };
     }
+    if (scene.phoneIn !== undefined && scene.phoneIn !== null && scene.phoneIn !== 'right' && scene.phoneIn !== 'left') return { ok: false, error: 'A scene has an invalid starting phone hand.' };
+    const phone = validatePhoneActions(scene.phone, { sceneDuration: scene.duration, characterIds: ids, phoneIn: scene.phoneIn });
+    if (!phone.ok) return { ok: false, error: phone.error };
   }
   return { ok: true, library: value as TimedLibrary };
 }
@@ -80,7 +89,11 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
 
 export function pruneTimedScenes(library: TimedLibrary, availableCharacters: string[]): TimedLibrary {
   const allowed = new Set(['max', 'maxine', ...availableCharacters]);
-  return { version: 1, scenes: library.scenes.map(scene => ({ ...scene, characters: Object.fromEntries(Object.entries(scene.characters).filter(([id]) => allowed.has(id))), actions: scene.actions.filter(action => allowed.has(action.characterId)) })) };
+  return { version: 1, scenes: library.scenes.map(scene => {
+    const characters = Object.fromEntries(Object.entries(scene.characters).filter(([id]) => allowed.has(id)));
+    const phone = prunePhoneActions(scene.phone, Object.keys(characters));
+    return { ...scene, characters, actions: scene.actions.filter(action => allowed.has(action.characterId)), phone };
+  }) };
 }
 
 export const waveDurationSeconds = WAVE_DURATION_MS / 1000;

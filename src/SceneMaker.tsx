@@ -10,6 +10,8 @@ import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit 
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { advanceSceneTime, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
 import { renderSceneVideo } from './sceneVideoExport';
+import { drawScenePreview } from './scenePreview';
+import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
@@ -37,6 +39,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [targetAction, setTargetAction] = useState<string | null>(null);
+  const [selectedPhoneId, setSelectedPhoneId] = useState<string | null>(null);
   const [packs, setPacks] = useState<Record<string, Pack>>({});
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -85,21 +88,15 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
       if (end.x !== edge.x || end.y !== edge.y) { context.font = 'bold 27px Segoe UI'; context.fillText('Exit', Math.max(12, edge.x - 28), edge.y - 47); }
       context.restore();
     }
-    const states = Object.keys(scene.characters).map(id => ({ id, state: stateAt(scene, id, time) })).filter(item => item.state.visible && packs[item.id]);
-    states.sort((a, b) => a.state.point.y - b.state.point.y);
-    for (const { id, state } of states) {
-      const { x, y } = state.point;
-      const pack = packs[id];
-      context.save();
-      context.fillStyle = 'rgba(68, 42, 75, .22)'; context.beginPath(); context.ellipse(x, y - 3, 87, 17, 0, 0, Math.PI * 2); context.fill();
-      if (id === selectedCharacter) { context.strokeStyle = '#705bdf'; context.lineWidth = 6; context.beginPath(); context.ellipse(x, y - 3, 92, 23, 0, 0, Math.PI * 2); context.stroke(); }
-      if (state.pose === 'side') {
-        const width = state.frame === 0 ? 213 : 239;
-        context.translate(x, y); context.scale(state.direction, 1);
-        context.drawImage(pack.side[state.frame], -width / 2, -355 - (state.frame > 0 && state.frame % 2 === 0 ? 3 : 0), width, 355);
-      } else if (state.pose === 'wave') context.drawImage(pack.wave[state.frame - 1], x - 245 / 2, y - 355, 245, 355);
-      else context.drawImage(pack.idle, x - 213 / 2, y - 355, 213, 355);
-      context.restore();
+    // The editor uses the one shared scene renderer, so what you direct is exactly what plays
+    // back and what the WebM export records. Only the selection ring is added on top.
+    drawScenePreview(context, scene, time, room, packs);
+    if (selectedCharacter) {
+      const selected = stateAt(scene, selectedCharacter, time);
+      if (selected.visible && packs[selectedCharacter]) {
+        context.strokeStyle = '#705bdf'; context.lineWidth = 6;
+        context.beginPath(); context.ellipse(selected.point.x, selected.point.y - 3, 92, 23, 0, 0, Math.PI * 2); context.stroke();
+      }
     }
   }, [scene, time, room, packs, selectedCharacter, selectedAction]);
 
@@ -156,6 +153,57 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     else setMessage(`${actionNames[type]} added. Drag its block on the timeline to change when it happens.`);
   };
   const selectAction = (id: string) => { const action = scene?.actions.find(item => item.id === id); if (!action) return; setSelectedCharacter(action.characterId); setSelectedAction(id); setTargetAction(null); setPlaying(false); setTime(action.start); };
+  const speechAssets = audioAssets.filter(asset => asset.kind === 'speech');
+  const selectedPhone = scene?.phone?.find(action => action.id === selectedPhoneId) ?? null;
+  const phoneNow = selectedCharacter && scene ? phoneStateAt(scene, selectedCharacter, time) : null;
+  const phoneActions = scene && selectedCharacter ? (scene.phone ?? []).filter(action => action.characterId === selectedCharacter).sort((a, b) => a.start - b.start) : [];
+
+  const commitPhone = (change: (current: TimedScene) => TimedScene) => update(current => {
+    const before = current;
+    const next = change(current);
+    // Keep each communication's speech clip aligned with its own interaction time, and drop
+    // the clip of an interaction that was deleted so no silent orphan audio is left behind.
+    let audioClips = next.audio ?? [];
+    const keptClipIds = new Set((next.phone ?? []).map(action => action.clipId).filter(Boolean));
+    const removed = (before.phone ?? []).filter(action => action.clipId && !keptClipIds.has(action.clipId));
+    for (const gone of removed) audioClips = syncPhoneClip({ duration: next.duration, audio: audioClips }, gone, null, gone.clipId);
+    for (const action of next.phone ?? []) {
+      const asset = action.assetId ? audioAssets.find(item => item.id === action.assetId) ?? null : null;
+      audioClips = syncPhoneClip({ duration: next.duration, audio: audioClips }, action, asset);
+    }
+    return { ...next, audio: audioClips };
+  });
+
+  const removePhoneAction = (id: string) => {
+    const target = scene?.phone?.find(action => action.id === id);
+    if (!target) return;
+    commitPhone(value => ({ ...value, phone: (value.phone ?? []).filter(item => item.id !== id) }));
+    setSelectedPhoneId(null);
+    setMessage(`${phoneActionNames[target.type]} removed.`);
+  };
+
+  const addPhoneAction = (type: PhoneActionType) => {
+    if (!scene || !selectedCharacter) return;
+    const existing = phoneActions;
+    const hand = (existing.find(item => item.hand)?.hand ?? 'right') as PhoneHand;
+    const held = phoneStateAt(scene, selectedCharacter, time).held;
+    if ((type === 'hold' || type === 'tap' || type === 'communicate') && !held) { setMessage(`Take out ${characterName(selectedCharacter)}'s phone first.`); return; }
+    if (type === 'take-out' && held) { setMessage(`${characterName(selectedCharacter)} is already holding the phone.`); return; }
+    if (type === 'put-away' && !held) { setMessage('The phone is already put away.'); return; }
+    const start = Math.min(scene.duration, Math.max(time, 0, ...existing.map(item => item.start + item.duration)));
+    const duration = type === 'take-out' || type === 'put-away' ? Math.min(PHONE_RAISE_SECONDS, Math.max(0.1, scene.duration - start)) : type === 'tap' ? Math.min(PHONE_TAP_SECONDS, Math.max(0.1, scene.duration - start)) : type === 'communicate' ? Math.min(3, Math.max(0.8, scene.duration - start)) : Math.min(2, Math.max(0.3, scene.duration - start));
+    if (duration <= 0) { setMessage('Move the playhead earlier or extend the scene to make room.'); return; }
+    const action: PhoneAction = {
+      id: crypto.randomUUID(), characterId: selectedCharacter, type, start, duration,
+      ...(type === 'take-out' ? { hand } : {}),
+      ...(type === 'communicate' ? { message: PHONE_MESSAGES[0], symbol: 'food', position: 'above-right', clipId: crypto.randomUUID() } : {}),
+    };
+    commitPhone(value => ({ ...value, phone: [...(value.phone ?? []), action] }));
+    setSelectedPhoneId(action.id); setSelectedAction(null); setTime(start);
+    setMessage(`${phoneActionNames[type]} added at ${fmt(start)}. The phone speaks for the Brightling; they never speak it themselves.`);
+  };
+
+  const changePhone = (id: string, patch: Partial<PhoneAction>) => commitPhone(value => ({ ...value, phone: (value.phone ?? []).map(action => action.id === id ? { ...action, ...patch } : action) }));
   const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (!scene || playing) return;
     const p = stagePoint(event);
@@ -189,7 +237,14 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
       <aside className="scene-director"><h2>Direct your Brightlings</h2><label>Add Brightling<select aria-label="Add Brightling" value="" onChange={event => { const id = event.target.value; if (!id) return; const point = initialPoint(Object.keys(scene.characters).length); update(value => ({ ...value, characters: { ...value.characters, [id]: point }, actions: [...value.actions, { id: crypto.randomUUID(), characterId: id, type: 'appear', start: 0, duration: 0, point }] })); setSelectedCharacter(id); setSelectedAction(null); setTime(0); setMessage(`Drag ${characterName(id)} on the stage to set the starting position.`); }}><option value="">Choose a Brightling…</option>{cast.filter(item => !Object.hasOwn(scene.characters, item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
         <div className="director-cast">{Object.keys(scene.characters).map(id => <button key={id} className={selectedCharacter === id ? 'active' : ''} onClick={() => { setSelectedCharacter(id); setSelectedAction(null); setTargetAction(null); }}>{characterName(id)}</button>)}</div>
         {selectedCharacter ? <><p className="director-tip">{time === 0 ? `Drag ${characterName(selectedCharacter)} on the stage to place them.` : `Direct ${characterName(selectedCharacter)} at ${fmt(time)}.`}</p><div className="director-actions">{(Object.keys(actionNames) as ActionType[]).map(type => <button key={type} onClick={() => addAction(type)}>{actionNames[type]}</button>)}</div>
-          <button className="director-remove" onClick={() => { if (!window.confirm(`Remove ${characterName(selectedCharacter)} from this scene?`)) return; const id = selectedCharacter; update(value => { const next = clone(value); delete next.characters[id]; next.actions = next.actions.filter(action => action.characterId !== id); return next; }); setSelectedCharacter(null); setSelectedAction(null); }}>Remove Brightling</button>
+          <div className="director-phone" aria-label="Phone and Bright Speak">
+            <p className="eyebrow">PHONE &amp; BRIGHT SPEAK</p>
+            <p className="director-tip">{phoneNow?.held ? `${characterName(selectedCharacter)} is holding the phone in the ${phoneNow.hand} hand.` : `${characterName(selectedCharacter)} is not holding a phone.`}</p>
+            <div className="director-actions">{(['take-out', 'hold', 'tap', 'communicate', 'put-away'] as PhoneActionType[]).map(type => <button key={type} onClick={() => addPhoneAction(type)}>{phoneActionNames[type]}</button>)}</div>
+            <label className="phone-carry">Start this shot with the phone already in hand<select aria-label="Phone already in hand" value={scene.phoneIn ?? ''} onChange={event => update(value => ({ ...value, phoneIn: event.target.value === '' ? null : event.target.value as PhoneHand }))}><option value="">No — put it away</option><option value="right">Yes — right hand</option><option value="left">Yes — left hand</option></select></label>
+            {phoneActions.length > 0 && <ul className="phone-list" aria-label="Phone interactions">{phoneActions.map(action => <li key={action.id}><button className={selectedPhoneId === action.id ? 'active' : ''} onClick={() => { setSelectedPhoneId(action.id); setTime(action.start); setPlaying(false); }}>{phoneActionNames[action.type]} · {fmt(action.start)}</button></li>)}</ul>}
+          </div>
+          <button className="director-remove" onClick={() => { if (!window.confirm(`Remove ${characterName(selectedCharacter)} from this scene?`)) return; const id = selectedCharacter; update(value => { const next = clone(value); delete next.characters[id]; next.actions = next.actions.filter(action => action.characterId !== id); next.phone = (next.phone ?? []).filter(action => action.characterId !== id); return next; }); setSelectedCharacter(null); setSelectedAction(null); }}>Remove Brightling</button>
         </> : <p className="director-tip">Choose a Brightling here or tap one on the stage.</p>}
       </aside></div>
     {activeAction && <section className="scene-inspector" aria-label="Selected action"><div className="inspector-heading"><div><p className="eyebrow">SELECTED ACTION</p><h2>{characterName(activeAction.characterId)} · {actionNames[activeAction.type]}</h2></div><button onClick={() => { update(value => ({ ...value, actions: value.actions.filter(item => item.id !== activeAction.id) })); setSelectedAction(null); setTargetAction(null); }}>Remove action</button></div>
@@ -199,6 +254,21 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
       {activeAction.point && <details className="advanced-position"><summary>Advanced position</summary><div><label>X<input aria-label="Destination X" type="number" min="-250" max={WIDTH + 250} value={activeAction.point.x} onChange={event => changeAction(activeAction.id, { point: { ...activeAction.point!, x: Number(event.target.value) } })} /></label><label>Y<input aria-label="Destination Y" type="number" min="350" max={HEIGHT + 150} value={activeAction.point.y} onChange={event => changeAction(activeAction.id, { point: { ...activeAction.point!, y: Number(event.target.value) } })} /></label></div></details>}
     </section>}
     {selectedPosition && !activeAction && <details className="advanced-position scene-initial-advanced"><summary>Advanced starting position for {characterName(selectedCharacter!)}</summary><div><label>X<input aria-label={`${characterName(selectedCharacter!)} initial X`} type="number" value={selectedPosition.x} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, x: Number(event.target.value) })} /></label><label>Y<input aria-label={`${characterName(selectedCharacter!)} initial Y`} type="number" value={selectedPosition.y} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, y: Number(event.target.value) })} /></label></div></details>}
+    {selectedPhone && <section className="scene-inspector" aria-label="Selected phone interaction"><div className="inspector-heading"><div><p className="eyebrow">SELECTED PHONE INTERACTION</p><h2>{characterName(selectedPhone.characterId)} · {phoneActionNames[selectedPhone.type]}</h2></div><button onClick={() => removePhoneAction(selectedPhone.id)}>Remove interaction</button></div>
+      <div className="inspector-fields">
+        <label>Start at (seconds)<input aria-label="Phone interaction start time" type="number" min="0" max={scene.duration} step="0.1" value={selectedPhone.start} onChange={event => changePhone(selectedPhone.id, { start: Number(event.target.value) })} /></label>
+        {selectedPhone.type !== 'tap' && <label>Length (seconds)<input aria-label="Phone interaction duration" type="number" min={selectedPhone.type === 'communicate' ? 0.8 : 0.1} max={selectedPhone.type === 'communicate' ? 12 : 3} step="0.1" value={selectedPhone.duration} onChange={event => changePhone(selectedPhone.id, { duration: Number(event.target.value) })} /></label>}
+        {selectedPhone.type === 'take-out' && <label>Which hand<select aria-label="Phone hand" value={selectedPhone.hand ?? 'right'} onChange={event => changePhone(selectedPhone.id, { hand: event.target.value as PhoneHand })}><option value="right">Right hand</option><option value="left">Left hand</option></select></label>}
+        {selectedPhone.type === 'communicate' && <>
+          <label>Message<input aria-label="Communication message" maxLength={80} value={selectedPhone.message ?? ''} onChange={event => changePhone(selectedPhone.id, { message: event.target.value })} /></label>
+          <label>Quick messages<select aria-label="Quick communication messages" value="" onChange={event => event.target.value && changePhone(selectedPhone.id, { message: event.target.value })}><option value="">Choose a message…</option>{PHONE_MESSAGES.map(item => <option key={item} value={item}>{item}</option>)}</select></label>
+          <label>Symbol<select aria-label="Communication symbol" value={selectedPhone.symbol ?? 'food'} onChange={event => changePhone(selectedPhone.id, { symbol: event.target.value as PhoneAction['symbol'] })}>{PHONE_SYMBOLS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+          <label>Pop-up position<select aria-label="Communication pop-up position" value={selectedPhone.position ?? 'above-right'} onChange={event => changePhone(selectedPhone.id, { position: event.target.value as PhoneAction['position'] })}>{PHONE_POSITIONS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+          <label>Phone voice<select aria-label="Phone voice" value={selectedPhone.assetId ?? ''} onChange={event => changePhone(selectedPhone.id, { assetId: event.target.value || undefined, clipId: event.target.value ? selectedPhone.clipId ?? crypto.randomUUID() : undefined })}><option value="">Silent — text only</option>{speechAssets.map(asset => <option key={asset.id} value={asset.id}>{asset.name}</option>)}</select></label>
+          <p className="director-tip">Generate the line in Voice Maker (AI Voices or Record Voice), save it, then choose it here. The device speaks it — {characterName(selectedPhone.characterId)} stays silent.</p>
+        </>}
+      </div>
+    </section>}
     <SceneTimeline scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} name={characterName} onSeek={value => { setPlaying(false); setTime(value); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} />
     <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} speakers={Object.keys(scene.characters).map(id => ({ id, name: characterName(id) }))} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onExtendDuration={seconds => update(value => ({ ...value, duration: Math.max(value.duration, Math.min(3600, seconds)) }))} onSeek={value => { setPlaying(false); setTime(value); }} />
     {validation && !validation.ok && <p role="alert" className="storage-alert">{validation.error}</p>}<p role="status" className="scene-status">{message}</p>

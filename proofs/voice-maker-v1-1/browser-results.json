@@ -1,5 +1,5 @@
 {
-  "mode": "unavailable",
+  "mode": "ready",
   "origin": "http://127.0.0.1:4177/",
   "steps": [
     {
@@ -7,34 +7,54 @@
       "detail": "http://127.0.0.1:4177/"
     },
     {
-      "step": "engine reported unavailable with a plain reason",
-      "detail": "Voice engine: ErrorRequired Python executable is missing.Retry voice engine"
+      "step": "Voice Maker reported Ready with no manual Python step",
+      "detail": "Voice engine: ReadyInstalled local voice models passed the health check."
     },
     {
-      "step": "failure reason came from the manager health check",
-      "detail": "{\"state\":\"error\",\"detail\":\"Required Python executable is missing.\",\"port\":null,\"owned\":true}"
+      "step": "status came from the versioned health check",
+      "detail": "{\"state\":\"ready\",\"detail\":\"Local voice engine is ready.\",\"port\":8766,\"owned\":true}"
     },
     {
-      "step": "Retry control offered",
-      "detail": "retry=true"
+      "step": "generated AI speech",
+      "detail": "61 voices installed, 344ms"
     },
     {
-      "step": "Generate disabled while unavailable",
-      "detail": "disabled=true"
+      "step": "edited the generated speech with a preset",
+      "detail": "processed audio ready"
     },
     {
-      "step": "Retry accepted without a false ready state",
-      "detail": "Voice engine: StartingVoice engine is starting."
+      "step": "saved the generated and edited speech",
+      "detail": "library shows 2 saved voice(s)"
+    },
+    {
+      "step": "recorded speech through the microphone",
+      "detail": "Original: My recording · 2.46s. Edits create a new asset."
+    },
+    {
+      "step": "saved the edited recording",
+      "detail": "library grew from 2 to 4"
+    },
+    {
+      "step": "survived a reload with saved voices intact",
+      "detail": "reopen shows Ready and 4 saved voices"
     }
   ],
   "consoleErrors": [],
   "failedRequests": [],
-  "statusText": "Voice engine: ErrorRequired Python executable is missing.Retry voice engine",
   "manager": {
-    "state": "error",
-    "detail": "Required Python executable is missing.",
-    "port": null,
+    "state": "ready",
+    "detail": "Local voice engine is ready.",
+    "port": 8766,
     "owned": true
   },
-  "afterRetry": "Voice engine: StartingVoice engine is starting."
+  "health": {
+    "service": "BrightTalesVoiceMaker",
+    "protocol": 2,
+    "state": "ready",
+    "detail": "Local voice engine is ready.",
+    "voices": 61
+  },
+  "generateMs": 344,
+  "profileRemoved": true,
+  "leftoverProfileBrowsers": 0
 }

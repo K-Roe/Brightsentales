@@ -3,10 +3,15 @@ import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit 
 import { HEIGHT, WIDTH } from './scene';
 import { stateAt, type TimedScene } from './timedScenes';
 import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
+import { phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
+import { drawCommunicationPopup, drawPhone } from './phoneArt';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 const image = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const item = new Image(); item.onload = () => resolve(item); item.onerror = reject; item.src = url; });
+/** Source pixel size of the approved frames, used to map a measured hand anchor onto the stage. */
+const SOURCE = { idle: { width: 434, height: 724 }, moving: { width: 500, height: 724 } };
+const PHONE_SCALE = 0.5;
 
 export async function previewPack(id: string, characters: Brightling[], maxOutfit: MaxOutfit, maxineOutfit: MaxineOutfit): Promise<PreviewPack | null> {
   const custom = characters.find(item => item.id === id);
@@ -19,20 +24,41 @@ export async function previewPack(id: string, characters: Brightling[], maxOutfi
 export function drawScenePreview(context: CanvasRenderingContext2D, scene: TimedScene, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
   context.clearRect(0, 0, WIDTH, HEIGHT);
   context.drawImage(room, 0, 0, WIDTH, HEIGHT);
-  const states = Object.keys(scene.characters).map(id => ({ id, state: stateAt(scene, id, time) })).filter(item => item.state.visible && packs[item.id]);
+  const states = Object.keys(scene.characters).map(id => ({ id, state: stateAt(scene, id, time), phone: phoneStateAt(scene, id, time) })).filter(item => item.state.visible && packs[item.id]);
   states.sort((a, b) => a.state.point.y - b.state.point.y);
-  for (const { id, state } of states) {
+  for (const { id, state, phone } of states) {
     const { x, y } = state.point;
     const pack = packs[id];
     context.save();
     context.fillStyle = 'rgba(68, 42, 75, .22)'; context.beginPath(); context.ellipse(x, y - 3, 87, 17, 0, 0, Math.PI * 2); context.fill();
+    const width = state.pose === 'side' ? (state.frame === 0 ? 213 : 239) : state.pose === 'wave' ? 245 : 213;
+    const height = 355;
+    const source = state.pose === 'idle' ? SOURCE.idle : SOURCE.moving;
+    const top = y - height - (state.pose === 'side' && state.frame > 0 && state.frame % 2 === 0 ? 3 : 0);
+    const left = x - width / 2;
     if (state.pose === 'side') {
-      const width = state.frame === 0 ? 213 : 239;
       context.translate(x, y); context.scale(state.direction, 1);
-      context.drawImage(pack.side[state.frame], -width / 2, -355 - (state.frame > 0 && state.frame % 2 === 0 ? 3 : 0), width, 355);
-    } else if (state.pose === 'wave') context.drawImage(pack.wave[state.frame - 1], x - 245 / 2, y - 355, 245, 355);
-    else context.drawImage(pack.idle, x - 213 / 2, y - 355, 213, 355);
+      context.drawImage(pack.side[state.frame], -width / 2, -height - (state.frame > 0 && state.frame % 2 === 0 ? 3 : 0), width, height);
+    } else if (state.pose === 'wave') context.drawImage(pack.wave[state.frame - 1], left, top, width, height);
+    else context.drawImage(pack.idle, left, top, width, height);
     context.restore();
+    if (phone.held || phone.raise > 0) {
+      const anchor = phoneAnchor(id, state.pose, state.pose === 'idle' ? 0 : state.pose === 'wave' ? state.frame : state.frame, phone.hand, {
+        x: left, y: top, width, height, sourceWidth: source.width, sourceHeight: source.height, direction: state.pose === 'side' ? state.direction : 1,
+      });
+      if (anchor) {
+        // Sit the phone just outside the hand so it reads as held rather than painted on the leg.
+        const outward = anchor.x < left + width / 2 ? -1 : 1;
+        drawPhone(context, { x: anchor.x + outward * 15 * PHONE_SCALE, y: anchor.y + 30 * PHONE_SCALE, scale: PHONE_SCALE, raise: phone.raise, tapping: phone.tapping, direction: state.direction });
+      }
+    }
+  }
+  // Communication pop-ups sit above the cast so a pop-up is never half hidden behind a Brightling.
+  for (const { id, state, phone } of states) {
+    if (!phone.popup) continue;
+    const width = 470 * PHONE_SCALE;
+    const box = phonePopupBox(state.point.x, state.point.y, phone.popup.position, width);
+    drawCommunicationPopup(context, phone.popup, { x: box.x, y: box.y, width, scale: PHONE_SCALE });
   }
 }
 
