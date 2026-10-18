@@ -19,8 +19,17 @@ Karl authorised sequential technical development with visual and listening accep
 | Beginner Note Preview | Implemented; technical checks passed | **AWAITING KARL'S SPEAKER REVIEW** | [Note Preview report](../proofs/note-preview/REPORT.md) | Hear C4, switch instruments, add and drag notes, then check the preview volume and feel. |
 | Voice Maker V1 | Implemented; technical checks passed | **AWAITING KARL'S MICROPHONE/SPEAKER REVIEW** | [Voice Maker report](../proofs/voice-maker/REPORT.md) | Record a voice, compare original/effects, listen to generated speech and the rendered scene in both themes. |
 | Voice Maker V1.1 — automatic voice service | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [V1.1 report](../proofs/voice-maker-v1-1/REPORT.md) | Open BrightTales normally, go to Voice Maker, confirm the engine says Ready without any second terminal, then generate a line and record his own voice. |
+| Max Phone Interaction V1.2 | **Partially delivered; blocked on artwork** | **AWAITING KARL'S DECISION** | [V1.2 report](../proofs/max-phone-v1-2/REPORT.md) | Pop-up work is done and verified. The holding/tapping animation needs three new Max frames — see the decision question. |
 | Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
 | M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
+
+## Max Phone Interaction V1.2 — pop-up improvements, artwork blocked
+
+- **Delivered and verified:** the Bright Speak pop-up is larger (235→348 px), nearer Max and the device (gap 130→42 px), with larger text (~24→~34 px) and a larger symbol (~64→~92 px). It is provably clear of the face and inside the frame at every position, asserted in tests. Message, device speech timing and fades are unchanged.
+- **Blocked, and why:** the holding/tapping animation. The approved artwork has no holding or tapping pose (idle, five walk, three wave, per outfit; the sheets contain only those already extracted), the character pipeline only recolours existing frames, and the pose generator lives in the sibling `BrightTales` repo, which this task forbids modifying. Scripted arm re-posing was attempted three times and rejected as visibly unconvincing — the rejected frames are archived as evidence rather than shipped.
+- **Specification:** three full-body 434×724 frames named `max-phone-hold.png`, `max-phone-tap-raise.png` and `max-phone-tap-touch.png`, described in the report. The renderer, timing, continuity, audio, export and Backup v8 are already ready to accept them.
+- **Tests:** 184/184, 11/11 service tests, production build, and the full acceptance re-run with zero console errors all pass.
+- **Karl's decision needed:** artwork route for the three frames — see the accompanying question. **Visual acceptance is not claimed.**
 
 ## Max's Phone & Bright Speak V1
 

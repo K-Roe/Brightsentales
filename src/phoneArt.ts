@@ -120,9 +120,9 @@ export function drawPhoneSymbol(context: CanvasRenderingContext2D, symbol: Phone
  */
 export function drawCommunicationPopup(context: CanvasRenderingContext2D, popup: PhonePopup, options: { x: number; y: number; width: number; scale: number }) {
   const { x, y, width, scale } = options;
-  const height = 190 * scale;
-  const symbolCentre = 74 * scale;
-  const textLeft = 128 * scale;
+  const height = 210 * scale;
+  const symbolCentre = 80 * scale;
+  const textLeft = 142 * scale;
   context.save();
   context.globalAlpha = popup.opacity;
   context.translate(x + width / 2, y + height / 2);
@@ -140,7 +140,7 @@ export function drawCommunicationPopup(context: CanvasRenderingContext2D, popup:
   context.save();
   roundedRect(context, 0, 0, width, height, 30 * scale); context.clip();
   context.translate(symbolCentre, height / 2);
-  drawPhoneSymbol(context, popup.symbol, 104 * scale);
+  drawPhoneSymbol(context, popup.symbol, 124 * scale);
   context.restore();
   context.beginPath();
   context.moveTo(width / 2 - 26 * scale, height - 2);
@@ -148,12 +148,12 @@ export function drawCommunicationPopup(context: CanvasRenderingContext2D, popup:
   context.lineTo(width / 2 + 4 * scale, height + 30 * scale);
   context.closePath();
   context.fillStyle = '#fffaf0'; context.fill(); context.stroke();
-  const textWidth = width - textLeft - 26 * scale;
+  const textWidth = width - textLeft - 30 * scale;
   context.fillStyle = '#2b1d4d';
-  context.font = `bold ${Math.round(38 * scale)}px Segoe UI`;
+  context.font = `bold ${Math.round(46 * scale)}px Segoe UI`;
   context.textAlign = 'left'; context.textBaseline = 'middle';
   const lines = wrapText(context, popup.message, textWidth);
-  const lineHeight = 46 * scale;
+  const lineHeight = 56 * scale;
   const top = height / 2 - ((lines.length - 1) * lineHeight) / 2 - (popup.speaking ? 10 * scale : 0);
   lines.forEach((line, index) => context.fillText(line, textLeft, top + index * lineHeight, textWidth));
   if (popup.speaking) drawSpeakerMark(context, width - 40 * scale, 28 * scale, scale);

@@ -35,7 +35,7 @@
     },
     {
       "name": "scene video exported",
-      "detail": "Max_asks_for_food.webm (2970908 bytes)"
+      "detail": "Max_asks_for_food.webm (3055858 bytes)"
     },
     {
       "name": "phone speech saved as a scene clip",
@@ -127,13 +127,13 @@
   },
   "video": {
     "name": "Max_asks_for_food.webm",
-    "bytes": 2970908,
+    "bytes": 3055858,
     "copiedTo": "proofs/max-phone-v1/max-asks-for-food.webm"
   },
   "sceneAudioClips": [
     {
-      "id": "bc17f951-d968-43ee-8877-cd17bfc6fc37",
-      "assetId": "4b226cf6-0c8a-4443-bd05-c34d4aaec6f3",
+      "id": "e19ee03b-bef9-4df5-8845-89902e50991d",
+      "assetId": "ef007ef2-3a1f-472e-a701-f25ee6be19fc",
       "start": 3.62,
       "trimStart": 0,
       "trimEnd": 1.3013333333333332,

@@ -193,20 +193,30 @@ describe('hand anchors and pop-up placement', () => {
   it('keeps every pop-up inside the frame', () => {
     for (const position of ['above-left', 'above-right', 'left', 'right'] as const) {
       for (const x of [-200, 0, WIDTH / 2, WIDTH + 200]) {
-        const boxOut = phonePopupBox(x, HEIGHT, position, 470 * 0.62);
+        const boxOut = phonePopupBox(x, HEIGHT, position);
         expect(boxOut.x).toBeGreaterThanOrEqual(28);
-        expect(boxOut.x + 470 * 0.62).toBeLessThanOrEqual(WIDTH);
+        expect(boxOut.x + 470 * 0.74).toBeLessThanOrEqual(WIDTH);
         expect(boxOut.y).toBeGreaterThanOrEqual(28);
-        expect(boxOut.y).toBeLessThanOrEqual(HEIGHT);
+        expect(boxOut.y + 210 * 0.74).toBeLessThanOrEqual(HEIGHT);
       }
     }
   });
 
   it('puts the pop-up beside the character rather than over the face', () => {
-    const above = phonePopupBox(800, 790, 'above-right', 470 * 0.62);
-    const beside = phonePopupBox(800, 790, 'right', 470 * 0.62);
-    expect(above.y).toBeLessThan(790 - 330);
+    const above = phonePopupBox(800, 790, 'above-right', 470 * 0.74, 210 * 0.74);
+    const beside = phonePopupBox(800, 790, 'right', 470 * 0.74, 210 * 0.74);
+    expect(above.y).toBeLessThan(790 - 355);
     expect(beside.x).toBeGreaterThan(800);
+  });
+
+  it('keeps the pop-up clear of the head for an "above" placement and near the phone', () => {
+    // The character's head occupies roughly y-355 to y; an above-head pop-up must end above it.
+    const characterY = 790;
+    const above = phonePopupBox(700, characterY, 'above-right');
+    expect(above.y + 210 * 0.74).toBeLessThanOrEqual(characterY - 355);
+    // And it sits close enough to read as coming from the device.
+    const beside = phonePopupBox(700, characterY, 'right');
+    expect(beside.x - 700).toBeLessThanOrEqual(42 + 1);
   });
 });
 

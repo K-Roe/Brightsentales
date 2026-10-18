@@ -3,7 +3,7 @@ import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit 
 import { HEIGHT, WIDTH } from './scene';
 import { stateAt, type TimedScene } from './timedScenes';
 import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
-import { phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
+import { PHONE_POPUP_HEIGHT, PHONE_POPUP_SCALE, PHONE_POPUP_WIDTH, phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
 import { drawCommunicationPopup, drawPhone } from './phoneArt';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
@@ -56,9 +56,8 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
   // Communication pop-ups sit above the cast so a pop-up is never half hidden behind a Brightling.
   for (const { id, state, phone } of states) {
     if (!phone.popup) continue;
-    const width = 470 * PHONE_SCALE;
-    const box = phonePopupBox(state.point.x, state.point.y, phone.popup.position, width);
-    drawCommunicationPopup(context, phone.popup, { x: box.x, y: box.y, width, scale: PHONE_SCALE });
+    const box = phonePopupBox(state.point.x, state.point.y, phone.popup.position);
+    drawCommunicationPopup(context, phone.popup, { x: box.x, y: box.y, width: PHONE_POPUP_WIDTH, scale: PHONE_POPUP_SCALE });
   }
 }
 

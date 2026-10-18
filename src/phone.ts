@@ -273,14 +273,22 @@ export function syncPhoneClip(scene: { duration: number; audio?: AudioClip[] }, 
   return [...clips, phoneSpeechClip(action, asset, scene.duration, ownedClipId)];
 }
 
+/** Pop-up size on the 1672x941 stage: large enough to read on a phone-sized screen. */
+export const PHONE_POPUP_SCALE = 0.74;
+export const PHONE_POPUP_WIDTH = 470 * PHONE_POPUP_SCALE;
+export const PHONE_POPUP_HEIGHT = 210 * PHONE_POPUP_SCALE;
+
 /** Keeps the pop-up inside the frame and clear of the character's face. */
-export function phonePopupBox(characterX: number, characterY: number, position: PhonePopupPosition, size: number): { x: number; y: number } {
-  const headroom = characterY - 330;
-  const gap = 130;
-  let x = position === 'above-left' || position === 'left' ? characterX - gap - size : characterX + gap;
-  let y = position === 'above-left' || position === 'above-right' ? headroom - size * 0.55 : characterY - 250;
+export function phonePopupBox(characterX: number, characterY: number, position: PhonePopupPosition, size = PHONE_POPUP_WIDTH, height = PHONE_POPUP_HEIGHT): { x: number; y: number } {
+  // Sit beside the character rather than far away, so it reads as coming from the phone.
+  const gap = 42;
+  const above = position === 'above-left' || position === 'above-right';
+  const leftSide = position === 'above-left' || position === 'left';
+  let x = leftSide ? characterX - gap - size : characterX + gap;
+  // "Above" clears the head entirely; "beside" sits at chest height.
+  let y = above ? characterY - 355 - height - 26 : characterY - 268;
   x = Math.max(28, Math.min(WIDTH - size - 28, x));
-  y = Math.max(28, Math.min(HEIGHT - size * 0.62 - 28, y));
+  y = Math.max(28, Math.min(HEIGHT - height - 28, y));
   return { x, y };
 }
 
