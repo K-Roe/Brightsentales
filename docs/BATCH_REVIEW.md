@@ -23,6 +23,14 @@ Karl authorised sequential technical development with visual and listening accep
 | Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
 | M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
 
+## Max Phone Native2D cut-out rig — built, proven, blocked
+
+- **Built:** `scripts/build_max_rig.py` bakes approved `max-0.png` into 8 parts (torso, sleeves, hands, shoulder caps, head) plus `rig.json` with pivots, into `public/art/rig/max/`. Cut paths are explicitly authored anatomical polygons; head and hands use exact mask components. Approved PNGs are unmodified.
+- **Proven:** the rest pose reconstructs the approved frame exactly (pixel diff is anti-aliasing only), arms rotate, hands stay attached after fixing their pivot, and phone-height poses are reachable by solved angles (+70.7 deg holding, -78.5 deg tapping). Waving needs no rig — approved wave frames swap in cleanly.
+- **Blocked and reported, per Karl's gate:** raising an arm exposes empty armpit space, slices the hoodie star and tears the hood junction, because the artwork has no pixels behind the arms. Arms-behind-torso was tried and is worse. The rig is **not wired into the app**, `src/` is unchanged, and nothing is marked visually approved.
+- **Unblock:** one additive "arms-removed torso" fill layer (new pixels only, no approved pixel changed), and optionally the pointing-hand asset.
+- **Tests:** 184/184 and the production build pass; the app is unaffected. Close-up evidence of shoulders, hands and the star is in `proofs/max-phone-v1-3/`.
+
 ## Max Phone Interaction V1.2 — pop-up improvements, artwork blocked
 
 - **Delivered and verified:** the Bright Speak pop-up is larger (235→348 px), nearer Max and the device (gap 130→42 px), with larger text (~24→~34 px) and a larger symbol (~64→~92 px). It is provably clear of the face and inside the frame at every position, asserted in tests. Message, device speech timing and fades are unchanged.

@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "character": "max",
+  "source": "/art/max-0.png",
+  "width": 434,
+  "height": 724,
+  "pivots": {
+    "arm-right": {
+      "x": 150,
+      "y": 410
+    },
+    "arm-left": {
+      "x": 300,
+      "y": 410
+    },
+    "hand-right": {
+      "x": 98,
+      "y": 521
+    },
+    "hand-left": {
+      "x": 333,
+      "y": 522
+    },
+    "head": {
+      "x": 218,
+      "y": 382
+    }
+  },
+  "parts": {
+    "torso": {
+      "file": "torso.png",
+      "bbox": [
+        0,
+        0,
+        433,
+        723
+      ],
+      "pixels": 241782
+    },
+    "arm-right": {
+      "file": "sleeve-right.png",
+      "bbox": [
+        81,
+        374,
+        150,
+        562
+      ],
+      "pixels": 8639
+    },
+    "arm-left": {
+      "file": "sleeve-left.png",
+      "bbox": [
+        300,
+        358,
+        356,
+        556
+      ],
+      "pixels": 8149
+    },
+    "hand-right": {
+      "file": "hand-right.png",
+      "bbox": [
+        73,
+        490,
+        125,
+        547
+      ],
+      "pixels": 2144
+    },
+    "hand-left": {
+      "file": "hand-left.png",
+      "bbox": [
+        306,
+        491,
+        357,
+        548
+      ],
+      "pixels": 2074
+    },
+    "shoulder-right": {
+      "file": "shoulder-right.png",
+      "bbox": [
+        100,
+        374,
+        150,
+        418
+      ],
+      "pixels": 1689
+    },
+    "shoulder-left": {
+      "file": "shoulder-left.png",
+      "bbox": [
+        300,
+        358,
+        338,
+        404
+      ],
+      "pixels": 1280
+    },
+    "head": {
+      "file": "head.png",
+      "bbox": [
+        63,
+        41,
+        374,
+        382
+      ],
+      "pixels": 54545
+    }
+  },
+  "drawOrder": [
+    "torso",
+    "arm-right",
+    "arm-left",
+    "hand-right",
+    "hand-left",
+    "head",
+    "shoulder-right",
+    "shoulder-left"
+  ]
+}
