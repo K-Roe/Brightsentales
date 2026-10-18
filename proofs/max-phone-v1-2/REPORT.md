@@ -14,7 +14,18 @@
 
 The character pipeline (`src/maker.ts`) is a **recolouring** pipeline: a source frame plus per-region greyscale masks (`body`, `hair`, `hoodie` in `public/recolour-masks/`), combined by `recolourPixels`. It recolours existing frames; it cannot author new ones. The tooling that generates new poses is the Native2D/Blender generator in the sibling `BrightTales` repo, which this task explicitly forbids touching.
 
-### Scripted arm re-posing was attempted and rejected
+### 4. The sibling Native2D route cannot supply them either — it holds a *different* Max
+
+Karl authorised limited work in `C:\Users\karlr\repos\BrightTales`. That route was investigated before writing any code there, and it is blocked for a concrete reason:
+
+- `characters/Max/` does contain a rigged, posed Max (`Max.brightling.blend`, bones `Arm.L`/`Arm.R`, previews including `full-body-raised-arm.png`) — but it is **not Karl's approved Max**. That rig renders a pale-skinned character with brown hair, a blue hoodie and blue trousers (`previews/full-body-front.png`).
+- Karl's approved Max is a different character entirely: teal skin, spiky teal hair, purple hoodie with a yellow star, blue shorts and trainers (`brightsenappstales/public/art/max-0.png`).
+- The Native2D rig was built from a different "Brightlings" design sheet (`characters/Max/source/max-reference.png`), and that repository's own critique says so in its own words: *"Max is still not accepted likeness quality… The face proportions do not yet reproduce Max's design… not recognisably Max."*
+- No bridge exists between the two code bases: nothing under `src/brighttales3d/` references `brightsenappstales`, `max-0.png` or the recolour masks, and Native2D packages are 3D character revisions, not 2D sprite poses.
+
+So posing that rig would produce phone frames of a **different-looking character**, which is exactly "redesigning Max" — forbidden by this task, by Karl's authorisation ("Reuse the existing Max character design… Do not redesign Max"), and by the standing project rule against presenting generated approximations as approved art. Per Karl's instruction to report blockers rather than silently substitute, **nothing was changed in the sibling repository**; it already had unrelated uncommitted changes before this session.
+
+### 5. Scripted arm re-posing was attempted and rejected
 
 I built `scripts/build_phone_poses.py`, which removes an arm (erasing the sleeve by separating it from the torso run in the hoodie mask, and removing the hand as its own skin component — both verified against `scripts/analyse_sprites.py`) and redraws the replacement in Max's style. Three iterations produced visible artefacts rather than convincing art. The rejected output is archived at `rejected-scripted-arms/` as evidence.
 
@@ -62,4 +73,8 @@ Everything already working was re-verified end to end after these changes: **184
 
 ## 5. Decision needed
 
-The blocking item is artwork, not code. Options are set out in the accompanying question. Nothing further will be attempted on the artwork until Karl chooses, because each iteration costs time and produces worse results.
+The blocking item is artwork, not code, and it cannot be produced by either automated route available (this repo's recolour pipeline, or the sibling Native2D rig). The remaining options all involve a decision only Karl can make, and none of them is something I should choose unilaterally:
+
+1. **Draw the three frames** (Karl or an artist), against the specification above. Smallest change, preserves Max exactly, and everything downstream is already built.
+2. **Accept the phone as composited artwork** (V1 behaviour), with the improved pop-up, and drop the "holds in one hand / taps with the other" requirement for V1.
+3. **Unify the two Max characters** — a much larger piece of work outside this task's scope, and it would change Karl's approved appearance.
