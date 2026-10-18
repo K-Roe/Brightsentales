@@ -1,0 +1,192 @@
+﻿{
+  "max-0": {
+    "size": [
+      434,
+      724
+    ],
+    "head_component": {
+      "size": 39573,
+      "bbox": [
+        63,
+        137,
+        374,
+        382
+      ],
+      "centre": [
+        213,
+        257
+      ]
+    },
+    "other_components": [
+      {
+        "size": 2144,
+        "bbox": [
+          73,
+          490,
+          125,
+          547
+        ],
+        "centre": [
+          98,
+          519
+        ]
+      },
+      {
+        "size": 2074,
+        "bbox": [
+          306,
+          491,
+          357,
+          548
+        ],
+        "centre": [
+          333,
+          520
+        ]
+      },
+      {
+        "size": 1198,
+        "bbox": [
+          240,
+          566,
+          292,
+          603
+        ],
+        "centre": [
+          263,
+          583
+        ]
+      },
+      {
+        "size": 1190,
+        "bbox": [
+          134,
+          565,
+          187,
+          603
+        ],
+        "centre": [
+          163,
+          582
+        ]
+      }
+    ],
+    "hair_bbox": [
+      108,
+      41,
+      349,
+      186
+    ],
+    "arm_separable_below_y": {
+      "left": 395,
+      "right": 395
+    }
+  },
+  "max-wave-1": {
+    "size": [
+      500,
+      724
+    ],
+    "head_component": {
+      "size": 36110,
+      "bbox": [
+        116,
+        137,
+        427,
+        365
+      ],
+      "centre": [
+        267,
+        246
+      ]
+    },
+    "other_components": [
+      {
+        "size": 3001,
+        "bbox": [
+          70,
+          340,
+          144,
+          407
+        ],
+        "centre": [
+          109,
+          374
+        ]
+      },
+      {
+        "size": 2553,
+        "bbox": [
+          124,
+          471,
+          184,
+          533
+        ],
+        "centre": [
+          154,
+          503
+        ]
+      },
+      {
+        "size": 2498,
+        "bbox": [
+          364,
+          474,
+          419,
+          537
+        ],
+        "centre": [
+          392,
+          506
+        ]
+      },
+      {
+        "size": 1647,
+        "bbox": [
+          297,
+          556,
+          356,
+          601
+        ],
+        "centre": [
+          325,
+          576
+        ]
+      }
+    ],
+    "hair_bbox": [
+      153,
+      19,
+      403,
+      186
+    ],
+    "arm_separable_below_y": {
+      "left": 363,
+      "right": 363
+    }
+  },
+  "geometry": {
+    "right_shoulder": [
+      150.0,
+      424.0
+    ],
+    "left_shoulder": [
+      300.0,
+      424.0
+    ],
+    "phone_in_front_of_chest": [
+      215.0,
+      455.0
+    ],
+    "right_arm_length": 108.3,
+    "left_arm_length": 101.5,
+    "right_shoulder_to_phone": 72.0,
+    "left_shoulder_to_phone": 90.5,
+    "right_can_reach_phone": true,
+    "left_can_reach_phone": true
+  },
+  "head_pivot_candidate": {
+    "x": 218,
+    "y": 382
+  }
+}
