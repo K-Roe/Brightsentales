@@ -99,6 +99,52 @@ def save_part(source: np.ndarray, region: np.ndarray, name: str) -> dict:
     return {"file": f"{name}.png", "bbox": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())], "pixels": int(region.sum())}
 
 
+def torso_fill(source: np.ndarray, footprint: np.ndarray, name: str) -> dict:
+    """Complete the hidden shoulder/armpit/hoodie area the arm used to cover.
+
+    The fill occupies only pixels that were the arm's own pixels, i.e. areas that become
+    empty once the arm is cut away. At rest the arm covers it exactly, so the approved frame
+    is still reconstructed pixel for pixel; when the arm lifts, his side is there instead of
+    a hole.
+
+    Colour comes from the torso itself at the same height, so the hoodie, its hem and the
+    shorts continue seamlessly across the new pixels. The body's outer contour is drawn in
+    the same dark outline, inside the fill, so nothing is added beyond the existing
+    silhouette.
+    """
+    alpha = source[:, :, 3] > 8
+    region = footprint & alpha
+    if not region.any():
+        raise SystemExit(f"Torso fill for {name} would be empty.")
+
+    height, width = region.shape
+    # Outer contour: fill pixels touching transparent background just outside the body.
+    grown_background = np.array(
+        Image.fromarray(((~alpha) * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(7))
+    ) > 127
+    edge = region & grown_background
+
+    fill = np.zeros_like(source)
+    for y in range(height):
+        row = region[y]
+        if not row.any():
+            continue
+        sample = None
+        for x in range(200, width):
+            if alpha[y, x]:
+                sample = source[y, x]
+                break
+        if sample is None:
+            sample = source[y, 200]
+        fill[y, row] = sample
+    fill[edge] = (43, 29, 77, 255)
+
+    Image.fromarray(fill, "RGBA").save(OUT / f"{name}.png")
+    ys, xs = np.nonzero(region)
+    return {"file": f"{name}.png", "pixels": int(region.sum()),
+            "bbox": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())]}
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     source = np.array(Image.open(SOURCE).convert("RGBA"))
@@ -132,8 +178,12 @@ def main() -> None:
     arms = right_sleeve | hand_right_mask | left_sleeve | hand_left_mask
     caps = right_cap | left_cap
 
+    # The fill completes exactly the arm's own footprint, so the torso part must keep those
+    # pixels out of the arms but inside the torso.
     registry = {}
     registry["torso"] = save_part(source, ~(arms | head_mask | caps), "torso")
+    registry["torso-fill"] = torso_fill(source, right_sleeve | hand_right_mask, "torso-fill-right")
+    registry["torso-fill-left"] = torso_fill(source, left_sleeve | hand_left_mask, "torso-fill-left")
     registry["arm-right"] = save_part(source, right_sleeve, "sleeve-right")
     registry["arm-left"] = save_part(source, left_sleeve, "sleeve-left")
     registry["hand-right"] = save_part(source, hand_right_mask, "hand-right")
@@ -156,7 +206,7 @@ def main() -> None:
             "head": {"x": PIVOTS["head"][0], "y": PIVOTS["head"][1]},
         },
         "parts": registry,
-        "drawOrder": ["torso", "arm-right", "arm-left", "hand-right", "hand-left", "head", "shoulder-right", "shoulder-left"],
+        "drawOrder": ["torso", "torso-fill", "torso-fill-left", "arm-right", "arm-left", "hand-right", "hand-left", "head", "shoulder-right", "shoulder-left"],
     }
     (OUT / "rig.json").write_text(json.dumps(rig, indent=2), encoding="utf-8")
     print(json.dumps({k: v["pixels"] for k, v in registry.items()}, indent=2))
