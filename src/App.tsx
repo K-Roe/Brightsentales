@@ -6,6 +6,8 @@ import Places from './Places';
 import SceneMaker from './SceneMaker';
 import EpisodeMaker, { type EpisodeLeaveGuard } from './EpisodeMaker';
 import AudioLibrary from './AudioLibrary';
+import VoiceMaker from './VoiceMaker';
+import { emptyVoiceSettings, readVoiceSettings, validVoiceSettings, VOICE_SETTINGS_KEY, type VoiceSettings } from './voiceSettings';
 import { type AudioAsset, type AudioKind } from './audio';
 import { audioBackupAssets, decodeAudioBackup, importAudioFile, listAudioAssets, removeAudioAsset, saveAudioAsset } from './audioStore';
 import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, speechFitsEpisode, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
@@ -96,10 +98,12 @@ export default function App() {
   const [initialProjects] = useState(() => { try { return decodeStudioProjects(localStorage.getItem(MUSIC_KEY)); } catch { return { ok: false as const, error: 'Browser music project storage is unavailable.' }; } });
   const [projects, setProjects] = useState<StudioProjects>(initialProjects.ok ? initialProjects.projects : structuredClone(EMPTY_PROJECTS));
   const [projectsIssue, setProjectsIssue] = useState<string | null>(initialProjects.ok ? null : initialProjects.error);
+  const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>(() => { try { return readVoiceSettings(); } catch { return emptyVoiceSettings(); } });
+  const [voiceSettingsIssue, setVoiceSettingsIssue] = useState<string | null>(() => { try { readVoiceSettings(); return null; } catch { return 'Saved voice settings are invalid. Existing data was kept.'; } });
   const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
   const [audioIssue, setAudioIssue] = useState<string | null>(null);
   const [sceneIssue, setSceneIssue] = useState<string | null>(() => { try { const raw = localStorage.getItem(STORAGE_KEY); return raw !== null && !parseScene(raw) ? 'Saved scene JSON is invalid. It has not been overwritten.' : null; } catch { return 'Browser scene storage is unavailable.'; } });
-  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'intros' | 'episodes' | 'credits' | 'music' | 'audio' | 'playground'>('characters');
+  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'intros' | 'episodes' | 'credits' | 'music' | 'voice' | 'audio' | 'playground'>('characters');
   const [requestedSceneId, setRequestedSceneId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
   const [maxOutfit, setMaxOutfit] = useState<MaxOutfit>(() => maxOutfitFrom(savedRef.current.maxOutfit));
@@ -300,7 +304,7 @@ export default function App() {
     setSceneIds([...sceneIds, item.id]); select(item.id); setActiveTab('playground'); setNotice(`${item.name} added. Drag to place, then save the scene.`);
   };
   const exportStudio = async (): Promise<StudioBackup | null> => {
-    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue || timedIssue || episodeIssue || introIssue || creditsIssue || projectsIssue || audioIssue) return null;
+    if (!recovery.ok || libraryIssue || sceneIssue || placesIssue || timedIssue || episodeIssue || introIssue || creditsIssue || projectsIssue || audioIssue || voiceSettingsIssue) return null;
     try {
       const storedLibrary = readLibrary();
       const storedPlaces = decodePlaceOrganisation(localStorage.getItem(PLACE_FOLDERS_KEY));
@@ -313,7 +317,7 @@ export default function App() {
       const storedProjects = decodeStudioProjects(localStorage.getItem(MUSIC_KEY));
       if (!storedTimed.ok || !storedEpisodes.ok || !storedIntros.ok || !storedCredits.ok || !storedProjects.ok) return null;
       const currentAudio = await listAudioAssets();
-      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation, storedTimed.library, storedEpisodes.library, await audioBackupAssets(currentAudio), storedIntros.library, storedCredits.library, storedProjects.projects);
+      const candidate = createStudioBackup(storedLibrary.characters, sceneRaw === null ? null : JSON.parse(sceneRaw), new Date(), storedPlaces.organisation, storedTimed.library, storedEpisodes.library, await audioBackupAssets(currentAudio), storedIntros.library, storedCredits.library, storedProjects.projects, readVoiceSettings());
       const checked = validateStudioBackup(candidate);
       return checked.ok ? checked.backup : null;
     } catch { return null; }
@@ -347,6 +351,7 @@ export default function App() {
       if (restoredCredits.ok) { setCredits(restoredCredits.library); setCreditsIssue(null); }
       const restoredProjects = decodeStudioProjects(localStorage.getItem(MUSIC_KEY));
       if (restoredProjects.ok) { setProjects(restoredProjects.projects); setProjectsIssue(null); }
+      try { setVoiceSettings(readVoiceSettings()); setVoiceSettingsIssue(null); } catch { /* Restore validator and journal preserve existing settings. */ }
       if (restoredAudio !== null) { setAudioAssets(restoredAudio); setAudioIssue(null); }
       setNotice('Studio Backup restored. Characters, scenes, episodes and Places library are ready.');
       return true;
@@ -406,6 +411,16 @@ export default function App() {
       setNotice('The render was created but could not be stored in the Audio Library. Browser storage may be full.');
     }
   };
+  const saveVoiceAsset = async (asset: AudioAsset) => {
+    if (audioIssue) throw new Error(audioIssue);
+    await saveAudioAsset(asset);
+    setAudioAssets(previous => [...previous, asset]);
+  };
+  const saveVoiceSettings = (next: VoiceSettings): boolean => {
+    if (voiceSettingsIssue || !validVoiceSettings(next)) return false;
+    try { localStorage.setItem(VOICE_SETTINGS_KEY, JSON.stringify(next)); setVoiceSettings(next); return true; }
+    catch { return false; }
+  };
   const addAudio = async (file: File, kind: AudioKind) => {
     if (audioIssue) throw new Error(audioIssue);
     const asset = await importAudioFile(file, kind);
@@ -448,7 +463,7 @@ export default function App() {
     <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
-      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'music', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section'); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', music: '♪', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab === 'music' ? 'Music Studio' : tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'music', 'voice', 'audio', 'playground'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section'); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', music: '♪', voice: '\u266c', audio: '♫', playground: '▶' } as const)[tab]}</span><span>{tab === 'music' ? 'Music Studio' : tab === 'voice' ? 'Voice Maker' : tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
       <label className="appearance-control">Appearance<select aria-label="Appearance" value={appearance} onChange={event => chooseAppearance(event.target.value as Appearance)}><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></label>
       <span className="local-badge"><span /> Saved in this browser</span>
     </aside>
@@ -460,6 +475,7 @@ export default function App() {
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
       {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
+      {activeTab === 'voice' && <VoiceMaker assets={audioAssets} characters={library} settings={voiceSettings} issue={voiceSettingsIssue} onSettingsChange={saveVoiceSettings} onSaveAsset={saveVoiceAsset} onDeleteAsset={deleteAudio} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>

@@ -8,13 +8,14 @@ import { INTROS_KEY, validateIntroLibrary, type IntroLibrary } from './introduct
 import { CREDITS_KEY, validateCreditsLibrary, type CreditsLibrary } from './credits';
 import { MUSIC_KEY, validateStudioProjects, type StudioProjects } from './musicProject';
 import { type AudioBackupAsset, validAudioBackup } from './audio';
+import { VOICE_SETTINGS_KEY, validVoiceSettings, type VoiceSettings } from './voiceSettings';
 
 export const STUDIO_BACKUP_VERSION = 8;
 export const RESTORE_JOURNAL_KEY = 'brightsenappstales.restore.v1';
-export type StudioBackup = { version: 8; createdAt: string; characters: Brightling[]; scene: Scene | null; places: PlaceOrganisation; timedScenes: TimedLibrary | null; episodes: EpisodeLibrary | null; intros: IntroLibrary | null; credits: CreditsLibrary | null; projects: StudioProjects | null; audioAssets: AudioBackupAsset[] | null };
+export type StudioBackup = { version: 8; createdAt: string; characters: Brightling[]; scene: Scene | null; places: PlaceOrganisation; timedScenes: TimedLibrary | null; episodes: EpisodeLibrary | null; intros: IntroLibrary | null; credits: CreditsLibrary | null; projects: StudioProjects | null; audioAssets: AudioBackupAsset[] | null; voiceSettings?: VoiceSettings | null };
 export type BackupResult = { ok: true; backup: StudioBackup } | { ok: false; error: string };
-type Before = { library: string | null; scene: string | null; places?: string | null; timedScenes?: string | null; episodes?: string | null; intros?: string | null; credits?: string | null; projects?: string | null };
-type Journal = { version: 1 | 2 | 3 | 4 | 5 | 6 | 7; phase: 'pending' | 'committed'; before: Before; restoreTimed?: boolean; restoreEpisodes?: boolean; restoreIntros?: boolean; restoreCredits?: boolean; restoreProjects?: boolean };
+type Before = { library: string | null; scene: string | null; places?: string | null; timedScenes?: string | null; episodes?: string | null; intros?: string | null; credits?: string | null; projects?: string | null; voiceSettings?: string | null };
+type Journal = { version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8; phase: 'pending' | 'committed'; before: Before; restoreTimed?: boolean; restoreEpisodes?: boolean; restoreIntros?: boolean; restoreCredits?: boolean; restoreProjects?: boolean; restoreVoiceSettings?: boolean };
 type Storage = Pick<globalThis.Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
 export function validateStudioBackup(data: unknown): BackupResult {
@@ -64,6 +65,8 @@ export function validateStudioBackup(data: unknown): BackupResult {
   const checkedProjects = version >= 8 && value.projects !== null ? validateStudioProjects(value.projects) : null;
   if (checkedProjects && !checkedProjects.ok) return { ok: false, error: checkedProjects.error };
   const projects = checkedProjects?.ok ? checkedProjects.projects : null;
+  if ('voiceSettings' in value && value.voiceSettings !== null && !validVoiceSettings(value.voiceSettings)) return { ok: false, error: 'Backup voice presets or defaults are invalid.' };
+  const voiceSettings = 'voiceSettings' in value ? value.voiceSettings as VoiceSettings | null : undefined;
   const hasClips = (items?: { audio?: { assetId: string }[] }[]) => !!items?.some(item => item.audio?.length);
   if (audioAssets === null && (hasClips(timedScenes?.scenes) || hasClips(episodes?.episodes) || hasClips(intros?.intros) || hasClips(credits?.credits))) return { ok: false, error: 'This backup has audio clips but no audio files.' };
   if (audioAssets) {
@@ -73,11 +76,11 @@ export function validateStudioBackup(data: unknown): BackupResult {
   }
   // Keep missing references intact. The Episode Maker marks them and blocks playback,
   // allowing a later backup to restore the original scene ID without losing the episode.
-  return { ok: true, backup: { version: 8, createdAt: value.createdAt, characters: library.characters, scene, places: places.organisation, timedScenes, episodes, intros, credits, projects, audioAssets } };
+  return { ok: true, backup: { version: 8, createdAt: value.createdAt, characters: library.characters, scene, places: places.organisation, timedScenes, episodes, intros, credits, projects, audioAssets, ...(voiceSettings !== undefined ? { voiceSettings } : {}) } };
 }
 
-export function createStudioBackup(characters: Brightling[], scene: Scene | null, date = new Date(), places: PlaceOrganisation = structuredClone(DEFAULT_PLACE_ORGANISATION), timedScenes: TimedLibrary = { version: 1, scenes: [] }, episodes: EpisodeLibrary = { version: 1, episodes: [] }, audioAssets: AudioBackupAsset[] = [], intros: IntroLibrary = { version: 1, intros: [] }, credits: CreditsLibrary = { version: 1, credits: [] }, projects: StudioProjects = { version: 1, music: [], effects: [] }): StudioBackup {
-  return { version: 8, createdAt: date.toISOString(), characters, scene, places, timedScenes, episodes, intros, credits, projects, audioAssets };
+export function createStudioBackup(characters: Brightling[], scene: Scene | null, date = new Date(), places: PlaceOrganisation = structuredClone(DEFAULT_PLACE_ORGANISATION), timedScenes: TimedLibrary = { version: 1, scenes: [] }, episodes: EpisodeLibrary = { version: 1, episodes: [] }, audioAssets: AudioBackupAsset[] = [], intros: IntroLibrary = { version: 1, intros: [] }, credits: CreditsLibrary = { version: 1, credits: [] }, projects: StudioProjects = { version: 1, music: [], effects: [] }, voiceSettings?: VoiceSettings): StudioBackup {
+  return { version: 8, createdAt: date.toISOString(), characters, scene, places, timedScenes, episodes, intros, credits, projects, audioAssets, ...(voiceSettings ? { voiceSettings } : {}) };
 }
 
 function writeOriginal(storage: Storage, key: string, value: string | null) {
@@ -92,12 +95,12 @@ function parseJournal(raw: string): Journal | null {
     const journal = value as Partial<Journal>;
     const before = journal.before;
     const version = journal.version ?? 0;
-    if (![1, 2, 3, 4, 5, 6, 7].includes(version) || !['pending', 'committed'].includes(journal.phase ?? '') || !before || (before.library !== null && typeof before.library !== 'string') || (before.scene !== null && typeof before.scene !== 'string') || version !== 1 && before.places !== null && typeof before.places !== 'string' || version >= 3 && before.timedScenes !== null && typeof before.timedScenes !== 'string' || version >= 4 && before.episodes !== null && typeof before.episodes !== 'string' || version >= 5 && before.intros !== null && typeof before.intros !== 'string' || version >= 6 && before.credits !== null && typeof before.credits !== 'string' || version === 7 && before.projects !== null && typeof before.projects !== 'string') return null;
+    if (![1, 2, 3, 4, 5, 6, 7, 8].includes(version) || !['pending', 'committed'].includes(journal.phase ?? '') || !before || (before.library !== null && typeof before.library !== 'string') || (before.scene !== null && typeof before.scene !== 'string') || version !== 1 && before.places !== null && typeof before.places !== 'string' || version >= 3 && before.timedScenes !== null && typeof before.timedScenes !== 'string' || version >= 4 && before.episodes !== null && typeof before.episodes !== 'string' || version >= 5 && before.intros !== null && typeof before.intros !== 'string' || version >= 6 && before.credits !== null && typeof before.credits !== 'string' || version >= 7 && before.projects !== null && typeof before.projects !== 'string' || version >= 8 && before.voiceSettings !== null && typeof before.voiceSettings !== 'string') return null;
     return journal as Journal;
   } catch { return null; }
 }
 
-export function recoverStudioRestore(storage: Storage, libraryKey: string, sceneKey: string, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY, introsKey = INTROS_KEY, creditsKey = CREDITS_KEY, projectsKey = MUSIC_KEY): { ok: boolean; error?: string } {
+export function recoverStudioRestore(storage: Storage, libraryKey: string, sceneKey: string, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY, introsKey = INTROS_KEY, creditsKey = CREDITS_KEY, projectsKey = MUSIC_KEY, voiceKey = VOICE_SETTINGS_KEY): { ok: boolean; error?: string } {
   try {
     const raw = storage.getItem(RESTORE_JOURNAL_KEY);
     if (raw === null) return { ok: true };
@@ -111,7 +114,8 @@ export function recoverStudioRestore(storage: Storage, libraryKey: string, scene
       if (journal.version >= 4 && journal.restoreEpisodes) writeOriginal(storage, episodesKey, journal.before.episodes ?? null);
       if (journal.version >= 5 && journal.restoreIntros) writeOriginal(storage, introsKey, journal.before.intros ?? null);
       if (journal.version >= 6 && journal.restoreCredits) writeOriginal(storage, creditsKey, journal.before.credits ?? null);
-      if (journal.version === 7 && journal.restoreProjects) writeOriginal(storage, projectsKey, journal.before.projects ?? null);
+      if (journal.version >= 7 && journal.restoreProjects) writeOriginal(storage, projectsKey, journal.before.projects ?? null);
+      if (journal.version >= 8 && journal.restoreVoiceSettings) writeOriginal(storage, voiceKey, journal.before.voiceSettings ?? null);
     }
     storage.removeItem(RESTORE_JOURNAL_KEY);
     return { ok: true };
@@ -130,13 +134,13 @@ export function finalizeStudioRestore(storage: Storage): { ok: boolean; error?: 
   } catch { return { ok: false, error: 'Studio restore could not be finalised. Reload to recover it.' }; }
 }
 
-export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY, deferCommit = false, introsKey = INTROS_KEY, creditsKey = CREDITS_KEY, projectsKey = MUSIC_KEY): { ok: boolean; error?: string } {
+export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneKey: string, backup: StudioBackup, placesKey = PLACE_FOLDERS_KEY, timedKey = TIMED_SCENES_KEY, episodesKey = EPISODES_KEY, deferCommit = false, introsKey = INTROS_KEY, creditsKey = CREDITS_KEY, projectsKey = MUSIC_KEY, voiceKey = VOICE_SETTINGS_KEY): { ok: boolean; error?: string } {
   const checked = validateStudioBackup(backup);
   if (!checked.ok) return { ok: false, error: checked.error };
   const recovery = recoverStudioRestore(storage, libraryKey, sceneKey, placesKey, timedKey, episodesKey, introsKey, creditsKey, projectsKey);
   if (!recovery.ok) return recovery;
   let before: Before;
-  try { before = { library: storage.getItem(libraryKey), scene: storage.getItem(sceneKey), places: storage.getItem(placesKey), timedScenes: storage.getItem(timedKey), episodes: storage.getItem(episodesKey), intros: storage.getItem(introsKey), credits: storage.getItem(creditsKey), projects: storage.getItem(projectsKey) }; }
+  try { before = { library: storage.getItem(libraryKey), scene: storage.getItem(sceneKey), places: storage.getItem(placesKey), timedScenes: storage.getItem(timedKey), episodes: storage.getItem(episodesKey), intros: storage.getItem(introsKey), credits: storage.getItem(creditsKey), projects: storage.getItem(projectsKey), voiceSettings: storage.getItem(voiceKey) }; }
   catch { return { ok: false, error: 'Browser storage could not be read. Nothing was changed.' }; }
   const placeIds = placesIn(checked.backup.places).filter(place => place.artworkAvailable && place.background).map(place => place.id);
   let nextTimed = checked.backup.timedScenes;
@@ -174,7 +178,7 @@ export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneK
       nextProjects = current.projects;
     } catch { return { ok: false, error: 'Existing music projects are invalid. Nothing was changed.' }; }
   }
-  const pending: Journal = { version: 7, phase: 'pending', before, restoreTimed: nextTimed !== null, restoreEpisodes: checked.backup.episodes !== null, restoreIntros: nextIntros !== null, restoreCredits: nextCredits !== null, restoreProjects: nextProjects !== null };
+  const pending: Journal = { version: 8, phase: 'pending', before, restoreTimed: nextTimed !== null, restoreEpisodes: checked.backup.episodes !== null, restoreIntros: nextIntros !== null, restoreCredits: nextCredits !== null, restoreProjects: nextProjects !== null, restoreVoiceSettings: checked.backup.voiceSettings != null };
   try {
     storage.setItem(RESTORE_JOURNAL_KEY, JSON.stringify(pending));
     storage.setItem(libraryKey, JSON.stringify(checked.backup.characters));
@@ -185,6 +189,7 @@ export function restoreStudioBackup(storage: Storage, libraryKey: string, sceneK
     if (nextIntros !== null) storage.setItem(introsKey, JSON.stringify(nextIntros));
     if (nextCredits !== null) storage.setItem(creditsKey, JSON.stringify(nextCredits));
     if (nextProjects !== null) storage.setItem(projectsKey, JSON.stringify(nextProjects));
+    if (checked.backup.voiceSettings != null) storage.setItem(voiceKey, JSON.stringify(checked.backup.voiceSettings));
     if (deferCommit) return { ok: true };
     if (!finalizeStudioRestore(storage).ok) throw new Error('Could not commit Studio restore.');
     return { ok: true };

@@ -9,6 +9,7 @@ import { HEIGHT, Point, WIDTH } from './scene';
 import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { advanceSceneTime, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
+import { renderSceneVideo } from './sceneVideoExport';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
@@ -30,6 +31,8 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const [scene, setScene] = useState<TimedScene | null>(null);
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
   const [message, setMessage] = useState('Choose a scene or create one.');
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
@@ -122,6 +125,18 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     const next = { version: 1 as const, scenes: exists ? library.scenes.map(item => item.id === scene.id ? scene : item) : [...library.scenes, scene] };
     setMessage(onSave(next) ? 'Scene saved in this browser.' : 'Scene could not be saved. Existing scenes were kept.');
   };
+  const exportVideo = async () => {
+    if (!scene || !room || !validation?.ok || exporting) return;
+    setPlaying(false); setExporting(true); setExportProgress(0);
+    try {
+      const blob = await renderSceneVideo(scene, room, packs, audioAssets, setExportProgress);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a'); link.href = url; link.download = `${scene.name.replace(/[^a-z0-9_-]/gi, '_') || 'scene'}.webm`; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      setMessage('Scene video exported with its saved voice, music and sound-effect clips.');
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Scene export failed.'); }
+    finally { setExporting(false); }
+  };
   const changeAction = (id: string, patch: Partial<TimedAction>) => update(value => ({ ...value, actions: value.actions.map(action => action.id === id ? { ...action, ...patch } : action) }));
   const placeInitial = (id: string, next: Point) => update(value => {
     const previous = value.characters[id];
@@ -167,7 +182,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     {library.scenes.length === 0 && <p className="scene-empty">No timed scenes yet. Create one to begin.</p>}<p role="status">{message}</p></section>;
 
   const selectedPosition = selectedCharacter ? scene.characters[selectedCharacter] : null;
-  return <section className="scene-maker scene-visual"><div className="scene-heading"><button onClick={() => { setPlaying(false); setScene(null); }}>← All scenes</button><h1>{scene.name}</h1><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button></div>
+  return <section className="scene-maker scene-visual"><div className="scene-heading"><button onClick={() => { setPlaying(false); setScene(null); }}>← All scenes</button><h1>{scene.name}</h1><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button><button disabled={!!issue || !validation?.ok || !room || exporting} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export scene video (WebM)'}</button></div>
     <div className="scene-setup"><label>Scene name<input aria-label="Scene name" maxLength={80} value={scene.name} onChange={event => update(value => ({ ...value, name: event.target.value }))} /></label><label>Place<select aria-label="Scene place" value={scene.placeId} onChange={event => update(value => ({ ...value, placeId: event.target.value }))}>{readyPlaces.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select></label><label>Duration (seconds)<input aria-label="Scene duration" type="number" min="1" max="3600" step="1" value={scene.duration} onChange={event => update(value => ({ ...value, duration: Number(event.target.value) }))} /></label></div>
     <div className="scene-stage-main"><div className="scene-stage"><div className="scene-stage-caption"><strong>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Scene'}</strong><span>{targetAction ? 'Click the stage to set the position' : time === 0 ? 'Click a Brightling, then drag to place' : 'Select a Brightling or scrub to a new time'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} aria-label="Timed scene stage: select Brightlings, drag at zero seconds, or click a walking destination" />
       <div className="scene-playback"><button onClick={() => { if (!playing) audio.startAt(time); setPlaying(value => !value); }} disabled={!validation?.ok || time >= scene.duration && !playing}>{playing ? 'Pause' : 'Play'}</button><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
@@ -185,7 +200,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     </section>}
     {selectedPosition && !activeAction && <details className="advanced-position scene-initial-advanced"><summary>Advanced starting position for {characterName(selectedCharacter!)}</summary><div><label>X<input aria-label={`${characterName(selectedCharacter!)} initial X`} type="number" value={selectedPosition.x} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, x: Number(event.target.value) })} /></label><label>Y<input aria-label={`${characterName(selectedCharacter!)} initial Y`} type="number" value={selectedPosition.y} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, y: Number(event.target.value) })} /></label></div></details>}
     <SceneTimeline scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} name={characterName} onSeek={value => { setPlaying(false); setTime(value); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} />
-    <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} speakers={Object.keys(scene.characters).map(id => ({ id, name: characterName(id) }))} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onSeek={value => { setPlaying(false); setTime(value); }} />
+    <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} speakers={Object.keys(scene.characters).map(id => ({ id, name: characterName(id) }))} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onExtendDuration={seconds => update(value => ({ ...value, duration: Math.max(value.duration, Math.min(3600, seconds)) }))} onSeek={value => { setPlaying(false); setTime(value); }} />
     {validation && !validation.ok && <p role="alert" className="storage-alert">{validation.error}</p>}<p role="status" className="scene-status">{message}</p>
   </section>;
 }

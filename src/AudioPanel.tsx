@@ -2,12 +2,13 @@ import { useRef, useState } from 'react';
 import { clipLength, type AudioAsset, type AudioClip, type AudioKind } from './audio';
 
 type Speaker = { id: string; name: string };
-type Props = { clips: AudioClip[]; assets: AudioAsset[]; duration: number; time: number; onChange: (clips: AudioClip[]) => void; onSeek: (time: number) => void; label: string; speakers?: Speaker[] };
+type Props = { clips: AudioClip[]; assets: AudioAsset[]; duration: number; time: number; onChange: (clips: AudioClip[]) => void; onSeek: (time: number) => void; label: string; speakers?: Speaker[]; onExtendDuration?: (seconds: number) => void };
 const PX = 24;
 const LABEL = 106;
-export default function AudioPanel({ clips, assets, duration, time, onChange, onSeek, label, speakers = [] }: Props) {
+export default function AudioPanel({ clips, assets, duration, time, onChange, onSeek, label, speakers = [], onExtendDuration }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [choice, setChoice] = useState('');
+  const [addError, setAddError] = useState('');
   const drag = useRef<{ id: string; x: number; start: number } | null>(null);
   const active = clips.find(clip => clip.id === selected);
   const asset = active && assets.find(item => item.id === active.assetId);
@@ -15,12 +16,15 @@ export default function AudioPanel({ clips, assets, duration, time, onChange, on
   const add = (kind: AudioKind) => {
     const picked = assets.find(item => item.id === choice && item.kind === kind) ?? assets.find(item => item.kind === kind);
     if (!picked) return;
-    const clip: AudioClip = { id: crypto.randomUUID(), assetId: picked.id, start: Math.min(time, Math.max(0, duration - .1)), trimStart: 0, trimEnd: picked.duration, volume: kind === 'music' ? .35 : .65, fadeIn: 0, fadeOut: 0, ...(kind === 'speech' ? { speakerId: 'narrator' } : {}) };
+    setAddError('');
+    const clip: AudioClip = { id: crypto.randomUUID(), assetId: picked.id, start: Math.min(time, Math.max(0, duration - .1)), trimStart: 0, trimEnd: picked.duration, volume: kind === 'music' ? .35 : .65, fadeIn: 0, fadeOut: 0, ...(kind === 'speech' ? { speakerId: picked.speakerId && (picked.speakerId === 'narrator' || speakers.some(item => item.id === picked.speakerId)) ? picked.speakerId : 'narrator' } : {}) };
+    if (kind === 'speech' && onExtendDuration && clip.start + picked.duration > 3600) { setAddError('This voice would make the scene longer than one hour. Move the playhead earlier or trim the voice.'); return; }
+    if (kind === 'speech' && clip.start + picked.duration > duration && onExtendDuration) onExtendDuration(Math.ceil(clip.start + picked.duration));
     onChange([...clips, clip]); setSelected(clip.id);
   };
   const labelFor = (clip: AudioClip) => assets.find(item => item.id === clip.assetId)?.name ?? 'Missing audio';
   return <section className="audio-panel" aria-label={`${label} audio timeline`}><div className="audio-panel-heading"><div><h2>Music & sound</h2><p>Add music, effects or recorded voices from the Audio Library. Drag a clip to choose when it starts.</p></div><div className="audio-add"><select aria-label={`${label} audio asset`} value={choice} onChange={event => setChoice(event.target.value)}><option value="">Choose a sound</option>{assets.map(item => <option key={item.id} value={item.id}>{item.name} ({item.kind === 'music' ? 'Music' : item.kind === 'speech' ? 'Speech' : 'Effect'})</option>)}</select><button disabled={!assets.some(item => item.kind === 'music') || !!choice && assets.find(item => item.id === choice)?.kind !== 'music'} onClick={() => add('music')}>Add Music</button><button disabled={!assets.some(item => item.kind === 'effect') || !!choice && assets.find(item => item.id === choice)?.kind !== 'effect'} onClick={() => add('effect')}>Add Sound Effect</button><button disabled={!assets.some(item => item.kind === 'speech') || !!choice && assets.find(item => item.id === choice)?.kind !== 'speech'} onClick={() => add('speech')}>Add Speech</button></div></div>
-    {assets.length === 0 && <p className="audio-hint">Import an audio file in the Audio Library first.</p>}
+    {assets.length === 0 && <p className="audio-hint">Import an audio file in the Audio Library first.</p>}{addError && <p className="audio-hint" role="alert">{addError}</p>}
     <div className="audio-timeline-scroll"><div className="audio-timeline" style={{ width: LABEL + duration * PX + 40 }}>
       <div className="audio-ruler" onClick={event => { const rect = event.currentTarget.getBoundingClientRect(); onSeek(Math.max(0, Math.min(duration, (event.clientX - rect.left - LABEL) / PX))); }}><span>Time</span>{Array.from({ length: Math.floor(duration / 5) + 1 }, (_, i) => <b key={i} style={{ left: LABEL + i * 5 * PX }}>{i * 5}s</b>)}</div>
       {(['music', 'effect', 'speech'] as const).map(kind => <div key={kind} className="audio-lane"><strong>{kind === 'music' ? 'Music' : kind === 'speech' ? 'Voices' : 'Effects'}</strong>{clips.filter(clip => assets.find(item => item.id === clip.assetId)?.kind === kind || !assets.some(item => item.id === clip.assetId) && kind === 'effect').map(clip => <button key={clip.id} className={`audio-block ${kind} ${selected === clip.id ? 'selected' : ''}`} style={{ left: LABEL + clip.start * PX, width: Math.max(52, Math.min(clipLength(clip), duration - clip.start) * PX) }} title={`${labelFor(clip)} at ${clip.start.toFixed(1)}s`} onClick={() => setSelected(clip.id)} onPointerDown={event => { setSelected(clip.id); drag.current = { id: clip.id, x: event.clientX, start: clip.start }; event.currentTarget.setPointerCapture(event.pointerId); }} onPointerMove={event => { const d = drag.current; if (!d || d.id !== clip.id || !event.currentTarget.hasPointerCapture(event.pointerId)) return; const start = Math.max(0, Math.min(duration - .1, Math.round((d.start + (event.clientX - d.x) / PX) * 2) / 2)); change(clip.id, { start }); }} onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}>{labelFor(clip)}</button>)}</div>)}

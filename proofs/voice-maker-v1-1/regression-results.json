@@ -1,0 +1,135 @@
+{
+  "origin": "http://127.0.0.1:4177/",
+  "sections": [
+    {
+      "section": "✦Characters",
+      "heading": "Meet your Brightlings."
+    },
+    {
+      "section": "▧Places",
+      "heading": "Explore your places."
+    },
+    {
+      "section": "▤Scenes",
+      "heading": "Make a timed scene."
+    },
+    {
+      "section": "★Intros",
+      "heading": "Make a reusable intro."
+    },
+    {
+      "section": "▣Episodes",
+      "heading": "Unsaved episode changes"
+    },
+    {
+      "section": "❖Credits",
+      "heading": "Make your end credits."
+    },
+    {
+      "section": "♪Music Studio",
+      "heading": "Make your own music & sounds"
+    },
+    {
+      "section": "♬Voice Maker",
+      "heading": "Make voices for your cartoons"
+    },
+    {
+      "section": "♫Audio",
+      "heading": "Your sounds"
+    },
+    {
+      "section": "▶Playground",
+      "heading": "Make a moment move."
+    }
+  ],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "checks": [
+    {
+      "name": "section opens",
+      "detail": "✦Characters -> \"Meet your Brightlings.\""
+    },
+    {
+      "name": "section opens",
+      "detail": "▧Places -> \"Explore your places.\""
+    },
+    {
+      "name": "section opens",
+      "detail": "▤Scenes -> \"Make a timed scene.\""
+    },
+    {
+      "name": "section opens",
+      "detail": "★Intros -> \"Make a reusable intro.\""
+    },
+    {
+      "name": "section opens",
+      "detail": "▣Episodes -> \"Unsaved episode changes\""
+    },
+    {
+      "name": "section opens",
+      "detail": "❖Credits -> \"Make your end credits.\""
+    },
+    {
+      "name": "section opens",
+      "detail": "♪Music Studio -> \"Make your own music & sounds\""
+    },
+    {
+      "name": "section opens",
+      "detail": "♬Voice Maker -> \"Make voices for your cartoons\""
+    },
+    {
+      "name": "section opens",
+      "detail": "♫Audio -> \"Your sounds\""
+    },
+    {
+      "name": "section opens",
+      "detail": "▶Playground -> \"Make a moment move.\""
+    },
+    {
+      "name": "music studio editor opens and renders",
+      "detail": "created=created, exportButton=true, canvases=0, starterTunes=0"
+    },
+    {
+      "name": "studio backup exported unchanged",
+      "detail": "version 8, 0 audio assets"
+    },
+    {
+      "name": "audio library section opens",
+      "detail": "0 items listed in a fresh profile"
+    },
+    {
+      "name": "no console errors",
+      "detail": "0 captured"
+    },
+    {
+      "name": "no failed requests",
+      "detail": "0 captured"
+    }
+  ],
+  "navLabels": [
+    "✦Characters",
+    "▧Places",
+    "▤Scenes",
+    "★Intros",
+    "▣Episodes",
+    "❖Credits",
+    "♪Music Studio",
+    "♬Voice Maker",
+    "♫Audio",
+    "▶Playground"
+  ],
+  "music": {
+    "created": "created",
+    "editor": {
+      "exportButton": true,
+      "canvases": 0,
+      "noteButtons": 0
+    }
+  },
+  "backupFiles": [
+    "brightsenappstales-studio-2026-10-18.json"
+  ],
+  "backupVersion": 8,
+  "backupAudioAssets": 0,
+  "audioLibraryArticles": 0
+}

@@ -1,16 +1,19 @@
 # Project status
 
-Updated 18 October 2026 after the approved Beginner Note Preview. Start here when resuming work; verify the code and Git state before acting.
+Updated 18 October 2026 after Voice Maker V1.1 automatic service management. Start here when resuming work; verify the code and Git state before acting.
 
 ## Current gate
 
-- **Current milestone:** Beginner Note Preview is implemented for Karl's speaker review. UI follow-up Packages A and B remain awaiting Karl's visual review. M6.7 Complete Episode Assembly remains unstarted.
-- **Status:** PAUSED for Karl's visual/listening review and the unresolved song SHA-256 equality requirement.
+- **Current milestone:** Voice Maker V1.1 automatic voice service management is implemented and technically verified. Beginner Note Preview and UI Packages A and B remain awaiting Karl's review. M6.7 Complete Episode Assembly remains unstarted.
+- **Status:** PAUSED for Karl's microphone, speaker and visual review and the unresolved song SHA-256 equality requirement.
 - **Last explicitly approved milestone:** F1 Unsaved Episode Changes Protection, approved by Karl in the F2 brief. M6.3 was approved in the F1 brief. Earlier approval is limited to the particular artwork/workflows Karl named; do not assume every historical proof report was accepted.
-- **Karl's approval required:** Yes, at the batch review. F2, F3, F4, M6.4, M6.5, M6.6, M6.6A and M6.6B are implemented but unapproved. No result is pre-approved.
-- **Current acceptance checklist:** Karl listens to C4, instrument switching, note addition and pitch dragging on his speakers, and reviews the Dark/Light screenshots. Song byte equality remains unresolved. Do not start M6.7 or Beat Blocks.
+- **Karl's approval required:** Yes, at the batch review. F2, F3, F4, M6.4, M6.5, M6.6, M6.6A, M6.6B, Voice Maker V1 and V1.1 are implemented but unapproved. No result is pre-approved.
+- **Current acceptance checklist:** Karl opens BrightTales normally, goes to Voice Maker, waits for Ready, generates a line and records his own voice; listens to generated, edited and scene speech and the scene WebM; reviews Voice Maker Dark/Light screenshots. Earlier Music Studio speaker/visual checks and song byte equality remain open. Do not start M6.7 or Beat Blocks.
 
 ## Implemented now
+
+- Voice Maker V1.1: the voice service is managed by the application. `scripts/studio.cjs` is the single launcher for `npm run dev` and `npm start`; `scripts/voice-lifecycle.cjs` starts `voice_local.py`, health-checks it, adopts an already-running compatible service instead of duplicating it, recovers from crashes within a bounded budget, offers Retry, and stops only the child it owns. Voice Maker shows Starting/Ready/Unavailable/Error with a plain-English reason and a Retry button. [Evidence](../proofs/voice-maker-v1-1/REPORT.md). Python and the voice models are still not bundled.
+- Voice Maker V1: local Piper/Kokoro speech via a loopback Python service, browser microphone or file import, non-destructive waveform editor and audible effect presets, reusable speaker defaults, the existing Audio Library and Backup v8 path, scene speech attribution and auto-extension, plus a bounded scene-only WebM with voice/music mixing. [Evidence](../proofs/voice-maker/REPORT.md). Karl's physical microphone/speaker acceptance remains pending.
 
 - React 19, TypeScript and Vite local web application with Characters, Places, Scenes, Episodes, Audio and Playground sections.
 - Protected Max and Maxine sprites; original and approved alternative outfits for each; shared nine-pose idle/side/walk/wave sprite mapping. Custom Brightlings use approved Max/Maxine source frames and reusable recolouring masks for body, hair and clothing. Custom Brightlings currently use original outfits.
@@ -41,14 +44,16 @@ Updated 18 October 2026 after the approved Beginner Note Preview. Start here whe
 - The proposed five-outfit collection was not delivered. Only each default character's original and T-shirt alternative are integrated. Additional garments and poses need artwork review.
 - Only the Living Room ships as an approved background. New uploaded backgrounds are user supplied; preview does not certify their artwork quality.
 - Current Scene Maker has horizontal facing poses. Near-vertical travel retains the last horizontal facing direction. Its timeline is deliberately lightweight.
-- M6.4 attribution carries no lip-sync or talking animation, and only Audio Library file formats are accepted; there is no in-app recording, text-to-speech or voice cleanup.
+- M6.4 attribution still carries no lip-sync or talking animation. Voice Maker V1 now records or imports speech, generates local Piper/Kokoro dialogue, and processes separate edited assets; Karl's physical microphone and speaker checks remain pending.
 - M6.5 titles are canvas text only: no fonts, letter animation, logos or per-line styling. The intro action palette omits Disappear, so a character cannot yet walk off screen during an intro. Length is capped at 600s and titles at 120 characters.
 - M6.6 credits are text only: no fonts, per-line colours, logos, images or individual line animations, and scroll speed is uniform with no easing. Line height shrinks automatically on very long lists. Credits show no Brightlings and are not yet attached to an episode.
 - M6.6A does not layer imported or previously rendered audio inside the studio; the mixer mixes the project's own instrument tracks. Combining generated and imported audio with trim, fades and looping is done via the existing Audio Panel in scenes, intros, episodes and credits. Instruments are synthesised approximations, not samples. Generated WAVs are uncompressed, so an 11.2s stereo render is about 1.9 MB. Capped at 12 tracks, 64 bars and 2000 notes per track; the piano roll shows MIDI 36–84; effect presets expose only pitch, length, volume, decay and a noise toggle; there are no per-track level meters or loop-region selection.
-- No finished-video export, camera, props, or broad undo/redo is implemented.
+- No complete episode/production export, camera, props, or broad undo/redo is implemented. Voice Maker V1 adds scene-only WebM export for up to 120 seconds.
 - F1 browser checks cover draft navigation and existing episode playback, not a new subjective review of animation or audio quality.
 
 ## Verification and evidence
+
+- Voice Maker V1.1 on 18 October 2026: `npm test -- --run` **156/156 passed** across 22 files; `npm run test:service` **11/11 passed**; `npm run build` **passed**. Launching the production build normally (`npm start`, `http://127.0.0.1:4177/`) started `voice_local.py` by itself and reported Ready with no manual Python step; a second launcher adopted the same service and the count of voice processes stayed at one through duplicate launch, a killed service and 30 seconds of observation. Isolated Chrome verified Voice Maker Ready, real Piper synthesis (61 voices), an edited save, a 2.46 s fake-microphone recording, its edited save and persistence across reload — with **zero console errors and zero failed requests** — against both the production and the development launch. A deliberately broken interpreter produced "Voice engine: Error — Required Python executable is missing.", a Retry button and a disabled Generate button, and Retry returned to Starting without a false Ready. All ten sections, the Music Studio editor and a Studio Backup v8 export were re-checked with zero console errors; disposable profiles removed. [Report](../proofs/voice-maker-v1-1/REPORT.md). Python/model packaging, Ctrl+C shutdown and Karl's physical microphone and speakers remain unverified.
 
 - Beginner Note Preview on 18 October 2026: 153/153 tests and production build passed. Isolated Chrome verified C4 key and keyboard audition, instrument changes, add/drag previews, Undo/Redo, scale shading, unchanged saved state, save/reopen, playback, WAV asset creation, Backup v8 round-trip, and zero captured console errors. [Report and Dark/Light screenshots](../proofs/note-preview/REPORT.md). Karl's physical-speaker acceptance remains pending.
 - UI follow-up on 18 October 2026: Package A passed 149/149 tests and build before B, plus isolated-browser note editing, drag Undo/Redo, save/reopen, playback, WAV export and Backup v8 UI round-trip. After B, 151/151 tests and build passed. Isolated Chrome captured all nine sections in Dark and Light, forms/editors/overlays, preference migration/System/reload and mobile checks with zero captured console/asset errors. [Package A report](../proofs/ui-package-a/REPORT.md), [Package B report](../proofs/ui-package-b/REPORT.md). Karl's visual/listening acceptance remains pending; song SHA-256 equality remains unverified.

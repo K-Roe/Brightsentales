@@ -5,6 +5,7 @@ import { addPlace, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, removePlace, s
 import { createStudioBackup, recoverStudioRestore, RESTORE_JOURNAL_KEY, restoreStudioBackup, validateStudioBackup } from './studioBackup';
 import { EPISODES_KEY } from './episodes';
 import { TIMED_SCENES_KEY, type TimedLibrary } from './timedScenes';
+import { VOICE_SETTINGS_KEY, emptyVoiceSettings, BUILTIN_VOICE_PRESETS } from './voiceSettings';
 
 const character: Brightling = { id: 'brightling-11111111-1111-4111-8111-111111111111', name: 'Charlie', template: 'male', ...DEFAULT_COLOURS.male };
 const scene = structuredClone(DEFAULT_SCENE);
@@ -22,6 +23,21 @@ class TestStorage {
 }
 
 describe('complete Studio Backup', () => {
+  it('restores voice defaults and presets in Backup v8 while preserving settings for old backups', () => {
+    const settings = emptyVoiceSettings();
+    settings.presets.push({ id: '11111111-1111-4111-8111-111111111111', name: 'Cartoon', effect: BUILTIN_VOICE_PRESETS[1].effect });
+    settings.defaults.max = { voice: 'piper:en_GB-alan-medium', presetId: settings.presets[0].id };
+    const complete = createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-18T12:00:00.000Z'), DEFAULT_PLACE_ORGANISATION, undefined, undefined, undefined, undefined, undefined, undefined, settings);
+    expect(validateStudioBackup(complete).ok).toBe(true);
+    expect(validateStudioBackup({ ...complete, voiceSettings: { ...settings, presets: [{ ...settings.presets[0], effect: { ...settings.presets[0].effect, speed: 9 } }] } }).ok).toBe(false);
+    const storage = new TestStorage();
+    storage.data.set(VOICE_SETTINGS_KEY, 'old settings');
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, complete).ok).toBe(true);
+    expect(JSON.parse(storage.getItem(VOICE_SETTINGS_KEY)!)).toEqual(settings);
+    const { voiceSettings: _voiceSettings, ...legacy } = complete;
+    expect(restoreStudioBackup(storage, LIBRARY_KEY, STORAGE_KEY, legacy).ok).toBe(true);
+    expect(JSON.parse(storage.getItem(VOICE_SETTINGS_KEY)!)).toEqual(settings);
+  });
   it('includes audio metadata and rejects missing clip assets or malformed audio bytes', () => {
     const audioId = '33333333-3333-4333-8333-333333333333';
     const asset = { id: audioId, name: 'Bell', kind: 'effect' as const, mime: 'audio/wav', duration: 1, size: 2, data: 'AAAA', sha256: '0'.repeat(64) };

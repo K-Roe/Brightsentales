@@ -6,6 +6,7 @@ import { readAppearance, resolveAppearance } from './appearance';
 import './style.css';
 import './theme.css';
 import './music-studio.css';
+import './voice-studio.css';
 
 const appearance = readAppearance();
 document.documentElement.dataset.theme = resolveAppearance(appearance, window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true);

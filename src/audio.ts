@@ -1,6 +1,6 @@
 export type AudioKind = 'music' | 'effect' | 'speech';
 export type AudioClip = { id: string; assetId: string; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number; speakerId?: string };
-export type AudioAssetInfo = { id: string; name: string; kind: AudioKind; mime: string; duration: number; size: number };
+export type AudioAssetInfo = { id: string; name: string; kind: AudioKind; mime: string; duration: number; size: number; speakerId?: string };
 export type AudioAsset = AudioAssetInfo & { blob: Blob };
 export type AudioBackupAsset = AudioAssetInfo & { data: string; sha256: string };
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -22,7 +22,7 @@ export function validAudioClips(value: unknown, limit: number): value is AudioCl
 export function validAudioInfo(value: unknown): value is AudioAssetInfo {
   if (!value || typeof value !== 'object') return false;
   const a = value as AudioAssetInfo;
-  return uuid.test(a.id) && typeof a.name === 'string' && !!a.name.trim() && a.name === a.name.trim() && a.name.length <= 120 && (a.kind === 'music' || a.kind === 'effect' || a.kind === 'speech') && AUDIO_MIMES.includes(a.mime) && validNumber(a.duration) && a.duration > 0 && a.duration <= 36000 && Number.isSafeInteger(a.size) && a.size > 0 && a.size <= 20_000_000;
+  return uuid.test(a.id) && typeof a.name === 'string' && !!a.name.trim() && a.name === a.name.trim() && a.name.length <= 120 && (a.kind === 'music' || a.kind === 'effect' || a.kind === 'speech') && AUDIO_MIMES.includes(a.mime) && validNumber(a.duration) && a.duration > 0 && a.duration <= 36000 && Number.isSafeInteger(a.size) && a.size > 0 && a.size <= 20_000_000 && (a.speakerId === undefined || a.kind === 'speech' && speaker.test(a.speakerId));
 }
 
 export function validAudioBackup(value: unknown): value is AudioBackupAsset[] {

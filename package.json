@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "node scripts/studio.cjs dev",
+    "start": "node scripts/studio.cjs production",
+    "test:service": "node --test test_voice_service.cjs",
     "build": "tsc -b && vite build",
     "test": "vitest run"
   },

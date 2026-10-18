@@ -1,0 +1,40 @@
+{
+  "mode": "unavailable",
+  "origin": "http://127.0.0.1:4177/",
+  "steps": [
+    {
+      "step": "app loaded from the normal launcher",
+      "detail": "http://127.0.0.1:4177/"
+    },
+    {
+      "step": "engine reported unavailable with a plain reason",
+      "detail": "Voice engine: ErrorRequired Python executable is missing.Retry voice engine"
+    },
+    {
+      "step": "failure reason came from the manager health check",
+      "detail": "{\"state\":\"error\",\"detail\":\"Required Python executable is missing.\",\"port\":null,\"owned\":true}"
+    },
+    {
+      "step": "Retry control offered",
+      "detail": "retry=true"
+    },
+    {
+      "step": "Generate disabled while unavailable",
+      "detail": "disabled=true"
+    },
+    {
+      "step": "Retry accepted without a false ready state",
+      "detail": "Voice engine: StartingVoice engine is starting."
+    }
+  ],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "statusText": "Voice engine: ErrorRequired Python executable is missing.Retry voice engine",
+  "manager": {
+    "state": "error",
+    "detail": "Required Python executable is missing.",
+    "port": null,
+    "owned": true
+  },
+  "afterRetry": "Voice engine: StartingVoice engine is starting."
+}

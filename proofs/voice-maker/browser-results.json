@@ -1,0 +1,58 @@
+{
+  "voices": 61,
+  "savedPreset": {
+    "id": "96dc1dfb-27e5-47de-b007-ab5a1d54e5a7",
+    "name": "My Bright Cartoon",
+    "effect": {
+      "pitch": 5,
+      "speed": 1,
+      "tone": 0.3,
+      "volume": 1,
+      "normalize": false,
+      "fadeIn": 0.03,
+      "fadeOut": 0.08,
+      "echo": false,
+      "reverb": false,
+      "robot": false
+    }
+  },
+  "assets": [
+    "Max dialogue",
+    "Max dialogue cartoon",
+    "piper-british-sample.wav",
+    "piper-british-sample cartoon"
+  ],
+  "undoneTone": "0.3",
+  "redoneTone": "0.5",
+  "systemTheme": "light",
+  "maxAsset": {
+    "text": "Max dialogue (Speech)",
+    "value": "10aef4bf-e108-4c4f-835d-cc32d04f4ae2"
+  },
+  "editedAsset": {
+    "text": "piper-british-sample cartoon (Speech)",
+    "value": "feaec6b6-4e08-4373-add0-e8bc7ef99f3d"
+  },
+  "musicAsset": {
+    "text": "background-music.wav (Music)",
+    "value": "8c105cc7-e8e3-46ea-bdcc-25772dce359b"
+  },
+  "extended": {
+    "duration": 3,
+    "speaker": "max"
+  },
+  "sceneSaved": "Scene saved in this browser.",
+  "previewMoved": "0.4s / 8.0s",
+  "videoFile": "My_Scene.webm",
+  "backup": {
+    "version": 8,
+    "presets": 1,
+    "speech": 4,
+    "music": 1,
+    "scenes": 1
+  },
+  "restoredPreset": true,
+  "restoredAssets": 4,
+  "micDenied": "Microphone access failed: Permission denied",
+  "errors": []
+}
