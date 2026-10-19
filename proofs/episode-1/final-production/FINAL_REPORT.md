@@ -119,11 +119,12 @@ All six scenes reference the approved Episode 1 place IDs plus the protected Liv
 
 ## Git status
 
-Commits made during final delivery:
+Commits made during final delivery (run `git log --oneline` for the exact current hashes):
 
-- `18ab41b` — Episode 1: deliver complete first cut Meet Max
-- `2f50791` — Episode 1: add production plan and reports
-- `0e4465e` — Episode 1: add automation scripts and result records
+- Episode 1: deliver complete first cut Meet Max
+- Episode 1: add production plan and reports
+- Episode 1: add automation scripts and result records
+- Episode 1: add git status to final report
 
 Remaining untracked files (kept in the working tree as additional evidence but not committed because of size):
 
