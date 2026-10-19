@@ -4,6 +4,8 @@
 
 **FIRST CUT DELIVERED - FINAL ACCEPTANCE PENDING.** The complete six-scene episode was created and exported through Studio. Approved Places, Native2D characters, intro, title, credits, Bright Speak, music and a provisional Lily narration are included. Final deliverables are in [proofs/episode-1/final-production/](../proofs/episode-1/final-production/FINAL_REPORT.md): the 256 s WebM, the editable Studio Backup v8, representative frames and verification data. Karl and Astra have not judged the complete video or narrator quality; physical listening remains pending. A later revised UI export exposed a timing defect and was rejected; the 256 s first cut remains the reliable playable export.
 
+**V2 IMPROVED CUT DELIVERED - ACCEPTANCE PENDING.** Under Karl's direct authorisation, Episode 1 V2 was produced with grounded characters, a reusable action library, Bright Speak naming, Maxine as Max's sister, Maxine's provisional `Emma` voice, and more active scene staging. Deliverables are in [proofs/episode-1/v2-production/](../proofs/episode-1/v2-production/): the 173 s WebM, editable Studio Backup v8, representative frames and the [V2 report](EPISODE1_V2_REPORT.md). 189/189 tests and production build passed; browser export produced a continuous WebM. Karl and Astra visual/listening approval remains pending.
+
 Karl authorised sequential technical development with visual and listening acceptance deferred until the end of the current coding session. **No milestone in this batch is pre-approved.** Review each milestone individually. Technical verification and Karl's approval are recorded separately in [ROADMAP.md](ROADMAP.md) and [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## Review checklist
@@ -26,6 +28,7 @@ Karl authorised sequential technical development with visual and listening accep
 | Max Phone Interaction V1.2 | **Complete; technical checks passed** | **HUMAN VISUAL ACCEPTANCE PASSED** — Karl approved holding, tapping and overall appearance on 18 October 2026. Physical audio hardware check pending. | [Completion report](../proofs/max-phone-v1-2/COMPLETION.md), [video](../proofs/max-phone-v1-2/max-asks-for-food-v1-2.webm) | No further visual action. Listen through physical speakers when convenient. |
 | Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
 | M6.7 — Episode assembly | Implemented | **AWAITING KARL'S REVIEW** | [Final production report](../proofs/episode-1/final-production/FINAL_REPORT.md) | Check the assembled production plays as one continuous piece. |
+| M6.7 V2 — Episode improvements | Implemented | **AWAITING KARL AND ASTRA'S REVIEW** | [V2 report](../proofs/episode-1/v2-production/EPISODE1_V2_REPORT.md) | Check grounding, character movement, Bright Speak explanation, Maxine as sister and Maxine's voice. |
 
 ## Max Phone Interaction V1.2 completion
 

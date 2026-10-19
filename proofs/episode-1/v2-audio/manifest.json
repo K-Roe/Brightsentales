@@ -1,0 +1,90 @@
+[
+  {
+    "key": "narrator-max-intro",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "Hello everyone! Welcome to BrightTales! Today we're going to meet someone very special. This is Max! Max is a Brightling with a big smile and a kind heart. He notices little things, and likes to share what makes him happy. Max doesn't use spoken words. He can tell us so much with a look, a wave, and the things he chooses to show us. Let's say hello!",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-max-intro.wav",
+    "bytes": 967436
+  },
+  {
+    "key": "narrator-maxine-intro",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "And this is Maxine! She is Max's sister. Maxine loves playful mornings and new ideas. She likes to take her time, look around, and see what the day might bring. When Max and Maxine are together, they listen to each other and find lovely ways to play. I think Maxine is ready to visit her brother.",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-maxine-intro.wav",
+    "bytes": 847628
+  },
+  {
+    "key": "narrator-breakfast-a",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "Back at Max's house, it is nearly breakfast time. Max has something he would like to tell us. He takes out his Bright Speak and chooses a picture of food. Bright Speak helps Max share what he wants and needs. Watch him tap the screen carefully.",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-breakfast-a.wav",
+    "bytes": 683788
+  },
+  {
+    "key": "narrator-breakfast-b",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "There we are! Max has told us what he needs. Bright Speak helps his message come through clearly. Now he can look forward to breakfast.",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-breakfast-b.wav",
+    "bytes": 396044
+  },
+  {
+    "key": "narrator-stars",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "After breakfast, Max feels proud. He has used his own way of communicating, and everyone has understood him. In Max's world, we call those happy little moments Bright Stars. A Bright Star can be for trying something new, sharing a feeling, or being kind. Max has earned a bright moment today. Shall we give him a little wave?",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-stars.wav",
+    "bytes": 914188
+  },
+  {
+    "key": "narrator-garden",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "Here comes Maxine! She has found Max in the garden. The two friends have room to explore. Maxine waves, and Max waves back. They notice the colours around them and take a little walk together. Sometimes sisters and brothers talk with words. Sometimes a smile, a gesture, or simply being side by side says enough. Max and Maxine are having a lovely time.",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-garden.wav",
+    "bytes": 1007372
+  },
+  {
+    "key": "narrator-goodbye",
+    "voice": "kokoro:bf_lily",
+    "speed": 0.9,
+    "text": "The day has been full of small, happy moments. Max shared what he needed. Maxine came to play. And together, they found a new story to tell. Max and Maxine have lots more adventures waiting for them. But for now, it's time to say goodbye, and goodnight. See you next time!",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\narrator-goodbye.wav",
+    "bytes": 791308
+  },
+  {
+    "key": "maxine-hi",
+    "voice": "kokoro:bf_emma",
+    "speed": 0.95,
+    "text": "Hi everyone! I'm Maxine.",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\maxine-hi.wav",
+    "bytes": 101132
+  },
+  {
+    "key": "maxine-fun",
+    "voice": "kokoro:bf_emma",
+    "speed": 0.95,
+    "text": "This is fun, Max!",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\maxine-fun.wav",
+    "bytes": 79628
+  },
+  {
+    "key": "maxine-goodnight",
+    "voice": "kokoro:bf_emma",
+    "speed": 0.95,
+    "text": "Goodnight, everyone!",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\maxine-goodnight.wav",
+    "bytes": 78604
+  },
+  {
+    "key": "device-hungry",
+    "voice": "kokoro:bm_george",
+    "speed": 1.0,
+    "text": "I'm hungry!",
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-audio\\device-hungry.wav",
+    "bytes": 66316
+  }
+]

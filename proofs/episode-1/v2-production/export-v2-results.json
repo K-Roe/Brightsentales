@@ -1,0 +1,24 @@
+{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode1-v2-profile-VMnGaN",
+  "downloads": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode1-v2-download-swOdKZ",
+  "steps": [
+    "Restored V2 Studio Backup v8",
+    "Opened six-scene Episode 1 V2",
+    "Episode export completed",
+    "V2 video saved"
+  ],
+  "errors": [],
+  "sceneNames": [
+    "1. Meet Max",
+    "2. Meet Maxine",
+    "3. Breakfast Time",
+    "4. Bright Stars",
+    "5. Playing Together",
+    "6. Goodbye for Now"
+  ],
+  "duration": 173,
+  "video": {
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\v2-production\\BrightTales-Episode-1-Meet-Max-V2.webm",
+    "bytes": 51517209
+  }
+}

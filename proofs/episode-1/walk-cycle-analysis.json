@@ -1,0 +1,156 @@
+{
+  "max": [
+    {
+      "file": "max-side-0.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        223,
+        696
+      ],
+      "right_lowest": [
+        250,
+        696
+      ]
+    },
+    {
+      "file": "max-side-1.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        165,
+        693
+      ],
+      "right_lowest": [
+        289,
+        694
+      ]
+    },
+    {
+      "file": "max-side-2.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        155,
+        684
+      ],
+      "right_lowest": [
+        309,
+        683
+      ]
+    },
+    {
+      "file": "max-side-3.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        172,
+        688
+      ],
+      "right_lowest": [
+        312,
+        687
+      ]
+    },
+    {
+      "file": "max-side-4.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        184,
+        694
+      ],
+      "right_lowest": [
+        312,
+        693
+      ]
+    }
+  ],
+  "maxine": [
+    {
+      "file": "maxine-side-0.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        246,
+        674
+      ],
+      "right_lowest": [
+        260,
+        675
+      ]
+    },
+    {
+      "file": "maxine-side-1.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        207,
+        676
+      ],
+      "right_lowest": [
+        331,
+        678
+      ]
+    },
+    {
+      "file": "maxine-side-2.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        248,
+        678
+      ],
+      "right_lowest": [
+        277,
+        682
+      ]
+    },
+    {
+      "file": "maxine-side-3.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        200,
+        661
+      ],
+      "right_lowest": [
+        336,
+        663
+      ]
+    },
+    {
+      "file": "maxine-side-4.png",
+      "size": [
+        500,
+        724
+      ],
+      "left_lowest": [
+        223,
+        650
+      ],
+      "right_lowest": [
+        306,
+        663
+      ]
+    }
+  ]
+}
