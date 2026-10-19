@@ -1,0 +1,20 @@
+# Meet Max and Maxine — UI production plan
+
+Status: complete UI-produced first cut delivered for review; final acceptance pending. See [production cut report](PRODUCTION_CUT_REPORT.md).
+
+The six requested backgrounds must be selected through Places from artwork approved by Karl. The narrator will use one British female voice throughout, with Lily selected provisionally from the four Studio-generated samples. Max has no spoken dialogue. His Bright Speak device alone speaks “I'm hungry!”
+
+| Section | Target | Place | Studio action | Narration draft |
+| --- | ---: | --- | --- | --- |
+| Intro and title | 10 s | Max's bedroom | Gentle BrightTales title; no flashing. | — |
+| 1. Meet Max | 36 s | Max's bedroom | Max appears, smiles and waves; allow quiet holds between actions. | “Hello, everyone! Welcome to BrightTales! Today, we're going to meet someone very special. This is Max! Max is a Brightling with a big smile and a kind heart. He notices little things, and he likes to share the things that make him happy. Max doesn't use spoken words. He can tell us so much with a look, a wave, and the things he chooses to show us. Let's say hello!” |
+| 2. Meet Maxine | 34 s | Maxine's bedroom | Maxine waves, then walks gently towards the door. | “And this is Maxine! She is Max's friend. Maxine loves playful mornings and new ideas. She likes to take her time, look around, and see what the day might bring. When Max and Maxine are together, they listen to each other and find lovely ways to play. I think Maxine is ready to visit her friend.” |
+| 3. Breakfast Time | 42 s | Max's kitchen | Max takes out phone, holds, taps, Bright Speak food pop-up, device voice, holds, puts away. | “Back at Max's house, it is nearly breakfast time. Max has something he would like to tell us. He takes out his communication phone and chooses a picture of food. He taps the screen carefully.” **Pause for device: “I'm hungry!”** “There we are! Max has told us what he needs. His phone helps his message come through clearly. Now he can look forward to breakfast.” |
+| 4. Bright Stars | 34 s | Living room | Max stands by existing star artwork, waves and smiles; calm hold. | “After breakfast, Max feels proud. He has used his own way of communicating, and everyone has understood him. In Max's world, we call those happy little moments Bright Stars. A Bright Star can be for trying something new, sharing a feeling, or being kind. Max has earned a bright moment today. Shall we give him a little wave?” |
+| 5. Playing Together | 43 s | Garden | Both approved Brightlings appear at matching scale; Maxine walks towards Max; each waves; leave interaction time without narration. | “Here comes Maxine! She has found Max in the garden. The two friends have room to explore. Maxine waves, and Max waves back. They notice the colours around them and take a little walk together. Sometimes friends talk with words. Sometimes a smile, a gesture, or simply being side by side says enough. Max and Maxine are having a lovely time.” |
+| 6. Goodbye for Now | 31 s | Front of Max's house | Both stand together and wave goodbye; hold the final pose. | “The day has been full of small, happy moments. Max shared what he needed. Maxine came to play. And together, they found a new story to tell. Max and Maxine have lots more adventures waiting for them. But for now, it's time to say goodbye. See you next time!” |
+| Credits | 12 s | Front of Max's house | Existing Credits Maker, gentle music fade. | — |
+
+Target total: **242 seconds (4:02)** before timing adjustments for actual generated narration. Use Scene Maker's speech-length extension when a line exceeds a shot. Keep each narrated passage in one or more short Voice Maker assets, with gaps for gestures. Add music and subtle effects via existing Audio Library at low levels, then inspect the exported mix. No Max voice asset should be assigned to his character.
+
+The six scenes were produced, saved, reopened and exported through Studio. Karl and Astra have yet to review the complete cut and narrator audio; final production acceptance remains pending.
