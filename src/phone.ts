@@ -99,11 +99,11 @@ const finite = (value: unknown): value is number => typeof value === 'number' &&
 const ends = (action: PhoneAction) => action.start + action.duration;
 
 export const phoneActionNames: Record<PhoneActionType, string> = {
-  'take-out': 'Take Out Phone',
-  hold: 'Hold Phone',
-  tap: 'Tap Phone',
+  'take-out': 'Take Out Bright Speak',
+  hold: 'Hold Bright Speak',
+  tap: 'Tap Bright Speak',
   communicate: 'Communicate Message',
-  'put-away': 'Put Away Phone',
+  'put-away': 'Put Away Bright Speak',
 };
 
 export type PhoneValidation = { ok: true } | { ok: false; error: string };
@@ -150,7 +150,7 @@ export function validatePhoneActions(value: unknown, options: { sceneDuration: n
   for (const list of perCharacter.values()) {
     const sorted = [...list].sort((a, b) => a.start - b.start);
     // A Brightling cannot put a phone away before holding one, unless the scene starts with it in hand.
-    if (sorted[0]?.type === 'put-away' && !phoneCarriedIn(options.phoneIn)) return { ok: false, error: 'Add Take Out Phone before Put Away Phone, or start the scene with the phone already in hand.' };
+    if (sorted[0]?.type === 'put-away' && !phoneCarriedIn(options.phoneIn)) return { ok: false, error: 'Add Take Out Bright Speak before Put Away Bright Speak, or start the scene with Bright Speak already in hand.' };
     for (let i = 1; i < sorted.length; i++) if (sorted[i].start < ends(sorted[i - 1]) - 1e-7) return { ok: false, error: 'Two phone interactions overlap for one Brightling.' };
   }
   return { ok: true };

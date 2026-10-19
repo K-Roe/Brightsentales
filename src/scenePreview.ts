@@ -5,6 +5,7 @@ import { stateAt, type TimedScene } from './timedScenes';
 import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
 import { PHONE_POPUP_HEIGHT, PHONE_POPUP_SCALE, PHONE_POPUP_WIDTH, illustratedPhoneFrameAt, phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
 import { drawCommunicationPopup, drawPhone } from './phoneArt';
+import { footAnchor, footDrop } from './spriteGrounding';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
 export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[]; phone?: { enter: Sprite; hold: Sprite; 'tap-start': Sprite; 'tap-mid': Sprite; raise: Sprite; touch: Sprite } };
@@ -35,21 +36,41 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     const { x, y } = state.point;
     const pack = packs[id];
     context.save();
-    context.fillStyle = 'rgba(68, 42, 75, .22)'; context.beginPath(); context.ellipse(x, y - 3, 87, 17, 0, 0, Math.PI * 2); context.fill();
+    // Ground shadow sits exactly on the floor at the character's foot point.
+    context.fillStyle = 'rgba(68, 42, 75, .22)'; context.beginPath(); context.ellipse(x, y, 87, 17, 0, 0, Math.PI * 2); context.fill();
     const width = state.pose === 'side' ? (state.frame === 0 ? 213 : 239) : state.pose === 'wave' ? 245 : 213;
     const height = 355;
     const source = state.pose === 'idle' ? SOURCE.idle : SOURCE.moving;
-    const top = y - height - (state.pose === 'side' && state.frame > 0 && state.frame % 2 === 0 ? 3 : 0);
+    const characterId = id === 'max' || id === 'maxine' ? id : 'max';
+    const anchor = footAnchor(characterId, state.pose, state.frame);
+    const drop = footDrop(state.pose, anchor.y, height);
+    const top = y - height + drop;
     const left = x - width / 2;
     const illustrated = id === 'max' && state.pose === 'idle' && phone.hand === 'left' && pack.phone && (phone.held || phone.raise > 0);
     const phonePose = illustrated ? illustratedPhoneFrameAt(scene, id, time, phone) : 'idle';
     const phoneFrame: Sprite | null = illustrated ? phonePose === 'idle' ? pack.idle : pack.phone![phonePose] : null;
-    if (phoneFrame) context.drawImage(phoneFrame, left, top, width, height);
-    else if (state.pose === 'side') {
-      context.translate(x, y); context.scale(state.direction, 1);
-      context.drawImage(pack.side[state.frame], -width / 2, -height - (state.frame > 0 && state.frame % 2 === 0 ? 3 : 0), width, height);
-    } else if (state.pose === 'wave') context.drawImage(pack.wave[state.frame - 1], left, top, width, height);
-    else context.drawImage(pack.idle, left, top, width, height);
+    const sprite: Sprite | null = phoneFrame
+      ? phoneFrame
+      : state.pose === 'side'
+      ? pack.side[state.frame]
+      : state.pose === 'wave'
+      ? pack.wave[state.frame - 1]
+      : pack.idle;
+    if (sprite) {
+      context.save();
+      // Apply expression transforms around the sprite centre so gestures feel natural.
+      const centerX = x;
+      const centerY = top + height / 2;
+      context.translate(centerX, centerY);
+      const scaleX = state.expression?.scaleX ?? 1;
+      const scaleY = state.expression?.scaleY ?? 1;
+      if (state.pose === 'side') context.scale(state.direction * scaleX, scaleY);
+      else context.scale(scaleX, scaleY);
+      if (state.expression?.rotate) context.rotate((state.expression.rotate * Math.PI) / 180);
+      context.translate(state.expression?.offsetX ?? 0, state.expression?.offsetY ?? 0);
+      context.drawImage(sprite, -width / 2, -height / 2, width, height);
+      context.restore();
+    }
     context.restore();
     if (!illustrated && (phone.held || phone.raise > 0)) {
       const anchor = phoneAnchor(id, state.pose, state.pose === 'idle' ? 0 : state.pose === 'wave' ? state.frame : state.frame, phone.hand, {

@@ -45,7 +45,7 @@ describe('phone interaction validation', () => {
 
   it('gives a beginner a plain reason for a broken sequence', () => {
     const result = validatePhoneActions([action({ id: uuid('1'), type: 'put-away', start: 2, duration: 0.5 })], { sceneDuration: 10, characterIds: ['max'] });
-    expect(result).toEqual({ ok: false, error: 'Add Take Out Phone before Put Away Phone, or start the scene with the phone already in hand.' });
+    expect(result).toEqual({ ok: false, error: 'Add Take Out Bright Speak before Put Away Bright Speak, or start the scene with Bright Speak already in hand.' });
     const carried = validatePhoneActions([action({ id: uuid('1'), type: 'put-away', start: 2, duration: 0.5 })], { sceneDuration: 10, characterIds: ['max'], phoneIn: 'right' });
     expect(carried.ok).toBe(true);
   });
@@ -67,7 +67,7 @@ describe('phone interaction validation', () => {
   });
 
   it('names every action for the beginner buttons', () => {
-    expect(Object.values(phoneActionNames)).toEqual(['Take Out Phone', 'Hold Phone', 'Tap Phone', 'Communicate Message', 'Put Away Phone']);
+    expect(Object.values(phoneActionNames)).toEqual(['Take Out Bright Speak', 'Hold Bright Speak', 'Tap Bright Speak', 'Communicate Message', 'Put Away Bright Speak']);
   });
 
   it('validates the symbol and position catalogues', () => {

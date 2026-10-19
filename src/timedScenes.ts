@@ -5,7 +5,7 @@ import { type AudioClip, validAudioClips } from './audio';
 import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHand } from './phone';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
-export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear';
+export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn';
 export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
@@ -14,7 +14,8 @@ export type TimedAction = { id: string; characterId: string; type: ActionType; s
  */
 export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
-export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1 };
+export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number };
+export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
 export const EMPTY_TIMED_LIBRARY: TimedLibrary = { version: 1, scenes: [] };
 const characterId = /^(max|maxine|brightling-[a-f0-9-]{36})$/;
@@ -36,7 +37,8 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     const actions = new Set<string>();
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'wait' || action.type === 'wave') && action.duration <= 0 || action.type === 'wave' && action.duration < WAVE_DURATION_MS / 1000 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear') && action.point !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn']);
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
@@ -57,6 +59,34 @@ export function decodeTimedLibrary(raw: string | null, places?: string[]): Timed
   catch { return { ok: false, error: 'Saved timed scenes are not valid JSON.' }; }
 }
 
+export function expressionAt(actionType: ActionType, elapsed: number, duration: number): ExpressionState | undefined {
+  if (duration <= 0) return undefined;
+  const t = Math.max(0, Math.min(1, elapsed / duration));
+  const phase = elapsed * Math.PI * 2; // radians per second for oscillations
+  switch (actionType) {
+    case 'breathe':
+      return { scaleY: 1 + Math.sin(phase * 0.8) * 0.015, scaleX: 1 + Math.cos(phase * 0.8) * 0.005 };
+    case 'point':
+      return { rotate: Math.sin(t * Math.PI) * 8 * (elapsed < 0.12 ? elapsed / 0.12 : 1) };
+    case 'nod':
+      return { rotate: Math.sin(t * Math.PI * 2) * 4 };
+    case 'shake':
+      return { rotate: Math.sin(phase * 12) * 3 };
+    case 'smile':
+      return { scaleY: 1 + Math.sin(t * Math.PI) * 0.025 };
+    case 'surprise':
+      return { scaleY: 1 + Math.sin(t * Math.PI) * 0.06, scaleX: 1 + Math.sin(t * Math.PI) * 0.04, offsetY: -Math.sin(t * Math.PI) * 6 };
+    case 'clap':
+      return { scaleX: 1 + Math.sin(phase * 10) * 0.08 };
+    case 'react':
+      return { scaleY: 1 + Math.sin(t * Math.PI) * 0.05, offsetY: -Math.sin(t * Math.PI) * 10 };
+    case 'turn':
+      return { scaleX: 1 - Math.sin(t * Math.PI) * 0.35 };
+    default:
+      return undefined;
+  }
+}
+
 export function stateAt(scene: TimedScene, character: string, time: number): SceneState {
   let position = { ...scene.characters[character] };
   let visible = false;
@@ -75,13 +105,18 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       const progress = Math.max(0, Math.min(1, (now - action.start - turn) / Math.max(1e-6, action.duration - turn)));
       if (now < ends(action)) {
         const current = { x: origin.x + (destination.x - origin.x) * progress, y: origin.y + (destination.y - origin.y) * progress };
-        return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(Math.hypot(current.x - origin.x, current.y - origin.y)), direction };
+        const travelled = Math.hypot(current.x - origin.x, current.y - origin.y);
+        return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled), direction };
       }
       position = { ...destination };
     }
     if (action.type === 'wave' && now < ends(action)) {
       const frame = waveFrameAt((now - action.start) * 1000);
       return { visible, point: position, pose: frame ? 'wave' : 'idle', frame: frame ?? 0, direction };
+    }
+    if (now < ends(action)) {
+      const expression = expressionAt(action.type, now - action.start, action.duration);
+      if (expression) return { visible, point: position, pose: 'idle', frame: 0, direction, expression };
     }
   }
   return { visible, point: position, pose: 'idle', frame: 0, direction };

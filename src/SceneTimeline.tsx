@@ -14,7 +14,11 @@ type Props = {
   onTiming: (action: TimedAction) => void;
 };
 type Lane = { id: string; kind: 'character'; label: string };
-const titles = { appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear' } as const;
+const titles = {
+  appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear',
+  breathe: 'Breathe', point: 'Point', nod: 'Nod', shake: 'Shake', smile: 'Smile',
+  surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn',
+} as const;
 const LABEL_WIDTH = 116;
 
 export default function SceneTimeline({ scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming }: Props) {
