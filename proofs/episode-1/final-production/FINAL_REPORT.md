@@ -117,6 +117,24 @@ All six scenes reference the approved Episode 1 place IDs plus the protected Liv
 5. Confirm the import. This replaces the current Studio data with the Episode 1 project.
 6. Go to **Episodes** and open **Meet Max — Episode 1** to preview or export again.
 
+## Git status
+
+Commits made during final delivery:
+
+- `18ab41b` — Episode 1: deliver complete first cut Meet Max
+- `2f50791` — Episode 1: add production plan and reports
+- `0e4465e` — Episode 1: add automation scripts and result records
+
+Remaining untracked files (kept in the working tree as additional evidence but not committed because of size):
+
+- `proofs/episode-1/background-candidates/` — approved background artwork and prompts
+- `proofs/episode-1/background-import/` — Places import evidence and restored-place screenshots
+- `proofs/episode-1/production/` — full first-cut production frames and the original 256 s export
+- `proofs/episode-1/*.webm`, `*.wav`, `*.mp3` — smoke-test videos and narrator voice samples
+- `proofs/episode-1/*.png` — additional smoke-test screenshots and Voice Maker samples
+
+Run `git status` for the exact current list.
+
 ## Result
 
 **Episode 1 first cut: technically complete and playable.** The full six-scene episode, intro, title, narration, music, sound effects, Bright Speak phone interaction and credits are present in the exported WebM and editable Studio Backup v8. Final creative acceptance awaits Karl and Astra's review.
