@@ -1,23 +1,21 @@
 import { useEffect, useRef } from 'react';
 import { clipLength, effectiveVolume, type AudioAsset, type AudioClip } from './audio';
-import type { Episode } from './episodes';
+import { productionBlocks, type Episode } from './episodes';
 import type { TimedLibrary } from './timedScenes';
+import type { IntroLibrary } from './introductions';
+import type { CreditsLibrary } from './credits';
 
 export type PlaybackClip = AudioClip & { key: string; source: 'scene' | 'episode' };
 export const scenePlaybackClips = (clips: AudioClip[] = []): PlaybackClip[] => clips.map(clip => ({ ...clip, key: clip.id, source: 'scene' }));
 
-export function episodePlaybackClips(episode: Episode, scenes: TimedLibrary): PlaybackClip[] {
+export function episodePlaybackClips(episode: Episode, scenes: TimedLibrary, intros?: IntroLibrary, credits?: CreditsLibrary): PlaybackClip[] {
   const output: PlaybackClip[] = (episode.audio ?? []).map(clip => ({ ...clip, key: `episode:${clip.id}`, source: 'episode' }));
-  let start = 0;
-  episode.sceneIds.forEach((id, index) => {
-    const scene = scenes.scenes.find(item => item.id === id);
-    if (!scene) return;
+  productionBlocks(episode, scenes, intros, credits).forEach(({ scene, index, start, kind }) => {
     for (const clip of scene.audio ?? []) {
       const remaining = scene.duration - clip.start;
       if (remaining <= 0) continue;
-      output.push({ ...clip, start: start + clip.start, trimEnd: Math.min(clip.trimEnd, clip.trimStart + remaining), key: `scene:${index}:${clip.id}`, source: 'scene' });
+      output.push({ ...clip, start: start + clip.start, trimEnd: Math.min(clip.trimEnd, clip.trimStart + remaining), key: `${kind}:${index}:${clip.id}`, source: 'scene' });
     }
-    start += scene.duration;
   });
   return output;
 }

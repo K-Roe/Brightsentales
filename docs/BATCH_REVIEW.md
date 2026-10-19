@@ -1,5 +1,9 @@
 # Batch review for Karl
 
+## Episode 1 production acceptance (19 October 2026)
+
+**FIRST CUT DELIVERED - FINAL ACCEPTANCE PENDING.** The complete six-scene episode was created and exported through Studio. Approved Places, Native2D characters, intro, title, credits, Bright Speak, music and a provisional Lily narration are included. Final deliverables are in [proofs/episode-1/final-production/](../proofs/episode-1/final-production/FINAL_REPORT.md): the 256 s WebM, the editable Studio Backup v8, representative frames and verification data. Karl and Astra have not judged the complete video or narrator quality; physical listening remains pending. A later revised UI export exposed a timing defect and was rejected; the 256 s first cut remains the reliable playable export.
+
 Karl authorised sequential technical development with visual and listening acceptance deferred until the end of the current coding session. **No milestone in this batch is pre-approved.** Review each milestone individually. Technical verification and Karl's approval are recorded separately in [ROADMAP.md](ROADMAP.md) and [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## Review checklist
@@ -21,7 +25,7 @@ Karl authorised sequential technical development with visual and listening accep
 | Voice Maker V1.1 — automatic voice service | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [V1.1 report](../proofs/voice-maker-v1-1/REPORT.md) | Open BrightTales normally, go to Voice Maker, confirm the engine says Ready without any second terminal, then generate a line and record his own voice. |
 | Max Phone Interaction V1.2 | **Complete; technical checks passed** | **HUMAN VISUAL ACCEPTANCE PASSED** — Karl approved holding, tapping and overall appearance on 18 October 2026. Physical audio hardware check pending. | [Completion report](../proofs/max-phone-v1-2/COMPLETION.md), [video](../proofs/max-phone-v1-2/max-asks-for-food-v1-2.webm) | No further visual action. Listen through physical speakers when convenient. |
 | Max's Phone & Bright Speak V1 | Implemented; technical checks passed | **AWAITING KARL'S REVIEW** | [Phone report](../proofs/max-phone-v1/REPORT.md) | Watch the Max phone scene video: does the phone look held in his hand, is the pop-up clear, and does the device speaking read as Max communicating rather than talking? |
-| M6.7 — Episode assembly | Not started | **AWAITING KARL'S REVIEW** | Pending `proofs/m6-7/` | Check the assembled production plays as one continuous piece. |
+| M6.7 — Episode assembly | Implemented | **AWAITING KARL'S REVIEW** | [Final production report](../proofs/episode-1/final-production/FINAL_REPORT.md) | Check the assembled production plays as one continuous piece. |
 
 ## Max Phone Interaction V1.2 completion
 

@@ -111,7 +111,7 @@ export default function Places({ organisation, storageIssue, onSave }: Props) {
     <div className="page-intro"><p className="eyebrow">CARTOON PLACES</p><h1>Explore your <em>places.</em></h1><p>Organise and preview approved backgrounds. Your Playground scene stays unchanged.</p></div>
     {storageIssue && <p className="storage-alert" role="alert">Places folders need attention: {storageIssue} Existing data has not been changed.</p>}
     <div className="overview-heading">
-      <div><p className="eyebrow">YOUR BACKGROUNDS</p><h2>{folder ? folder.name : 'Places Library'}</h2><p>{folder ? 'Open a place preview or move a place to another folder.' : 'Open a folder to see its places. Bedroom and Garden still need approved artwork.'}</p></div>
+      <div><p className="eyebrow">YOUR BACKGROUNDS</p><h2>{folder ? folder.name : 'Places Library'}</h2><p>{folder ? 'Open a place preview or move a place to another folder.' : 'Open a folder to see its places and approved artwork.'}</p></div>
       <div className="places-heading-actions">
         {folder ? <button className="places-primary" onClick={back}>← Back to Places</button> : <button className="places-primary" onClick={beginCreate} disabled={!!storageIssue}>+ New Folder</button>}
         <button className="places-primary" onClick={() => { setAddingPlace(true); setPlaceName(''); setPlaceFile(null); setMessage(''); }} disabled={!!storageIssue}>+ Add Place</button>

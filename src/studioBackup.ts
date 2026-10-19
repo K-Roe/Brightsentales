@@ -52,7 +52,6 @@ export function validateStudioBackup(data: unknown): BackupResult {
   const checkedEpisodes = version >= 4 ? validateEpisodeLibrary(value.episodes) : null;
   if (checkedEpisodes && !checkedEpisodes.ok) return { ok: false, error: checkedEpisodes.error };
   const episodes = checkedEpisodes?.ok ? checkedEpisodes.library : null;
-  if (episodes && timedScenes && episodes.episodes.some(item => !speechFitsEpisode(item, timedScenes))) return { ok: false, error: 'An episode voice clip runs past its duration.' };
   if (version >= 5 && !validAudioBackup(value.audioAssets)) return { ok: false, error: 'Backup audio files are invalid.' };
   const audioAssets = version >= 5 ? value.audioAssets as AudioBackupAsset[] : null;
   const checkedIntros = version >= 6 && value.intros !== null ? validateIntroLibrary(value.intros, placeIdsForContent) : null;
@@ -62,6 +61,7 @@ export function validateStudioBackup(data: unknown): BackupResult {
   const checkedCredits = version >= 7 && value.credits !== null ? validateCreditsLibrary(value.credits, placeIdsForContent) : null;
   if (checkedCredits && !checkedCredits.ok) return { ok: false, error: checkedCredits.error };
   const credits = checkedCredits?.ok ? checkedCredits.library : null;
+  if (episodes && timedScenes && episodes.episodes.some(item => !speechFitsEpisode(item, timedScenes, intros ?? undefined, credits ?? undefined))) return { ok: false, error: 'An episode voice clip runs past its duration.' };
   const checkedProjects = version >= 8 && value.projects !== null ? validateStudioProjects(value.projects) : null;
   if (checkedProjects && !checkedProjects.ok) return { ok: false, error: checkedProjects.error };
   const projects = checkedProjects?.ok ? checkedProjects.projects : null;

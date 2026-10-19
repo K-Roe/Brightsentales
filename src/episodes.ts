@@ -1,8 +1,10 @@
 import type { TimedLibrary, TimedScene } from './timedScenes';
 import { clipLength, type AudioClip, validAudioClips } from './audio';
+import type { Intro, IntroLibrary } from './introductions';
+import { creditsAsScene, type Credits, type CreditsLibrary } from './credits';
 
 export const EPISODES_KEY = 'brightsenappstales.episodes.v1';
-export type Episode = { id: string; name: string; sceneIds: string[]; audio?: AudioClip[] };
+export type Episode = { id: string; name: string; sceneIds: string[]; introId?: string; creditsId?: string; audio?: AudioClip[] };
 export type EpisodeLibrary = { version: 1; episodes: Episode[] };
 export const EMPTY_EPISODE_LIBRARY: EpisodeLibrary = { version: 1, episodes: [] };
 export type EpisodeResult = { ok: true; library: EpisodeLibrary } | { ok: false; error: string };
@@ -14,7 +16,7 @@ export function validateEpisodeLibrary(value: unknown): EpisodeResult {
   if (episodes.length > 100) return { ok: false, error: 'Too many episodes.' };
   const ids = new Set<string>();
   for (const episode of episodes) {
-    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id)) || episode.audio !== undefined && !validAudioClips(episode.audio, 360000)) return { ok: false, error: 'An episode has invalid details.' };
+    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id)) || episode.introId !== undefined && !uuid.test(episode.introId) || episode.creditsId !== undefined && !uuid.test(episode.creditsId) || episode.audio !== undefined && !validAudioClips(episode.audio, 360000)) return { ok: false, error: 'An episode has invalid details.' };
     ids.add(episode.id);
   }
   return { ok: true, library: value as EpisodeLibrary };
@@ -27,11 +29,34 @@ export function decodeEpisodeLibrary(raw: string | null): EpisodeResult {
 }
 
 export type EpisodePosition = { scene: TimedScene; index: number; localTime: number; start: number; total: number };
+export type ProductionBlock = { kind: 'intro' | 'scene' | 'credits'; scene: TimedScene; start: number; index: number; intro?: Intro; credits?: Credits };
+export function productionBlocks(episode: Episode, scenes: TimedLibrary, intros?: IntroLibrary, credits?: CreditsLibrary): ProductionBlock[] {
+  const blocks: ProductionBlock[] = [];
+  let start = 0;
+  const add = (kind: ProductionBlock['kind'], scene: TimedScene, intro?: Intro, endCredits?: Credits) => { blocks.push({ kind, scene, start, index: blocks.length, ...(intro ? { intro } : {}), ...(endCredits ? { credits: endCredits } : {}) }); start += scene.duration; };
+  const intro = intros?.intros.find(item => item.id === episode.introId);
+  if (intro) add('intro', intro, intro);
+  for (const id of episode.sceneIds) { const scene = scenes.scenes.find(item => item.id === id); if (scene) add('scene', scene); }
+  const endCredits = credits?.credits.find(item => item.id === episode.creditsId);
+  if (endCredits) add('credits', creditsAsScene(endCredits), undefined, endCredits);
+  return blocks;
+}
+export function productionDuration(episode: Episode, scenes: TimedLibrary, intros?: IntroLibrary, credits?: CreditsLibrary): number {
+  return productionBlocks(episode, scenes, intros, credits).reduce((sum, block) => sum + block.scene.duration, 0);
+}
+export function productionPosition(episode: Episode, scenes: TimedLibrary, intros: IntroLibrary, credits: CreditsLibrary, time: number): (ProductionBlock & { localTime: number; total: number }) | null {
+  if (missingSceneIds(episode, scenes).length || episode.introId && !intros.intros.some(item => item.id === episode.introId) || episode.creditsId && !credits.credits.some(item => item.id === episode.creditsId)) return null;
+  const blocks = productionBlocks(episode, scenes, intros, credits);
+  const total = productionDuration(episode, scenes, intros, credits);
+  const current = Math.max(0, Math.min(total, time));
+  const block = blocks.find((item, index) => current < item.start + item.scene.duration || index === blocks.length - 1);
+  return block ? { ...block, localTime: current - block.start, total } : null;
+}
 export function episodeDuration(episode: Episode, scenes: TimedLibrary): number {
   return episode.sceneIds.reduce((sum, id) => sum + (scenes.scenes.find(scene => scene.id === id)?.duration ?? 0), 0);
 }
-export function speechFitsEpisode(episode: Episode, scenes: TimedLibrary): boolean {
-  const total = episodeDuration(episode, scenes);
+export function speechFitsEpisode(episode: Episode, scenes: TimedLibrary, intros?: IntroLibrary, credits?: CreditsLibrary): boolean {
+  const total = productionDuration(episode, scenes, intros, credits);
   return (episode.audio ?? []).every(clip => clip.speakerId === undefined || clip.start + clipLength(clip) <= total + 1e-7);
 }
 

@@ -15,6 +15,9 @@ describe('Voice Maker settings', () => {
     state.presets.push({ id: '11111111-1111-4111-8111-111111111111', name: 'Bright', effect });
     state.defaults.max = { voice: 'piper:en_GB-alan-medium', presetId: state.presets[0].id };
     expect(validVoiceSettings(state)).toBe(true);
+    state.defaults.narrator = { voice: 'kokoro:bf_alice', presetId: null, speed: .9 };
+    expect(validVoiceSettings(state)).toBe(true);
+    expect(validVoiceSettings({ ...state, defaults: { ...state.defaults, narrator: { ...state.defaults.narrator, speed: 2 } } })).toBe(false);
     expect(validVoiceSettings({ ...state, presets: [{ ...state.presets[0], effect: { ...effect, pitch: 99 } }] })).toBe(false);
     expect(validVoiceSettings({ ...state, presets: [{ ...state.presets[0], effect: { ...effect, cuts: [[0, 1]] } }] })).toBe(false);
     expect(validVoiceEffect({ ...naturalEffect(2), cuts: [[1, .5]] })).toBe(false);

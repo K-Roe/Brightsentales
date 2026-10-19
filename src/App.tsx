@@ -376,7 +376,7 @@ export default function App() {
   const saveEpisodes = (next: EpisodeLibrary): boolean => {
     if (!recovery.ok || episodeIssue) return false;
     const checked = validateEpisodeLibrary(next);
-    if (!checked.ok || checked.library.episodes.some(item => !speechFitsEpisode(item, timedScenes))) return false;
+    if (!checked.ok || checked.library.episodes.some(item => !speechFitsEpisode(item, timedScenes, intros, credits))) return false;
     try { localStorage.setItem(EPISODES_KEY, JSON.stringify(checked.library)); setEpisodes(checked.library); return true; }
     catch { return false; }
   };
@@ -473,7 +473,7 @@ export default function App() {
       {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} audioAssets={audioAssets} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
-      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
+      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
       {activeTab === 'voice' && <VoiceMaker assets={audioAssets} characters={library} settings={voiceSettings} issue={voiceSettingsIssue} onSettingsChange={saveVoiceSettings} onSaveAsset={saveVoiceAsset} onDeleteAsset={deleteAudio} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}

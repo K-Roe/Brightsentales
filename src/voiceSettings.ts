@@ -6,7 +6,7 @@ export type VoiceEffect = {
   echo: boolean; reverb: boolean; robot: boolean;
 };
 export type VoicePreset = { id: string; name: string; effect: Omit<VoiceEffect, 'trimStart' | 'trimEnd' | 'cuts'> };
-export type VoiceSettings = { version: 1; presets: VoicePreset[]; defaults: Record<string, { voice: string | null; presetId: string | null }> };
+export type VoiceSettings = { version: 1; presets: VoicePreset[]; defaults: Record<string, { voice: string | null; presetId: string | null; speed?: number }> };
 export const emptyVoiceSettings = (): VoiceSettings => ({ version: 1, presets: [], defaults: {} });
 export const naturalEffect = (duration: number): VoiceEffect => ({ trimStart: 0, trimEnd: Math.floor(duration * 100) / 100, cuts: [], pitch: 0, speed: 1, tone: 0, volume: 1, normalize: false, fadeIn: .03, fadeOut: .08, echo: false, reverb: false, robot: false });
 export const BUILTIN_VOICE_PRESETS: VoicePreset[] = [
@@ -37,7 +37,7 @@ export const validVoiceSettings = (value: unknown): value is VoiceSettings => {
     if (!preset || typeof preset.id !== 'string' || !/^[a-f0-9-]{36}$/.test(preset.id) || ids.has(preset.id) || typeof preset.name !== 'string' || !preset.name.trim() || preset.name.length > 60 || !preset.effect || typeof preset.effect !== 'object' || 'trimStart' in preset.effect || 'trimEnd' in preset.effect || 'cuts' in preset.effect || !validVoiceEffect({ ...preset.effect, trimStart: 0, trimEnd: 1, cuts: [] })) return false;
     ids.add(preset.id);
   }
-  return Object.entries(state.defaults).length <= 200 && Object.entries(state.defaults).every(([id, item]) => /^(narrator|max|maxine|brightling-[a-f0-9-]{36})$/.test(id) && item && (item.voice === null || typeof item.voice === 'string' && item.voice.length <= 100) && (item.presetId === null || typeof item.presetId === 'string' && item.presetId.length <= 100));
+  return Object.entries(state.defaults).length <= 200 && Object.entries(state.defaults).every(([id, item]) => /^(narrator|max|maxine|brightling-[a-f0-9-]{36})$/.test(id) && item && (item.voice === null || typeof item.voice === 'string' && item.voice.length <= 100) && (item.presetId === null || typeof item.presetId === 'string' && item.presetId.length <= 100) && (item.speed === undefined || numberIn(item.speed, .6, 1.8)));
 };
 export const readVoiceSettings = (): VoiceSettings => {
   const raw = localStorage.getItem(VOICE_SETTINGS_KEY);

@@ -6,7 +6,7 @@ import subprocess
 import unittest
 import wave
 
-from voice_local import process_audio
+from voice_local import _finish_sentence, process_audio
 
 
 def tone(seconds=4):
@@ -33,6 +33,14 @@ def frequency(data):
 
 
 class VoiceProcessingTests(unittest.TestCase):
+    def test_generated_sentence_keeps_full_pcm_then_adds_quiet_tail(self):
+        original = tone(1)
+        finished = _finish_sentence(original)
+        with wave.open(io.BytesIO(original), "rb") as source, wave.open(io.BytesIO(finished), "rb") as result:
+            self.assertEqual(result.getnframes(), source.getnframes() + 4000)
+            self.assertEqual(result.readframes(source.getnframes()), source.readframes(source.getnframes()))
+            self.assertEqual(result.readframes(4000), bytes(8000))
+
     def test_separate_cuts_use_original_timeline(self):
         result = process_audio(tone(), {"trimStart": 0, "trimEnd": 4, "cuts": [[.5, 1], [2, 2.5]]})
         self.assertAlmostEqual(duration(result), 3, delta=.03)

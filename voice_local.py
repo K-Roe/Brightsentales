@@ -27,6 +27,21 @@ SERVICE_NAME = "BrightTalesVoiceMaker"
 SERVICE_PROTOCOL = 2
 
 
+def _finish_sentence(wav_bytes: bytes, tail_seconds: float = 0.25) -> bytes:
+    """Leave a short natural gap after synthesis so edits and scene cuts cannot clip the last word."""
+    with wave.open(io.BytesIO(wav_bytes), "rb") as source:
+        channels, sample_width, rate, _, _, _ = source.getparams()
+        frames = source.readframes(source.getnframes())
+    output = io.BytesIO()
+    with wave.open(output, "wb") as target:
+        target.setnchannels(channels)
+        target.setsampwidth(sample_width)
+        target.setframerate(rate)
+        target.writeframes(frames)
+        target.writeframes(bytes(round(rate * tail_seconds) * channels * sample_width))
+    return output.getvalue()
+
+
 def installed_voices() -> list[dict[str, str]]:
     voices = []
     try:
@@ -64,7 +79,7 @@ def synthesize(data: dict) -> bytes:
             output = io.BytesIO()
             with wave.open(output, "wb") as wav:
                 _models[voice_id].synthesize_wav(text, wav, SynthesisConfig(length_scale=1 / speed))
-            return output.getvalue()
+            return _finish_sentence(output.getvalue())
         from kokoro_onnx import Kokoro
         import numpy as np
         if "kokoro" not in _models:
@@ -74,7 +89,7 @@ def synthesize(data: dict) -> bytes:
         output = io.BytesIO()
         with wave.open(output, "wb") as wav:
             wav.setnchannels(1); wav.setsampwidth(2); wav.setframerate(rate); wav.writeframes(pcm.tobytes())
-        return output.getvalue()
+        return _finish_sentence(output.getvalue())
 
 
 def check_runtime() -> dict:

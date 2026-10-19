@@ -4,36 +4,44 @@ import { advanceSceneTime, type TimedLibrary } from './timedScenes';
 import { HEIGHT, WIDTH } from './scene';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { type MaxOutfit, type MaxineOutfit } from './outfit';
-import { drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
-import { episodeDuration, episodePosition, missingSceneIds, speechFitsEpisode, type Episode, type EpisodeLibrary } from './episodes';
+import { drawCreditsPreview, drawIntroPreview, drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
+import { missingSceneIds, productionBlocks, productionDuration, productionPosition, speechFitsEpisode, type Episode, type EpisodeLibrary } from './episodes';
 import AudioPanel from './AudioPanel';
 import type { AudioAsset } from './audio';
 import { episodePlaybackClips, useAudioPlayback } from './audioPlayback';
 import { episodeHasUnsavedChanges, episodeSnapshot } from './episodeDraft';
+import { introTitleOpacity, type IntroLibrary } from './introductions';
+import { type CreditsLibrary } from './credits';
+import { renderTimelineVideo } from './sceneVideoExport';
 
 export type EpisodeLeaveGuard = (proceed: () => void) => void;
-type Props = { library: EpisodeLibrary; scenes: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: EpisodeLibrary) => boolean; onEditScene: (id: string) => void; leaveGuardRef: RefObject<EpisodeLeaveGuard | null>; audioAssets?: AudioAsset[] };
+type Props = { library: EpisodeLibrary; scenes: TimedLibrary; intros: IntroLibrary; credits: CreditsLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: EpisodeLibrary) => boolean; onEditScene: (id: string) => void; leaveGuardRef: RefObject<EpisodeLeaveGuard | null>; audioAssets?: AudioAsset[] };
 const clock = (time: number) => `${time.toFixed(1)}s`;
+const loadImage = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = () => reject(new Error(`Artwork could not load: ${url.slice(0, 80)}`)); image.src = url; });
 
-export default function EpisodeMaker({ library, scenes, characters, places, maxOutfit, maxineOutfit, issue, onSave, onEditScene, leaveGuardRef, audioAssets = [] }: Props) {
+export default function EpisodeMaker({ library, scenes, intros, credits, characters, places, maxOutfit, maxineOutfit, issue, onSave, onEditScene, leaveGuardRef, audioAssets = [] }: Props) {
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [savedSnapshot, setSavedSnapshot] = useState<string | null>(null);
   const [pendingLeave, setPendingLeave] = useState<{ proceed: () => void; destination: string } | null>(null);
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [message, setMessage] = useState('Choose an episode or create one.');
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const canvas = useRef<HTMLCanvasElement>(null);
   const leaveDialog = useRef<HTMLDialogElement>(null);
   const cancelLeave = useRef<HTMLButtonElement>(null);
   const last = useRef(0);
-  const total = episode ? episodeDuration(episode, scenes) : 0;
+  const total = episode ? productionDuration(episode, scenes, intros, credits) : 0;
   const dirty = episodeHasUnsavedChanges(episode, savedSnapshot);
   const missing = episode ? missingSceneIds(episode, scenes) : [];
-  const position = episode && missing.length === 0 ? episodePosition(episode, scenes, time) : null;
+  const missingIntro = !!episode?.introId && !intros.intros.some(item => item.id === episode.introId);
+  const missingCredits = !!episode?.creditsId && !credits.credits.some(item => item.id === episode.creditsId);
+  const position = episode && missing.length === 0 ? productionPosition(episode, scenes, intros, credits, time) : null;
   const scene = position?.scene;
-  const audio = useAudioPlayback(episode ? episodePlaybackClips(episode, scenes) : [], audioAssets, time, playing, setMessage);
+  const audio = useAudioPlayback(episode ? episodePlaybackClips(episode, scenes, intros, credits) : [], audioAssets, time, playing, setMessage);
   const placeName = (id: string) => placesIn(places).find(place => place.id === id)?.name ?? 'Place unavailable';
   const readyPlace = scene && placesIn(places).find(place => place.id === scene.placeId && place.artworkAvailable && place.background);
   const requestLeave = (proceed: () => void, destination: string) => {
@@ -45,15 +53,48 @@ export default function EpisodeMaker({ library, scenes, characters, places, maxO
     setSavedSnapshot(library.episodes.some(saved => saved.id === item.id) ? episodeSnapshot(item) : null);
     setTime(0); setPlaying(false); setMessage('Add scenes from the library, then press Play.');
   }, 'open another episode');
-  const change = (next: Episode) => { setPlaying(false); setEpisode(next); setTime(Math.min(time, episodeDuration(next, scenes))); };
+  const change = (next: Episode) => { setPlaying(false); setEpisode(next); setTime(Math.min(time, productionDuration(next, scenes, intros, credits))); };
   const save = (): boolean => {
     if (!episode || issue) { setMessage(issue ?? 'Episode could not be saved.'); return false; }
-    if (!speechFitsEpisode(episode, scenes)) { setMessage('A voice clip runs past the episode end. Move or trim it before saving.'); return false; }
+    if (!speechFitsEpisode(episode, scenes, intros, credits)) { setMessage('A voice clip runs past the episode end. Move or trim it before saving.'); return false; }
     const next = { version: 1 as const, episodes: library.episodes.some(item => item.id === episode.id) ? library.episodes.map(item => item.id === episode.id ? episode : item) : [...library.episodes, episode] };
     const saved = onSave(next);
     if (saved) setSavedSnapshot(episodeSnapshot(episode));
     setMessage(saved ? 'Episode saved in this browser.' : 'Episode could not be saved. Existing episodes were kept.');
     return saved;
+  };
+  const exportVideo = async () => {
+    if (!episode || dirty || missing.length || missingIntro || missingCredits || exporting) return;
+    setPlaying(false); setExporting(true); setExportProgress(0);
+    try {
+      const blocks = productionBlocks(episode, scenes, intros, credits);
+      if (!blocks.length) throw new Error('Add an intro, scene or credits before exporting.');
+      const placesById = new Map(placesIn(places).map(place => [place.id, place]));
+      const rooms = new Map<string, HTMLImageElement>();
+      for (const block of blocks) {
+        const place = placesById.get(block.scene.placeId);
+        if (!place?.artworkAvailable || !place.background) throw new Error(`Artwork is missing for ${place?.name ?? block.scene.placeId}.`);
+        if (!rooms.has(block.scene.placeId)) rooms.set(block.scene.placeId, await loadImage(place.background));
+      }
+      const cast = [...new Set(blocks.flatMap(block => Object.keys(block.scene.characters)))];
+      const loaded = await Promise.all(cast.map(async id => [id, await previewPack(id, characters, maxOutfit, maxineOutfit)] as const));
+      const packsById = Object.fromEntries(loaded.filter((entry): entry is readonly [string, PreviewPack] => entry[1] !== null));
+      if (cast.some(id => !packsById[id])) throw new Error('A Brightling sprite is missing.');
+      const draw = (context: CanvasRenderingContext2D, at: number) => {
+        const block = blocks.find((item, index) => at < item.start + item.scene.duration || index === blocks.length - 1)!;
+        const local = at - block.start;
+        const room = rooms.get(block.scene.placeId)!;
+        if (block.intro) drawIntroPreview(context, block.scene, block.intro.seriesTitle, block.intro.episodeTitle, block.intro.titleStyle, introTitleOpacity(block.intro, local), local, room, packsById);
+        else if (block.credits) drawCreditsPreview(context, block.scene, block.credits.title, block.credits.lines, block.credits.mode, block.credits.scrollSpeed, local, room);
+        else drawScenePreview(context, block.scene, local, room, packsById);
+      };
+      const blob = await renderTimelineVideo(total, draw, episodePlaybackClips(episode, scenes, intros, credits), audioAssets, setExportProgress);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a'); link.href = url; link.download = `${episode.name.replace(/[^a-z0-9_-]/gi, '_') || 'episode'}.webm`; link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      setMessage(`Complete episode exported (${(blob.size / 1_000_000).toFixed(1)} MB). Check the downloaded video.`);
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Episode export failed.'); }
+    finally { setExporting(false); }
   };
 
   useEffect(() => {
@@ -95,7 +136,11 @@ export default function EpisodeMaker({ library, scenes, characters, places, maxO
     const context = canvas.current?.getContext('2d');
     if (!context) return;
     context.clearRect(0, 0, WIDTH, HEIGHT);
-    if (scene && room) drawScenePreview(context, scene, position!.localTime, room, packs);
+    if (scene && room && position) {
+      if (position.intro) drawIntroPreview(context, scene, position.intro.seriesTitle, position.intro.episodeTitle, position.intro.titleStyle, introTitleOpacity(position.intro, position.localTime), position.localTime, room, packs);
+      else if (position.credits) drawCreditsPreview(context, scene, position.credits.title, position.credits.lines, position.credits.mode, position.credits.scrollSpeed, position.localTime, room);
+      else drawScenePreview(context, scene, position.localTime, room, packs);
+    }
   }, [scene, room, packs, position?.localTime]);
 
   useEffect(() => {
@@ -121,15 +166,18 @@ export default function EpisodeMaker({ library, scenes, characters, places, maxO
     </dialog>
     {!episode ? <><div className="scene-heading"><div><p className="eyebrow">EPISODE LIBRARY</p><h1>Your episodes</h1><p>Put saved scenes together and watch the whole cartoon.</p></div><button className="scene-primary" disabled={!!issue} onClick={() => open({ id: crypto.randomUUID(), name: 'My Episode', sceneIds: [] })}>Create Episode</button></div>
       {issue && <p role="alert" className="storage-alert">{issue}</p>}
-      <div className="scene-library">{library.episodes.map(item => <article key={item.id}><h2>{item.name}</h2><p>{item.sceneIds.length} scenes · {clock(episodeDuration(item, scenes))}</p>{missingSceneIds(item, scenes).length > 0 && <p role="alert" className="episode-warning">Missing saved scene. Open to repair the sequence.</p>}<div className="scene-actions"><button onClick={() => open(item)}>Open</button><button onClick={() => { open({ ...item, id: crypto.randomUUID(), name: `${item.name} copy` }); setMessage('Duplicate opened. Save to keep it.'); }}>Duplicate</button><button onClick={() => { if (window.confirm(`Delete “${item.name}”? The saved scenes will stay in your library.`)) setMessage(onSave({ version: 1, episodes: library.episodes.filter(other => other.id !== item.id) }) ? 'Episode deleted. Its scenes were kept.' : 'Episode could not be deleted.'); }}>Delete</button></div></article>)}</div>
+      <div className="scene-library">{library.episodes.map(item => <article key={item.id}><h2>{item.name}</h2><p>{item.sceneIds.length} scenes · {clock(productionDuration(item, scenes, intros, credits))}</p>{missingSceneIds(item, scenes).length > 0 && <p role="alert" className="episode-warning">Missing saved scene. Open to repair the sequence.</p>}<div className="scene-actions"><button onClick={() => open(item)}>Open</button><button onClick={() => { open({ ...item, id: crypto.randomUUID(), name: `${item.name} copy` }); setMessage('Duplicate opened. Save to keep it.'); }}>Duplicate</button><button onClick={() => { if (window.confirm(`Delete “${item.name}”? The saved scenes will stay in your library.`)) setMessage(onSave({ version: 1, episodes: library.episodes.filter(other => other.id !== item.id) }) ? 'Episode deleted. Its scenes were kept.' : 'Episode could not be deleted.'); }}>Delete</button></div></article>)}</div>
       {library.episodes.length === 0 && <p className="scene-empty">No episodes yet. Create one to add your saved scenes.</p>}
     </> : <><div className="scene-heading"><div><p className="eyebrow">EPISODE EDITOR</p><h1>{episode.name}</h1><p>{episode.sceneIds.length} scenes · Total duration <strong>{clock(total)}</strong></p><span className={`episode-save-indicator ${dirty ? 'unsaved' : 'saved'}`} role="status">{dirty ? 'Unsaved changes' : 'Saved'}</span></div><div className="scene-actions"><button onClick={() => requestLeave(() => { setEpisode(null); setPlaying(false); }, 'return to Episodes')}>Back to Episodes</button><button className="scene-primary" onClick={save} disabled={!!issue}>Save Episode</button></div></div>
       <label className="episode-name">Episode name<input aria-label="Episode name" maxLength={80} value={episode.name} onChange={event => change({ ...episode, name: event.target.value })} /></label>
+      <div className="voice-fields"><label>Opening intro<select aria-label="Episode intro" value={episode.introId ?? ''} onChange={event => change({ ...episode, introId: event.target.value || undefined })}><option value="">No intro</option>{intros.intros.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label><label>Ending credits<select aria-label="Episode credits" value={episode.creditsId ?? ''} onChange={event => change({ ...episode, creditsId: event.target.value || undefined })}><option value="">No credits</option>{credits.credits.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label></div>
       {missing.length > 0 && <p role="alert" className="episode-warning">This episode refers to {missing.length} missing scene{missing.length === 1 ? '' : 's'}. Playback is paused until you remove the missing block or restore the scene from a backup.</p>}
-      <div className="episode-workspace"><div className="episode-main"><section className="scene-stage episode-preview"><div className="scene-stage-caption"><strong>{scene ? scene.name : 'EPISODE PREVIEW'}</strong><span>{scene ? `${placeName(scene.placeId)} · Scene ${position!.index + 1} of ${episode.sceneIds.length} · ${clock(position!.localTime)} / ${clock(scene.duration)}` : 'Add a saved scene to start'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} aria-label="Episode cartoon preview" />
-        <div className="scene-playback"><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><button className="scene-primary" disabled={!!missing.length || total <= 0 || !readyPlace || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => { if (!playing) audio.startAt(time >= total ? 0 : time); if (time >= total) setTime(0); setPlaying(!playing); }}>{playing ? 'Pause' : 'Play'}</button><input aria-label="Episode time" type="range" min="0" max={total || 1} step="0.1" value={time} disabled={total <= 0 || !!missing.length} onChange={event => { setPlaying(false); setTime(Number(event.target.value)); }} /><strong>{clock(time)} / {clock(total)}</strong></div></section>
-        <section className="episode-sequence"><div className="episode-section-heading"><div><h2>Episode sequence</h2><p>Scenes play from left to right. Add the same scene again whenever you like.</p></div><strong>{clock(total)} total</strong></div><div className="episode-cards">{episode.sceneIds.map((id, index) => { const item = scenes.scenes.find(candidate => candidate.id === id); return <article key={`${index}-${id}`} className={position?.index === index ? 'active' : ''}><span className="episode-number">{index + 1}</span><div><h3>{item?.name ?? 'Missing scene'}</h3><p>{item ? `${placeName(item.placeId)} · ${clock(item.duration)}` : `Scene ID ${id} is unavailable. Remove it or restore a backup.`}</p></div><div className="episode-card-actions"><button aria-label={`Move scene ${index + 1} left`} disabled={index === 0} onClick={() => { const ids = [...episode.sceneIds]; [ids[index - 1], ids[index]] = [ids[index], ids[index - 1]]; change({ ...episode, sceneIds: ids }); }}>←</button><button aria-label={`Move scene ${index + 1} right`} disabled={index === episode.sceneIds.length - 1} onClick={() => { const ids = [...episode.sceneIds]; [ids[index + 1], ids[index]] = [ids[index], ids[index + 1]]; change({ ...episode, sceneIds: ids }); }}>→</button>{item && <button onClick={() => requestLeave(() => onEditScene(item.id), 'open Scene Maker')}>Edit Scene</button>}<button onClick={() => change({ ...episode, sceneIds: episode.sceneIds.filter((_, position) => position !== index) })}>Remove</button></div></article>; })}</div>{episode.sceneIds.length === 0 && <p>Choose a saved scene from the library.</p>}
-        <div className="episode-timeline" aria-label="Episode timeline">{episode.sceneIds.map((id, index) => { const item = scenes.scenes.find(candidate => candidate.id === id); if (!item) return null; const start = episode.sceneIds.slice(0, index).reduce((sum, before) => sum + (scenes.scenes.find(candidate => candidate.id === before)?.duration ?? 0), 0); return <button key={`${id}-${index}`} className={position?.index === index ? 'active' : ''} style={{ width: `${item.duration / Math.max(total, 1) * 100}%` }} onClick={() => { setPlaying(false); setTime(start); }} title={`Seek to ${item.name} at ${clock(start)}`}>{item.name}</button>; })}</div></section>
+      {(missingIntro || missingCredits) && <p role="alert" className="episode-warning">The selected intro or credits are missing. Choose another saved item before playback or export.</p>}
+      <div className="scene-actions"><button disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export Episode Video'}</button><span>Save the episode first. Export runs in real time and downloads a WebM with the full soundtrack.</span></div>
+      <div className="episode-workspace"><div className="episode-main"><section className="scene-stage episode-preview"><div className="scene-stage-caption"><strong>{scene ? scene.name : 'EPISODE PREVIEW'}</strong><span>{scene ? `${placeName(scene.placeId)} · ${position!.kind === 'scene' ? `Scene ${position!.index + 1 - (episode.introId ? 1 : 0)} of ${episode.sceneIds.length}` : position!.kind === 'intro' ? 'Intro' : 'Credits'} · ${clock(position!.localTime)} / ${clock(scene.duration)}` : 'Add a saved scene to start'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} aria-label="Episode cartoon preview" />
+        <div className="scene-playback"><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><button className="scene-primary" disabled={!!missing.length || missingIntro || missingCredits || total <= 0 || !readyPlace || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => { if (!playing) audio.startAt(time >= total ? 0 : time); if (time >= total) setTime(0); setPlaying(!playing); }}>{playing ? 'Pause' : 'Play'}</button><input aria-label="Episode time" type="range" min="0" max={total || 1} step="0.1" value={time} disabled={total <= 0 || !!missing.length || missingIntro || missingCredits} onChange={event => { setPlaying(false); setTime(Number(event.target.value)); }} /><strong>{clock(time)} / {clock(total)}</strong></div></section>
+        <section className="episode-sequence"><div className="episode-section-heading"><div><h2>Episode sequence</h2><p>Scenes play from left to right. Add the same scene again whenever you like.</p></div><strong>{clock(total)} total</strong></div><div className="episode-cards">{episode.sceneIds.map((id, index) => { const item = scenes.scenes.find(candidate => candidate.id === id); return <article key={`${index}-${id}`} className={position?.kind === 'scene' && position.index === index + (episode.introId ? 1 : 0) ? 'active' : ''}><span className="episode-number">{index + 1}</span><div><h3>{item?.name ?? 'Missing scene'}</h3><p>{item ? `${placeName(item.placeId)} · ${clock(item.duration)}` : `Scene ID ${id} is unavailable. Remove it or restore a backup.`}</p></div><div className="episode-card-actions"><button aria-label={`Move scene ${index + 1} left`} disabled={index === 0} onClick={() => { const ids = [...episode.sceneIds]; [ids[index - 1], ids[index]] = [ids[index], ids[index - 1]]; change({ ...episode, sceneIds: ids }); }}>←</button><button aria-label={`Move scene ${index + 1} right`} disabled={index === episode.sceneIds.length - 1} onClick={() => { const ids = [...episode.sceneIds]; [ids[index + 1], ids[index]] = [ids[index], ids[index + 1]]; change({ ...episode, sceneIds: ids }); }}>→</button>{item && <button onClick={() => requestLeave(() => onEditScene(item.id), 'open Scene Maker')}>Edit Scene</button>}<button onClick={() => change({ ...episode, sceneIds: episode.sceneIds.filter((_, position) => position !== index) })}>Remove</button></div></article>; })}</div>{episode.sceneIds.length === 0 && <p>Choose a saved scene from the library.</p>}
+        <div className="episode-timeline" aria-label="Episode timeline">{productionBlocks(episode, scenes, intros, credits).map(block => <button key={`${block.kind}-${block.index}-${block.scene.id}`} className={position?.index === block.index ? 'active' : ''} style={{ width: `${block.scene.duration / Math.max(total, 1) * 100}%` }} onClick={() => { setPlaying(false); setTime(block.start); }} title={`Seek to ${block.scene.name} at ${clock(block.start)}`}>{block.kind === 'intro' ? 'Intro' : block.kind === 'credits' ? 'Credits' : block.scene.name}</button>)}</div></section>
         <AudioPanel label="Episode" clips={episode.audio ?? []} assets={audioAssets} speakers={[{ id: 'max', name: 'Max' }, { id: 'maxine', name: 'Maxine' }, ...characters.map(item => ({ id: item.id, name: item.name }))]} duration={total} time={time} onChange={clips => change({ ...episode, audio: clips })} onSeek={value => { setPlaying(false); setTime(value); }} /></div>
       <aside className="episode-scene-library"><h2>Saved scenes</h2><p>Add a scene to the end of your episode.</p>{scenes.scenes.map(item => <article key={item.id}><strong>{item.name}</strong><span>{placeName(item.placeId)} · {clock(item.duration)}</span><div><button onClick={() => change({ ...episode, sceneIds: [...episode.sceneIds, item.id] })}>Add Scene</button><button onClick={() => requestLeave(() => onEditScene(item.id), 'open Scene Maker')}>Edit Scene</button></div></article>)}{scenes.scenes.length === 0 && <p>Create a scene in Scene Maker first.</p>}</aside></div>
       <p role="status" className="scene-status">{message}</p>
