@@ -1,0 +1,293 @@
+{
+  "origin": "http://127.0.0.1:4177/",
+  "samples": [
+    {
+      "id": "32027ee8-c1e1-4dd9-8f58-76c297b0ea8b",
+      "voice": "bf_alice",
+      "speed": 0.9,
+      "text": "Hello, everyone! Welcome to BrightTales! Today, we're going to meet someone very special. This is Max!",
+      "duration": 6.357333333333333,
+      "bytes": 305196,
+      "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\narrator-bf_alice.wav"
+    },
+    {
+      "id": "2abf9361-2760-4a70-88cf-11a8b4addd22",
+      "voice": "bf_emma",
+      "speed": 0.9,
+      "text": "Hello, everyone! Welcome to BrightTales! Today, we're going to meet someone very special. This is Max!",
+      "duration": 6.165333333333334,
+      "bytes": 295980,
+      "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\narrator-bf_emma.wav"
+    },
+    {
+      "id": "28df8739-931d-4648-a578-dcc5b11b6072",
+      "voice": "bf_isabella",
+      "speed": 0.9,
+      "text": "Hello, everyone! Welcome to BrightTales! Today, we're going to meet someone very special. This is Max!",
+      "duration": 6.464,
+      "bytes": 310316,
+      "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\narrator-bf_isabella.wav"
+    },
+    {
+      "id": "bdf1d573-7f46-4d89-92df-e91027f145f3",
+      "voice": "bf_lily",
+      "speed": 0.9,
+      "text": "Hello, everyone! Welcome to BrightTales! Today, we're going to meet someone very special. This is Max!",
+      "duration": 6.101333333333334,
+      "bytes": 292908,
+      "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\narrator-bf_lily.wav"
+    }
+  ],
+  "errors": [],
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode-voices-DwfBnP",
+  "installed": [
+    {
+      "id": "piper:ar_JO-kareem-low",
+      "name": "ar JO kareem low (Piper)"
+    },
+    {
+      "id": "piper:ar_JO-kareem-medium",
+      "name": "ar JO kareem medium (Piper)"
+    },
+    {
+      "id": "piper:bg_BG-dimitar-medium",
+      "name": "bg BG dimitar medium (Piper)"
+    },
+    {
+      "id": "piper:bn_BD-google-medium",
+      "name": "bn BD google medium (Piper)"
+    },
+    {
+      "id": "piper:ca_ES-upc_ona-medium",
+      "name": "ca ES upc ona medium (Piper)"
+    },
+    {
+      "id": "piper:ca_ES-upc_ona-x_low",
+      "name": "ca ES upc ona x low (Piper)"
+    },
+    {
+      "id": "piper:ca_ES-upc_pau-x_low",
+      "name": "ca ES upc pau x low (Piper)"
+    },
+    {
+      "id": "piper:cs_CZ-jirka-low",
+      "name": "cs CZ jirka low (Piper)"
+    },
+    {
+      "id": "piper:cs_CZ-jirka-medium",
+      "name": "cs CZ jirka medium (Piper)"
+    },
+    {
+      "id": "piper:cs_CZ-kasandra-medium",
+      "name": "cs CZ kasandra medium (Piper)"
+    },
+    {
+      "id": "piper:cy_GB-bu_tts-medium",
+      "name": "cy GB bu tts medium (Piper)"
+    },
+    {
+      "id": "piper:cy_GB-gwryw_gogleddol-medium",
+      "name": "cy GB gwryw gogleddol medium (Piper)"
+    },
+    {
+      "id": "piper:da_DK-talesyntese-medium",
+      "name": "da DK talesyntese medium (Piper)"
+    },
+    {
+      "id": "piper:de_DE-kerstin-low",
+      "name": "de DE kerstin low (Piper)"
+    },
+    {
+      "id": "piper:de_DE-mls-medium",
+      "name": "de DE mls medium (Piper)"
+    },
+    {
+      "id": "piper:de_DE-pavoque-low",
+      "name": "de DE pavoque low (Piper)"
+    },
+    {
+      "id": "piper:en_GB-alan-low",
+      "name": "en GB alan low (Piper)"
+    },
+    {
+      "id": "piper:en_GB-alan-medium",
+      "name": "en GB alan medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-alba-medium",
+      "name": "en GB alba medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-aru-medium",
+      "name": "en GB aru medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-cori-high",
+      "name": "en GB cori high (Piper)"
+    },
+    {
+      "id": "piper:en_GB-cori-medium",
+      "name": "en GB cori medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-jenny_dioco-medium",
+      "name": "en GB jenny dioco medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-northern_english_male-medium",
+      "name": "en GB northern english male medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-semaine-medium",
+      "name": "en GB semaine medium (Piper)"
+    },
+    {
+      "id": "piper:en_GB-southern_english_female-low",
+      "name": "en GB southern english female low (Piper)"
+    },
+    {
+      "id": "piper:en_GB-vctk-medium",
+      "name": "en GB vctk medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-amy-low",
+      "name": "en US amy low (Piper)"
+    },
+    {
+      "id": "piper:en_US-amy-medium",
+      "name": "en US amy medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-arctic-medium",
+      "name": "en US arctic medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-bryce-medium",
+      "name": "en US bryce medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-danny-low",
+      "name": "en US danny low (Piper)"
+    },
+    {
+      "id": "piper:en_US-hfc_female-medium",
+      "name": "en US hfc female medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-hfc_male-medium",
+      "name": "en US hfc male medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-joe-medium",
+      "name": "en US joe medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-john-medium",
+      "name": "en US john medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-kathleen-low",
+      "name": "en US kathleen low (Piper)"
+    },
+    {
+      "id": "piper:en_US-kristin-medium",
+      "name": "en US kristin medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-kusal-medium",
+      "name": "en US kusal medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-l2arctic-medium",
+      "name": "en US l2arctic medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-lessac-high",
+      "name": "en US lessac high (Piper)"
+    },
+    {
+      "id": "piper:en_US-lessac-low",
+      "name": "en US lessac low (Piper)"
+    },
+    {
+      "id": "piper:en_US-lessac-medium",
+      "name": "en US lessac medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-libritts-high",
+      "name": "en US libritts high (Piper)"
+    },
+    {
+      "id": "piper:en_US-libritts_r-medium",
+      "name": "en US libritts r medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-ljspeech-high",
+      "name": "en US ljspeech high (Piper)"
+    },
+    {
+      "id": "piper:en_US-ljspeech-medium",
+      "name": "en US ljspeech medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-norman-medium",
+      "name": "en US norman medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-reza_ibrahim-medium",
+      "name": "en US reza ibrahim medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-ryan-high",
+      "name": "en US ryan high (Piper)"
+    },
+    {
+      "id": "piper:en_US-ryan-low",
+      "name": "en US ryan low (Piper)"
+    },
+    {
+      "id": "piper:en_US-ryan-medium",
+      "name": "en US ryan medium (Piper)"
+    },
+    {
+      "id": "piper:en_US-sam-medium",
+      "name": "en US sam medium (Piper)"
+    },
+    {
+      "id": "kokoro:bf_alice",
+      "name": "Alice · British female (Kokoro)"
+    },
+    {
+      "id": "kokoro:bf_emma",
+      "name": "Emma · British female (Kokoro)"
+    },
+    {
+      "id": "kokoro:bf_isabella",
+      "name": "Isabella · British female (Kokoro)"
+    },
+    {
+      "id": "kokoro:bf_lily",
+      "name": "Lily · British female (Kokoro)"
+    },
+    {
+      "id": "kokoro:bm_daniel",
+      "name": "Daniel · British male (Kokoro)"
+    },
+    {
+      "id": "kokoro:bm_fable",
+      "name": "Fable · British male (Kokoro)"
+    },
+    {
+      "id": "kokoro:bm_george",
+      "name": "George · British male (Kokoro)"
+    },
+    {
+      "id": "kokoro:bm_lewis",
+      "name": "Lewis · British male (Kokoro)"
+    }
+  ],
+  "defaultAfterReload": {
+    "voice": "kokoro:bf_lily",
+    "speed": "0.9"
+  }
+}

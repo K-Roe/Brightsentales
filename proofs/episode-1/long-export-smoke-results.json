@@ -1,0 +1,59 @@
+{
+  "origin": "http://127.0.0.1:4177/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode-smoke-Ck8bwY",
+  "downloads": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode-download-TU1vIb",
+  "steps": [
+    {
+      "name": "intro saved through UI"
+    },
+    {
+      "name": "narration generated and saved through UI"
+    },
+    {
+      "name": "shot automatically extended for narration",
+      "detail": "7"
+    },
+    {
+      "name": "scene saved through UI"
+    },
+    {
+      "name": "credits saved through UI"
+    },
+    {
+      "name": "episode saved through UI",
+      "detail": "186.0s"
+    },
+    {
+      "name": "intro preview",
+      "detail": "Episode smoke introLiving Room · Intro · 1.0s / 3.0s"
+    },
+    {
+      "name": "scene preview",
+      "detail": "Max appearsLiving Room · Scene 1 of 1 · 1.0s / 180.0s"
+    },
+    {
+      "name": "credits preview",
+      "detail": "Episode smoke creditsLiving Room · Credits · 1.0s / 3.0s"
+    },
+    {
+      "name": "episode exported through UI",
+      "detail": "Production_export_smoke.webm"
+    },
+    {
+      "name": "saved episode reopened",
+      "detail": "Production export smoke"
+    },
+    {
+      "name": "Studio Backup v8 keeps production references and narration",
+      "detail": {
+        "version": 8,
+        "scenes": 1,
+        "intros": 1,
+        "credits": 1,
+        "audio": 1
+      }
+    }
+  ],
+  "errors": [],
+  "cleanup": "Disposable browser and downloads removed."
+}
