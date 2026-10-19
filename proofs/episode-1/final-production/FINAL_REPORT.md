@@ -14,6 +14,8 @@ All files are stored under `proofs/episode-1/final-production/`.
 |---|-------------|------|------|-------|
 | 1 | Complete playable episode video | `BrightTales-Episode-1-Meet-Max.webm` | 69,538,159 bytes | VP9 1672×941 + Opus stereo 48 kHz, ~256 s |
 | 2 | Editable Studio Backup v8 | `BrightTales-Episode-1-Meet-Max-studio-backup-v8.json` | 12,625,634 bytes | Restores places, scenes, episode, intro, credits, audio assets |
+| 3 | Production report | `FINAL_REPORT.md` | — | This document |
+| 4 | Verification frames | `frame-003s.png` – `frame-248s.png` | — | Ten representative decoded frames |
 
 ### SHA-256 checksums
 
@@ -24,8 +26,6 @@ BrightTales-Episode-1-Meet-Max.webm
 BrightTales-Episode-1-Meet-Max-studio-backup-v8.json
   F516EB215A045D806D48377A966C67D9F164DB9C46B6799BDA0B3CFBB0BFDEED
 ```
-| 3 | Production report | `FINAL_REPORT.md` | — | This document |
-| 4 | Verification frames | `frame-003s.png` – `frame-248s.png` | — | Ten representative decoded frames |
 
 ## Episode structure
 
