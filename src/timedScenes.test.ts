@@ -50,6 +50,29 @@ describe('timed scene schedule', () => {
     expect(validateTimedLibrary({ version: 1, scenes: [conflict] }).ok).toBe(false);
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...scene, duration: 29 }] }).ok).toBe(false);
   });
+  it('sequences walk, wave, jump and excited bounce on the existing scene timeline', () => {
+    const actions: TimedScene['actions'] = [
+      { id: id(21), characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 500, y: 780 } },
+      { id: id(22), characterId: 'max', type: 'walk', start: 0, duration: 2, point: { x: 750, y: 780 } },
+      { id: id(23), characterId: 'max', type: 'wave', start: 2, duration: 2 },
+      { id: id(24), characterId: 'max', type: 'jump', start: 4, duration: 1 },
+      { id: id(25), characterId: 'max', type: 'excited', start: 5, duration: 1.5 },
+    ];
+    const sequence: TimedScene = { ...scene, characters: { max: { x: 500, y: 780 } }, actions };
+    expect(validateTimedLibrary({ version: 1, scenes: [sequence] }).ok).toBe(true);
+    expect(stateAt(sequence, 'max', 1).pose).toBe('side');
+    expect(stateAt(sequence, 'max', 2.4).pose).toBe('wave');
+    expect(stateAt(sequence, 'max', 4).expression?.offsetY ?? 0).toBe(0);
+    expect(stateAt(sequence, 'max', 4.47).expression?.offsetY).toBeLessThan(-100);
+    expect(stateAt(sequence, 'max', 5).expression?.offsetY ?? 0).toBeCloseTo(0);
+    expect(stateAt(sequence, 'max', 5.4).expression?.anchor).toBe('foot');
+    expect(stateAt(sequence, 'max', 5.375).expression?.offsetY).toBeLessThan(-30);
+    expect(stateAt(sequence, 'max', 5.75).expression?.offsetY).toBeCloseTo(0);
+    expect(stateAt(sequence, 'max', 6.5).expression).toBeUndefined();
+    expect(stateAt(sequence, 'max', 6.5).point).toEqual({ x: 750, y: 780 });
+    expect(decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [sequence] })).ok).toBe(true);
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...sequence, actions: [...actions, { id: id(26), characterId: 'max', type: 'jump', start: 4.5, duration: 1 }] }] }).ok).toBe(false);
+  });
   it('preserves scenes through save, backup and restore, while retaining older data', () => {
     const timed = { version: 1 as const, scenes: [scene] };
     expect(decodeTimedLibrary(JSON.stringify(timed))).toEqual({ ok: true, library: timed });

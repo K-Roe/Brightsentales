@@ -1,0 +1,91 @@
+{
+  "scene": {
+    "id": "22222222-2222-4222-8222-000000000001",
+    "name": "Frame Actions Batch 1",
+    "duration": 8,
+    "placeId": "living-room",
+    "characters": {
+      "max": {
+        "x": 500,
+        "y": 790
+      },
+      "maxine": {
+        "x": 1120,
+        "y": 820
+      }
+    },
+    "actions": [
+      {
+        "id": "22222222-2222-4222-8222-000000000002",
+        "characterId": "max",
+        "type": "appear",
+        "start": 0,
+        "duration": 0,
+        "point": {
+          "x": 500,
+          "y": 790
+        }
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000003",
+        "characterId": "max",
+        "type": "walk",
+        "start": 0,
+        "duration": 2,
+        "point": {
+          "x": 740,
+          "y": 790
+        }
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000004",
+        "characterId": "max",
+        "type": "wave",
+        "start": 2,
+        "duration": 2
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000005",
+        "characterId": "max",
+        "type": "jump",
+        "start": 4,
+        "duration": 1
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000006",
+        "characterId": "max",
+        "type": "excited",
+        "start": 5,
+        "duration": 1.5
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000007",
+        "characterId": "maxine",
+        "type": "appear",
+        "start": 0,
+        "duration": 0,
+        "point": {
+          "x": 1120,
+          "y": 820
+        }
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000008",
+        "characterId": "maxine",
+        "type": "jump",
+        "start": 1,
+        "duration": 1
+      },
+      {
+        "id": "22222222-2222-4222-8222-000000000009",
+        "characterId": "maxine",
+        "type": "excited",
+        "start": 3,
+        "duration": 1.5
+      }
+    ]
+  },
+  "videoBytes": 2288539,
+  "errors": [],
+  "disposableProfile": true
+}

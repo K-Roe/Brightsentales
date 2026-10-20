@@ -58,9 +58,11 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
       : pack.idle;
     if (sprite) {
       context.save();
-      // Apply expression transforms around the sprite centre so gestures feel natural.
+      // Existing gestures retain their centre pivot. New whole-frame actions use
+      // the measured foot line so stretching cannot lift the shoes from the floor.
       const centerX = x;
-      const centerY = top + height / 2;
+      const footPivot = state.expression?.anchor === 'foot';
+      const centerY = footPivot ? top + anchor.y * height : top + height / 2;
       context.translate(centerX, centerY);
       const scaleX = state.expression?.scaleX ?? 1;
       const scaleY = state.expression?.scaleY ?? 1;
@@ -68,7 +70,7 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
       else context.scale(scaleX, scaleY);
       if (state.expression?.rotate) context.rotate((state.expression.rotate * Math.PI) / 180);
       context.translate(state.expression?.offsetX ?? 0, state.expression?.offsetY ?? 0);
-      context.drawImage(sprite, -width / 2, -height / 2, width, height);
+      context.drawImage(sprite, -width / 2, footPivot ? -anchor.y * height : -height / 2, width, height);
       context.restore();
     }
     context.restore();

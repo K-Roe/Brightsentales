@@ -17,7 +17,7 @@ type Lane = { id: string; kind: 'character'; label: string };
 const titles = {
   appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear',
   breathe: 'Breathe', point: 'Point', nod: 'Nod', shake: 'Shake', smile: 'Smile',
-  surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn',
+  surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn', jump: 'Jump', excited: 'Excited bounce',
 } as const;
 const LABEL_WIDTH = 116;
 

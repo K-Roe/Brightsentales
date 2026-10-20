@@ -5,7 +5,7 @@ import { type AudioClip, validAudioClips } from './audio';
 import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHand } from './phone';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
-export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn';
+export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited';
 export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
@@ -14,7 +14,7 @@ export type TimedAction = { id: string; characterId: string; type: ActionType; s
  */
 export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
-export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number };
+export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number; anchor?: 'foot' };
 export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
 export const EMPTY_TIMED_LIBRARY: TimedLibrary = { version: 1, scenes: [] };
@@ -37,8 +37,8 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     const actions = new Set<string>();
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
-      const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn']);
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited']);
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
@@ -82,6 +82,16 @@ export function expressionAt(actionType: ActionType, elapsed: number, duration: 
       return { scaleY: 1 + Math.sin(t * Math.PI) * 0.05, offsetY: -Math.sin(t * Math.PI) * 10 };
     case 'turn':
       return { scaleX: 1 - Math.sin(t * Math.PI) * 0.35 };
+    case 'jump': {
+      // The approved standing frame remains whole. Feet stay at the stage anchor
+      // during takeoff and landing; only the flight interval lifts the sprite.
+      if (t < 0.14) return { anchor: 'foot', scaleY: 1 - 0.08 * Math.sin(Math.PI * t / 0.14) };
+      if (t < 0.8) return { anchor: 'foot', offsetY: -105 * Math.sin(Math.PI * (t - 0.14) / 0.66) };
+      return { anchor: 'foot', scaleY: 1 - 0.08 * Math.sin(Math.PI * (t - 0.8) / 0.2) };
+    }
+    case 'excited':
+      // Two short hops land on the same measured floor point between beats.
+      return { anchor: 'foot', offsetY: -38 * Math.sin(2 * Math.PI * t) ** 2 };
     default:
       return undefined;
   }
