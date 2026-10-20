@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_SCENE, STORAGE_KEY, WIDTH } from './scene';
 import { DEFAULT_COLOURS, LIBRARY_KEY, type Brightling } from './maker';
 import { createStudioBackup, restoreStudioBackup, validateStudioBackup } from './studioBackup';
-import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
+import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, gestureFrameAt, gestureFramesForScene, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
 
 const id = (n: number) => `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`;
 const scene: TimedScene = {
@@ -72,6 +72,33 @@ describe('timed scene schedule', () => {
     expect(stateAt(sequence, 'max', 6.5).point).toEqual({ x: 750, y: 780 });
     expect(decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [sequence] })).ok).toBe(true);
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...sequence, actions: [...actions, { id: id(26), characterId: 'max', type: 'jump', start: 4.5, duration: 1 }] }] }).ok).toBe(false);
+  });
+  it('selects registered whole frames and keeps legacy saved gestures unchanged', () => {
+    const actions: TimedScene['actions'] = [
+      { id: id(40), characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 500, y: 780 } },
+      { id: id(41), characterId: 'max', type: 'point', start: 0, duration: 1, artwork: 'provisional-v1' },
+      { id: id(42), characterId: 'max', type: 'clap', start: 1, duration: 1, artwork: 'provisional-v1' },
+      { id: id(43), characterId: 'max', type: 'nod', start: 2, duration: 1, artwork: 'provisional-v1' },
+      { id: id(44), characterId: 'max', type: 'shake', start: 3, duration: 1, artwork: 'provisional-v1' },
+    ];
+    const demo: TimedScene = { ...scene, duration: 4, characters: { max: { x: 500, y: 780 } }, actions };
+    expect(validateTimedLibrary({ version: 1, scenes: [demo] }).ok).toBe(true);
+    expect(gestureFramesForScene(demo, 'max')).toEqual(['point', 'clap-open', 'clap-contact', 'nod-down', 'shake-left', 'shake-right']);
+    expect(stateAt(demo, 'max', 0).gestureFrame).toBeUndefined();
+    expect(stateAt(demo, 'max', 0.5).gestureFrame).toBe('point');
+    expect(stateAt(demo, 'max', 1.15).gestureFrame).toBe('clap-open');
+    expect(stateAt(demo, 'max', 1.25).gestureFrame).toBe('clap-contact');
+    expect(stateAt(demo, 'max', 2.25).gestureFrame).toBe('nod-down');
+    expect(stateAt(demo, 'max', 3.2).gestureFrame).toBe('shake-left');
+    expect(stateAt(demo, 'max', 3.5).gestureFrame).toBe('shake-right');
+    expect(stateAt(demo, 'max', 4).gestureFrame).toBeUndefined();
+    expect(gestureFrameAt('nod', 0, 1)).toBeUndefined();
+    expect(decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [demo] })).ok).toBe(true);
+    const legacy = { ...demo, actions: actions.map(action => ({ ...action, artwork: undefined })) };
+    expect(stateAt(legacy, 'max', 0.5).gestureFrame).toBeUndefined();
+    expect(stateAt(legacy, 'max', 0.5).expression?.rotate).toBeDefined();
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...demo, actions: [{ ...actions[1], characterId: 'maxine' }] }] }).ok).toBe(false);
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...demo, actions: [{ ...actions[1], artwork: 'unknown' }] }] }).ok).toBe(false);
   });
   it('preserves scenes through save, backup and restore, while retaining older data', () => {
     const timed = { version: 1 as const, scenes: [scene] };

@@ -6,7 +6,11 @@ import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHa
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
 export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited';
-export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point };
+export type GestureType = 'point' | 'clap' | 'nod' | 'shake';
+export type GestureFrame = 'point' | 'clap-open' | 'clap-contact' | 'nod-down' | 'shake-left' | 'shake-right';
+export const isGesture = (type: ActionType): type is GestureType => type === 'point' || type === 'clap' || type === 'nod' || type === 'shake';
+// Absence means the original whole-sprite expression, preserving saved scenes.
+export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1' };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
  * unchanged. `phoneIn` carries the prop across a shot boundary: a scene that starts with the
@@ -15,7 +19,7 @@ export type TimedAction = { id: string; characterId: string; type: ActionType; s
 export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
 export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number; anchor?: 'foot' };
-export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState };
+export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState; gestureFrame?: GestureFrame };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
 export const EMPTY_TIMED_LIBRARY: TimedLibrary = { version: 1, scenes: [] };
 const characterId = /^(max|maxine|brightling-[a-f0-9-]{36})$/;
@@ -38,7 +42,7 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
       const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited']);
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined || action.artwork !== undefined && (action.artwork !== 'provisional-v1' || !isGesture(action.type) || action.characterId !== 'max' && action.characterId !== 'maxine')) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
@@ -97,6 +101,35 @@ export function expressionAt(actionType: ActionType, elapsed: number, duration: 
   }
 }
 
+/** Registered whole-body frames. The approved idle frame leads and ends every action. */
+export function gestureFrameAt(type: GestureType, elapsed: number, duration: number): GestureFrame | undefined {
+  if (duration <= 0 || elapsed <= 0 || elapsed >= duration) return undefined;
+  const t = elapsed / duration;
+  if (type === 'point') return t < 0.12 || t >= 0.88 ? undefined : 'point';
+  if (type === 'clap') {
+    if (t < 0.08 || t >= 0.92) return undefined;
+    if (t < 0.22 || t >= 0.76) return 'clap-open';
+    if (t < 0.39 || t >= 0.61) return 'clap-contact';
+    return 'clap-open';
+  }
+  if (type === 'nod') return t >= 0.16 && t < 0.37 || t >= 0.57 && t < 0.78 ? 'nod-down' : undefined;
+  if (t < 0.1 || t >= 0.9) return undefined;
+  if (t < 0.3 || t >= 0.7 && t < 0.9) return 'shake-left';
+  if (t < 0.4 || t >= 0.6 && t < 0.7) return undefined;
+  return 'shake-right';
+}
+
+export function gestureFramesForScene(scene: TimedScene, character: string): GestureFrame[] {
+  const frames = new Set<GestureFrame>();
+  for (const action of scene.actions) if (action.characterId === character && action.artwork === 'provisional-v1' && isGesture(action.type)) {
+    if (action.type === 'clap') { frames.add('clap-open'); frames.add('clap-contact'); }
+    else if (action.type === 'nod') frames.add('nod-down');
+    else if (action.type === 'shake') { frames.add('shake-left'); frames.add('shake-right'); }
+    else frames.add('point');
+  }
+  return [...frames];
+}
+
 export function stateAt(scene: TimedScene, character: string, time: number): SceneState {
   let position = { ...scene.characters[character] };
   let visible = false;
@@ -123,6 +156,9 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
     if (action.type === 'wave' && now < ends(action)) {
       const frame = waveFrameAt((now - action.start) * 1000);
       return { visible, point: position, pose: frame ? 'wave' : 'idle', frame: frame ?? 0, direction };
+    }
+    if (action.artwork === 'provisional-v1' && isGesture(action.type) && now < ends(action)) {
+      return { visible, point: position, pose: 'idle', frame: 0, direction, gestureFrame: gestureFrameAt(action.type, now - action.start, action.duration) };
     }
     if (now < ends(action)) {
       const expression = expressionAt(action.type, now - action.start, action.duration);

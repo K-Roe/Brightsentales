@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { Brightling } from './maker';
-import { advanceSceneTime, type TimedLibrary } from './timedScenes';
+import { advanceSceneTime, gestureFramesForScene, type TimedLibrary } from './timedScenes';
 import { HEIGHT, WIDTH } from './scene';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { type MaxOutfit, type MaxineOutfit } from './outfit';
@@ -77,7 +77,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
         if (!rooms.has(block.scene.placeId)) rooms.set(block.scene.placeId, await loadImage(place.background));
       }
       const cast = [...new Set(blocks.flatMap(block => Object.keys(block.scene.characters)))];
-      const loaded = await Promise.all(cast.map(async id => [id, await previewPack(id, characters, maxOutfit, maxineOutfit)] as const));
+      const loaded = await Promise.all(cast.map(async id => [id, await previewPack(id, characters, maxOutfit, maxineOutfit, [...new Set(blocks.flatMap(block => gestureFramesForScene(block.scene, id)))])] as const));
       const packsById = Object.fromEntries(loaded.filter((entry): entry is readonly [string, PreviewPack] => entry[1] !== null));
       if (cast.some(id => !packsById[id])) throw new Error('A Brightling sprite is missing.');
       const draw = (context: CanvasRenderingContext2D, at: number) => {
@@ -126,11 +126,11 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     if (!scene) { setPacks({}); return; }
     let live = true;
     setPacks({});
-    Promise.all(Object.keys(scene.characters).map(async id => [id, await previewPack(id, characters, maxOutfit, maxineOutfit)] as const))
+    Promise.all(Object.keys(scene.characters).map(async id => [id, await previewPack(id, characters, maxOutfit, maxineOutfit, gestureFramesForScene(scene, id))] as const))
       .then(entries => { if (live) setPacks(Object.fromEntries(entries.filter((entry): entry is readonly [string, PreviewPack] => entry[1] !== null))); })
       .catch(() => { if (live) setMessage('A Brightling sprite could not load.'); });
     return () => { live = false; };
-  }, [scene?.id, characters, maxOutfit, maxineOutfit]);
+  }, [scene?.id, scene?.actions, characters, maxOutfit, maxineOutfit]);
 
   useEffect(() => {
     const context = canvas.current?.getContext('2d');
@@ -173,6 +173,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
       <div className="voice-fields"><label>Opening intro<select aria-label="Episode intro" value={episode.introId ?? ''} onChange={event => change({ ...episode, introId: event.target.value || undefined })}><option value="">No intro</option>{intros.intros.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label><label>Ending credits<select aria-label="Episode credits" value={episode.creditsId ?? ''} onChange={event => change({ ...episode, creditsId: event.target.value || undefined })}><option value="">No credits</option>{credits.credits.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label></div>
       {missing.length > 0 && <p role="alert" className="episode-warning">This episode refers to {missing.length} missing scene{missing.length === 1 ? '' : 's'}. Playback is paused until you remove the missing block or restore the scene from a backup.</p>}
       {(missingIntro || missingCredits) && <p role="alert" className="episode-warning">The selected intro or credits are missing. Choose another saved item before playback or export.</p>}
+      {scene?.actions.some(action => action.artwork === 'provisional-v1' && (action.characterId === 'max' && maxOutfit !== 'original' || action.characterId === 'maxine' && maxineOutfit !== 'original')) && <p role="status" className="episode-warning">Provisional gestures need Max and Maxine's original outfits. The current outfit shows its standing pose instead.</p>}
       <div className="scene-actions"><button disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export Episode Video'}</button><span>Save the episode first. Export runs in real time and downloads a WebM with the full soundtrack.</span></div>
       <div className="episode-workspace"><div className="episode-main"><section className="scene-stage episode-preview"><div className="scene-stage-caption"><strong>{scene ? scene.name : 'EPISODE PREVIEW'}</strong><span>{scene ? `${placeName(scene.placeId)} · ${position!.kind === 'scene' ? `Scene ${position!.index + 1 - (episode.introId ? 1 : 0)} of ${episode.sceneIds.length}` : position!.kind === 'intro' ? 'Intro' : 'Credits'} · ${clock(position!.localTime)} / ${clock(scene.duration)}` : 'Add a saved scene to start'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} aria-label="Episode cartoon preview" />
         <div className="scene-playback"><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><button className="scene-primary" disabled={!!missing.length || missingIntro || missingCredits || total <= 0 || !readyPlace || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => { if (!playing) audio.startAt(time >= total ? 0 : time); if (time >= total) setTime(0); setPlaying(!playing); }}>{playing ? 'Pause' : 'Play'}</button><input aria-label="Episode time" type="range" min="0" max={total || 1} step="0.1" value={time} disabled={total <= 0 || !!missing.length || missingIntro || missingCredits} onChange={event => { setPlaying(false); setTime(Number(event.target.value)); }} /><strong>{clock(time)} / {clock(total)}</strong></div></section>
