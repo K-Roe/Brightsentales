@@ -1,7 +1,7 @@
-# Frame actions, batch 1 — awaiting Karl's visual approval
+# Frame actions, batch 1 — approved by Karl
 
 **Date:** 20 October 2026  
-**Scope:** Jump and excited bounce on the existing timed scene renderer. AC-01 skeletal editing is stopped and its navigation entry is hidden. Its saved local definitions and files were not deleted.
+**Scope:** Jump and excited bounce on the existing timed scene renderer. AC-01 skeletal editing is stopped and its navigation entry is hidden. Its saved local definitions and files were not deleted. **Karl officially approved Batch 1 on 20 October 2026.**
 
 ## Audit and acceptance checklist
 
@@ -15,7 +15,7 @@ Checklist for this batch:
 - [x] Sequence saved Walk → Wave → Jump → Excited bounce in a version 1 scene.
 - [x] Render a scene WebM through the actual browser export, with Max and Maxine.
 - [x] Keep phone, walking and waving code paths unchanged; full test suite and build pass.
-- [ ] Karl visual approval.
+- [x] Karl visual approval, recorded on 20 October 2026.
 
 ## Rendered evidence
 

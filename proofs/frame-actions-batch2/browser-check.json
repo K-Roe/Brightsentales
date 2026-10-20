@@ -1,0 +1,101 @@
+{
+  "scene": {
+    "id": "33333333-3333-4333-8333-000000000001",
+    "name": "Batch 2 Existing Actions Baseline",
+    "duration": 10,
+    "placeId": "living-room",
+    "characters": {
+      "max": {
+        "x": 500,
+        "y": 790
+      },
+      "maxine": {
+        "x": 1120,
+        "y": 820
+      }
+    },
+    "actions": [
+      {
+        "id": "33333333-3333-4333-8333-000000000002",
+        "characterId": "max",
+        "type": "appear",
+        "start": 0,
+        "duration": 0,
+        "point": {
+          "x": 500,
+          "y": 790
+        }
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000003",
+        "characterId": "max",
+        "type": "point",
+        "start": 0,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000004",
+        "characterId": "max",
+        "type": "nod",
+        "start": 2,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000005",
+        "characterId": "max",
+        "type": "shake",
+        "start": 4,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000006",
+        "characterId": "max",
+        "type": "clap",
+        "start": 6,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000007",
+        "characterId": "maxine",
+        "type": "appear",
+        "start": 0,
+        "duration": 0,
+        "point": {
+          "x": 1120,
+          "y": 820
+        }
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000008",
+        "characterId": "maxine",
+        "type": "point",
+        "start": 1,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000009",
+        "characterId": "maxine",
+        "type": "nod",
+        "start": 3,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000010",
+        "characterId": "maxine",
+        "type": "shake",
+        "start": 5,
+        "duration": 2
+      },
+      {
+        "id": "33333333-3333-4333-8333-000000000011",
+        "characterId": "maxine",
+        "type": "clap",
+        "start": 7,
+        "duration": 2
+      }
+    ]
+  },
+  "videoBytes": 2891412,
+  "errors": [],
+  "disposableProfile": true
+}
