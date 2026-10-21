@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "source": "/art/max-0.png",
+  "width": 434,
+  "height": 724,
+  "parts": [
+    "head",
+    "hand-right",
+    "hand-left",
+    "forearm-right",
+    "forearm-left",
+    "upper-arm-right",
+    "upper-arm-left",
+    "shoe-right",
+    "shoe-left",
+    "pelvis",
+    "upper-leg-right",
+    "upper-leg-left",
+    "lower-leg-right",
+    "lower-leg-left",
+    "torso"
+  ],
+  "newFillParts": [
+    "upper-leg-fill-right",
+    "lower-leg-fill-right",
+    "upper-leg-fill-left",
+    "lower-leg-fill-left",
+    "arm-fill-right",
+    "arm-fill-left"
+  ],
+  "joints": {
+    "neck": [
+      218,
+      382
+    ],
+    "pelvis": [
+      217,
+      548
+    ],
+    "shoulder-right": [
+      150,
+      410
+    ],
+    "elbow-right": [
+      112,
+      477
+    ],
+    "wrist-right": [
+      98,
+      521
+    ],
+    "shoulder-left": [
+      300,
+      410
+    ],
+    "elbow-left": [
+      334,
+      474
+    ],
+    "wrist-left": [
+      333,
+      522
+    ],
+    "hip-right": [
+      164,
+      552
+    ],
+    "knee-right": [
+      162,
+      590
+    ],
+    "ankle-right": [
+      153,
+      620
+    ],
+    "hip-left": [
+      268,
+      552
+    ],
+    "knee-left": [
+      271,
+      590
+    ],
+    "ankle-left": [
+      281,
+      620
+    ]
+  },
+  "approvedFootLine": 699,
+  "seatTarget": [
+    217,
+    613
+  ]
+}

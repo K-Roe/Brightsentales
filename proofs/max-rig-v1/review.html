@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:," />
+  <title>Max articulated sit rig V1 — experimental review</title>
+  <style>
+    body { margin: 0; background: #1f1733; color: #fff9ef; font: 16px system-ui; }
+    main { max-width: 1672px; margin: 0 auto; padding: 16px; }
+    canvas { display: block; width: 100%; height: auto; background: #fff; border-radius: 12px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px 0; }
+    button { font: inherit; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+    input[type="range"] { flex: 1; min-width: 200px; }
+    #status { min-width: 180px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Experimental Max sit rig V1</h1>
+    <p>Isolated review. Approved Max and production animations are unchanged.</p>
+    <canvas id="stage" width="1672" height="941" aria-label="Max sit animation preview"></canvas>
+    <div class="controls">
+      <button id="play" type="button">Pause</button>
+      <button id="motion" type="button">Motion</button>
+      <button id="comparison" type="button">Standing comparison</button>
+      <button id="joints" type="button">Joint diagram</button>
+      <input id="scrub" type="range" min="0" max="6.4" step="0.01" value="0" aria-label="Scrub animation" />
+      <output id="status">Loading…</output>
+    </div>
+  </main>
+  <script type="module">
+    import { CYCLE_SECONDS, drawMaxSitStudy, loadMaxRigAssets, sitPoseAt } from '/src/experimental/maxSitRig.ts';
+    const image = source => new Promise((resolve, reject) => { const item = new Image(); item.onload = () => resolve(item); item.onerror = reject; item.src = source; });
+    const canvas = document.getElementById('stage');
+    const context = canvas.getContext('2d');
+    const slider = document.getElementById('scrub');
+    const status = document.getElementById('status');
+    const play = document.getElementById('play');
+    let mode = 'motion', playing = true, time = 0, previous = performance.now();
+    try {
+      const [assets, approved, room] = await Promise.all([loadMaxRigAssets(), image('/art/max-0.png'), image('/art/living-room.png')]);
+      const render = value => {
+        time = Math.max(0, Math.min(CYCLE_SECONDS, value));
+        slider.value = String(time);
+        drawMaxSitStudy(context, assets, approved, room, time, mode);
+        status.textContent = `${sitPoseAt(time).phase} · ${time.toFixed(2)} s`;
+      };
+      window.maxRigReview = {
+        renderAt: render,
+        setMode: value => { mode = value; playing = false; play.textContent = 'Play'; render(0); },
+        start: () => { mode = 'motion'; playing = true; play.textContent = 'Pause'; render(0); },
+        canvas, assets,
+      };
+      render(0);
+      requestAnimationFrame(function tick(now) {
+        if (playing && mode === 'motion') render((time + (now - previous) / 1000) % CYCLE_SECONDS);
+        previous = now;
+        requestAnimationFrame(tick);
+      });
+      play.onclick = () => { playing = !playing; play.textContent = playing ? 'Pause' : 'Play'; };
+      slider.oninput = () => { playing = false; play.textContent = 'Play'; render(Number(slider.value)); };
+      for (const choice of ['motion', 'comparison', 'joints']) document.getElementById(choice).onclick = () => { mode = choice; playing = choice === 'motion'; play.textContent = playing ? 'Pause' : 'Play'; render(0); };
+    } catch (error) { status.textContent = `Load failed: ${error.message}`; throw error; }
+  </script>
+</body>
+</html>
