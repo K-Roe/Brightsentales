@@ -18,6 +18,7 @@ const titles = {
   appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear',
   breathe: 'Breathe', point: 'Point', nod: 'Nod', shake: 'Shake', smile: 'Smile',
   surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn', jump: 'Jump', excited: 'Excited bounce',
+  'sit-down': 'Sit down', 'stand-up': 'Stand up', 'pick-up': 'Pick up toy', 'put-down': 'Put down toy',
 } as const;
 const LABEL_WIDTH = 116;
 

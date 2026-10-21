@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_SCENE, STORAGE_KEY, WIDTH } from './scene';
 import { DEFAULT_COLOURS, LIBRARY_KEY, type Brightling } from './maker';
 import { createStudioBackup, restoreStudioBackup, validateStudioBackup } from './studioBackup';
-import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, gestureFrameAt, gestureFramesForScene, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
+import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, gestureFrameAt, gestureFramesForScene, objectAt, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
 
 const id = (n: number) => `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`;
 const scene: TimedScene = {
@@ -99,6 +99,50 @@ describe('timed scene schedule', () => {
     expect(stateAt(legacy, 'max', 0.5).expression?.rotate).toBeDefined();
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...demo, actions: [{ ...actions[1], characterId: 'maxine' }] }] }).ok).toBe(false);
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...demo, actions: [{ ...actions[1], artwork: 'unknown' }] }] }).ok).toBe(false);
+  });
+  it('holds a grounded seated pose until standing and resumes walking at the same floor point', () => {
+    const seated: TimedScene = { ...scene, characters: { max: { x: 800, y: 790 } }, actions: [
+      { id: id(60), characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 800, y: 790 } },
+      { id: id(61), characterId: 'max', type: 'sit-down', start: 0, duration: 1.5, artwork: 'provisional-v1', seat: 'chair' },
+      { id: id(62), characterId: 'max', type: 'stand-up', start: 4, duration: 1.5, artwork: 'provisional-v1', seat: 'chair' },
+      { id: id(63), characterId: 'max', type: 'walk', start: 5.5, duration: 2, point: { x: 1000, y: 790 } },
+    ] };
+    expect(validateTimedLibrary({ version: 1, scenes: [seated] }).ok).toBe(true);
+    expect(stateAt(seated, 'max', .65).gestureFrame).toBe('sit-lowering');
+    expect(stateAt(seated, 'max', 2.5).gestureFrame).toBe('sit-seated');
+    expect(stateAt(seated, 'max', 4.1).gestureFrame).toBe('sit-seated');
+    expect(stateAt(seated, 'max', 5.5).point).toEqual({ x: 800, y: 790 });
+    expect(stateAt(seated, 'max', 5.5).gestureFrame).toBeUndefined();
+    expect(stateAt(seated, 'max', 7.5).point).toEqual({ x: 1000, y: 790 });
+    expect(decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [seated] })).ok).toBe(true);
+    const withoutStand = { ...seated, actions: seated.actions.filter(action => action.type !== 'stand-up') };
+    expect(validateTimedLibrary({ version: 1, scenes: [withoutStand] }).ok).toBe(false);
+    const sofa = { ...seated, actions: seated.actions.map(action => action.type === 'sit-down' || action.type === 'stand-up' ? { ...action, seat: 'sofa' as const } : action) };
+    expect(validateTimedLibrary({ version: 1, scenes: [sofa] })).toMatchObject({ ok: false });
+  });
+  it('keeps a toy on the floor, attaches it to the hand, carries it while walking, and releases it', () => {
+    const ball = id(70);
+    const sequence: TimedScene = { ...scene, characters: { maxine: { x: 900, y: 790 } }, objects: [{ id: ball, kind: 'toy-ball', point: { x: 828, y: 790 } }], actions: [
+      { id: id(71), characterId: 'maxine', type: 'appear', start: 0, duration: 0, point: { x: 900, y: 790 } },
+      { id: id(72), characterId: 'maxine', type: 'pick-up', start: 1, duration: 1.5, artwork: 'provisional-v1', objectId: ball },
+      { id: id(73), characterId: 'maxine', type: 'walk', start: 2.5, duration: 3, point: { x: 1100, y: 790 } },
+      { id: id(74), characterId: 'maxine', type: 'put-down', start: 6, duration: 1.5, artwork: 'provisional-v1', objectId: ball, point: { x: 1028, y: 790 } },
+      { id: id(75), characterId: 'maxine', type: 'wave', start: 7.5, duration: 2 },
+    ] };
+    expect(validateTimedLibrary({ version: 1, scenes: [sequence] }).ok).toBe(true);
+    expect(objectAt(sequence, ball, 0)?.point).toEqual({ x: 828, y: 773 });
+    expect(stateAt(sequence, 'maxine', 1.6).gestureFrame).toBe('object-reach');
+    expect(objectAt(sequence, ball, 2)?.phase).toBe('lift');
+    expect(stateAt(sequence, 'maxine', 3).pose).toBe('side');
+    expect(objectAt(sequence, ball, 4)?.heldBy).toBe('maxine');
+    expect(objectAt(sequence, ball, 7)?.phase).toBe('lower');
+    expect(objectAt(sequence, ball, 8)?.point).toEqual({ x: 1028, y: 773 });
+    expect(objectAt(sequence, ball, 8)?.heldBy).toBeNull();
+    expect(stateAt(sequence, 'maxine', 8).pose).toBe('wave');
+    expect(decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [sequence] })).ok).toBe(true);
+    expect(validateStudioBackup(createStudioBackup([], DEFAULT_SCENE, new Date('2026-10-21T12:00:00.000Z'), undefined, { version: 1, scenes: [sequence] })).ok).toBe(true);
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...sequence, actions: sequence.actions.filter(action => action.type !== 'pick-up') }] }).ok).toBe(false);
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...sequence, objects: [{ id: ball, kind: 'toy-ball', point: { x: 500, y: 790 } }] }] }).ok).toBe(false);
   });
   it('preserves scenes through save, backup and restore, while retaining older data', () => {
     const timed = { version: 1 as const, scenes: [scene] };

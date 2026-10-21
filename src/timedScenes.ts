@@ -5,18 +5,21 @@ import { type AudioClip, validAudioClips } from './audio';
 import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHand } from './phone';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
-export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited';
+export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited' | 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
+export type FrameActionType = 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
+export const isFrameAction = (type: ActionType): type is FrameActionType => type === 'sit-down' || type === 'stand-up' || type === 'pick-up' || type === 'put-down';
 export type GestureType = 'point' | 'clap' | 'nod' | 'shake';
-export type GestureFrame = 'point' | 'clap-open' | 'clap-contact' | 'nod-down' | 'shake-left' | 'shake-right';
+export type GestureFrame = 'point' | 'clap-open' | 'clap-contact' | 'nod-down' | 'shake-left' | 'shake-right' | 'sit-lowering' | 'sit-seated' | 'object-reach' | 'object-lift' | 'object-carry';
 export const isGesture = (type: ActionType): type is GestureType => type === 'point' || type === 'clap' || type === 'nod' || type === 'shake';
 // Absence means the original whole-sprite expression, preserving saved scenes.
-export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1' };
+export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1'; seat?: 'chair' | 'sofa'; objectId?: string };
+export type SceneObject = { id: string; kind: 'toy-ball'; point: Point };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
  * unchanged. `phoneIn` carries the prop across a shot boundary: a scene that starts with the
  * phone already in hand means the previous shot did not put it away.
  */
-export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
+export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; objects?: SceneObject[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
 export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number; anchor?: 'foot' };
 export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState; gestureFrame?: GestureFrame };
@@ -38,17 +41,47 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     seen.add(scene.id);
     const ids = Object.keys(scene.characters);
     if (ids.length > 30 || ids.some(id => !characterId.test(id) || !point(scene.characters[id])) || scene.actions.length > 500) return { ok: false, error: 'A timed scene has invalid characters or positions.' };
+    if (scene.objects !== undefined && (!Array.isArray(scene.objects) || scene.objects.length > 30 || scene.objects.some(object => !object || !uuidId.test(object.id) || object.kind !== 'toy-ball' || !point(object.point)) || new Set(scene.objects.map(object => object.id)).size !== scene.objects.length)) return { ok: false, error: 'A scene object is invalid.' };
     const actions = new Set<string>();
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
       const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited']);
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type)) && action.point !== undefined || action.artwork !== undefined && (action.artwork !== 'provisional-v1' || !isGesture(action.type) || action.characterId !== 'max' && action.characterId !== 'maxine')) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited', 'sit-down', 'stand-up', 'pick-up', 'put-down'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear' || action.type === 'put-down') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type) || action.type === 'sit-down' || action.type === 'stand-up' || action.type === 'pick-up') && action.point !== undefined || action.artwork !== undefined && (action.artwork !== 'provisional-v1' || !(isGesture(action.type) || isFrameAction(action.type)) || action.characterId !== 'max' && action.characterId !== 'maxine') || isFrameAction(action.type) && (action.artwork !== 'provisional-v1' || action.duration < .4) || (action.type === 'sit-down' || action.type === 'stand-up') && (action.seat !== 'chair' && action.seat !== 'sofa' || action.objectId !== undefined) || action.type !== 'sit-down' && action.type !== 'stand-up' && action.seat !== undefined || (action.type === 'pick-up' || action.type === 'put-down') && (!action.objectId || !scene.objects?.some(object => object.id === action.objectId)) || action.type !== 'pick-up' && action.type !== 'put-down' && action.objectId !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
     for (const list of perCharacter.values()) {
       list.sort((a, b) => a.start - b.start || scene.actions.indexOf(a) - scene.actions.indexOf(b));
       for (let i = 1; i < list.length; i++) if (list[i].start < ends(list[i - 1]) - 1e-7) return { ok: false, error: 'Actions overlap for one Brightling.' };
+      let seated = false;
+      let seat: 'chair' | 'sofa' | null = null;
+      for (const action of list) {
+        if (action.type === 'sit-down') {
+          if (seated || action.seat === 'sofa') return { ok: false, error: 'Sofa sitting needs separately layered furniture art. Use the provisional chair.' };
+          seated = true;
+          seat = action.seat!;
+        } else if (action.type === 'stand-up') {
+          if (!seated || action.seat !== seat) return { ok: false, error: 'Stand up needs a Brightling seated on the same furniture.' };
+          seated = false;
+          seat = null;
+        } else if (seated && (action.type === 'walk' || action.type === 'jump' || action.type === 'pick-up' || action.type === 'put-down')) return { ok: false, error: 'Stand up before moving or using a toy.' };
+      }
+    }
+    // A single object has one owner; its ownership changes only at completed actions.
+    for (const object of scene.objects ?? []) {
+      let owner: string | null = null;
+      for (const action of scene.actions.filter(item => item.objectId === object.id).sort((a, b) => a.start - b.start)) {
+        const p = stateAt(scene, action.characterId, action.start).point;
+        if (action.type === 'pick-up') {
+          const floor = objectAt(scene, object.id, Math.max(0, action.start - 0.001))?.point;
+          if (owner || !floor || Math.hypot(floor.x - (p.x - 72), floor.y - (p.y - 17)) > 25) return { ok: false, error: 'The toy must be beside the Brightling’s reaching hand before pickup.' };
+          owner = action.characterId;
+        }
+        if (action.type === 'put-down') {
+          if (owner !== action.characterId || Math.hypot(action.point!.x - (p.x - 72), action.point!.y - p.y) > 90) return { ok: false, error: 'Put down needs the carried toy and a nearby floor position.' };
+          owner = null;
+        }
+      }
     }
     if (scene.phoneIn !== undefined && scene.phoneIn !== null && scene.phoneIn !== 'right' && scene.phoneIn !== 'left') return { ok: false, error: 'A scene has an invalid starting phone hand.' };
     const phone = validatePhoneActions(scene.phone, { sceneDuration: scene.duration, characterIds: ids, phoneIn: scene.phoneIn });
@@ -121,6 +154,9 @@ export function gestureFrameAt(type: GestureType, elapsed: number, duration: num
 
 export function gestureFramesForScene(scene: TimedScene, character: string): GestureFrame[] {
   const frames = new Set<GestureFrame>();
+  if (scene.actions.some(action => action.characterId === character && isFrameAction(action.type))) {
+    for (const frame of ['sit-lowering', 'sit-seated', 'object-reach', 'object-lift', 'object-carry'] as GestureFrame[]) frames.add(frame);
+  }
   for (const action of scene.actions) if (action.characterId === character && action.artwork === 'provisional-v1' && isGesture(action.type)) {
     if (action.type === 'clap') { frames.add('clap-open'); frames.add('clap-contact'); }
     else if (action.type === 'nod') frames.add('nod-down');
@@ -134,12 +170,29 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
   let position = { ...scene.characters[character] };
   let visible = false;
   let direction: -1 | 1 = 1;
+  let seated = false;
+  let carrying = false;
   const now = Math.max(0, Math.min(scene.duration, time));
   const actions = scene.actions.filter(action => action.characterId === character).sort((a, b) => a.start - b.start || scene.actions.indexOf(a) - scene.actions.indexOf(b));
   for (const action of actions) {
     if (action.start > now) break;
     if (action.type === 'appear') { position = { ...action.point! }; visible = true; continue; }
     if (action.type === 'disappear') { visible = false; continue; }
+    if (isFrameAction(action.type)) {
+      const t = Math.max(0, Math.min(1, (now - action.start) / action.duration));
+      if (now < ends(action)) {
+        const gestureFrame: GestureFrame | undefined = action.type === 'sit-down' ? t < .2 ? undefined : t < .72 ? 'sit-lowering' : 'sit-seated'
+          : action.type === 'stand-up' ? t < .28 ? 'sit-seated' : t < .8 ? 'sit-lowering' : undefined
+          : action.type === 'pick-up' ? t < .16 ? carrying ? 'object-carry' : undefined : t < .48 ? 'object-reach' : t < .78 ? 'object-lift' : 'object-carry'
+          : t < .22 ? 'object-carry' : t < .55 ? 'object-lift' : t < .82 ? 'object-reach' : undefined;
+        return { visible, point: position, pose: 'idle', frame: 0, direction, gestureFrame };
+      }
+      if (action.type === 'sit-down') seated = true;
+      if (action.type === 'stand-up') seated = false;
+      if (action.type === 'pick-up') carrying = true;
+      if (action.type === 'put-down') carrying = false;
+      continue;
+    }
     if (action.type === 'walk') {
       const destination = action.point!;
       direction = directionTo(position, destination, direction);
@@ -165,7 +218,44 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       if (expression) return { visible, point: position, pose: 'idle', frame: 0, direction, expression };
     }
   }
-  return { visible, point: position, pose: 'idle', frame: 0, direction };
+  return { visible, point: position, pose: 'idle', frame: 0, direction, gestureFrame: seated ? 'sit-seated' : carrying ? 'object-carry' : undefined };
+}
+
+export type ObjectState = { point: Point; heldBy: string | null; phase: 'floor' | 'reach' | 'lift' | 'held' | 'lower' };
+/** Toy state is evaluated from saved actions for both Studio preview and export. */
+export function objectAt(scene: TimedScene, objectId: string, time: number): ObjectState | null {
+  const object = scene.objects?.find(item => item.id === objectId);
+  if (!object) return null;
+  let position = { x: object.point.x, y: object.point.y - 17 };
+  let owner: string | null = null;
+  const now = Math.max(0, Math.min(scene.duration, time));
+  const actions = scene.actions.filter(action => action.objectId === objectId).sort((a, b) => a.start - b.start);
+  for (const action of actions) {
+    if (action.start > now) break;
+    const state = stateAt(scene, action.characterId, Math.min(now, action.start + action.duration));
+    const floorHand = { x: state.point.x - 72, y: state.point.y - 23 };
+    const carryHand = { x: state.point.x - 55, y: state.point.y - 83 };
+    if (now < ends(action)) {
+      const t = (now - action.start) / action.duration;
+      if (action.type === 'pick-up') {
+        if (t < .48) return { point: position, heldBy: null, phase: 'reach' };
+        const p = Math.min(1, (t - .48) / .3);
+        return { point: { x: floorHand.x + (carryHand.x - floorHand.x) * p, y: floorHand.y + (carryHand.y - floorHand.y) * p }, heldBy: action.characterId, phase: 'lift' };
+      }
+      if (action.type === 'put-down') {
+        if (t < .22) return { point: carryHand, heldBy: action.characterId, phase: 'held' };
+        const p = Math.min(1, (t - .22) / .6);
+        return { point: { x: carryHand.x + (action.point!.x - carryHand.x) * p, y: carryHand.y + (action.point!.y - 17 - carryHand.y) * p }, heldBy: action.characterId, phase: 'lower' };
+      }
+    }
+    if (action.type === 'pick-up') owner = action.characterId;
+    if (action.type === 'put-down') { owner = null; position = { x: action.point!.x, y: action.point!.y - 17 }; }
+  }
+  if (owner) {
+    const state = stateAt(scene, owner, now);
+    return { point: { x: state.point.x - (state.pose === 'side' ? 58 : 55), y: state.point.y - (state.pose === 'side' ? 87 : 83) }, heldBy: owner, phase: 'held' };
+  }
+  return { point: position, heldBy: null, phase: 'floor' };
 }
 
 export function pruneTimedScenes(library: TimedLibrary, availableCharacters: string[]): TimedLibrary {

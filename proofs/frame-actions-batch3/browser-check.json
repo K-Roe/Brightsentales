@@ -1,0 +1,38 @@
+{
+  "results": [
+    {
+      "name": "B3 Max Chair",
+      "seconds": 7,
+      "bytes": 1847521,
+      "controlsVisible": true
+    },
+    {
+      "name": "B3 Maxine Chair",
+      "seconds": 7,
+      "bytes": 1839582,
+      "controlsVisible": true
+    },
+    {
+      "name": "B3 Max Toy",
+      "seconds": 9,
+      "bytes": 2769763,
+      "controlsVisible": true
+    },
+    {
+      "name": "B3 Maxine Toy",
+      "seconds": 9,
+      "bytes": 2820501,
+      "controlsVisible": true
+    },
+    {
+      "name": "B3 Walk Wave Sit Toy",
+      "seconds": 17,
+      "bytes": 5518975,
+      "controlsVisible": true
+    }
+  ],
+  "episodeBytes": 5468978,
+  "saveReload": true,
+  "errors": [],
+  "disposableProfile": true
+}
