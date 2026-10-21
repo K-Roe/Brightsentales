@@ -1,16 +1,16 @@
 # Frame actions batch 3 — provisional review
 
-**Gate:** Karl approved Batch 2 and authorised Batch 3 on 20 October 2026. **Batch 3 is incomplete and is not approved.** Chair sitting, standing and toy pickup/carry/putdown have browser-rendered evidence. Sitting on the approved Living Room sofa failed visual inspection and is disabled in Scene Maker. No Batch 4 work started.
+**Gate: REJECTED by Karl on 21 October 2026 in entirety.** No Batch 3 action is approved for production. The exported chair, toy and combined sequences fail Karl's cartoon animation standard. The [rejection audit](REJECTION_AUDIT.md) records full-video contact sheets, geometry causes, the proposed repair and the missing artwork. Scene Maker no longer permits adding new Batch 3 actions; existing saved scenes remain readable for review. Batch 4 is closed.
 
 ## Acceptance checklist
 
 - [x] Max and Maxine have separate complete sit-lowering, seated, object-reach, object-lift and object-carry frames; a separate provisional chair is available. Approved sprite packs and the Living Room image were not edited.
-- [x] Sit down persists in a seated pose until Stand up. Standing restores the same floor position. Chair demonstrations for both characters were decoded and visually inspected.
-- [x] A toy starts on the floor, meets the reaching hand, follows the carrying hand while standing and during approved side walking, and remains at the selected floor point after release. The test scenes show both characters.
-- [x] Scene Maker shows all four controls. Five scenes were saved, reopened after application reload and exported in disposable Chrome. The combined scene was also exported as an episode using the shared renderer.
+- [ ] Sit down and Stand up show natural seat contact and weight transfer. **Failed visual review:** persistence and floor coordinates work in code, but the characters appear in front of the chair and switch poses abruptly.
+- [ ] Pick up, carry and put down show believable hand contact and continuous motion. **Failed visual review:** ball offsets are hardcoded and the front-to-side carry transition snaps.
+- [x] Before rejection, Scene Maker offered all four controls; five scenes were saved, reopened and exported in disposable Chrome. The combined scene was also exported as an episode. **After rejection, new Batch 3 controls are disabled while saved scenes remain readable.**
 - [x] Full frontend suite: **197/197 tests passed**. Production build passed. Browser console exceptions and error log entries: **0**.
 - [ ] Maxine sits naturally on the approved sofa. **Failed:** the sofa is flattened into the Living Room background, so there is no separate front/seat layer for correct overlap. Repainting a strip of the unchanged room image over Maxine hid her torso and disconnected her legs; moving her in front of the sofa left her sitting on the rug. The attempted overlay was removed, and Scene Maker now rejects sofa seating. A separately layered, visually approved sofa asset is needed.
-- [ ] Karl's visual acceptance of any Batch 3 artwork or motion. The frames remain provisional.
+- [ ] Karl's visual acceptance of any Batch 3 artwork or motion. **Rejected on 21 October 2026.** The frames remain provisional and unavailable as new Scene Maker actions during repair.
 
 ## Audit and implementation
 
@@ -22,7 +22,7 @@ Scene Maker offers a provisional chair for Sit down and Stand up, a toy ball wit
 
 ## Rendered evidence
 
-All working videos were exported with Scene Maker in a disposable Chrome profile using [the repeatable browser script](browser-check.mjs) with `--working-only`. Its [run record](browser-check.json) confirms scene reload, four controls visible for each character, scene export, episode export and no browser errors. FFprobe decoded these video streams:
+The rejected implementation's videos were exported with Scene Maker in a disposable Chrome profile using [the repeatable browser script](browser-check.mjs) with `--working-only`. Its [run record](browser-check.json) confirms scene reload, four controls visible at that time, scene export, episode export and no browser errors. FFprobe decoded these video streams. **The single-frame observations below do not establish visual acceptance; see the full-motion [rejection audit](REJECTION_AUDIT.md).**
 
 | Demonstration | Video | Decoded frames | Visual observation |
 | --- | --- | ---: | --- |
@@ -39,4 +39,4 @@ All working videos were exported with Scene Maker in a disposable Chrome profile
 
 The [sofa attempt video](sofa-failure/B3_Maxine_Sofa.webm) and [decoded seated frame](sofa-failure/sofa-seated.png) show the overlap failure. The final product no longer draws the failed foreground strip or offers sofa seating. A sofa with separate back, seat and front layers is required for Maxine to sit with connected legs and sensible depth. This is an artwork/scene layering task requiring Karl's approval because the Living Room is approved artwork.
 
-The provisional complete frames switch at timed pose boundaries; they do not interpolate anatomy between frames. Facial/linework differences from the approved originals remain possible. The toy is one illustrated ball type, with a measured hand position for these front poses and the approved side walk. Two-character prop overlap, arbitrary objects, other outfits, other furniture and phone-plus-toy in the same hand were not visually verified. Batch 3 stays open for Karl's judgement of the working subset and a decision on layered sofa artwork.
+The provisional complete frames switch at timed pose boundaries; they do not interpolate anatomy between frames. Facial/linework differences from the approved originals remain possible. The toy is one illustrated ball type with **hardcoded approximate** hand offsets, not verified per-frame grip anchors. Two-character prop overlap, arbitrary objects, other outfits, other furniture and phone-plus-toy in the same hand were not visually verified. **None of the previously described working subset passed Karl's visual review.** The videos in this report document the rejected implementation. No corrected video or renewed visual acceptance exists.

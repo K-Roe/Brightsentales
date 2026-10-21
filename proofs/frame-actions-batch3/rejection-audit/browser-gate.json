@@ -1,0 +1,8 @@
+{
+  "rejectedDisabled": true,
+  "approvedEnabled": true,
+  "toyDisabled": true,
+  "savedSceneWarning": "This scene contains rejected Batch 3 actions. They remain available for review of saved work, but their motion and artwork are not approved for production.",
+  "sceneVisible": true,
+  "errors": []
+}
