@@ -1,0 +1,23 @@
+{
+  "source": "public\\art\\max-0.png",
+  "sourceSha256": "7d1c4a26bebdabd85b2114b8ca61df4e5f83302ab21aa8c895f5438d75a98d24",
+  "chairSourceSha256": "8072eeb530d94f5be2b5b48ac930f465d0fb6b3f92df2685d6407b35ef230bfa",
+  "sourceModified": false,
+  "canvas": [
+    434,
+    724
+  ],
+  "upperBodyTranslation": [
+    0,
+    40
+  ],
+  "approvedUpperCopiedPixels": 118304,
+  "solidFootBaseline": 684,
+  "lastSolidSeatedPixelRow": 683,
+  "chairLayers": [
+    "full source underpainting",
+    "registered cushion",
+    "traced foreground arms"
+  ],
+  "staticArtworkOnly": true
+}
