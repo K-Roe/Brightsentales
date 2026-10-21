@@ -26,7 +26,11 @@
     "upper-leg-fill-left",
     "lower-leg-fill-left",
     "arm-fill-right",
-    "arm-fill-left"
+    "arm-fill-left",
+    "seated-thigh-right",
+    "seated-shin-right",
+    "seated-thigh-left",
+    "seated-shin-left"
   ],
   "joints": {
     "neck": [
@@ -86,7 +90,8 @@
       620
     ]
   },
-  "approvedFootLine": 699,
+  "approvedFootLine": 684,
+  "chairFootRow": 1029,
   "seatTarget": [
     217,
     613

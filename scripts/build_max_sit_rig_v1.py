@@ -54,11 +54,41 @@ def illustrated_limb(name: str, points: list[tuple[int, int]], *, garment: bool 
     canvas.save(OUT / f'{name}.png')
 
 
+def seated_leg_art(side: str, hip_x: int) -> None:
+    """Reusable shorts, knee and shin surfaces registered to the source leg joints."""
+    outline = (4, 29, 61, 255)
+    shorts = (38, 57, 95, 255)
+    shorts_light = (53, 77, 113, 255)
+    skin = (39, 204, 193, 255)
+    skin_light = (82, 225, 211, 255)
+
+    thigh = Image.new('RGBA', size)
+    d = ImageDraw.Draw(thigh)
+    # The cap is at the hip; the lower turquoise oval marks a real bent knee.
+    d.rounded_rectangle((hip_x - 25, 548, hip_x + 25, 584), radius=16, fill=outline)
+    d.rounded_rectangle((hip_x - 21, 551, hip_x + 21, 581), radius=13, fill=shorts)
+    d.arc((hip_x - 19, 554, hip_x + 16, 581), 195, 345, fill=shorts_light, width=3)
+    d.ellipse((hip_x - 19, 573, hip_x + 19, 600), fill=outline)
+    d.ellipse((hip_x - 16, 575, hip_x + 16, 596), fill=skin)
+    d.arc((hip_x - 13, 578, hip_x + 11, 593), 190, 340, fill=skin_light, width=3)
+    thigh.save(OUT / f'seated-thigh-{side}.png')
+
+    shin = Image.new('RGBA', size)
+    d = ImageDraw.Draw(shin)
+    d.rounded_rectangle((hip_x - 18, 582, hip_x + 18, 630), radius=15, fill=outline)
+    d.rounded_rectangle((hip_x - 15, 585, hip_x + 15, 627), radius=12, fill=skin)
+    d.arc((hip_x - 11, 589, hip_x + 7, 618), 185, 350, fill=skin_light, width=3)
+    shin.save(OUT / f'seated-shin-{side}.png')
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     # Mutually exclusive original-pixel partitions reconstruct the source at rest.
     candidate: dict[str, np.ndarray] = {
-        'head': old_mask('head.png'),
+        # The inherited head mask omitted eyes, mouth, hair outlines and halo
+        # pixels. Those pixels stayed in the moving torso and ghosted on lean.
+        # All source pixels above the chin boundary move with the head.
+        'head': old_mask('head.png') | ((np.arange(height)[:, None] < 354) & (original[:, :, 3] > 0)),
         'hand-right': old_mask('hand-right.png'),
         'hand-left': old_mask('hand-left.png'),
     }
@@ -96,6 +126,7 @@ def main() -> None:
     for side, x in [('right', 164), ('left', 268)]:
         illustrated_limb(f'upper-leg-fill-{side}', [(x - 23, 550), (x + 22, 550), (x + 20, 591), (x - 21, 591)], garment=True)
         illustrated_limb(f'lower-leg-fill-{side}', [(x - 20, 585), (x + 20, 585), (x + 18, 628), (x - 18, 628)])
+        seated_leg_art(side, x)
     for side, x in [('right', 117), ('left', 328)]:
         illustrated_limb(f'arm-fill-{side}', [(x - 19, 449), (x + 19, 449), (x + 18, 511), (x - 18, 511)], garment=True)
 
@@ -105,8 +136,10 @@ def main() -> None:
     cw, ch = chair.size
     front_mask = Image.new('L', chair.size)
     pen = ImageDraw.Draw(front_mask)
-    pen.polygon([(0, 580), (90, 500), (336, 470), (423, 515), (437, 945), (0, 955)], fill=255)
-    pen.polygon([(1032, 515), (1120, 470), (1370, 500), (cw, 580), (cw, 955), (1019, 945)], fill=255)
+    # Only the outside armrests cross in front of Max. The cushion/base and
+    # chair feet stay behind him; the earlier broad masks cut off his shoes.
+    pen.polygon([(0, 580), (90, 500), (300, 470), (320, 700), (250, 700), (220, 945), (0, 955)], fill=255)
+    pen.polygon([(cw - 320, 700), (cw - 300, 470), (cw - 90, 500), (cw, 580), (cw, 955), (cw - 220, 945), (cw - 250, 700)], fill=255)
     chair_front = Image.new('RGBA', chair.size)
     chair_front.paste(chair, (0, 0), front_mask)
     chair.save(OUT / 'chair-back.png')
@@ -115,7 +148,7 @@ def main() -> None:
     metadata = {
         'version': 1, 'source': '/art/max-0.png', 'width': width, 'height': height,
         'parts': list(assigned),
-        'newFillParts': ['upper-leg-fill-right', 'lower-leg-fill-right', 'upper-leg-fill-left', 'lower-leg-fill-left', 'arm-fill-right', 'arm-fill-left'],
+        'newFillParts': ['upper-leg-fill-right', 'lower-leg-fill-right', 'upper-leg-fill-left', 'lower-leg-fill-left', 'arm-fill-right', 'arm-fill-left', 'seated-thigh-right', 'seated-shin-right', 'seated-thigh-left', 'seated-shin-left'],
         'joints': {
             'neck': [218, 382], 'pelvis': [217, 548],
             'shoulder-right': [150, 410], 'elbow-right': [112, 477], 'wrist-right': [98, 521],
@@ -123,7 +156,7 @@ def main() -> None:
             'hip-right': [164, 552], 'knee-right': [162, 590], 'ankle-right': [153, 620],
             'hip-left': [268, 552], 'knee-left': [271, 590], 'ankle-left': [281, 620],
         },
-        'approvedFootLine': 699, 'seatTarget': [217, 613],
+        'approvedFootLine': 684, 'chairFootRow': 1029, 'seatTarget': [217, 613],
     }
     (OUT / 'rig.json').write_text(json.dumps(metadata, indent=2), encoding='utf-8')
     # Exact neutral reconstruction can be validated without a browser.

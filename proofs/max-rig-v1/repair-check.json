@@ -1,0 +1,10 @@
+{
+  "neutralVisibleDifferences": 0,
+  "poseTimes": {
+    "standing": 0,
+    "halfway": 1.55,
+    "seated": 2.8
+  },
+  "fullMotionRendered": false,
+  "reason": "Focused seated pose still fails visual coherence; stopped before full animation."
+}

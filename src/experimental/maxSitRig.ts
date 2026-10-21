@@ -2,7 +2,9 @@
 const BASE = '/art/experimental/max-sit-v1/';
 const SOURCE_WIDTH = 434;
 const SOURCE_HEIGHT = 724;
-const FOOT_LINE = 699;
+// Last solid approved shoe row (the few pixels below are transparent fringe).
+const FOOT_LINE = 684;
+const CHAIR_FOOT_FRACTION = 1029 / 1080;
 
 export type Vec2 = { x: number; y: number };
 export type MaxRigAssets = Record<string, HTMLImageElement>;
@@ -14,7 +16,8 @@ const names = [
   'upper-leg-right', 'upper-leg-left', 'lower-leg-right', 'lower-leg-left',
   'torso', 'upper-leg-fill-right', 'lower-leg-fill-right',
   'upper-leg-fill-left', 'lower-leg-fill-left', 'arm-fill-right',
-  'arm-fill-left', 'chair-back', 'chair-front',
+  'arm-fill-left', 'seated-thigh-right', 'seated-shin-right',
+  'seated-thigh-left', 'seated-shin-left', 'chair-back', 'chair-front',
 ] as const;
 
 const load = (name: string) => new Promise<HTMLImageElement>((resolve, reject) => {
@@ -101,6 +104,7 @@ export function drawMaxRigSource(context: CanvasRenderingContext2D, assets: MaxR
     return point(turned.x, turned.y + targetRoot.y - root.y);
   };
 
+  const legJoints: Array<{ side: 'right' | 'left'; sourceHip: Vec2; sourceKnee: Vec2; sourceAnkle: Vec2; hip: Vec2; knee: Vec2; ankle: Vec2 }> = [];
   // Articulated knees move outward as the pelvis descends; shoes remain fixed.
   for (const side of ['right', 'left'] as const) {
     const right = side === 'right';
@@ -111,11 +115,10 @@ export function drawMaxRigSource(context: CanvasRenderingContext2D, assets: MaxR
     const ankle = sourceAnkle;
     const solved = kneeAt(hip, ankle, distance(sourceHip, sourceKnee), distance(sourceKnee, sourceAnkle), right ? -1 : 1);
     const knee = point(sourceKnee.x + (solved.x - sourceKnee.x) * amount, sourceKnee.y + (solved.y - sourceKnee.y) * amount);
-    const fillOpacity = Math.min(1, amount * 4);
-    drawBone(context, assets, `lower-leg-fill-${side}`, sourceKnee, sourceAnkle, knee, ankle, fillOpacity);
-    drawBone(context, assets, `lower-leg-${side}`, sourceKnee, sourceAnkle, knee, ankle);
-    drawBone(context, assets, `upper-leg-fill-${side}`, sourceHip, sourceKnee, hip, knee, fillOpacity);
-    drawBone(context, assets, `upper-leg-${side}`, sourceHip, sourceKnee, hip, knee);
+    legJoints.push({ side, sourceHip, sourceKnee, sourceAnkle, hip, knee, ankle });
+    const seatedOpacity = Math.min(1, amount * 3);
+    drawBone(context, assets, `seated-shin-${side}`, sourceKnee, sourceAnkle, knee, ankle, seatedOpacity);
+    drawBone(context, assets, `lower-leg-${side}`, sourceKnee, sourceAnkle, knee, ankle, 1 - seatedOpacity);
   }
   // The approved shoe pixels are unchanged and fixed on the floor.
   drawPart(context, assets, 'shoe-right', point(153, 620), point(153, 620));
@@ -123,6 +126,14 @@ export function drawMaxRigSource(context: CanvasRenderingContext2D, assets: MaxR
 
   drawPart(context, assets, 'torso', root, targetRoot, pose.lean);
   drawPart(context, assets, 'pelvis', root, targetRoot, pose.lean);
+
+  // A bent thigh is in front of Max's shorts and the upper shoe, while its
+  // lower leg remains behind the shoe. The neutral source partition is exact.
+  for (const leg of legJoints) {
+    const seatedOpacity = Math.min(1, amount * 3);
+    drawBone(context, assets, `upper-leg-${leg.side}`, leg.sourceHip, leg.sourceKnee, leg.hip, leg.knee, 1 - seatedOpacity);
+    drawBone(context, assets, `seated-thigh-${leg.side}`, leg.sourceHip, leg.sourceKnee, leg.hip, leg.knee, seatedOpacity);
+  }
 
   for (const side of ['right', 'left'] as const) {
     const right = side === 'right';
@@ -140,7 +151,7 @@ export function drawMaxRigSource(context: CanvasRenderingContext2D, assets: MaxR
     drawPart(context, assets, `hand-${side}`, sourceWrist, wrist, elbowAngle);
   }
   const neck = point(218, 382);
-  drawPart(context, assets, 'head', neck, upperPoint(neck), 0);
+  drawPart(context, assets, 'head', neck, upperPoint(neck), pose.lean);
 }
 
 /** Draws the experimental rig at a scene-style ground point with layered chair. */
@@ -159,13 +170,13 @@ export function drawMaxSitStudy(context: CanvasRenderingContext2D, assets: MaxRi
   context.save();
   context.fillStyle = 'rgba(68,42,75,.22)';
   context.beginPath(); context.ellipse(center, floor, 86, 14, 0, 0, Math.PI * 2); context.fill();
-  if (mode === 'motion') context.drawImage(assets['chair-back'], center - 115, floor - 140, 230, 140);
+  if (mode === 'motion') context.drawImage(assets['chair-back'], center - 115, floor - 140 * CHAIR_FOOT_FRACTION, 230, 140);
   const offscreen = document.createElement('canvas');
   offscreen.width = SOURCE_WIDTH; offscreen.height = SOURCE_HEIGHT;
   const local = offscreen.getContext('2d')!;
   drawMaxRigSource(local, assets, pose);
   context.drawImage(offscreen, center - SOURCE_WIDTH * scale / 2, top, SOURCE_WIDTH * scale, 355);
-  if (mode === 'motion') context.drawImage(assets['chair-front'], center - 115, floor - 140, 230, 140);
+  if (mode === 'motion') context.drawImage(assets['chair-front'], center - 115, floor - 140 * CHAIR_FOOT_FRACTION, 230, 140);
   if (mode === 'joints') {
     const stage = (x: number, y: number) => point(center - SOURCE_WIDTH * scale / 2 + x * scale, top + y * scale);
     const joints: Record<string, Vec2> = {
