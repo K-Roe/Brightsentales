@@ -1,5 +1,72 @@
 # Batch review for Karl
 
+## Unity Bridge V1 — Max's first appearance (23 October 2026)
+
+**EXPERIMENTAL; KARL'S LIVE EDITOR RECHECK AND VISUAL APPROVAL PENDING.** Karl's normal Editor timed out on `max.blink` after successful Connect/Ping. [The main-thread fix report and two-blink scene test](../proofs/unity-bridge-v1-fix/REPORT.md) document a passing disposable Play mode run and the still-pending normal Editor reload. The [original Max import proof](../proofs/unity-bridge-v1/REPORT.md) remains. No rigging or production renderer change is approved.
+
+## Unity Bridge V0 (23 October 2026)
+
+**APPROVED by Karl in the Bridge V1 authorisation.** The Studio and Unity projects contain an opt-in, loopback-only Ping/Pong bridge. See [the test and startup report](../proofs/unity-bridge-v0/REPORT.md).
+
+## Brightling Rig V1 — Max living body (23 October 2026)
+
+**EXPERIMENTAL; AWAITING KARL'S VISUAL DECISION.** [The Max-only standing comparison, connection close-up and report](../proofs/brightling-rig-v1/REPORT.md) are ready. The candidate is isolated from the Studio and Living World. Independent arm cutout motion failed visual inspection and is not part of the review video.
+
+
+## Living World V1.2 feasibility (23 October 2026)
+
+**BLOCKED on artwork; awaiting Karl's review of the [H.264 diagnostic](../proofs/living-world-v1-2/REPORT.md).** No physical-life renderer integration or walking-planner change.
+
+## Living World V1.1 (23 October 2026)
+
+**VISUALLY REJECTED by Karl; experimental code retained for comparison.**
+
+## Living World V1 (23 October 2026)
+
+**VISUALLY APPROVED by Karl on 23 October 2026 in the V1.1 request.** Independent deterministic room activity uses approved walking and Brightling Life V2 between directed actions. The [30-second ON episode](../proofs/living-world-v1/living-world-on-episode.mp4), [OFF comparison](../proofs/living-world-v1/living-world-off-comparison.mp4), [side-by-side review](../proofs/living-world-v1/side-by-side-off-on.mp4), [editable Backup](../proofs/living-world-v1/living-world-studio-backup.json) and [report](../proofs/living-world-v1/REPORT.md) record the approved foundation. V1.1 and permanent personality canon remain separate decisions.
+
+## Brightling Life System V2 (23 October 2026)
+
+**APPROVED by Karl on 23 October 2026 in the Living World V1 request.** Independent character-ID-seeded blink and subtle body channels compose with the existing walk, wave, turn and phone paths. Temporary eye-only layers leave approved sprites untouched; V1 remains selectable. The [complete 16-second H.264 MP4 episode](../proofs/brightling-life-v2/brightling-life-v2-episode.mp4), [matching MP4 scene](../proofs/brightling-life-v2/brightling-life-v2-scene.mp4), [side-by-side V1/V2 comparison](../proofs/brightling-life-v2/side-by-side-v1-v2.webm), [editable Studio Backup](../proofs/brightling-life-v2/brightling-life-v2-studio-backup.json) and [report](../proofs/brightling-life-v2/REPORT.md) record the reviewed behaviour. This approval does not extend to Living World V1 or new gaze/head artwork.
+
+## Cartoon Life V1 (23 October 2026)
+
+**EXPERIMENTAL; TECHNICALLY VERIFIED; AWAITING KARL'S VISUAL AND LISTENING DECISION.** An optional deterministic idle blink/breath, subtle walk anticipation/bob/settle and window ambience layer uses the shared scene renderer without changing approved artwork or actions. The [complete 18.5-second WebM episode](../proofs/cartoon-life-v1/cartoon-life-episode.webm), [off baseline](../proofs/cartoon-life-v1/baseline-scene.webm), [Studio Backup](../proofs/cartoon-life-v1/cartoon-life-studio-backup.json) and [report](../proofs/cartoon-life-v1/REPORT.md) are ready for review. 212 tests, build, disposable-browser save/reopen/export, fresh-profile Backup restore and complete FFmpeg decode passed. The approved side-walk-to-front pose cut and lack of independent gaze remain visible limits. No Cartoon Life artwork or behaviour is approved until Karl watches the episode.
+
+## Camera System V1 (22 October 2026)
+
+**APPROVED by Karl on 22 October 2026.** The [13-second exported camera demonstration](../proofs/camera-system-v1/camera-demo.webm) and [report](../proofs/camera-system-v1/REPORT.md) use approved Max and Maxine walk/wave frames. Karl approved adding the V1 camera system and UI for use in Scene Maker. This does not alter the Greeting V3, Batch 3 or sitting gates.
+
+## Max and Maxine Greeting V3 diagnosis (22 October 2026)
+
+**FOUNDATION VERIFIED; ARTWORK BLOCKED; NOT APPROVED.** Karl rejected V2. The [frame-by-frame root-cause report, stop and wave close-ups, correction brief and walk-only Scene Maker proof](../proofs/max-maxine-greeting-v3/REPORT.md) show the renderer improvement and the remaining landing pose cut. The scoped tests, full suite and build pass; a disposable-browser save/reopen and walk-only export pass. A hand-drawn art study did not match approved character style and remains outside production art. There is no full V3 greeting scene or episode export. Four illustrated landing frames and six side-wave frames are needed before completion. No later milestone has started.
+
+## Max and Maxine Greeting V2 (22 October 2026)
+
+**REJECTED by Karl.** Max and Maxine walk inward, stop in profile, wave toward each other using separate provisional side-wave frames, and return to side-facing idle. The [complete episode export, Scene Maker recording, backup and report](../proofs/max-maxine-greeting-v2/REPORT.md) are retained for diagnosis. Both browser exports decoded at 200 frames over approximately 8.3 seconds; 203 tests and the production build passed, but the stop and wave transitions failed visual review. No later milestone has started.
+
+## Max and Maxine Greeting V1 (21 October 2026)
+
+**NOT APPROVED by Karl.** The camera-facing turn looked unnatural: the walk snapped to a front-facing idle, and the Turn action squeezed that frame instead of turning a profile drawing. The approved wave frames also face forward. Its [original evidence](../proofs/max-maxine-greeting-v1/REPORT.md) is retained. Batch 3 remains disabled; sitting remains deferred.
+
+## Frame actions batch 1 (20 October 2026)
+
+**APPROVED by Karl on 20 October 2026.** The skeletal editor is stopped and hidden. Scene Maker offers Jump and Excited bounce using intact approved sprites and the existing shared scene renderer. The [8 second exported WebM](../proofs/frame-actions-batch1/downloads/Frame_Actions_Batch_1.webm) shows both Max and Maxine, and Max's walk/wave sequence; [screenshots and limits](../proofs/frame-actions-batch1/REPORT.md) are recorded separately. 194 tests and build passed.
+
+## Frame actions batch 2 (20 October 2026)
+
+**APPROVED by Karl on 20 October 2026.** Karl authorised new complete pose frames for clap, point, nod and shake head on Max and Maxine. Twelve provisional PNGs were added without changing approved originals. Scene Maker and Episode Maker use the existing timed renderer and an explicit action marker; unmarked older scenes keep their behavior. The [rendered scene video, episode video, screenshots and report](../proofs/frame-actions-batch2/REPORT.md) show both characters and disclose art consistency, outfit and frame transition limits.
+
+## Frame actions batch 3 (21 October 2026)
+
+**REJECTED IN ENTIRETY by Karl on 21 October 2026.** No Batch 3 action is production approved. The five [scene videos and episode export](../proofs/frame-actions-batch3/REPORT.md) demonstrate failed seat contact, abrupt transitions and unconvincing toy handling despite 197 passing tests and a production build. The [rejection audit](../proofs/frame-actions-batch3/REJECTION_AUDIT.md) includes full-video contact sheets and a historical repair proposal. Sofa seating also fails because the approved Living Room sofa is flattened into the background. Scene Maker keeps all new Batch 3 actions disabled while preserving saved review scenes. Batch 4 is closed.
+
+**Chair and sofa sitting are DEFERRED indefinitely, not approved.** The Max Seated V2 still was accepted only as a static identity and pose reference; the later motion study failed. Keep all experimental sitting art, layered chair assets, rig studies, scripts and recordings for future reference without integrating them. No further sitting work is scheduled unless Karl explicitly requests it. Previously approved actions remain unchanged. Karl must visually review each new action before approval.
+
+## Action Creator (20 October 2026)
+
+AC-01 **FAILED KARL'S MANUAL VISUAL REVIEW**. Moving an arm exposed cut-out gaps and stray original artwork. Pixel and rotated-pose diagnostics identified incomplete source separation; editing and playback are disabled until a proper rig is approved, while existing saved definitions remain exportable. 193 tests and build pass, but no browser recording or renewed visual acceptance exists. AC-02 through AC-05 are not started. See the [failure audit, images and manual fail-closed check](../proofs/ac-01/REPORT.md).
+
 ## Episode 1 production acceptance (19 October 2026)
 
 **FIRST CUT DELIVERED - FINAL ACCEPTANCE PENDING.** The complete six-scene episode was created and exported through Studio. Approved Places, Native2D characters, intro, title, credits, Bright Speak, music and a provisional Lily narration are included. Final deliverables are in [proofs/episode-1/final-production/](../proofs/episode-1/final-production/FINAL_REPORT.md): the 256 s WebM, the editable Studio Backup v8, representative frames and verification data. Karl and Astra have not judged the complete video or narrator quality; physical listening remains pending. A later revised UI export exposed a timing defect and was rejected; the 256 s first cut remains the reliable playable export.
