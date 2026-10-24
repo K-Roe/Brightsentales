@@ -30,6 +30,21 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
     expect(await studioSceneRevision(studioSceneConfig(edited))).not.toBe(await studioSceneRevision(original));
   });
 
+  it('transfers calm life, looking and authored camera shots in a revisioned v2 scene', async () => {
+    const sceneWithCamera: TimedScene = { ...scene, life: { enabled: true, mode: 'v2', ambience: false }, actions: [
+      { ...scene.actions[0], motion: 'gentle' },
+      { id: '33333333-3333-4333-8333-333333333333', characterId: 'maxine', type: 'look-at', target: 'max', start: 2, duration: 2 },
+    ], camera: [{ id: '44444444-4444-4444-8444-444444444444', shot: 'medium', focus: 'group', start: 0, duration: 2 }] };
+    const config = studioSceneConfig(sceneWithCamera);
+    expect(config).toMatchObject({ version: 2, calmLife: true });
+    expect(config.actions[0]).toMatchObject({ motion: 'gentle' });
+    expect(config.actions[1]).toMatchObject({ type: 'look-at', target: 'max' });
+    expect(config.camera[0]).toMatchObject({ shot: 'medium', focus: 'group', duration: 2 });
+    const edited = structuredClone(sceneWithCamera); edited.camera![0].duration = 2.5;
+    expect(await studioSceneRevision(studioSceneConfig(edited))).not.toBe(await studioSceneRevision(config));
+    expect(() => studioSceneConfig({ ...sceneWithCamera, life: { enabled: true, mode: 'v2', ambience: true } })).toThrow('Calm Life');
+  });
+
   it('rejects unsupported audio and rejected frame actions before transfer', () => {
     expect(() => studioSceneConfig({ ...scene, audio: [{ id: actionId, assetId: actionId, start: 0, volume: 1, trimStart: 0, trimEnd: 1, fadeIn: 0, fadeOut: 0 }] })).toThrow('Scene audio');
     expect(() => studioSceneConfig({ ...scene, actions: [{ ...scene.actions[0], type: 'sit-down', artwork: 'provisional-v1', seat: 'chair', point: undefined }] })).toThrow();

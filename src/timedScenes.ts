@@ -8,14 +8,14 @@ import type { CartoonLifeSettings } from './cartoonLife';
 import type { LivingWorldSettings } from './livingWorld';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
-export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited' | 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
+export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited' | 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
 export type FrameActionType = 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
 export const isFrameAction = (type: ActionType): type is FrameActionType => type === 'sit-down' || type === 'stand-up' || type === 'pick-up' || type === 'put-down';
 export type GestureType = 'point' | 'clap' | 'nod' | 'shake';
 export type GestureFrame = 'point' | 'clap-open' | 'clap-contact' | 'nod-down' | 'shake-left' | 'shake-right' | 'sit-lowering' | 'sit-seated' | 'object-reach' | 'object-lift' | 'object-carry';
 export const isGesture = (type: ActionType): type is GestureType => type === 'point' || type === 'clap' || type === 'nod' || type === 'shake';
 // Absence means the original whole-sprite expression, preserving saved scenes.
-export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1' | 'greeting-side-v2' | 'greeting-side-v3'; seat?: 'chair' | 'sofa'; objectId?: string };
+export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; target?: 'max' | 'maxine' | 'camera'; motion?: 'gentle'; artwork?: 'provisional-v1' | 'greeting-side-v2' | 'greeting-side-v3'; seat?: 'chair' | 'sofa'; objectId?: string };
 export type SceneObject = { id: string; kind: 'toy-ball'; point: Point };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
@@ -54,8 +54,7 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     const actions = new Set<string>();
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
-      const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited']);
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited', 'sit-down', 'stand-up', 'pick-up', 'put-down'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear' || action.type === 'put-down') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type) || action.type === 'sit-down' || action.type === 'stand-up' || action.type === 'pick-up') && action.point !== undefined || action.artwork !== undefined && !(action.characterId === 'max' || action.characterId === 'maxine') || action.artwork === 'provisional-v1' && !(isGesture(action.type) || isFrameAction(action.type)) || action.artwork === 'greeting-side-v2' && action.type !== 'walk' && action.type !== 'wave' || action.artwork === 'greeting-side-v3' && action.type !== 'walk' || action.artwork !== undefined && action.artwork !== 'provisional-v1' && action.artwork !== 'greeting-side-v2' && action.artwork !== 'greeting-side-v3' || isFrameAction(action.type) && (action.artwork !== 'provisional-v1' || action.duration < .4) || (action.type === 'sit-down' || action.type === 'stand-up') && (action.seat !== 'chair' && action.seat !== 'sofa' || action.objectId !== undefined) || action.type !== 'sit-down' && action.type !== 'stand-up' && action.seat !== undefined || (action.type === 'pick-up' || action.type === 'put-down') && (!action.objectId || !scene.objects?.some(object => object.id === action.objectId)) || action.type !== 'pick-up' && action.type !== 'put-down' && action.objectId !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'look-at', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited', 'sit-down', 'stand-up', 'pick-up', 'put-down'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear' || action.type === 'put-down') && !point(action.point) || action.type !== 'walk' && action.type !== 'appear' && action.type !== 'put-down' && action.point !== undefined || action.artwork !== undefined && !(action.characterId === 'max' || action.characterId === 'maxine') || action.artwork === 'provisional-v1' && !(isGesture(action.type) || isFrameAction(action.type)) || action.artwork === 'greeting-side-v2' && action.type !== 'walk' && action.type !== 'wave' || action.artwork === 'greeting-side-v3' && action.type !== 'walk' || action.artwork !== undefined && action.artwork !== 'provisional-v1' && action.artwork !== 'greeting-side-v2' && action.artwork !== 'greeting-side-v3' || isFrameAction(action.type) && (action.artwork !== 'provisional-v1' || action.duration < .4) || (action.type === 'sit-down' || action.type === 'stand-up') && (action.seat !== 'chair' && action.seat !== 'sofa' || action.objectId !== undefined) || action.type !== 'sit-down' && action.type !== 'stand-up' && action.seat !== undefined || (action.type === 'pick-up' || action.type === 'put-down') && (!action.objectId || !scene.objects?.some(object => object.id === action.objectId)) || action.type !== 'pick-up' && action.type !== 'put-down' && action.objectId !== undefined || action.type === 'look-at' && (action.duration < .3 || !action.target || action.target !== 'camera' && (!ids.includes(action.target) || action.target === action.characterId)) || action.type !== 'look-at' && action.target !== undefined || action.type !== 'walk' && action.motion !== undefined || action.motion !== undefined && action.motion !== 'gentle') return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
@@ -193,6 +192,36 @@ export function greetingV3WalkProgress(elapsed: number, duration: number): numbe
   return (cruise + intoStop - intoStop * intoStop / (2 * stop)) / distance;
 }
 
+/** Short ease-in/out with a steady middle stride. Shared numerically with the Unity player. */
+export function gentleWalkProgress(elapsed: number, duration: number): number {
+  if (duration <= 0) return 1;
+  const t = Math.max(0, Math.min(1, elapsed / duration));
+  if (t >= 1) return 1;
+  const acceleration = .18;
+  const deceleration = .22;
+  const cruiseEnd = 1 - deceleration;
+  const area = 1 - (acceleration + deceleration) / 2;
+  if (t < acceleration) return t * t / (2 * acceleration * area);
+  if (t < cruiseEnd) return (acceleration / 2 + t - acceleration) / area;
+  const tail = t - cruiseEnd;
+  return (acceleration / 2 + cruiseEnd - acceleration + tail - tail * tail / (2 * deceleration)) / area;
+}
+
+function pointAtWithoutActing(scene: TimedScene, character: string, time: number): Point {
+  let position = scene.characters[character];
+  for (const action of scene.actions.filter(item => item.characterId === character).sort((a, b) => a.start - b.start)) {
+    if (action.start > time) break;
+    if (action.type === 'appear') position = action.point!;
+    if (action.type !== 'walk') continue;
+    const turn = Math.min(action.duration, TURN_MS / 1000);
+    const moving = Math.max(1e-6, action.duration - turn);
+    const elapsed = time - action.start - turn;
+    const progress = action.motion === 'gentle' ? gentleWalkProgress(elapsed, moving) : action.artwork === 'greeting-side-v3' ? greetingV3WalkProgress(elapsed, moving) : Math.max(0, Math.min(1, elapsed / moving));
+    position = { x: position.x + (action.point!.x - position.x) * progress, y: position.y + (action.point!.y - position.y) * progress };
+  }
+  return position;
+}
+
 export function stateAt(scene: TimedScene, character: string, time: number): SceneState {
   let position = { ...scene.characters[character] };
   let visible = false;
@@ -229,7 +258,7 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       const turn = Math.min(action.duration, TURN_MS / 1000);
       const movement = Math.max(1e-6, action.duration - turn);
       const elapsed = now - action.start - turn;
-      const progress = action.artwork === 'greeting-side-v3'
+      const progress = action.motion === 'gentle' ? gentleWalkProgress(elapsed, movement) : action.artwork === 'greeting-side-v3'
         ? greetingV3WalkProgress(elapsed, movement)
         : Math.max(0, Math.min(1, elapsed / movement));
       if (now < ends(action)) {
@@ -238,14 +267,22 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
         return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled), direction, greetingV3: action.artwork === 'greeting-side-v3' };
       }
       position = { ...destination };
-      facingSide = action.artwork === 'greeting-side-v2' || action.artwork === 'greeting-side-v3';
+      facingSide = action.motion === 'gentle' || action.artwork === 'greeting-side-v2' || action.artwork === 'greeting-side-v3';
       greetingV3 = action.artwork === 'greeting-side-v3';
+    }
+    if (action.type === 'look-at') {
+      const target = action.target === 'camera' ? null : pointAtWithoutActing(scene, action.target!, now);
+      const side = !!target && Math.abs(target.x - position.x) >= 25;
+      if (side) direction = target!.x >= position.x ? 1 : -1;
+      facingSide = side;
+      if (now < ends(action)) return { visible, point: position, pose: side ? 'side' : 'idle', frame: 0, direction };
     }
     if (action.type === 'wave' && now < ends(action)) {
       const frame = waveFrameAt((now - action.start) * 1000);
       if (facingSide && action.artwork === 'greeting-side-v2') return { visible, point: position, pose: 'side', frame: 0, direction, sideWaveFrame: frame ? frame as 1 | 2 | 3 : undefined };
       return { visible, point: position, pose: frame ? 'wave' : 'idle', frame: frame ?? 0, direction };
     }
+    if (action.type === 'wave' && action.artwork !== 'greeting-side-v2') facingSide = false;
     if (action.artwork === 'provisional-v1' && isGesture(action.type) && now < ends(action)) {
       return { visible, point: position, pose: 'idle', frame: 0, direction, gestureFrame: gestureFrameAt(action.type, now - action.start, action.duration) };
     }

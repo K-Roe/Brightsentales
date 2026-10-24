@@ -19,7 +19,7 @@ type Props = {
 };
 type Lane = { id: string; kind: 'character'; label: string };
 const titles = {
-  appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear',
+  appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear', 'look-at': 'Look toward',
   breathe: 'Breathe', point: 'Point', nod: 'Nod', shake: 'Shake', smile: 'Smile',
   surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn', jump: 'Jump', excited: 'Excited bounce',
   'sit-down': 'Sit down', 'stand-up': 'Stand up', 'pick-up': 'Pick up toy', 'put-down': 'Put down toy',

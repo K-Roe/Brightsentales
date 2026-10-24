@@ -7,7 +7,7 @@ import type { TimedLibrary } from './timedScenes';
 
 type Status = 'disconnected' | 'connecting' | 'connected' | 'pinging' | 'commanding';
 
-export default function UnityConnection({ scenes }: { scenes: TimedLibrary }) {
+export default function UnityConnection({ scenes, requestedSceneId }: { scenes: TimedLibrary; requestedSceneId?: string | null }) {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Connection is off.');
   const [actor, setActor] = useState<ActingCharacter>('max');
@@ -103,17 +103,18 @@ export default function UnityConnection({ scenes }: { scenes: TimedLibrary }) {
   };
 
   return <section className="unity-connection" aria-labelledby="unity-connection-heading">
-    <p className="eyebrow">EXPERIMENTAL · LOCAL ONLY</p>
-    <h1 id="unity-connection-heading">Unity Connection</h1>
-    <p>Start the Unity project in Play mode, then connect to test the bridge.</p>
+    <p className="eyebrow">CARTOON PREVIEW · EXPERIMENTAL</p>
+    <h1 id="unity-connection-heading">Watch your cartoon</h1>
+    <p>Start the isolated preview stage, then connect and send a saved scene. Your scene stays editable in Scene Maker.</p>
     <p className="unity-connection-status" role="status"><strong>Status:</strong> {status === 'connecting' ? 'Connecting' : status === 'pinging' ? 'Waiting for Pong' : status === 'commanding' ? 'Waiting for command response' : status === 'connected' ? 'Connected' : 'Disconnected'}</p>
     <p role="status">{message}</p>
     <div className="unity-connection-actions">
-      <button type="button" onClick={connect} disabled={status !== 'disconnected'}>Connect</button>
+      <button type="button" onClick={connect} disabled={status !== 'disconnected'}>Connect preview</button>
       <button type="button" onClick={disconnect} disabled={status === 'disconnected'}>Disconnect</button>
-      <button type="button" onClick={ping} disabled={status !== 'connected'}>Ping</button>
-      <button type="button" onClick={blinkMax} disabled={status !== 'connected'}>Blink Max</button>
     </div>
+    <StudioSceneUnityPanel connected={status === 'connected'} library={scenes} requestedSceneId={requestedSceneId} />
+    <details className="preview-diagnostics"><summary>Developer tools and earlier experiments</summary>
+      <div className="unity-connection-actions"><button type="button" onClick={ping} disabled={status !== 'connected'}>Ping</button><button type="button" onClick={blinkMax} disabled={status !== 'connected'}>Blink Max</button></div>
     <section aria-labelledby="unity-director-controls-heading">
       <p className="eyebrow">EXPERIMENTAL · DIRECTOR CONTROLS V2</p>
       <h2 id="unity-director-controls-heading">Direct Max and Maxine</h2>
@@ -128,7 +129,7 @@ export default function UnityConnection({ scenes }: { scenes: TimedLibrary }) {
     </section>
     <PortalV1Panel connected={status === 'connected'} />
     <CartoonEngineV1Panel connected={status === 'connected'} />
-    <StudioSceneUnityPanel connected={status === 'connected'} library={scenes} />
     <small>Loopback address: {UNITY_BRIDGE_URL}. The connection is off until you press Connect.</small>
+    </details>
   </section>;
 }

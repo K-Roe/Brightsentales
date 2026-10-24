@@ -3,12 +3,14 @@ import { validateTimedLibrary, type TimedScene } from './timedScenes';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
 
 export type StudioSceneConfig = {
-  version: 1;
+  version: 2;
   sceneId: string;
   environment: 'living-room';
   duration: number;
+  calmLife: boolean;
   characters: { id: 'max' | 'maxine'; x: number; y: number; facing: 'front' | 'left' | 'right' }[];
-  actions: { id: string; characterId: 'max' | 'maxine'; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear'; start: number; duration: number; x: number; y: number }[];
+  actions: { id: string; characterId: 'max' | 'maxine'; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at'; start: number; duration: number; x: number; y: number; target: string; motion: 'gentle' | 'linear' }[];
+  camera: { id: string; shot: 'wide' | 'medium' | 'close-up'; focus: 'max' | 'maxine' | 'group' | 'point'; x: number; y: number; follow: boolean; start: number; duration: number }[];
 };
 
 export type StudioSceneAction = 'load' | 'play' | 'status' | 'reset';
@@ -23,30 +25,31 @@ export async function studioSceneRevision(config: StudioSceneConfig): Promise<st
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-/** Phase 1 accepts only artwork and actions with a faithful mapping in the isolated Unity scene. */
+/** Transfers only artwork and actions with a faithful mapping in the isolated Unity scene. */
 export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
   if (scene.placeId !== 'living-room') throw new Error('Unity currently supports the approved Living Room artwork only.');
   const validated = validateTimedLibrary({ version: 1, scenes: [scene] }, ['living-room']);
   if (!validated.ok) throw new Error(validated.error);
   if (scene.duration > 120) throw new Error('Unity saved-scene playback is limited to 120 seconds.');
-  if (scene.camera?.length) throw new Error('Camera keyframes are not supported by Unity saved-scene playback yet.');
   if (scene.audio?.length) throw new Error('Scene audio is not supported by Unity playback yet.');
   if (scene.phone?.length || scene.phoneIn) throw new Error('Bright Speak is not supported by Unity playback yet.');
   if (scene.objects?.length) throw new Error('Scene objects are not supported by Unity playback yet.');
-  if (scene.life || scene.livingWorld) throw new Error('Character Life and Living World are not supported by Unity playback yet.');
+  if (scene.life && (scene.life.mode !== 'v2' || scene.life.ambience !== false) || scene.livingWorld)
+    throw new Error('For Unity preview, choose Calm Life without room ambience. Living World is not supported yet.');
   const ids = Object.keys(scene.characters);
   if (!ids.length || ids.length > 2 || ids.some(id => id !== 'max' && id !== 'maxine'))
     throw new Error('Unity saved-scene playback currently supports Max and Maxine only.');
   if (scene.actions.length > 100) throw new Error('Unity saved-scene playback supports at most 100 actions.');
   for (const action of scene.actions) {
-    if (!['appear', 'walk', 'wait', 'wave', 'disappear'].includes(action.type))
+    if (!['appear', 'walk', 'wait', 'wave', 'disappear', 'look-at'].includes(action.type))
       throw new Error(`${action.type} is not supported by Unity saved-scene playback yet.`);
     if (action.artwork) throw new Error(`The ${action.artwork} artwork variant is not supported by Unity saved-scene playback.`);
     if (action.point && (clampPoint(action.point).x !== action.point.x || clampPoint(action.point).y !== action.point.y))
       throw new Error(`${action.type} destination is outside the approved Unity stage.`);
   }
   return {
-    version: 1, sceneId: scene.id, environment: 'living-room', duration: scene.duration,
+    version: 2, sceneId: scene.id, environment: 'living-room', duration: scene.duration,
+    calmLife: scene.life?.mode === 'v2',
     characters: ids.map(id => {
       const point = scene.characters[id];
       if (clampPoint(point).x !== point.x || clampPoint(point).y !== point.y)
@@ -58,6 +61,12 @@ export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
       type: action.type as StudioSceneConfig['actions'][number]['type'],
       start: action.start, duration: action.duration,
       x: action.point?.x ?? 0, y: action.point?.y ?? 0,
+      target: action.target ?? '', motion: action.motion ?? 'linear',
+    })),
+    camera: (scene.camera ?? []).map(key => ({
+      id: key.id, shot: key.shot, focus: key.focus,
+      x: key.point?.x ?? 0, y: key.point?.y ?? 0, follow: !!key.follow,
+      start: key.start, duration: key.duration,
     })),
   };
 }
