@@ -1,0 +1,132 @@
+{
+  "sourceHashes": {
+    "Max's bedroom": "9530bbfee7e303db7f3b600011ccf5bf8699f760b50b427a044960c4862f4777",
+    "Maxine's bedroom": "8434c34b6e88525c048dabcded449027b283e54fa5955262ddebefc6f8098c5d",
+    "Kitchen": "57e05ffa51f335a19b9781a51446b97290ae48eea9bc7cdc1c2173b0e53b99f4",
+    "Garden": "1c1fa773bee022888eaff8e9d3e21051b4d1e96539d3eedbc4bfa294b15ebffe",
+    "Front of Max's house": "19eed77c9e672682e0d897ccb8858d3cce8c702f5ecdf65e29b5adf27af3c0f0"
+  },
+  "livingRoomHash": "a04bf20a1529e82537910108303ca2c1d02b8bf906320f60b73d08dab52e4a26",
+  "steps": [
+    {
+      "name": "Garden imported through Places"
+    },
+    {
+      "name": "unused Bedroom placeholder removed through Places"
+    },
+    {
+      "name": "Max's bedroom imported through Places"
+    },
+    {
+      "name": "Maxine's bedroom imported through Places"
+    },
+    {
+      "name": "Kitchen imported through Places"
+    },
+    {
+      "name": "Front of Max's house imported through Places"
+    },
+    {
+      "name": "six ready locations and both Native2D Brightlings available in Scene Maker",
+      "detail": [
+        "Living Room",
+        "Garden",
+        "Max's bedroom",
+        "Maxine's bedroom",
+        "Kitchen",
+        "Front of Max's house"
+      ]
+    },
+    {
+      "name": "Living Room previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Garden previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Max's bedroom previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Maxine's bedroom previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Kitchen previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Front of Max's house previewed and exported with Max and Maxine"
+    },
+    {
+      "name": "Studio Backup v8 exported through UI with unchanged imported artwork"
+    },
+    {
+      "name": "five approved source PNGs and protected Living Room remain byte unchanged"
+    }
+  ],
+  "exports": [
+    {
+      "place": "Living Room",
+      "video": "living-room-export.webm",
+      "bytes": 399834
+    },
+    {
+      "place": "Garden",
+      "video": "garden-export.webm",
+      "bytes": 656629
+    },
+    {
+      "place": "Max's bedroom",
+      "video": "max-s-bedroom-export.webm",
+      "bytes": 515072
+    },
+    {
+      "place": "Maxine's bedroom",
+      "video": "maxine-s-bedroom-export.webm",
+      "bytes": 499036
+    },
+    {
+      "place": "Kitchen",
+      "video": "kitchen-export.webm",
+      "bytes": 609164
+    },
+    {
+      "place": "Front of Max's house",
+      "video": "front-of-max-s-house-export.webm",
+      "bytes": 610393
+    }
+  ],
+  "errors": [],
+  "savedArtworkHashes": {
+    "garden": "c826654dc139833879ade4e3e7c384a3517567be69b5e58ee884d00d1435bb9b",
+    "place-c80ed77d-fb19-4714-b8de-34265e70749a": "10c55a3d46893657625e59a1e777a84c36d79efd2af344155a33e719ed19df8a",
+    "place-98f791a6-1568-4aa3-86d8-3fcc2b0b78a9": "013cc6d38040fda777694f77bf13355f7874644c4ba6154efbb7662abdfb313c",
+    "place-b9b39342-4a21-4e91-a70c-87eb5facfb41": "24afe297e784557de16826bc45609eed38eb42f066e8a593d90428a212d3118a",
+    "place-6189910b-10a4-402e-a18a-baa07de18f69": "0a3054ab86efd15b545e4b5a18793b44cbf58fa3551694388667d797235e0c65"
+  },
+  "sceneMakerLocations": [
+    {
+      "id": "living-room",
+      "name": "Living Room"
+    },
+    {
+      "id": "garden",
+      "name": "Garden"
+    },
+    {
+      "id": "place-c80ed77d-fb19-4714-b8de-34265e70749a",
+      "name": "Max's bedroom"
+    },
+    {
+      "id": "place-98f791a6-1568-4aa3-86d8-3fcc2b0b78a9",
+      "name": "Maxine's bedroom"
+    },
+    {
+      "id": "place-b9b39342-4a21-4e91-a70c-87eb5facfb41",
+      "name": "Kitchen"
+    },
+    {
+      "id": "place-6189910b-10a4-402e-a18a-baa07de18f69",
+      "name": "Front of Max's house"
+    }
+  ],
+  "cleanup": "Disposable browser and downloads removed."
+}

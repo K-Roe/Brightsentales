@@ -1,0 +1,120 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: ✦
+      - generic [ref=e7]:
+        - strong [ref=e8]: BrightSenAppsTales
+        - generic [ref=e9]: 2D CARTOON STUDIO
+    - paragraph [ref=e10]: STUDIO
+    - navigation "Studio sections" [ref=e11]:
+      - button "Characters" [ref=e12] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e13]: ✦
+      - button "Places" [ref=e15] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e16]: ▧
+      - button "Scenes" [ref=e18] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e19]: ▤
+      - button "Intros" [ref=e21] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e22]: ★
+      - button "Episodes" [ref=e24] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e25]: ▣
+      - button "Credits" [ref=e27] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e28]: ❖
+      - button "Music Studio" [ref=e30] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e31]: ♪
+      - button "Voice Maker" [ref=e33] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e34]: ♬
+      - button "Audio" [ref=e36] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e37]: ♫
+      - button "Playground" [ref=e39] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e40]: ▶
+      - button "Unity Connection" [ref=e42] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e43]: ◇
+    - generic [ref=e45]:
+      - text: Appearance
+      - combobox "Appearance" [ref=e46]:
+        - option "Dark" [selected]
+        - option "Light"
+        - option "System"
+    - generic [ref=e47]: Saved in this browser
+  - main [ref=e49]:
+    - region [ref=e106]:
+      - paragraph [ref=e107]: EXPERIMENTAL · LOCAL ONLY
+      - heading "Unity Connection" [level=1] [ref=e108]
+      - paragraph [ref=e109]: Start the Unity project in Play mode, then connect to test the bridge.
+      - status [ref=e110]:
+        - strong [ref=e111]: "Status:"
+        - text: Connected
+      - status [ref=e112]: Connected to Unity. Ready for Ping.
+      - generic [ref=e113]:
+        - button "Connect" [disabled] [ref=e114]
+        - button "Disconnect" [ref=e115] [cursor=pointer]
+        - button "Ping" [ref=e116] [cursor=pointer]
+        - button "Blink Max" [ref=e117] [cursor=pointer]
+      - region [ref=e118]:
+        - paragraph [ref=e119]: EXPERIMENTAL · DIRECTOR CONTROLS V2
+        - heading "Direct Max and Maxine" [level=2] [ref=e120]
+        - paragraph [ref=e121]: Open Character Acting V1.2 in Unity Play mode, then choose one command.
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - text: Character
+            - combobox "Character" [ref=e124]:
+              - option "Max" [selected]
+              - option "Maxine"
+          - generic [ref=e125]:
+            - text: Action
+            - combobox "Action" [ref=e126]:
+              - option "Look At" [selected]
+              - option "Wave"
+              - option "Idle"
+          - generic [ref=e127]:
+            - text: Target
+            - combobox "Target" [ref=e128]:
+              - option "Max"
+              - option "Maxine" [selected]
+          - button "Send to Unity" [ref=e129] [cursor=pointer]
+        - paragraph [ref=e130]: An acknowledgement confirms Unity handled the command on its main thread. Watch the Game view for the pose or gesture.
+      - region [ref=e131]:
+        - paragraph [ref=e132]: EXPERIMENTAL · PORTAL V1 · MAX ONLY
+        - heading "Send Max to Unity" [level=2] [ref=e133]
+        - 'generic "Max portal preview: idle" [ref=e134]':
+          - img "Approved Max artwork" [ref=e135]
+        - status [ref=e136]: "Transfer: idle. Max is ready in this experimental preview."
+        - generic [ref=e137]:
+          - button "Send Max Through Portal" [ref=e138] [cursor=pointer]
+          - button "Cancel" [disabled] [ref=e139]
+          - button "Check transfer" [disabled] [ref=e140]
+          - button "Reset" [disabled] [ref=e141]
+          - generic [ref=e142]:
+            - checkbox "Mute portal sound" [checked] [ref=e143]
+            - text: Mute portal sound
+        - paragraph [ref=e144]: The preview is temporary. Max’s saved BrightTales character is never removed. Handoff commits when Unity accepts arrival; completion appears only after Unity reports the arrival finished.
+      - region [ref=e145]:
+        - paragraph [ref=e146]: EXPERIMENTAL · 2.5D CARTOON ENGINE V1
+        - heading "Max and Maxine’s Living Room" [level=2] [ref=e147]
+        - paragraph [ref=e148]: A 26-second Unity review scene using the approved characters and Living Room illustration.
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - text: Review version
+            - combobox "Review version" [disabled] [ref=e151]:
+              - option "V1 baseline"
+              - option "V1.1 character polish" [selected]
+          - generic [ref=e152]:
+            - text: Starting shot
+            - combobox "Starting shot" [disabled] [ref=e153]:
+              - option "Wide" [selected]
+              - option "Medium"
+              - option "Close-up"
+          - generic [ref=e154]:
+            - text: Focus
+            - combobox "Focus" [disabled] [ref=e155]:
+              - option "Both" [selected]
+              - option "Max"
+              - option "Maxine"
+          - button "Send Scene to Unity" [disabled] [ref=e156] [cursor=pointer]
+          - button "Play scene" [disabled] [ref=e157] [cursor=pointer]
+          - button "Check status" [disabled] [ref=e158] [cursor=pointer]
+          - button "Stop / Reset" [disabled] [ref=e164] [cursor=pointer]
+        - status [ref=e160]: Unity playback started. Waiting for Unity to report completion.
+        - paragraph [ref=e161]:
+          - generic [ref=e162]: "Connection: Connected · Unity state: playing · Playback: 0.3 / 26 s · Run b719198a"
+      - generic [ref=e163]: "Loopback address: http://127.0.0.1:17843. The connection is off until you press Connect."

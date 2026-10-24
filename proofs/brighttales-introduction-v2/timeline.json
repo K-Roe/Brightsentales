@@ -1,0 +1,142 @@
+{
+  "narrator": "kokoro:bf_lily",
+  "speed": 0.9,
+  "scenes": [
+    {
+      "name": "Welcome to BrightTales",
+      "globalStart": 0,
+      "duration": 10,
+      "narrations": [
+        {
+          "key": "welcome",
+          "text": "Hello, everyone! Welcome to BrightTales! A wonderful little world where we can learn, play and have fun together!",
+          "localStart": 0.85,
+          "globalStart": 0.85,
+          "duration": 6.906,
+          "end": 7.755999999999999
+        }
+      ]
+    },
+    {
+      "name": "Meet Max",
+      "globalStart": 10,
+      "duration": 16,
+      "narrations": [
+        {
+          "key": "max_1",
+          "text": "Everyone, meet Max! Max is a friendly Brightling who loves exploring and discovering new things!",
+          "localStart": 0.85,
+          "globalStart": 10.85,
+          "duration": 6.33,
+          "end": 17.18
+        },
+        {
+          "key": "max_2",
+          "text": "Max doesn't use spoken words to communicate, but he has lots of wonderful things to say!",
+          "localStart": 7.98,
+          "globalStart": 17.98,
+          "duration": 5.732666666666667,
+          "end": 23.712666666666667
+        }
+      ]
+    },
+    {
+      "name": "Meet Maxine",
+      "globalStart": 26,
+      "duration": 10,
+      "narrations": [
+        {
+          "key": "maxine",
+          "text": "And this is Maxine! She's Max's friend, and together they love going on little adventures!",
+          "localStart": 0.85,
+          "globalStart": 26.85,
+          "duration": 5.924666666666667,
+          "end": 32.77466666666667
+        }
+      ]
+    },
+    {
+      "name": "Bright Speak",
+      "globalStart": 36,
+      "duration": 19,
+      "narrations": [
+        {
+          "key": "speak_1",
+          "text": "Sometimes, telling someone what you want or how you feel can be difficult.",
+          "localStart": 0.85,
+          "globalStart": 36.85,
+          "duration": 4.836666666666667,
+          "end": 41.68666666666667
+        },
+        {
+          "key": "speak_2",
+          "text": "That's where Bright Speak comes in!",
+          "localStart": 6.487,
+          "globalStart": 42.487,
+          "duration": 2.5753333333333335,
+          "end": 45.062333333333335
+        },
+        {
+          "key": "speak_3",
+          "text": "Bright Speak helps children communicate, using pictures and words to help share what they want to say.",
+          "localStart": 9.862,
+          "globalStart": 45.862,
+          "duration": 6.287333333333334,
+          "end": 52.14933333333334
+        }
+      ]
+    },
+    {
+      "name": "Together",
+      "globalStart": 55,
+      "duration": 14,
+      "narrations": [
+        {
+          "key": "world_1",
+          "text": "In BrightTales, Max and Maxine will explore, learn and discover new things together!",
+          "localStart": 0.85,
+          "globalStart": 55.85,
+          "duration": 5.156666666666666,
+          "end": 61.00666666666667
+        },
+        {
+          "key": "world_2",
+          "text": "And there's always something exciting waiting around the corner!",
+          "localStart": 6.807,
+          "globalStart": 61.807,
+          "duration": 3.791333333333333,
+          "end": 65.59833333333333
+        }
+      ]
+    },
+    {
+      "name": "Goodbye",
+      "globalStart": 69,
+      "duration": 10,
+      "narrations": [
+        {
+          "key": "goodbye_1",
+          "text": "Thank you for joining us! We can't wait to see you again!",
+          "localStart": 0.85,
+          "globalStart": 69.85,
+          "duration": 3.4713333333333334,
+          "end": 73.32133333333333
+        },
+        {
+          "key": "goodbye_2",
+          "text": "Bye-bye, everyone!",
+          "localStart": 5.121,
+          "globalStart": 74.121,
+          "duration": 2.042,
+          "end": 76.163
+        }
+      ]
+    }
+  ],
+  "closingTitle": {
+    "start": 79,
+    "duration": 5
+  },
+  "total": 84,
+  "music": "none: no content-approved asset"
+}

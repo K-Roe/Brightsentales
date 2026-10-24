@@ -1,0 +1,28 @@
+{
+  "audioAssets": [
+    {
+      "id": "7d809c4e-4b79-4e74-a773-472aee029e0b",
+      "name": "soft-chime.wav",
+      "kind": "effect",
+      "duration": 0.6500208333333334
+    },
+    {
+      "id": "c81ddb0b-0899-4465-b8aa-3b37aa5c0ba8",
+      "name": "gentle-hello.wav",
+      "kind": "music",
+      "duration": 18.5
+    }
+  ],
+  "lifeToggleEnabled": true,
+  "cameraBlocks": 3,
+  "savedLife": true,
+  "baselineToggleOff": true,
+  "baselineVideoBytes": 6011643,
+  "lifeSceneVideoBytes": 6682118,
+  "episodeVideoBytes": 6579550,
+  "backupBytes": 1135626,
+  "backupLife": true,
+  "backupAudio": 2,
+  "episodeSaved": true,
+  "consoleErrors": []
+}

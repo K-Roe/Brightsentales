@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { editActionTiming, type TimingEdit } from './timelineEditing';
 import type { TimedAction, TimedScene } from './timedScenes';
+import type { CameraKeyframe } from './camera';
 
 type Props = {
   scene: TimedScene;
@@ -12,6 +13,9 @@ type Props = {
   onSelectCharacter: (id: string) => void;
   onSelectAction: (id: string) => void;
   onTiming: (action: TimedAction) => void;
+  selectedCamera?: string | null;
+  onSelectCamera?: (id: string) => void;
+  onCameraTiming?: (key: CameraKeyframe) => void;
 };
 type Lane = { id: string; kind: 'character'; label: string };
 const titles = {
@@ -22,7 +26,7 @@ const titles = {
 } as const;
 const LABEL_WIDTH = 116;
 
-export default function SceneTimeline({ scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming }: Props) {
+export default function SceneTimeline({ scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming, selectedCamera, onSelectCamera, onCameraTiming }: Props) {
   const [pixelsPerSecond, setPixelsPerSecond] = useState(24);
   const drag = useRef<{ id: string; mode: TimingEdit; x: number; base: TimedScene } | null>(null);
   const lanes: Lane[] = Object.keys(scene.characters).map(id => ({ id, kind: 'character', label: name(id) }));
@@ -53,6 +57,14 @@ export default function SceneTimeline({ scene, time, selectedCharacter, selected
           onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}
         ><span>{titles[action.type]}</span>{action.duration > 0 && <span className="timeline-resize" aria-hidden="true" />}</div>)}
       </div>)}
+      {onSelectCamera && onCameraTiming && <div className="timeline-lane" data-lane-kind="camera"><span className="timeline-label">Camera</span><div className="timeline-track" style={{ left: LABEL_WIDTH }} />
+        {(scene.camera ?? []).map(key => <div key={key.id} role="button" tabIndex={0} aria-label={`${key.shot} camera at ${key.start} seconds`} className={`timeline-block timeline-camera ${selectedCamera === key.id ? 'selected' : ''}`} style={{ left: LABEL_WIDTH + key.start * pixelsPerSecond, width: Math.max(58, key.duration * pixelsPerSecond) }}
+          onClick={() => onSelectCamera(key.id)}
+          onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelectCamera(key.id); } }}
+          onPointerDown={event => { event.stopPropagation(); onSelectCamera(key.id); drag.current = { id: key.id, mode: (event.target as HTMLElement).closest('.timeline-resize') ? 'resize' : 'move', x: event.clientX, base: structuredClone(scene) }; event.currentTarget.setPointerCapture(event.pointerId); }}
+          onPointerMove={event => { const current = drag.current; if (!current || current.id !== key.id || !event.currentTarget.hasPointerCapture(event.pointerId)) return; const original = current.base.camera?.find(item => item.id === key.id); if (!original) return; const delta = Math.round((event.clientX - current.x) / pixelsPerSecond * 10) / 10; const next = current.mode === 'resize' ? { ...original, duration: Math.max(original.start === 0 ? 0 : .6, Math.min(15, current.base.duration - original.start, original.duration + delta)) } : { ...original, start: Math.max(0, Math.min(current.base.duration - original.duration, original.start + delta)) }; onCameraTiming(next); }}
+          onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}><span>{key.shot === 'close-up' ? 'Close-Up' : key.shot === 'medium' ? 'Medium' : 'Wide'}</span><span className="timeline-resize" aria-hidden="true" /></div>)}
+      </div>}
       <div className="timeline-playhead" style={{ left: LABEL_WIDTH + time * pixelsPerSecond }} aria-hidden="true"><span /></div>
     </div></div>
     {lanes.length === 0 && <p className="timeline-empty">Add a Brightling to start its timeline.</p>}

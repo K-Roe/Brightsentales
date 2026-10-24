@@ -1,0 +1,107 @@
+{
+  "voice": "kokoro:bf_lily",
+  "speed": 0.9,
+  "relation": "friend",
+  "lines": [
+    {
+      "key": "welcome",
+      "line": "Hello, everyone! Welcome to BrightTales! A wonderful little world where we can learn, play and have fun together!",
+      "assetId": "3d50fe9f-637e-48c8-ab66-e174b4123f1e",
+      "name": "Narrator — Lily — Hello, everyone! Welcome to BrightTales! A wonderful li",
+      "duration": 6.906,
+      "size": 331532,
+      "file": "narration/welcome.wav"
+    },
+    {
+      "key": "max_1",
+      "line": "Everyone, meet Max! Max is a friendly Brightling who loves exploring and discovering new things!",
+      "assetId": "a9f7c480-3532-4d64-952d-91cee0e1bab2",
+      "name": "Narrator — Lily — Everyone, meet Max! Max is a friendly Brightling who lo",
+      "duration": 6.33,
+      "size": 303884,
+      "file": "narration/max_1.wav"
+    },
+    {
+      "key": "max_2",
+      "line": "Max doesn't use spoken words to communicate, but he has lots of wonderful things to say!",
+      "assetId": "248f9b31-6e62-4dcb-96bc-3fd8a04aca3a",
+      "name": "Narrator — Lily — Max doesn't use spoken words to communicate, but he has",
+      "duration": 5.732666666666667,
+      "size": 275212,
+      "file": "narration/max_2.wav"
+    },
+    {
+      "key": "maxine",
+      "line": "And this is Maxine! She's Max's friend, and together they love going on little adventures!",
+      "assetId": "bd09f5c9-3b75-4caa-a00e-9a8f45fedbfa",
+      "name": "Narrator — Lily — And this is Maxine! She's Max's friend, and together th",
+      "duration": 5.924666666666667,
+      "size": 284428,
+      "file": "narration/maxine.wav"
+    },
+    {
+      "key": "speak_1",
+      "line": "Sometimes, telling someone what you want or how you feel can be difficult.",
+      "assetId": "d037f73f-0065-47eb-a2ad-5e9b1ef483a9",
+      "name": "Narrator — Lily — Sometimes, telling someone what you want or how you fee",
+      "duration": 4.836666666666667,
+      "size": 232204,
+      "file": "narration/speak_1.wav"
+    },
+    {
+      "key": "speak_2",
+      "line": "That's where Bright Speak comes in!",
+      "assetId": "398ff6c1-61e6-4a02-ac23-324114f84624",
+      "name": "Narrator — Lily — That's where Bright Speak comes in!",
+      "duration": 2.5753333333333335,
+      "size": 123660,
+      "file": "narration/speak_2.wav"
+    },
+    {
+      "key": "speak_3",
+      "line": "Bright Speak helps children communicate, using pictures and words to help share what they want to say.",
+      "assetId": "2458d2bf-dd28-479f-85c8-93681f7d3c90",
+      "name": "Narrator — Lily — Bright Speak helps children communicate, using pictures",
+      "duration": 6.287333333333334,
+      "size": 301836,
+      "file": "narration/speak_3.wav"
+    },
+    {
+      "key": "world_1",
+      "line": "In BrightTales, Max and Maxine will explore, learn and discover new things together!",
+      "assetId": "d1dc52b0-177a-4b87-8d5d-1016bdb819b3",
+      "name": "Narrator — Lily — In BrightTales, Max and Maxine will explore, learn and",
+      "duration": 5.156666666666666,
+      "size": 247564,
+      "file": "narration/world_1.wav"
+    },
+    {
+      "key": "world_2",
+      "line": "And there's always something exciting waiting around the corner!",
+      "assetId": "77b1f2bf-46e1-4ddf-8bc4-baf15affd327",
+      "name": "Narrator — Lily — And there's always something exciting waiting around th",
+      "duration": 3.791333333333333,
+      "size": 182028,
+      "file": "narration/world_2.wav"
+    },
+    {
+      "key": "goodbye_1",
+      "line": "Thank you for joining us! We can't wait to see you again!",
+      "assetId": "0cc309d9-dfde-4d13-a29c-fc22899e9cf6",
+      "name": "Narrator — Lily — Thank you for joining us! We can't wait to see you agai",
+      "duration": 3.4713333333333334,
+      "size": 166668,
+      "file": "narration/goodbye_1.wav"
+    },
+    {
+      "key": "goodbye_2",
+      "line": "Bye-bye, everyone!",
+      "assetId": "c9ab5ef6-8600-4fea-aa03-08dc5834f97c",
+      "name": "Narrator — Lily — Bye-bye, everyone!",
+      "duration": 2.042,
+      "size": 98060,
+      "file": "narration/goodbye_2.wav"
+    }
+  ],
+  "browserErrors": []
+}

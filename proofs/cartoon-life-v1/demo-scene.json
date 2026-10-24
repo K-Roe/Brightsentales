@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "91919191-9191-4191-8191-919191919191",
+      "name": "A Little Hello - Cartoon Life study",
+      "duration": 18.5,
+      "placeId": "living-room",
+      "characters": { "max": { "x": 440, "y": 790 }, "maxine": { "x": 1200, "y": 790 } },
+      "actions": [
+        { "id": "91919191-9191-4191-8191-919191919201", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 440, "y": 790 } },
+        { "id": "91919191-9191-4191-8191-919191919202", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1200, "y": 790 } },
+        { "id": "91919191-9191-4191-8191-919191919203", "characterId": "max", "type": "nod", "artwork": "provisional-v1", "start": 3.8, "duration": 0.8 },
+        { "id": "91919191-9191-4191-8191-919191919204", "characterId": "max", "type": "walk", "start": 5, "duration": 3.2, "point": { "x": 745, "y": 790 } },
+        { "id": "91919191-9191-4191-8191-919191919205", "characterId": "max", "type": "wave", "start": 9.1, "duration": 1.7 },
+        { "id": "91919191-9191-4191-8191-919191919206", "characterId": "maxine", "type": "nod", "artwork": "provisional-v1", "start": 11.3, "duration": 0.8 },
+        { "id": "91919191-9191-4191-8191-919191919207", "characterId": "maxine", "type": "wave", "start": 12.8, "duration": 1.7 }
+      ],
+      "camera": [
+        { "id": "91919191-9191-4191-8191-919191919211", "shot": "medium", "focus": "max", "follow": true, "start": 5, "duration": 2 },
+        { "id": "91919191-9191-4191-8191-919191919212", "shot": "medium", "focus": "maxine", "start": 10.6, "duration": 2 },
+        { "id": "91919191-9191-4191-8191-919191919213", "shot": "wide", "focus": "point", "point": { "x": 836, "y": 470.5 }, "start": 15, "duration": 2.2 }
+      ],
+      "life": { "enabled": true, "ambience": true }
+    }
+  ]
+}

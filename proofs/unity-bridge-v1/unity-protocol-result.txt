@@ -1,0 +1,1 @@
+MAX_BRIDGE_PROTOCOL_TEST_PASS health=200 ping=200 unknown=404 malformed=400 accepted=202 busy=409 unavailable=503 reopened=true

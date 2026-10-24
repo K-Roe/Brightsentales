@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c1c1",
+      "name": "Living World V1.1 - natural home",
+      "duration": 45,
+      "placeId": "living-room",
+      "characters": {
+        "max": { "x": 440, "y": 790 },
+        "maxine": { "x": 1160, "y": 790 }
+      },
+      "actions": [
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c101", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 440, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c102", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1160, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c103", "characterId": "max", "type": "walk", "start": 17, "duration": 4, "point": { "x": 740, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c104", "characterId": "maxine", "type": "wave", "start": 27, "duration": 1.7 }
+      ],
+      "life": { "enabled": true, "mode": "v2", "ambience": true },
+      "livingWorld": { "enabled": true, "mode": "v1.1" }
+    },
+    {
+      "id": "c2c2c2c2-c2c2-42c2-82c2-c2c2c2c2c2c2",
+      "name": "Living World V1 - approved baseline",
+      "duration": 45,
+      "placeId": "living-room",
+      "characters": {
+        "max": { "x": 440, "y": 790 },
+        "maxine": { "x": 1160, "y": 790 }
+      },
+      "actions": [
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c101", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 440, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c102", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1160, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c103", "characterId": "max", "type": "walk", "start": 17, "duration": 4, "point": { "x": 740, "y": 790 } },
+        { "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c104", "characterId": "maxine", "type": "wave", "start": 27, "duration": 1.7 }
+      ],
+      "life": { "enabled": true, "mode": "v2", "ambience": true },
+      "livingWorld": { "enabled": true }
+    }
+  ]
+}

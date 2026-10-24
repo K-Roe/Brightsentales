@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "id": "a1010000-0000-4000-8000-000000000002",
+  "name": "Max AC-01 Test - Reach and Return",
+  "category": "interactions",
+  "rig": "max-original-v1",
+  "duration": 2,
+  "keyframes": [
+    { "id": "a1010000-0000-4000-8000-000000000021", "time": 0, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000022", "time": 0.7, "pose": { "arm-left": 45, "arm-right": 0, "hand-left": -12, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000023", "time": 1.3, "pose": { "arm-left": 45, "arm-right": 0, "hand-left": -12, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000024", "time": 2, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } }
+  ]
+}

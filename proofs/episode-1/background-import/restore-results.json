@@ -1,0 +1,16 @@
+{
+  "steps": [
+    "Studio Backup restored through Characters UI into fresh browser",
+    "All six locations available in fresh Scene Maker"
+  ],
+  "errors": [],
+  "locations": [
+    "Living Room",
+    "Garden",
+    "Max's bedroom",
+    "Maxine's bedroom",
+    "Kitchen",
+    "Front of Max's house"
+  ],
+  "cleanup": "Disposable browser removed."
+}

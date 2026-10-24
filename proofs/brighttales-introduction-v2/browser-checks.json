@@ -1,0 +1,32 @@
+{
+  "imported": true,
+  "sceneCount": 6,
+  "duration": 84,
+  "sceneOrder": [
+    "Welcome to BrightTales",
+    "Meet Max",
+    "Meet Maxine",
+    "Bright Speak",
+    "Together",
+    "Goodbye"
+  ],
+  "credits": "46587e08-1965-4ad5-8b9c-38cb9af4315a",
+  "player": {
+    "created": 1,
+    "progress": [
+      {
+        "time": 2.302946,
+        "paused": false,
+        "volume": 0.35,
+        "ready": 4,
+        "error": null
+      }
+    ],
+    "ui": "Add scenes from the library, then press Play."
+  },
+  "savedAudioAssets": 11,
+  "episodeReopened": true,
+  "videoBytes": 25416052,
+  "errors": [],
+  "failedRequests": []
+}

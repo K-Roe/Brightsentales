@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "character": "max",
+  "approvedSource": "/art/max-0.png",
+  "approvedSha256": "7d1c4a26bebdabd85b2114b8ca61df4e5f83302ab21aa8c895f5438d75a98d24",
+  "size": [
+    434,
+    724
+  ],
+  "layers": [
+    "hidden-fill",
+    "neck-back",
+    "lower",
+    "upper",
+    "chest",
+    "head"
+  ],
+  "pivots": {
+    "neck": [
+      217,
+      380
+    ],
+    "chest": [
+      217,
+      516
+    ],
+    "shoulderRight": [
+      150,
+      410
+    ],
+    "shoulderLeft": [
+      300,
+      410
+    ],
+    "waist": [
+      217,
+      562
+    ]
+  },
+  "neutralDifferingVisiblePixels": 0,
+  "neutralDifferingExternalPixels": 434,
+  "neutralDifferingAlphaPixels": 0,
+  "sourcePixelCounts": {
+    "lower": 22634,
+    "upper": 31967,
+    "chest": 20412,
+    "head": 77568
+  }
+}

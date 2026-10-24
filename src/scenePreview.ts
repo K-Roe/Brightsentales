@@ -6,17 +6,36 @@ import { creditRowsAt, type CreditLine, type CreditsMode } from './credits';
 import { PHONE_POPUP_HEIGHT, PHONE_POPUP_SCALE, PHONE_POPUP_WIDTH, illustratedPhoneFrameAt, phoneAnchor, phonePopupBox, phoneStateAt, type PhoneState } from './phone';
 import { drawCommunicationPopup, drawPhone } from './phoneArt';
 import { footAnchor, footDrop } from './spriteGrounding';
+import { cameraAt } from './camera';
+import { blinkAt, drawLivingRoomLife, lifeMotionAt, makeBlinkFrame } from './cartoonLife';
+import { livingWorldAt } from './livingWorld';
+import { characterLifeAt } from './brightlingLife';
+import { makeEyeLayer, type EyeLayer, type EyeTemplate } from './eyeLayers';
 
 type Sprite = HTMLImageElement | HTMLCanvasElement;
-export type PreviewPack = { idle: Sprite; side: Sprite[]; wave: Sprite[]; gestures?: Partial<Record<GestureFrame, Sprite>>; chair?: Sprite; phone?: { enter: Sprite; hold: Sprite; 'tap-start': Sprite; 'tap-mid': Sprite; raise: Sprite; touch: Sprite } };
+type PhoneSprites = { enter: Sprite; hold: Sprite; 'tap-start': Sprite; 'tap-mid': Sprite; raise: Sprite; touch: Sprite };
+type EyeLayers = { idle: EyeLayer | null; side: (EyeLayer | null)[]; wave: (EyeLayer | null)[]; phone?: Partial<Record<keyof PhoneSprites, EyeLayer | null>> };
+export type PreviewPack = { idle: Sprite; blink?: Sprite; eyes?: EyeLayers; side: Sprite[]; wave: Sprite[]; sideWave?: Sprite[]; gestures?: Partial<Record<GestureFrame, Sprite>>; chair?: Sprite; phone?: PhoneSprites };
 const image = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const item = new Image(); item.onload = () => resolve(item); item.onerror = reject; item.src = url; });
 /** Source pixel size of the approved frames, used to map a measured hand anchor onto the stage. */
 const SOURCE = { idle: { width: 434, height: 724 }, moving: { width: 500, height: 724 } };
 const PHONE_SCALE = 0.5;
 
-export async function previewPack(id: string, characters: Brightling[], maxOutfit: MaxOutfit, maxineOutfit: MaxineOutfit, gestureFrames: GestureFrame[] = []): Promise<PreviewPack | null> {
+function eyeLayers(pack: PreviewPack, template: EyeTemplate): EyeLayers {
+  return {
+    idle: makeEyeLayer(pack.idle, template, 'idle'),
+    side: pack.side.map((sprite, frame) => makeEyeLayer(sprite, template, 'side', frame)),
+    wave: pack.wave.map((sprite, frame) => makeEyeLayer(sprite, template, 'wave', frame)),
+    phone: pack.phone ? Object.fromEntries(Object.entries(pack.phone).map(([key, sprite]) => [key, makeEyeLayer(sprite, template, 'phone')])) : undefined,
+  };
+}
+
+export async function previewPack(id: string, characters: Brightling[], maxOutfit: MaxOutfit, maxineOutfit: MaxineOutfit, gestureFrames: GestureFrame[] = [], sideWave = false, life: boolean | 'v2' = false): Promise<PreviewPack | null> {
   const custom = characters.find(item => item.id === id);
-  if (custom) return makePack(custom);
+  if (custom) {
+    const pack = await makePack(custom);
+    return life === 'v2' ? { ...pack, eyes: eyeLayers(pack, custom.template) } : pack;
+  }
   if (id !== 'max' && id !== 'maxine') return null;
   const source = (pose: 'idle' | 'side' | 'wave', frame = 0) => id === 'max' ? maxSpriteSource(maxOutfit, pose, frame) : maxineSpriteSource(maxineOutfit, pose, frame);
   const phone = id === 'max' && maxOutfit === 'original' ? {
@@ -26,8 +45,12 @@ export async function previewPack(id: string, characters: Brightling[], maxOutfi
   } : undefined;
   const originalOutfit = id === 'max' ? maxOutfit === 'original' : maxineOutfit === 'original';
   const gestures = originalOutfit ? Object.fromEntries(await Promise.all(gestureFrames.map(async frame => [frame, await image(`/art/provisional-actions/${id}/${frame}.png`)] as const))) : undefined;
+  const sideWaveFrames = sideWave && originalOutfit ? await Promise.all(Array.from({ length: 3 }, (_, index) => image(`/art/provisional-actions/greeting-v2/${id}-side-wave-${index + 1}.png`))) : undefined;
   const chair = gestureFrames.includes('sit-seated') ? await image('/art/provisional-actions/chair.png') : undefined;
-  return { idle: await image(source('idle')), side: await Promise.all(Array.from({ length: 5 }, (_, i) => image(source('side', i)))), wave: await Promise.all(Array.from({ length: 3 }, (_, i) => image(source('wave', i)))), gestures, chair, phone };
+  const idle = await image(source('idle'));
+  const pack: PreviewPack = { idle, blink: life && originalOutfit ? makeBlinkFrame(idle, id) : undefined, side: await Promise.all(Array.from({ length: 5 }, (_, i) => image(source('side', i)))), wave: await Promise.all(Array.from({ length: 3 }, (_, i) => image(source('wave', i)))), sideWave: sideWaveFrames, gestures, chair, phone };
+  if (life === 'v2') pack.eyes = eyeLayers(pack, id === 'max' ? 'male' : 'female');
+  return pack;
 }
 
 function drawToy(context: CanvasRenderingContext2D, x: number, y: number) {
@@ -40,13 +63,22 @@ function drawToy(context: CanvasRenderingContext2D, x: number, y: number) {
 
 export function drawScenePreview(context: CanvasRenderingContext2D, scene: TimedScene, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
   context.clearRect(0, 0, WIDTH, HEIGHT);
+  if (scene.camera?.length) {
+    const view = cameraAt(scene, time);
+    context.save();
+    context.translate(WIDTH / 2, HEIGHT / 2);
+    context.scale(view.zoom, view.zoom);
+    context.translate(-view.x, -view.y);
+  }
   context.drawImage(room, 0, 0, WIDTH, HEIGHT);
+  if (scene.life?.enabled && scene.life.ambience !== false && scene.placeId === 'living-room') drawLivingRoomLife(context, time);
+  const lifeV2 = scene.life?.mode === 'v2' || scene.livingWorld?.enabled === true;
   // Furniture and floor props join the cast's existing foot-Y depth ordering.
   // A chair is drawn just behind its seated Brightling at the same floor point.
   const furnishings = scene.actions.filter(item => item.type === 'sit-down' && item.seat === 'chair').map(action => ({ point: stateAt(scene, action.characterId, action.start).point, chair: packs[action.characterId]?.chair })).filter((item): item is { point: { x: number; y: number }; chair: Sprite } => !!item.chair);
   const floorToys = (scene.objects ?? []).map(object => objectAt(scene, object.id, time)).filter((item): item is NonNullable<typeof item> => !!item && (item.phase === 'floor' || item.phase === 'reach'));
   const floorItems = [...furnishings.map(item => ({ y: item.point.y, draw: () => context.drawImage(item.chair, item.point.x - 130, item.point.y - 265, 260, 265) })), ...floorToys.map(item => ({ y: item.point.y + 17, draw: () => drawToy(context, item.point.x, item.point.y) }))].sort((a, b) => a.y - b.y);
-  const states = Object.keys(scene.characters).map(id => ({ id, state: stateAt(scene, id, time), phone: phoneStateAt(scene, id, time) })).filter(item => item.state.visible && packs[item.id]);
+  const states = Object.keys(scene.characters).map(id => ({ id, state: livingWorldAt(scene, id, time).state, phone: phoneStateAt(scene, id, time) })).filter(item => item.state.visible && packs[item.id]);
   states.sort((a, b) => a.state.point.y - b.state.point.y);
   let floorIndex = 0;
   for (const { id, state, phone } of states) {
@@ -56,14 +88,17 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     context.save();
     // Ground shadow sits exactly on the floor at the character's foot point.
     context.fillStyle = 'rgba(68, 42, 75, .22)'; context.beginPath(); context.ellipse(x, y, 87, 17, 0, 0, Math.PI * 2); context.fill();
-    const width = state.pose === 'side' ? (state.frame === 0 ? 213 : 239) : state.pose === 'wave' ? 245 : 213;
     const height = 355;
+    const proportionalSide = state.pose === 'side' && state.greetingV3;
+    const width = proportionalSide ? SOURCE.moving.width / SOURCE.moving.height * height
+      : state.pose === 'side' ? (state.frame === 0 ? 213 : 239) : state.pose === 'wave' ? 245 : 213;
     const source = state.pose === 'idle' ? SOURCE.idle : SOURCE.moving;
     const characterId = id === 'max' || id === 'maxine' ? id : 'max';
     const anchor = footAnchor(characterId, state.pose, state.frame);
     const drop = footDrop(state.pose, anchor.y, height);
     const top = y - height + drop;
-    const left = x - width / 2;
+    const stanceX = proportionalSide ? footAnchor(characterId, 'side', 0).x : .5;
+    const left = x - (state.pose === 'side' && state.direction < 0 ? 1 - stanceX : stanceX) * width;
     // Bright Speak owns the hands while held. Keep its approved illustrated or
     // composite path, and resume the gesture after the phone is put away.
     const gestureFrame = phone.held || phone.raise > 0 ? undefined : state.gestureFrame;
@@ -74,26 +109,47 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
       ? phoneFrame
       : gestureFrame && pack.gestures?.[gestureFrame]
       ? pack.gestures[gestureFrame]!
+      : state.sideWaveFrame && pack.sideWave?.[state.sideWaveFrame - 1]
+      ? pack.sideWave[state.sideWaveFrame - 1]
       : state.pose === 'side'
       ? pack.side[state.frame]
       : state.pose === 'wave'
       ? pack.wave[state.frame - 1]
+      : scene.life?.enabled && !lifeV2 && state.pose === 'idle' && !state.expression && !phone.held && !phone.raise && pack.blink && blinkAt(id, time)
+      ? pack.blink
       : pack.idle;
+    const controller = lifeV2 ? characterLifeAt(scene, id, time, state, phone.held || phone.raise > 0) : null;
+    const life = controller ? { scaleX: controller.breathX, scaleY: controller.breathY, offsetY: controller.lift } : lifeMotionAt(scene, id, time, state, !!(phone.held || phone.raise > 0));
+    const eyelid = controller?.blinking && !gestureFrame && !state.sideWaveFrame && pack.eyes
+      ? illustrated ? phonePose === 'idle' ? pack.eyes.idle : pack.eyes.phone?.[phonePose]
+        : state.pose === 'side' ? pack.eyes.side[state.frame]
+        : state.pose === 'wave' ? pack.eyes.wave[state.frame - 1]
+        : pack.eyes.idle
+      : null;
     if (sprite) {
       context.save();
       // Existing gestures retain their centre pivot. New whole-frame actions use
       // the measured foot line so stretching cannot lift the shoes from the floor.
       const centerX = x;
-      const footPivot = state.expression?.anchor === 'foot';
+      const footPivot = state.expression?.anchor === 'foot' || !!life;
       const centerY = footPivot ? top + anchor.y * height : top + height / 2;
       context.translate(centerX, centerY);
-      const scaleX = state.expression?.scaleX ?? 1;
-      const scaleY = state.expression?.scaleY ?? 1;
+      const scaleX = (state.expression?.scaleX ?? 1) * (life?.scaleX ?? 1);
+      const scaleY = (state.expression?.scaleY ?? 1) * (life?.scaleY ?? 1);
       if (state.pose === 'side') context.scale(state.direction * scaleX, scaleY);
       else context.scale(scaleX, scaleY);
       if (state.expression?.rotate) context.rotate((state.expression.rotate * Math.PI) / 180);
-      context.translate(state.expression?.offsetX ?? 0, state.expression?.offsetY ?? 0);
-      context.drawImage(sprite, -width / 2, footPivot ? -anchor.y * height : -height / 2, width, height);
+      context.translate(state.expression?.offsetX ?? 0, (state.expression?.offsetY ?? 0) + (life?.offsetY ?? 0));
+      context.drawImage(sprite, -stanceX * width, footPivot ? -anchor.y * height : -height / 2, width, height);
+      if (eyelid) {
+        const sourceWidth = sprite instanceof HTMLImageElement ? sprite.naturalWidth : sprite.width;
+        const sourceHeight = sprite instanceof HTMLImageElement ? sprite.naturalHeight : sprite.height;
+        context.drawImage(eyelid.canvas,
+          -stanceX * width + eyelid.x / sourceWidth * width,
+          (footPivot ? -anchor.y * height : -height / 2) + eyelid.y / sourceHeight * height,
+          eyelid.canvas.width / sourceWidth * width,
+          eyelid.canvas.height / sourceHeight * height);
+      }
       context.restore();
     }
     context.restore();
@@ -119,6 +175,7 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     const box = phonePopupBox(state.point.x, state.point.y, phone.popup.position);
     drawCommunicationPopup(context, phone.popup, { x: box.x, y: box.y, width: PHONE_POPUP_WIDTH, scale: PHONE_POPUP_SCALE });
   }
+  if (scene.camera?.length) context.restore();
 }
 
 /**

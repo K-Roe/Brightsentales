@@ -1,0 +1,194 @@
+{
+  "version": 8,
+  "createdAt": "2026-10-23T09:43:49.311Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b1b1",
+        "name": "Living World V1 ON - family room",
+        "duration": 30,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b103",
+            "characterId": "max",
+            "type": "walk",
+            "start": 10,
+            "duration": 5,
+            "point": {
+              "x": 750,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b104",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 15,
+            "duration": 1.7
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "mode": "v2",
+          "ambience": true
+        },
+        "livingWorld": {
+          "enabled": true
+        }
+      },
+      {
+        "id": "b2b2b2b2-b2b2-42b2-82b2-b2b2b2b2b2b2",
+        "name": "Living World V1 OFF - comparison",
+        "duration": 30,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b103",
+            "characterId": "max",
+            "type": "walk",
+            "start": 10,
+            "duration": 5,
+            "point": {
+              "x": 750,
+              "y": 790
+            }
+          },
+          {
+            "id": "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b104",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 15,
+            "duration": 1.7
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "mode": "v2",
+          "ambience": true
+        }
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "556e0dcb-8720-4d10-ab63-71378e4357b7",
+        "name": "Living World V1 review",
+        "sceneIds": [
+          "b1b1b1b1-b1b1-41b1-81b1-b1b1b1b1b1b1"
+        ]
+      }
+    ]
+  },
+  "intros": {
+    "version": 1,
+    "intros": []
+  },
+  "credits": {
+    "version": 1,
+    "credits": []
+  },
+  "projects": {
+    "version": 1,
+    "music": [],
+    "effects": []
+  },
+  "audioAssets": [],
+  "voiceSettings": {
+    "version": 1,
+    "presets": [],
+    "defaults": {}
+  }
+}

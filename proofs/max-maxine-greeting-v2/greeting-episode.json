@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "episodes": [
+    {
+      "id": "655b9b2d-cec4-48d1-9926-8b91d4c00d51",
+      "name": "Max and Maxine Greeting V2",
+      "sceneIds": [
+        "55555555-5555-4555-8555-000000000001"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode1-final-profile-WGA33j",
+  "steps": [
+    "Restored final editable backup through Studio UI",
+    "Reopened six-scene episode in Episode Maker",
+    "Full episode downloaded from Studio UI"
+  ],
+  "errors": [],
+  "sceneNames": [
+    "1. Meet Max",
+    "2. Meet Maxine",
+    "3. Breakfast Time",
+    "4. Bright Stars",
+    "5. Playing Together",
+    "6. Goodbye for Now"
+  ],
+  "video": {
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\production\\meet-max-episode-1-review-cut-reexport.webm",
+    "bytes": 48019960
+  }
+}

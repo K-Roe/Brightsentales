@@ -1,0 +1,7 @@
+﻿connect 200 {"status":"ready","source":"unity","version":0}
+ping 200 {"type":"pong","source":"unity","version":0}
+blink-1 202 {"status":"accepted","command":"max.blink","source":"unity","version":1}
+busy-repeat 409 {"status":"failed","command":"max.blink","reason":"Max is already blinking","source":"unity","version":1}
+blink-2 202 {"status":"accepted","command":"max.blink","source":"unity","version":1}
+reconnect 200 {"status":"ready","source":"unity","version":0}
+ping-after 200 {"type":"pong","source":"unity","version":0}

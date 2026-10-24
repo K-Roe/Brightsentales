@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Brightling } from './maker';
 import SceneTimeline from './SceneTimeline';
+import CameraPanel from './CameraPanel';
+import { cameraAt, validCamera, type CameraKeyframe } from './camera';
 import AudioPanel from './AudioPanel';
 import type { AudioAsset } from './audio';
 import { scenePlaybackClips, useAudioPlayback } from './audioPlayback';
 import { HEIGHT, Point, WIDTH } from './scene';
 import { type MaxOutfit, type MaxineOutfit } from './outfit';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
-import { advanceSceneTime, gestureFramesForScene, isFrameAction, isGesture, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
+import { advanceSceneTime, gestureFramesForScene, isFrameAction, isGesture, needsGreetingSideWave, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
+import { livingWorldAt } from './livingWorld';
 import { renderSceneVideo } from './sceneVideoExport';
 import { drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
 import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
@@ -24,7 +27,7 @@ const actionNames: Record<ActionType, string> = {
   'sit-down': 'Sit down', 'stand-up': 'Stand up', 'pick-up': 'Pick up toy', 'put-down': 'Put down toy',
 };
 const fmt = (time: number) => `${time.toFixed(1)}s`;
-const stagePoint = (event: React.PointerEvent<HTMLCanvasElement>): Point => { const box = event.currentTarget.getBoundingClientRect(); return { x: Math.round((event.clientX - box.left) * WIDTH / box.width), y: Math.round((event.clientY - box.top) * HEIGHT / box.height) }; };
+const stagePoint = (event: React.PointerEvent<HTMLCanvasElement>, scene: TimedScene, time: number): Point => { const box = event.currentTarget.getBoundingClientRect(); const view = cameraAt(scene, time); return { x: Math.round(view.x + ((event.clientX - box.left) * WIDTH / box.width - WIDTH / 2) / view.zoom), y: Math.round(view.y + ((event.clientY - box.top) * HEIGHT / box.height - HEIGHT / 2) / view.zoom) }; };
 
 export default function SceneMaker({ library, characters, places, maxOutfit, maxineOutfit, issue, onSave, requestedSceneId, audioAssets = [] }: Props) {
   const readyPlaces = placesIn(places).filter(place => place.artworkAvailable && place.background);
@@ -38,6 +41,8 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [targetAction, setTargetAction] = useState<string | null>(null);
   const [selectedPhoneId, setSelectedPhoneId] = useState<string | null>(null);
+  const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
+  const [cameraPreview, setCameraPreview] = useState<CameraKeyframe | null>(null);
   const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -64,11 +69,11 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     if (!scene) return;
     let live = true;
     Promise.all(Object.keys(scene.characters).map(async id => {
-      const pack = await previewPack(id, characters, maxOutfit, maxineOutfit, gestureFramesForScene(scene, id));
+      const pack = await previewPack(id, characters, maxOutfit, maxineOutfit, gestureFramesForScene(scene, id), needsGreetingSideWave(scene, id), scene.life?.mode === 'v2' || scene.livingWorld?.enabled ? 'v2' : !!scene.life?.enabled);
       return [id, pack] as const;
     })).then(entries => { if (live) setPacks(Object.fromEntries(entries.filter((entry): entry is readonly [string, PreviewPack] => entry[1] !== null))); }).catch(() => { if (live) setMessage('A Brightling sprite could not load.'); });
     return () => { live = false; };
-  }, [scene && Object.keys(scene.characters).join('|'), scene && scene.actions.map(action => `${action.id}:${action.type}:${action.artwork ?? ''}`).join('|'), characters, maxOutfit, maxineOutfit]);
+  }, [scene && Object.keys(scene.characters).join('|'), scene && scene.actions.map(action => `${action.id}:${action.type}:${action.artwork ?? ''}`).join('|'), scene?.life?.enabled, scene?.life?.mode, scene?.livingWorld?.enabled, characters, maxOutfit, maxineOutfit]);
 
   useEffect(() => {
     if (!scene || !room || !canvas.current) return;
@@ -88,15 +93,19 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     }
     // The editor uses the one shared scene renderer, so what you direct is exactly what plays
     // back and what the WebM export records. Only the selection ring is added on top.
-    drawScenePreview(context, scene, time, room, packs);
+    const previewScene = cameraPreview && !playing ? { ...scene, camera: [...(scene.camera ?? []).filter(key => key.start < time), { ...cameraPreview, start: time, duration: 0 }] } : scene;
+    drawScenePreview(context, previewScene, time, room, packs);
     if (selectedCharacter) {
       const selected = stateAt(scene, selectedCharacter, time);
       if (selected.visible && packs[selectedCharacter]) {
+        const view = cameraAt(previewScene, time);
+        context.save(); context.translate(WIDTH / 2, HEIGHT / 2); context.scale(view.zoom, view.zoom); context.translate(-view.x, -view.y);
         context.strokeStyle = '#705bdf'; context.lineWidth = 6;
         context.beginPath(); context.ellipse(selected.point.x, selected.point.y - 3, 92, 23, 0, 0, Math.PI * 2); context.stroke();
+        context.restore();
       }
     }
-  }, [scene, time, room, packs, selectedCharacter, selectedAction]);
+  }, [scene, time, room, packs, selectedCharacter, selectedAction, cameraPreview, playing]);
 
   useEffect(() => {
     if (!playing || !scene) return;
@@ -112,7 +121,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     return () => cancelAnimationFrame(frame);
   }, [playing, scene?.duration]);
 
-  const openScene = (next: TimedScene) => { setPlaying(false); setScene(clone(next)); setTime(0); setSelectedAction(null); setSelectedCharacter(null); setTargetAction(null); setMessage('Select a Brightling on the stage or below it.'); };
+  const openScene = (next: TimedScene) => { setPlaying(false); setScene(clone(next)); setTime(0); setSelectedAction(null); setSelectedCamera(null); setCameraPreview(null); setSelectedCharacter(null); setTargetAction(null); setMessage('Select a Brightling on the stage or below it.'); };
   useEffect(() => { const requested = library.scenes.find(item => item.id === requestedSceneId); if (requested) openScene(requested); }, [requestedSceneId]);
   const save = () => {
     if (!scene || !validation?.ok) { setMessage(validation && !validation.ok ? validation.error : 'Scene is not ready.'); return; }
@@ -124,6 +133,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     if (!scene || !room || !validation?.ok || exporting) return;
     setPlaying(false); setExporting(true); setExportProgress(0);
     try {
+      if (Object.keys(scene.characters).some(id => needsGreetingSideWave(scene, id) && !packs[id]?.sideWave)) throw new Error('Greeting V2 side-wave artwork requires Max and Maxine in their original outfits.');
       const blob = await renderSceneVideo(scene, room, packs, audioAssets, setExportProgress);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a'); link.href = url; link.download = `${scene.name.replace(/[^a-z0-9_-]/gi, '_') || 'scene'}.webm`; link.click();
@@ -209,9 +219,9 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const changePhone = (id: string, patch: Partial<PhoneAction>) => commitPhone(value => ({ ...value, phone: (value.phone ?? []).map(action => action.id === id ? { ...action, ...patch } : action) }));
   const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (!scene || playing) return;
-    const p = stagePoint(event);
+    const p = stagePoint(event, scene, time);
     if (targetAction) { if (p.y >= 350) { changeAction(targetAction, { point: p }); setTargetAction(null); setMessage('Position set. The path now shows the destination.'); } return; }
-    const hit = Object.keys(scene.characters).filter(id => stateAt(scene, id, time).visible).sort((a, b) => stateAt(scene, b, time).point.y - stateAt(scene, a, time).point.y).find(id => { const q = stateAt(scene, id, time).point; return Math.abs(p.x - q.x) < 107 && p.y >= q.y - 335 && p.y <= q.y + 12; });
+    const hit = Object.keys(scene.characters).filter(id => livingWorldAt(scene, id, time).state.visible).sort((a, b) => livingWorldAt(scene, b, time).state.point.y - livingWorldAt(scene, a, time).state.point.y).find(id => { const q = livingWorldAt(scene, id, time).state.point; return Math.abs(p.x - q.x) < 107 && p.y >= q.y - 335 && p.y <= q.y + 12; });
     if (!hit) return;
     setSelectedCharacter(hit); setSelectedAction(null);
     if (time <= .001) { drag.current = { id: hit, down: p, moved: false }; event.currentTarget.setPointerCapture(event.pointerId); }
@@ -219,7 +229,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
   const pointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const current = drag.current;
     if (!current || !scene) return;
-    const p = stagePoint(event);
+    const p = stagePoint(event, scene, time);
     if (Math.hypot(p.x - current.down.x, p.y - current.down.y) > 5) current.moved = true;
     if (current.moved) placeInitial(current.id, { x: Math.max(0, Math.min(WIDTH, p.x)), y: Math.max(350, Math.min(HEIGHT, p.y)) });
   };
@@ -234,9 +244,14 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
 
   const selectedPosition = selectedCharacter ? scene.characters[selectedCharacter] : null;
   return <section className="scene-maker scene-visual"><div className="scene-heading"><button onClick={() => { setPlaying(false); setScene(null); }}>← All scenes</button><h1>{scene.name}</h1><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button><button disabled={!!issue || !validation?.ok || !room || exporting} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export scene video (WebM)'}</button></div>
-    <div className="scene-setup"><label>Scene name<input aria-label="Scene name" maxLength={80} value={scene.name} onChange={event => update(value => ({ ...value, name: event.target.value }))} /></label><label>Place<select aria-label="Scene place" value={scene.placeId} onChange={event => update(value => ({ ...value, placeId: event.target.value }))}>{readyPlaces.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select></label><label>Duration (seconds)<input aria-label="Scene duration" type="number" min="1" max="3600" step="1" value={scene.duration} onChange={event => update(value => ({ ...value, duration: Number(event.target.value) }))} /></label></div>
+    <div className="scene-setup"><label>Scene name<input aria-label="Scene name" maxLength={80} value={scene.name} onChange={event => update(value => ({ ...value, name: event.target.value }))} /></label><label>Place<select aria-label="Scene place" value={scene.placeId} onChange={event => update(value => ({ ...value, placeId: event.target.value, livingWorld: event.target.value === 'living-room' ? value.livingWorld : undefined }))}>{readyPlaces.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select></label><label>Duration (seconds)<input aria-label="Scene duration" type="number" min="1" max="3600" step="1" value={scene.duration} onChange={event => update(value => ({ ...value, duration: Number(event.target.value) }))} /></label></div>
+    <label className="cartoon-life-toggle"><input aria-label="Cartoon Life experimental" type="checkbox" checked={!!scene.life?.enabled && scene.life.mode !== 'v2'} onChange={event => update(value => ({ ...value, life: event.target.checked ? { enabled: true, ambience: true } : undefined }))} /> Cartoon Life V1 <span>Original experimental comparison</span></label>
+    <label className="cartoon-life-toggle"><input aria-label="Brightling Life V2 experimental" type="checkbox" checked={scene.life?.mode === 'v2'} onChange={event => update(value => ({ ...value, life: event.target.checked ? { enabled: true, ambience: true, mode: 'v2' } : undefined }))} /> Brightling Life V2 <span>Independent blink and subtle motion, experimental</span></label>
+    <label className="cartoon-life-toggle"><input aria-label="Living World experimental" type="checkbox" checked={!!scene.livingWorld?.enabled} disabled={scene.placeId !== 'living-room'} onChange={event => update(value => ({ ...value, livingWorld: event.target.checked ? { enabled: true } : undefined }))} /> Living World: {scene.livingWorld?.enabled ? 'ON' : 'OFF'} <span>Quiet independent activity between directed actions; includes Brightling Life V2. Living Room only.</span></label>
+    {scene.livingWorld?.enabled && <label className="cartoon-life-toggle"><input aria-label="Living World V1.1 experimental" type="checkbox" checked={scene.livingWorld.mode === 'v1.1'} onChange={event => update(value => ({ ...value, livingWorld: value.livingWorld ? { ...value.livingWorld, mode: event.target.checked ? 'v1.1' : undefined } : undefined }))} /> Natural behaviour V1.1 <span>Longer pauses and purposeful room destinations; experimental comparison.</span></label>}
     {scene.actions.some(action => isFrameAction(action.type)) && <p role="alert" className="episode-warning">This scene contains rejected Batch 3 actions. They remain available for review of saved work, but their motion and artwork are not approved for production.</p>}
     {scene.actions.some(action => action.artwork === 'provisional-v1' && !supportsGesture(action.characterId)) && <p role="status" className="episode-warning">Some provisional gestures need Max or Maxine's original outfit. They show the standing pose with the current outfit until it is restored.</p>}
+    {scene.actions.some(action => action.artwork === 'greeting-side-v2' && !supportsGesture(action.characterId)) && <p role="alert" className="episode-warning">Greeting V2 side waves require Max and Maxine's original outfits. Restore those outfits before export.</p>}
     <div className="scene-stage-main"><div className="scene-stage"><div className="scene-stage-caption"><strong>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Scene'}</strong><span>{targetAction ? 'Click the stage to set the position' : time === 0 ? 'Click a Brightling, then drag to place' : 'Select a Brightling or scrub to a new time'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} aria-label="Timed scene stage: select Brightlings, drag at zero seconds, or click a walking destination" />
       <div className="scene-playback"><button onClick={() => { if (!playing) audio.startAt(time); setPlaying(value => !value); }} disabled={!validation?.ok || time >= scene.duration && !playing}>{playing ? 'Pause' : 'Play'}</button><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
       <aside className="scene-director"><h2>Direct your Brightlings</h2><label>Add Brightling<select aria-label="Add Brightling" value="" onChange={event => { const id = event.target.value; if (!id) return; const point = initialPoint(Object.keys(scene.characters).length); update(value => ({ ...value, characters: { ...value.characters, [id]: point }, actions: [...value.actions, { id: crypto.randomUUID(), characterId: id, type: 'appear', start: 0, duration: 0, point }] })); setSelectedCharacter(id); setSelectedAction(null); setTime(0); setMessage(`Drag ${characterName(id)} on the stage to set the starting position.`); }}><option value="">Choose a Brightling…</option>{cast.filter(item => !Object.hasOwn(scene.characters, item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
@@ -281,7 +296,8 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
         </>}
       </div>
     </section>}
-    <SceneTimeline scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} name={characterName} onSeek={value => { setPlaying(false); setTime(value); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} />
+    <CameraPanel scene={scene} time={time} selectedId={selectedCamera} onSelect={setSelectedCamera} onPreview={setCameraPreview} onChange={camera => update(value => ({ ...value, camera }))} />
+    <SceneTimeline scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} selectedCamera={selectedCamera} name={characterName} onSeek={value => { setPlaying(false); setTime(value); setCameraPreview(null); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} onSelectCamera={id => { setSelectedCamera(id); setCameraPreview(null); setPlaying(false); const key = scene.camera?.find(item => item.id === id); if (key) setTime(key.start); }} onCameraTiming={key => { const camera = (scene.camera ?? []).map(item => item.id === key.id ? key : item); if (validCamera({ ...scene, camera })) update(value => ({ ...value, camera })); }} />
     <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} speakers={Object.keys(scene.characters).map(id => ({ id, name: characterName(id) }))} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onExtendDuration={seconds => update(value => ({ ...value, duration: Math.max(value.duration, Math.min(3600, seconds)) }))} onSeek={value => { setPlaying(false); setTime(value); }} />
     {validation && !validation.ok && <p role="alert" className="storage-alert">{validation.error}</p>}<p role="status" className="scene-status">{message}</p>
   </section>;

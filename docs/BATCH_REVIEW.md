@@ -1,5 +1,11 @@
 # Batch review for Karl
 
+**Cartoon Engine V1.1 (24 October 2026):** Karl visually approved the 26-second Living Room cartoon. See the [approval record](../proofs/cartoon-engine-v1-1/APPROVAL.md) and review evidence.
+
+## Unity 2.5D Cartoon Engine V1 (24 October 2026)
+
+**EXPERIMENTAL; TECHNICALLY VERIFIED; AWAITING KARL'S VISUAL REVIEW.** The [26-second Unity Game-camera recording and review report](../proofs/cartoon-engine-v1/REPORT.md) show Max and Maxine in the approved Living Room after a Studio scene transfer. The flattened room image cannot provide true sofa or plant occlusion; approved baselines and Portal V1 remain separate.
+
 ## Unity Bridge V1 — Max's first appearance (23 October 2026)
 
 **EXPERIMENTAL; KARL'S LIVE EDITOR RECHECK AND VISUAL APPROVAL PENDING.** Karl's normal Editor timed out on `max.blink` after successful Connect/Ping. [The main-thread fix report and two-blink scene test](../proofs/unity-bridge-v1-fix/REPORT.md) document a passing disposable Play mode run and the still-pending normal Editor reload. The [original Max import proof](../proofs/unity-bridge-v1/REPORT.md) remains. No rigging or production renderer change is approved.

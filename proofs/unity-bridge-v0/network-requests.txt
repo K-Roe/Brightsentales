@@ -1,0 +1,7 @@
+93. [GET] http://127.0.0.1:17843/health => [FAILED] net::ERR_CONNECTION_REFUSED
+94. [GET] http://127.0.0.1:17843/health => [FAILED] net::ERR_CONNECTION_REFUSED
+95. [GET] http://127.0.0.1:17843/health => [FAILED] net::ERR_CONNECTION_REFUSED
+96. [GET] http://127.0.0.1:17843/health => [200] OK
+97. [GET] http://127.0.0.1:17843/ping => [200] OK
+
+Note: 92 static requests not shown, run with "static" option to see them.

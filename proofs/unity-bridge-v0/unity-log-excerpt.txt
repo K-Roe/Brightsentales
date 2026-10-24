@@ -1,0 +1,2 @@
+373:BrightTales Bridge V0 listening on http://127.0.0.1:17843
+387:BRIDGE_V0_READY

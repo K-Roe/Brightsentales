@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "44444444-4444-4444-8444-000000000001",
+      "name": "Max and Maxine Greeting V1",
+      "duration": 8.2,
+      "placeId": "living-room",
+      "characters": {
+        "max": { "x": 350, "y": 790 },
+        "maxine": { "x": 1320, "y": 790 }
+      },
+      "actions": [
+        { "id": "44444444-4444-4444-8444-000000000002", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 350, "y": 790 } },
+        { "id": "44444444-4444-4444-8444-000000000003", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1320, "y": 790 } },
+        { "id": "44444444-4444-4444-8444-000000000004", "characterId": "max", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 690, "y": 790 } },
+        { "id": "44444444-4444-4444-8444-000000000005", "characterId": "maxine", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 980, "y": 790 } },
+        { "id": "44444444-4444-4444-8444-000000000006", "characterId": "max", "type": "turn", "start": 3.05, "duration": 0.4 },
+        { "id": "44444444-4444-4444-8444-000000000007", "characterId": "maxine", "type": "turn", "start": 3.05, "duration": 0.4 },
+        { "id": "44444444-4444-4444-8444-000000000008", "characterId": "max", "type": "wave", "start": 3.6, "duration": 1.62 },
+        { "id": "44444444-4444-4444-8444-000000000009", "characterId": "maxine", "type": "wave", "start": 5.45, "duration": 1.62 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,357 @@
+{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode1-profile-S92oGw",
+  "downloads": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-episode1-download-NDKTjd",
+  "completed": [
+    "restore approved places",
+    "compose gentle music",
+    "make subtle star effect",
+    "generate and save narration",
+    "create opening intro and title",
+    "scene meet-max",
+    "scene meet-maxine",
+    "scene breakfast",
+    "scene bright-stars",
+    "scene garden",
+    "scene goodbye",
+    "create ending credits",
+    "assemble and save complete episode",
+    "reopen saved episode",
+    "export editable Studio Backup",
+    "export full episode video"
+  ],
+  "voices": {
+    "max": {
+      "name": "Narrator — Lily — Hello, everyone! Welcome to BrightTales! Today, we're g",
+      "duration": 19.8
+    },
+    "maxine": {
+      "name": "Narrator — Lily — And this is Maxine! She is Max's friend. Maxine loves p",
+      "duration": 17.5
+    },
+    "breakfast_a": {
+      "name": "Narrator — Lily — Back at Max's house, it is nearly breakfast time. Max l",
+      "duration": 12.7
+    },
+    "breakfast_b": {
+      "name": "Narrator — Lily — There we are! Max has told us what he needs. His phone",
+      "duration": 9.5
+    },
+    "stars": {
+      "name": "Narrator — Lily — After breakfast, Max feels proud. He has used his own w",
+      "duration": 18.8
+    },
+    "garden": {
+      "name": "Narrator — Lily — Here comes Maxine! She has found Max in the garden. The",
+      "duration": 20.1
+    },
+    "goodbye": {
+      "name": "Narrator — Lily — The day has been full of small, happy moments. Max shar",
+      "duration": 16.2
+    },
+    "device": {
+      "name": "Narrator — George — I'm hungry!",
+      "duration": 1.2
+    }
+  },
+  "steps": [
+    {
+      "name": "restore approved places",
+      "at": "2026-10-19T19:33:59.063Z"
+    },
+    {
+      "name": "compose gentle music",
+      "at": "2026-10-19T19:33:59.804Z"
+    },
+    {
+      "name": "make subtle star effect",
+      "at": "2026-10-19T19:35:51.047Z"
+    },
+    {
+      "name": "generate and save narration",
+      "at": "2026-10-19T19:36:47.468Z"
+    },
+    {
+      "name": "create opening intro and title",
+      "at": "2026-10-19T19:36:48.054Z"
+    },
+    {
+      "scene": "1. Meet Max",
+      "place": "Max's bedroom",
+      "duration": 36,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene meet-max",
+      "at": "2026-10-19T19:37:07.265Z"
+    },
+    {
+      "scene": "2. Meet Maxine",
+      "place": "Maxine's bedroom",
+      "duration": 34,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene meet-maxine",
+      "at": "2026-10-19T19:38:41.631Z"
+    },
+    {
+      "scene": "3. Breakfast Time",
+      "place": "Kitchen",
+      "duration": 50,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene breakfast",
+      "at": "2026-10-19T19:38:42.747Z"
+    },
+    {
+      "scene": "4. Bright Stars",
+      "place": "Living Room",
+      "duration": 34,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene bright-stars",
+      "at": "2026-10-19T19:38:43.448Z"
+    },
+    {
+      "scene": "5. Playing Together",
+      "place": "Garden",
+      "duration": 43,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene garden",
+      "at": "2026-10-19T19:38:44.339Z"
+    },
+    {
+      "scene": "6. Goodbye for Now",
+      "place": "Front of Max's house",
+      "duration": 31,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene goodbye",
+      "at": "2026-10-19T19:38:44.772Z"
+    },
+    {
+      "name": "create ending credits",
+      "at": "2026-10-19T19:39:28.129Z"
+    },
+    {
+      "name": "create opening intro and title",
+      "at": "2026-10-19T19:40:47.337Z"
+    },
+    {
+      "scene": "1. Meet Max",
+      "place": "Max's bedroom",
+      "duration": 36,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene meet-max",
+      "at": "2026-10-19T19:40:47.870Z"
+    },
+    {
+      "scene": "2. Meet Maxine",
+      "place": "Maxine's bedroom",
+      "duration": 34,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene meet-maxine",
+      "at": "2026-10-19T19:40:48.409Z"
+    },
+    {
+      "scene": "3. Breakfast Time",
+      "place": "Kitchen",
+      "duration": 50,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene breakfast",
+      "at": "2026-10-19T19:40:49.317Z"
+    },
+    {
+      "scene": "4. Bright Stars",
+      "place": "Living Room",
+      "duration": 34,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene bright-stars",
+      "at": "2026-10-19T19:40:49.941Z"
+    },
+    {
+      "scene": "5. Playing Together",
+      "place": "Garden",
+      "duration": 43,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene garden",
+      "at": "2026-10-19T19:40:50.542Z"
+    },
+    {
+      "scene": "6. Goodbye for Now",
+      "place": "Front of Max's house",
+      "duration": 31,
+      "status": "Scene saved in this browser."
+    },
+    {
+      "name": "scene goodbye",
+      "at": "2026-10-19T19:40:51.070Z"
+    },
+    {
+      "name": "create ending credits",
+      "at": "2026-10-19T19:40:51.649Z"
+    },
+    {
+      "name": "assemble and save complete episode",
+      "at": "2026-10-19T19:41:16.226Z"
+    },
+    {
+      "name": "reopen saved episode",
+      "at": "2026-10-19T19:41:16.690Z"
+    },
+    {
+      "name": "export editable Studio Backup",
+      "at": "2026-10-19T19:41:17.638Z"
+    },
+    {
+      "name": "export full episode video",
+      "at": "2026-10-19T19:45:35.416Z"
+    }
+  ],
+  "errors": [
+    {
+      "at": "2026-10-19T19:35:05.060Z",
+      "error": "Error: Timed out: document.querySelector('.music-render-result')?.textContent.includes('in your Audio Library')",
+      "lastStage": "compose gentle music"
+    },
+    {
+      "at": "2026-10-19T19:35:29.305Z",
+      "error": "TypeError: fetch failed",
+      "lastStage": "compose gentle music"
+    },
+    {
+      "at": "2026-10-19T19:36:48.110Z",
+      "error": "Error: Error: Missing max\n    at <anonymous>:1:121\n    at <anonymous>:1:168",
+      "lastStage": "create opening intro and title"
+    },
+    {
+      "at": "2026-10-19T19:37:07.276Z",
+      "error": "Error: Error: Missing Create Scene\n    at <anonymous>:1:115\n    at <anonymous>:1:171",
+      "lastStage": "scene meet-max"
+    },
+    {
+      "at": "2026-10-19T19:37:46.177Z",
+      "error": "Error: Chrome debugging endpoint did not become ready",
+      "lastStage": "scene meet-max"
+    },
+    {
+      "at": "2026-10-19T19:38:44.816Z",
+      "error": "Error: Error: Missing input[aria-label=\"Credit heading\"]\n    at <anonymous>:1:90\n    at <anonymous>:1:472",
+      "lastStage": "scene goodbye"
+    },
+    {
+      "at": "2026-10-19T19:39:28.147Z",
+      "error": "Error: Error: Missing option Episode 1 opening\n    at <anonymous>:1:160\n    at <anonymous>:1:413",
+      "lastStage": "create ending credits"
+    },
+    {
+      "at": "2026-10-19T19:40:51.722Z",
+      "error": "Error: Episode has fewer than six scenes",
+      "lastStage": "create ending credits"
+    }
+  ],
+  "uiText": "e 1 opening · 14.0s\nEnding credits\nNo credits\nEpisode 1 closing credits · 14.0s\nExport Episode Video\nSave the episode first. Export runs in real time and downloads a WebM with the full soundtrack.\nEPISODE 1 OPENING\nMax's bedroom · Intro · 0.0s / 14.0s\nRestart\nPlay\n0.0s / 256.0s\nEpisode sequence\n\nScenes play from left to right. Add the same scene again whenever you like.\n\n256.0s total\n1\n1. Meet Max\n\nMax's bedroom · 36.0s\n\n←\n→\nEdit Scene\nRemove\n2\n2. Meet Maxine\n\nMaxine's bedroom · 34.0s\n\n←\n→\nEdit Scene\nRemove\n3\n3. Breakfast Time\n\nKitchen · 50.0s\n\n←\n→\nEdit Scene\nRemove\n4\n4. Bright Stars\n\nLiving Room · 34.0s\n\n←\n→\nEdit Scene\nRemove\n5\n5. Playing Together\n\nGarden · 43.0s\n\n←\n→\nEdit Scene\nRemove\n6\n6. Goodbye for Now\n\nFront of Max's house · 31.0s\n\n←\n→\nEdit Scene\nRemove\nIntro\n1. Meet Max\n2. Meet Maxine\n3. Breakfast Time\n4. Bright Stars\n5. Playing Together\n6. Goodbye for Now\nCredits\nMusic & sound\n\nAdd music, effects or recorded voices from the Audio Library. Drag a clip to choose when it starts.\n\nChoose a sound\nNarrator — Lily — Back at Max's house, it is nearly breakfast time. Max l (Speech)\nBright Star soft sparkle (Effect)\nNarrator — Lily — There we are! Max has told us what he needs. His phone (Speech)\nNarrator — Lily — And this is Maxine! She is Max's friend. Maxine loves p (Speech)\nBright Star soft sparkle (Effect)\nNarrator — George — I'm hungry! (Speech)\nMeet Max — gentle morning theme (Music)\nNarrator — Lily — Here comes Maxine! She has found Max in the garden. The (Speech)\nNarrator — Lily — Hello, everyone! Welcome to BrightTales! Today, we're g (Speech)\nNarrator — Lily — The day has been full of small, happy moments. Max shar (Speech)\nNarrator — Lily — After breakfast, Max feels proud. He has used his own w (Speech)\nAdd Music\nAdd Sound Effect\nAdd Speech\nTime\n0s\n5s\n10s\n15s\n20s\n25s\n30s\n35s\n40s\n45s\n50s\n55s\n60s\n65s\n70s\n75s\n80s\n85s\n90s\n95s\n100s\n105s\n110s\n115s\n120s\n125s\n130s\n135s\n140s\n145s\n150s\n155s\n160s\n165s\n170s\n175s\n180s\n185s\n190s\n195s\n200s\n205s\n210s\n215s\n220s\n225s\n230s\n235s\n240s\n245s\n250s\n255s\nMusic\nEffects\nVoices\nSaved scenes\n\nAdd a scene to the end of your episode.\n\n1. Meet Max\nMax's bedroom · 36.0s\nAdd Scene\nEdit Scene\n2. Meet Maxine\nMaxine's bedroom · 34.0s\nAdd Scene\nEdit Scene\n3. Breakfast Time\nKitchen · 50.0s\nAdd Scene\nEdit Scene\n4. Bright Stars\nLiving Room · 34.0s\nAdd Scene\nEdit Scene\n5. Playing Together\nGarden · 43.0s\nAdd Scene\nEdit Scene\n6. Goodbye for Now\nFront of Max's house · 31.0s\nAdd Scene\nEdit Scene\n\nAdd scenes from the library, then press Play.",
+  "browserPreserved": "Closed gracefully after export.",
+  "duration": 256,
+  "savedSceneNames": [
+    "1. Meet Max",
+    "2. Meet Maxine",
+    "3. Breakfast Time",
+    "4. Bright Stars",
+    "5. Playing Together",
+    "6. Goodbye for Now"
+  ],
+  "backupSummary": {
+    "version": 8,
+    "scenes": [
+      {
+        "name": "1. Meet Max",
+        "duration": 36,
+        "placeId": "place-c80ed77d-fb19-4714-b8de-34265e70749a",
+        "characters": [
+          "max"
+        ],
+        "actions": 3,
+        "phone": 0,
+        "audio": 3
+      },
+      {
+        "name": "2. Meet Maxine",
+        "duration": 34,
+        "placeId": "place-98f791a6-1568-4aa3-86d8-3fcc2b0b78a9",
+        "characters": [
+          "maxine"
+        ],
+        "actions": 3,
+        "phone": 0,
+        "audio": 3
+      },
+      {
+        "name": "3. Breakfast Time",
+        "duration": 50,
+        "placeId": "place-b9b39342-4a21-4e91-a70c-87eb5facfb41",
+        "characters": [
+          "max"
+        ],
+        "actions": 2,
+        "phone": 5,
+        "audio": 6
+      },
+      {
+        "name": "4. Bright Stars",
+        "duration": 34,
+        "placeId": "living-room",
+        "characters": [
+          "max"
+        ],
+        "actions": 3,
+        "phone": 0,
+        "audio": 4
+      },
+      {
+        "name": "5. Playing Together",
+        "duration": 43,
+        "placeId": "garden",
+        "characters": [
+          "max",
+          "maxine"
+        ],
+        "actions": 6,
+        "phone": 0,
+        "audio": 4
+      },
+      {
+        "name": "6. Goodbye for Now",
+        "duration": 31,
+        "placeId": "place-6189910b-10a4-402e-a18a-baa07de18f69",
+        "characters": [
+          "max",
+          "maxine"
+        ],
+        "actions": 4,
+        "phone": 0,
+        "audio": 3
+      }
+    ],
+    "audioAssets": 11
+  },
+  "video": {
+    "path": "C:\\Users\\karlr\\repos\\brightsenappstales\\proofs\\episode-1\\production\\meet-max-episode-1-first-cut.webm",
+    "bytes": 69538159
+  }
+}

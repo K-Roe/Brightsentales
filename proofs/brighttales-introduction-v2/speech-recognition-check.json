@@ -1,0 +1,68 @@
+﻿[
+    {
+        "key":  "welcome",
+        "expected":  "Hello, everyone! Welcome to BrightTales! A wonderful little world where we can learn, play and have fun together!",
+        "recognized":  "Hello everyone welcome to break tales are wonderful little world way we can learn clay and have fun together",
+        "intelligible":  true
+    },
+    {
+        "key":  "max_1",
+        "expected":  "Everyone, meet Max! Max is a friendly Brightling who loves exploring and discovering new things!",
+        "recognized":  "Every one metre Max Max is a friendly brightening who loves exploring and discovering new things",
+        "intelligible":  true
+    },
+    {
+        "key":  "max_2",
+        "expected":  "Max doesn\u0027t use spoken words to communicate, but he has lots of wonderful things to say!",
+        "recognized":  "Max doesn\u0027t use spoken words to communicate but he has lots of wonderful things to say",
+        "intelligible":  true
+    },
+    {
+        "key":  "maxine",
+        "expected":  "And this is Maxine! She\u0027s Max\u0027s friend, and together they love going on little adventures!",
+        "recognized":  "And this is Maxine she\u0027s Max\u0027s friend and together they love going on little adventures",
+        "intelligible":  true
+    },
+    {
+        "key":  "speak_1",
+        "expected":  "Sometimes, telling someone what you want or how you feel can be difficult.",
+        "recognized":  "Sometimes telling someone what you want or how you feel can be difficult",
+        "intelligible":  true
+    },
+    {
+        "key":  "speak_2",
+        "expected":  "That\u0027s where Bright Speak comes in!",
+        "recognized":  "That\u0027s where bright speak comes in",
+        "intelligible":  true
+    },
+    {
+        "key":  "speak_3",
+        "expected":  "Bright Speak helps children communicate, using pictures and words to help share what they want to say.",
+        "recognized":  "Right speed helps children communicate using pictures and words to help share what they want to say",
+        "intelligible":  true
+    },
+    {
+        "key":  "world_1",
+        "expected":  "In BrightTales, Max and Maxine will explore, learn and discover new things together!",
+        "recognized":  "In bright tales maxim Maxine will explore learning discover new things together",
+        "intelligible":  true
+    },
+    {
+        "key":  "world_2",
+        "expected":  "And there\u0027s always something exciting waiting around the corner!",
+        "recognized":  "And there\u0027s always something exciting waiting around the corner",
+        "intelligible":  true
+    },
+    {
+        "key":  "goodbye_1",
+        "expected":  "Thank you for joining us! We can\u0027t wait to see you again!",
+        "recognized":  "Thank you for joining us we can\u0027t wait to see you again",
+        "intelligible":  true
+    },
+    {
+        "key":  "goodbye_2",
+        "expected":  "Bye-bye, everyone!",
+        "recognized":  "Bye bye every one\u0027s",
+        "intelligible":  true
+    }
+]

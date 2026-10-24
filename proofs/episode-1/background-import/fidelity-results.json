@@ -1,0 +1,92 @@
+{
+  "living-room": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 0.0,
+    "preview_to_export_mae_upper_43_percent": 6.591,
+    "next_best_preview_export_mae": 46.204,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  },
+  "garden": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 3.422,
+    "preview_to_export_mae_upper_43_percent": 6.726,
+    "next_best_preview_export_mae": 62.482,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  },
+  "max-s-bedroom": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 2.874,
+    "preview_to_export_mae_upper_43_percent": 6.012,
+    "next_best_preview_export_mae": 45.369,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  },
+  "maxine-s-bedroom": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 3.026,
+    "preview_to_export_mae_upper_43_percent": 6.182,
+    "next_best_preview_export_mae": 45.156,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  },
+  "kitchen": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 2.966,
+    "preview_to_export_mae_upper_43_percent": 6.23,
+    "next_best_preview_export_mae": 55.278,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  },
+  "front-of-max-s-house": {
+    "size": [
+      1672,
+      941
+    ],
+    "source_to_studio_preview_mae_upper_43_percent": 2.903,
+    "preview_to_export_mae_upper_43_percent": 6.026,
+    "next_best_preview_export_mae": 56.159,
+    "stream": {
+      "codec_name": "vp9",
+      "width": 1672,
+      "height": 941
+    },
+    "full_video_decode": "passed"
+  }
+}

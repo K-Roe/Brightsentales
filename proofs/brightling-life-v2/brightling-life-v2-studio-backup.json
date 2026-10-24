@@ -1,0 +1,252 @@
+{
+  "version": 8,
+  "createdAt": "2026-10-23T08:38:56.696Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a1a1",
+        "name": "Brightling Life V2 - independent life",
+        "duration": 16,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a103",
+            "characterId": "max",
+            "type": "wave",
+            "start": 3.6,
+            "duration": 1.7
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a104",
+            "characterId": "max",
+            "type": "walk",
+            "start": 5.9,
+            "duration": 3,
+            "point": {
+              "x": 760,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a105",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 13.4,
+            "duration": 1.7
+          }
+        ],
+        "phone": [
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a111",
+            "characterId": "maxine",
+            "type": "take-out",
+            "start": 9.4,
+            "duration": 0.55,
+            "hand": "right"
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a112",
+            "characterId": "maxine",
+            "type": "hold",
+            "start": 9.95,
+            "duration": 2.3
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a113",
+            "characterId": "maxine",
+            "type": "put-away",
+            "start": 12.25,
+            "duration": 0.55
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "ambience": true,
+          "mode": "v2"
+        }
+      },
+      {
+        "id": "a2a2a2a2-a2a2-42a2-82a2-a2a2a2a2a2a2",
+        "name": "Cartoon Life V1 - comparison",
+        "duration": 16,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a103",
+            "characterId": "max",
+            "type": "wave",
+            "start": 3.6,
+            "duration": 1.7
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a104",
+            "characterId": "max",
+            "type": "walk",
+            "start": 5.9,
+            "duration": 3,
+            "point": {
+              "x": 760,
+              "y": 790
+            }
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a105",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 13.4,
+            "duration": 1.7
+          }
+        ],
+        "phone": [
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a111",
+            "characterId": "maxine",
+            "type": "take-out",
+            "start": 9.4,
+            "duration": 0.55,
+            "hand": "right"
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a112",
+            "characterId": "maxine",
+            "type": "hold",
+            "start": 9.95,
+            "duration": 2.3
+          },
+          {
+            "id": "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a113",
+            "characterId": "maxine",
+            "type": "put-away",
+            "start": 12.25,
+            "duration": 0.55
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "ambience": true
+        }
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "83e5e449-cbe5-49fc-8734-1abbb9c3e20e",
+        "name": "Brightling Life V2 review",
+        "sceneIds": [
+          "a1a1a1a1-a1a1-41a1-81a1-a1a1a1a1a1a1"
+        ]
+      }
+    ]
+  },
+  "intros": {
+    "version": 1,
+    "intros": []
+  },
+  "credits": {
+    "version": 1,
+    "credits": []
+  },
+  "projects": {
+    "version": 1,
+    "music": [],
+    "effects": []
+  },
+  "audioAssets": [],
+  "voiceSettings": {
+    "version": 1,
+    "presets": [],
+    "defaults": {}
+  }
+}

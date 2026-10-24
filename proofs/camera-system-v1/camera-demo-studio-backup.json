@@ -1,0 +1,157 @@
+{
+  "version": 8,
+  "createdAt": "2026-10-22T21:50:39.822Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "81818181-8181-4181-8181-818181818181",
+        "name": "Camera V1 - Max and Maxine",
+        "duration": 13,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 400,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1210,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "81818181-8181-4181-8181-818181818182",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 400,
+              "y": 790
+            }
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818183",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1210,
+              "y": 790
+            }
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818184",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0.4,
+            "duration": 2.1,
+            "point": {
+              "x": 650,
+              "y": 790
+            }
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818185",
+            "characterId": "max",
+            "type": "wave",
+            "start": 5,
+            "duration": 1.7
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818186",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 9,
+            "duration": 1.7
+          }
+        ],
+        "camera": [
+          {
+            "id": "81818181-8181-4181-8181-818181818187",
+            "shot": "medium",
+            "focus": "max",
+            "start": 3,
+            "duration": 2
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818188",
+            "shot": "medium",
+            "focus": "maxine",
+            "start": 7,
+            "duration": 2
+          },
+          {
+            "id": "81818181-8181-4181-8181-818181818189",
+            "shot": "wide",
+            "focus": "point",
+            "point": {
+              "x": 836,
+              "y": 470.5
+            },
+            "start": 11,
+            "duration": 2
+          }
+        ]
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "733cc6ba-e1fd-44e1-a74b-7222aeab0507",
+        "name": "My Episode",
+        "sceneIds": [
+          "81818181-8181-4181-8181-818181818181"
+        ]
+      }
+    ]
+  },
+  "intros": {
+    "version": 1,
+    "intros": []
+  },
+  "credits": {
+    "version": 1,
+    "credits": []
+  },
+  "projects": {
+    "version": 1,
+    "music": [],
+    "effects": []
+  },
+  "audioAssets": [],
+  "voiceSettings": {
+    "version": 1,
+    "presets": [],
+    "defaults": {}
+  }
+}

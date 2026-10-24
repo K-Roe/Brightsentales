@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "id": "a1010000-0000-4000-8000-000000000001",
+  "name": "Max AC-01 Test - One Arm Wave",
+  "category": "interactions",
+  "rig": "max-original-v1",
+  "duration": 2.1,
+  "keyframes": [
+    { "id": "a1010000-0000-4000-8000-000000000011", "time": 0, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000012", "time": 0.4, "pose": { "arm-left": 0, "arm-right": 55, "hand-left": 0, "hand-right": 5 } },
+    { "id": "a1010000-0000-4000-8000-000000000013", "time": 0.7, "pose": { "arm-left": 0, "arm-right": 65, "hand-left": 0, "hand-right": -18 } },
+    { "id": "a1010000-0000-4000-8000-000000000014", "time": 1, "pose": { "arm-left": 0, "arm-right": 55, "hand-left": 0, "hand-right": 18 } },
+    { "id": "a1010000-0000-4000-8000-000000000015", "time": 1.3, "pose": { "arm-left": 0, "arm-right": 65, "hand-left": 0, "hand-right": -18 } },
+    { "id": "a1010000-0000-4000-8000-000000000016", "time": 1.7, "pose": { "arm-left": 0, "arm-right": 55, "hand-left": 0, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000017", "time": 2.1, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } }
+  ]
+}

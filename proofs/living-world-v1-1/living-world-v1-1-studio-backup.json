@@ -1,0 +1,198 @@
+{
+  "version": 8,
+  "createdAt": "2026-10-23T10:12:49.485Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c1c1",
+        "name": "Living World V1.1 - natural home",
+        "duration": 45,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c103",
+            "characterId": "max",
+            "type": "walk",
+            "start": 17,
+            "duration": 4,
+            "point": {
+              "x": 740,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c104",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 27,
+            "duration": 1.7
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "mode": "v2",
+          "ambience": true
+        },
+        "livingWorld": {
+          "enabled": true,
+          "mode": "v1.1"
+        }
+      },
+      {
+        "id": "c2c2c2c2-c2c2-42c2-82c2-c2c2c2c2c2c2",
+        "name": "Living World V1 - approved baseline",
+        "duration": 45,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 440,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1160,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c101",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 440,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c102",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1160,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c103",
+            "characterId": "max",
+            "type": "walk",
+            "start": 17,
+            "duration": 4,
+            "point": {
+              "x": 740,
+              "y": 790
+            }
+          },
+          {
+            "id": "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c104",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 27,
+            "duration": 1.7
+          }
+        ],
+        "life": {
+          "enabled": true,
+          "mode": "v2",
+          "ambience": true
+        },
+        "livingWorld": {
+          "enabled": true
+        }
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "47d31b92-c4eb-4ee5-ae58-8525cb1ea861",
+        "name": "Living World V1.1 review",
+        "sceneIds": [
+          "c1c1c1c1-c1c1-41c1-81c1-c1c1c1c1c1c1"
+        ]
+      }
+    ]
+  },
+  "intros": {
+    "version": 1,
+    "intros": []
+  },
+  "credits": {
+    "version": 1,
+    "credits": []
+  },
+  "projects": {
+    "version": 1,
+    "music": [],
+    "effects": []
+  },
+  "audioAssets": [],
+  "voiceSettings": {
+    "version": 1,
+    "presets": [],
+    "defaults": {}
+  }
+}

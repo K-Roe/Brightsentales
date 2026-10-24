@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "id": "a1010000-0000-4000-8000-000000000003",
+  "name": "Max AC-01 Test - Both Arms Excited",
+  "category": "emotions",
+  "rig": "max-original-v1",
+  "duration": 2,
+  "keyframes": [
+    { "id": "a1010000-0000-4000-8000-000000000031", "time": 0, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } },
+    { "id": "a1010000-0000-4000-8000-000000000032", "time": 0.5, "pose": { "arm-left": -60, "arm-right": 60, "hand-left": 8, "hand-right": -8 } },
+    { "id": "a1010000-0000-4000-8000-000000000033", "time": 0.85, "pose": { "arm-left": -68, "arm-right": 68, "hand-left": -8, "hand-right": 8 } },
+    { "id": "a1010000-0000-4000-8000-000000000034", "time": 1.2, "pose": { "arm-left": -54, "arm-right": 54, "hand-left": 8, "hand-right": -8 } },
+    { "id": "a1010000-0000-4000-8000-000000000035", "time": 1.55, "pose": { "arm-left": -68, "arm-right": 68, "hand-left": -8, "hand-right": 8 } },
+    { "id": "a1010000-0000-4000-8000-000000000036", "time": 2, "pose": { "arm-left": 0, "arm-right": 0, "hand-left": 0, "hand-right": 0 } }
+  ]
+}

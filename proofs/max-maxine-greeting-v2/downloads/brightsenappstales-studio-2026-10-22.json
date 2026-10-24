@@ -1,0 +1,145 @@
+{
+  "version": 8,
+  "createdAt": "2026-10-22T04:45:17.297Z",
+  "characters": [],
+  "scene": null,
+  "places": {
+    "version": 1,
+    "folders": [
+      {
+        "id": "house",
+        "name": "House",
+        "protected": true
+      },
+      {
+        "id": "park",
+        "name": "Park",
+        "protected": true
+      }
+    ],
+    "assignments": {
+      "living-room": "house",
+      "bedroom": "house",
+      "garden": "house"
+    },
+    "customPlaces": [],
+    "removedDefaultPlaceIds": [],
+    "artwork": {}
+  },
+  "timedScenes": {
+    "version": 1,
+    "scenes": [
+      {
+        "id": "55555555-5555-4555-8555-000000000001",
+        "name": "Max and Maxine Greeting V2",
+        "duration": 8.2,
+        "placeId": "living-room",
+        "characters": {
+          "max": {
+            "x": 350,
+            "y": 790
+          },
+          "maxine": {
+            "x": 1320,
+            "y": 790
+          }
+        },
+        "actions": [
+          {
+            "id": "55555555-5555-4555-8555-000000000002",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 350,
+              "y": 790
+            }
+          },
+          {
+            "id": "55555555-5555-4555-8555-000000000003",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "point": {
+              "x": 1320,
+              "y": 790
+            }
+          },
+          {
+            "id": "55555555-5555-4555-8555-000000000004",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0.5,
+            "duration": 2.5,
+            "point": {
+              "x": 690,
+              "y": 790
+            },
+            "artwork": "greeting-side-v2"
+          },
+          {
+            "id": "55555555-5555-4555-8555-000000000005",
+            "characterId": "maxine",
+            "type": "walk",
+            "start": 0.5,
+            "duration": 2.5,
+            "point": {
+              "x": 980,
+              "y": 790
+            },
+            "artwork": "greeting-side-v2"
+          },
+          {
+            "id": "55555555-5555-4555-8555-000000000006",
+            "characterId": "max",
+            "type": "wave",
+            "start": 3.6,
+            "duration": 1.62,
+            "artwork": "greeting-side-v2"
+          },
+          {
+            "id": "55555555-5555-4555-8555-000000000007",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 5.45,
+            "duration": 1.62,
+            "artwork": "greeting-side-v2"
+          }
+        ]
+      }
+    ]
+  },
+  "episodes": {
+    "version": 1,
+    "episodes": [
+      {
+        "id": "655b9b2d-cec4-48d1-9926-8b91d4c00d51",
+        "name": "Max and Maxine Greeting V2",
+        "sceneIds": [
+          "55555555-5555-4555-8555-000000000001"
+        ]
+      }
+    ]
+  },
+  "intros": {
+    "version": 1,
+    "intros": []
+  },
+  "credits": {
+    "version": 1,
+    "credits": []
+  },
+  "projects": {
+    "version": 1,
+    "music": [],
+    "effects": []
+  },
+  "audioAssets": [],
+  "voiceSettings": {
+    "version": 1,
+    "presets": [],
+    "defaults": {}
+  }
+}

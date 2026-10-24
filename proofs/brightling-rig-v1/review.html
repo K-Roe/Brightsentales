@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Max Living Body V1 — experimental review</title>
+<style>
+  body { margin: 0; background: #d9e9ed; color: #123d50; font: 16px Arial, sans-serif; }
+  main { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+  canvas { display: block; width: 100%; aspect-ratio: 16 / 9; background: white; border: 1px solid #779ca8; }
+  button { margin: 14px 12px 0 0; padding: 10px 18px; font: inherit; cursor: pointer; }
+  p { line-height: 1.5; }
+</style>
+<main>
+  <h1>Max Living Body V1 — experimental</h1>
+  <p>Approved standing Max is on the left. The right uses isolated experimental layers. Playback and recording evaluate the same pure scene-time pose.</p>
+  <canvas id="review" width="1920" height="1080"></canvas>
+  <button id="play">Play 18 seconds</button><button id="export">Export WebM review</button>
+  <label for="seek">Scene time</label> <input id="seek" type="range" min="0" max="17.99" step="0.01" value="0" aria-label="Review time"> <output id="time">0.00 s</output>
+  <p id="status">Loading art…</p>
+</main>
+<script type="module">
+  import { loadMaxLivingRig } from '/src/experimental/maxLivingRig.ts';
+  import { drawStandingRig, physicalPoseAt } from '/src/experimental/physicalRig.ts';
+  import { independentBlinkAt } from '/src/brightlingLife.ts';
+  import { makeEyeLayer } from '/src/eyeLayers.ts';
+
+  const canvas = document.querySelector('#review');
+  const context = canvas.getContext('2d');
+  const status = document.querySelector('#status');
+  const view = new URLSearchParams(location.search).get('view') === 'close' ? 'close' : 'full';
+  const source = new Image();
+  source.src = '/art/max-0.png';
+  await source.decode();
+  const baselineBlink = makeEyeLayer(source, 'male', 'idle');
+  const rig = await loadMaxLivingRig();
+  status.textContent = 'Ready. Experimental art is not connected to Scene Maker or Living World.';
+
+  function drawAt(time) {
+    const t = Math.max(0, Math.min(17.999, time));
+    document.querySelector('#seek').value = String(t);
+    document.querySelector('#time').textContent = `${t.toFixed(2)} s`;
+    const blink = independentBlinkAt('max', t);
+    const pose = physicalPoseAt('max', t, blink);
+    context.fillStyle = '#e9f2f4'; context.fillRect(0, 0, 1920, 1080);
+    context.fillStyle = '#123d50'; context.fillRect(0, 0, 1920, 115);
+    context.fillStyle = 'white'; context.font = 'bold 39px Arial';
+    context.fillText(`Max's Living Body — ${view === 'close' ? 'connection close-up' : '18-second standing comparison'}`, 42, 70);
+    for (const [left, label] of [[38, 'APPROVED MAX'], [978, 'EXPERIMENTAL RIG']]) {
+      context.fillStyle = 'white'; context.fillRect(left, 145, 904, 864);
+      context.strokeStyle = '#8eabb5'; context.lineWidth = 3; context.strokeRect(left, 145, 904, 864);
+      context.fillStyle = '#123d50'; context.font = 'bold 31px Arial'; context.fillText(label, left + 35, 198);
+    }
+    context.save(); context.beginPath(); context.rect(40, 225, 900, 780); context.clip();
+    context.translate(view === 'close' ? 146 : 250, view === 'close' ? 226 : 246);
+    const scale = view === 'close' ? 1.55 : 1.03;
+    context.scale(scale, scale);
+    context.drawImage(source, 0, 0);
+    if (blink && baselineBlink) context.drawImage(baselineBlink.canvas, baselineBlink.x, baselineBlink.y);
+    context.restore();
+    context.save(); context.beginPath(); context.rect(980, 225, 900, 780); context.clip();
+    context.translate(view === 'close' ? 1086 : 1190, view === 'close' ? 226 : 246);
+    context.scale(scale, scale);
+    drawStandingRig(context, rig, pose);
+    context.restore();
+    context.fillStyle = '#123d50'; context.font = '24px Arial';
+    context.fillText(view === 'close' ? 'Inspect hair, eye, neck and shoulder edges.' : 'Same scale • same frame • feet planted', 65, 244);
+    context.fillText(view === 'close' ? 'Motion is intentionally restricted to small angles.' : 'Breath, head movement and posture are independent.', 1005, 244);
+    context.fillStyle = '#2d9da9'; context.fillRect(0, 1046, 1920 * t / 18, 34);
+  }
+
+  let running = false;
+  async function play(record) {
+    if (running) return;
+    running = true;
+    const frames = [];
+    let recorder;
+    if (record) {
+      const stream = canvas.captureStream(24);
+      recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9', videoBitsPerSecond: 6_000_000 });
+      recorder.ondataavailable = event => { if (event.data.size) frames.push(event.data); };
+      recorder.start();
+    }
+    const start = performance.now();
+    await new Promise(resolve => {
+      function step(now) {
+        const time = Math.min(18, (now - start) / 1000);
+        drawAt(time);
+        if (time < 18) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+    if (recorder) {
+      await new Promise(resolve => { recorder.onstop = resolve; recorder.stop(); });
+      const url = URL.createObjectURL(new Blob(frames, { type: 'video/webm' }));
+      const anchor = document.createElement('a'); anchor.href = url;
+      anchor.download = `max-living-rig-v1-${view}.webm`; anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    }
+    running = false;
+  }
+  document.querySelector('#play').onclick = () => play(false);
+  document.querySelector('#export').onclick = () => play(true);
+  document.querySelector('#seek').oninput = event => { if (!running) drawAt(Number(event.target.value)); };
+  window.drawRigAt = drawAt;
+  window.rigReady = true;
+  drawAt(0);
+</script>
+</html>

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "55555555-5555-4555-8555-000000000001",
+      "name": "Max and Maxine Greeting V2",
+      "duration": 8.2,
+      "placeId": "living-room",
+      "characters": {
+        "max": { "x": 350, "y": 790 },
+        "maxine": { "x": 1320, "y": 790 }
+      },
+      "actions": [
+        { "id": "55555555-5555-4555-8555-000000000002", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 350, "y": 790 } },
+        { "id": "55555555-5555-4555-8555-000000000003", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1320, "y": 790 } },
+        { "id": "55555555-5555-4555-8555-000000000004", "characterId": "max", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 690, "y": 790 }, "artwork": "greeting-side-v2" },
+        { "id": "55555555-5555-4555-8555-000000000005", "characterId": "maxine", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 980, "y": 790 }, "artwork": "greeting-side-v2" },
+        { "id": "55555555-5555-4555-8555-000000000006", "characterId": "max", "type": "wave", "start": 3.6, "duration": 1.62, "artwork": "greeting-side-v2" },
+        { "id": "55555555-5555-4555-8555-000000000007", "characterId": "maxine", "type": "wave", "start": 5.45, "duration": 1.62, "artwork": "greeting-side-v2" }
+      ]
+    }
+  ]
+}

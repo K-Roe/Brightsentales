@@ -1,0 +1,93 @@
+- generic [ref=f2e3]:
+  - complementary [ref=f2e4]:
+    - generic [ref=f2e5]:
+      - generic [ref=f2e6]: ✦
+      - generic [ref=f2e7]:
+        - strong [ref=f2e8]: BrightSenAppsTales
+        - generic [ref=f2e9]: 2D CARTOON STUDIO
+    - paragraph [ref=f2e10]: STUDIO
+    - navigation "Studio sections" [ref=f2e11]:
+      - button "Characters" [ref=f2e12] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e13]: ✦
+      - button "Places" [ref=f2e15] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e16]: ▧
+      - button "Scenes" [ref=f2e18] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e19]: ▤
+      - button "Intros" [ref=f2e21] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e22]: ★
+      - button "Episodes" [ref=f2e24] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e25]: ▣
+      - button "Credits" [ref=f2e27] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e28]: ❖
+      - button "Music Studio" [ref=f2e30] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e31]: ♪
+      - button "Voice Maker" [ref=f2e33] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e34]: ♬
+      - button "Audio" [ref=f2e36] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e37]: ♫
+      - button "Playground" [ref=f2e39] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e40]: ▶
+      - button "Unity Connection" [ref=f2e42] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f2e43]: ◇
+    - generic [ref=f2e45]:
+      - text: Appearance
+      - combobox "Appearance" [ref=f2e46]:
+        - option "Dark" [selected]
+        - option "Light"
+        - option "System"
+    - generic [ref=f2e47]: Saved in this browser
+  - main [ref=f2e49]:
+    - region [ref=f2e106]:
+      - paragraph [ref=f2e107]: EXPERIMENTAL · LOCAL ONLY
+      - heading "Unity Connection" [level=1] [ref=f2e108]
+      - paragraph [ref=f2e109]: Start the Unity project in Play mode, then connect to test the bridge.
+      - status [ref=f2e110]:
+        - strong [ref=f2e111]: "Status:"
+        - text: Connected
+      - status [ref=f2e112]: Connected to Unity. Ready for Ping.
+      - generic [ref=f2e113]:
+        - button "Connect" [disabled] [ref=f2e114]
+        - button "Disconnect" [ref=f2e115] [cursor=pointer]
+        - button "Ping" [ref=f2e116] [cursor=pointer]
+        - button "Blink Max" [ref=f2e117] [cursor=pointer]
+      - region [ref=f2e118]:
+        - paragraph [ref=f2e119]: EXPERIMENTAL · DIRECTOR CONTROLS V2
+        - heading "Direct Max and Maxine" [level=2] [ref=f2e120]
+        - paragraph [ref=f2e121]: Open Character Acting V1.2 in Unity Play mode, then choose one command.
+        - generic [ref=f2e122]:
+          - generic [ref=f2e123]:
+            - text: Character
+            - combobox "Character" [ref=f2e124]:
+              - option "Max" [selected]
+              - option "Maxine"
+          - generic [ref=f2e125]:
+            - text: Action
+            - combobox "Action" [ref=f2e126]:
+              - option "Look At" [selected]
+              - option "Wave"
+              - option "Idle"
+          - generic [ref=f2e127]:
+            - text: Target
+            - combobox "Target" [ref=f2e128]:
+              - option "Max"
+              - option "Maxine" [selected]
+          - button "Send to Unity" [ref=f2e129] [cursor=pointer]
+        - paragraph [ref=f2e130]: An acknowledgement confirms Unity handled the command on its main thread. Watch the Game view for the pose or gesture.
+      - region [ref=f2e131]:
+        - paragraph [ref=f2e132]: EXPERIMENTAL · PORTAL V1 · MAX ONLY
+        - heading "Send Max to Unity" [level=2] [ref=f2e133]
+        - 'generic "Max portal preview: departing" [ref=f2e146]':
+          - img "Approved Max artwork" [ref=f2e135]
+        - status [ref=f2e136]: "Transfer: departing. Max is entering the BrightTales portal."
+        - paragraph [ref=f2e153]:
+          - generic [ref=f2e154]: "Transfer ID: 0aa5ac643a334278b94e6a06ea0bdf52"
+        - generic [ref=f2e137]:
+          - button "Send Max Through Portal" [disabled] [ref=f2e138]
+          - button "Cancel" [ref=f2e139] [cursor=pointer]
+          - button "Check transfer" [disabled] [ref=f2e140]
+          - button "Reset" [disabled] [ref=f2e141]
+          - generic [ref=f2e142]:
+            - checkbox "Mute portal sound" [checked] [ref=f2e143]
+            - text: Mute portal sound
+        - paragraph [ref=f2e144]: The preview is temporary. Max’s saved BrightTales character is never removed. Handoff commits when Unity accepts arrival; completion appears only after Unity reports the arrival finished.
+      - generic [ref=f2e145]: "Loopback address: http://127.0.0.1:17843. The connection is off until you press Connect."

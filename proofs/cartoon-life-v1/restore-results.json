@@ -1,0 +1,12 @@
+{
+  "life": true,
+  "baselineOff": true,
+  "sceneAudio": 3,
+  "episodes": 1,
+  "audioAssets": [
+    "soft-chime.wav",
+    "gentle-hello.wav"
+  ],
+  "openedLife": true,
+  "consoleErrors": []
+}

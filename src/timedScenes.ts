@@ -3,6 +3,9 @@ import { directionTo, frameForDistance, TURN_MS } from './walking';
 import { WAVE_DURATION_MS, waveFrameAt } from './wave';
 import { type AudioClip, validAudioClips } from './audio';
 import { prunePhoneActions, validatePhoneActions, type PhoneAction, type PhoneHand } from './phone';
+import { validCamera, type CameraKeyframe } from './camera';
+import type { CartoonLifeSettings } from './cartoonLife';
+import type { LivingWorldSettings } from './livingWorld';
 
 export const TIMED_SCENES_KEY = 'brightsenappstales.timed-scenes.v1';
 export type ActionType = 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'breathe' | 'point' | 'nod' | 'shake' | 'smile' | 'surprise' | 'clap' | 'react' | 'turn' | 'jump' | 'excited' | 'sit-down' | 'stand-up' | 'pick-up' | 'put-down';
@@ -12,17 +15,17 @@ export type GestureType = 'point' | 'clap' | 'nod' | 'shake';
 export type GestureFrame = 'point' | 'clap-open' | 'clap-contact' | 'nod-down' | 'shake-left' | 'shake-right' | 'sit-lowering' | 'sit-seated' | 'object-reach' | 'object-lift' | 'object-carry';
 export const isGesture = (type: ActionType): type is GestureType => type === 'point' || type === 'clap' || type === 'nod' || type === 'shake';
 // Absence means the original whole-sprite expression, preserving saved scenes.
-export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1'; seat?: 'chair' | 'sofa'; objectId?: string };
+export type TimedAction = { id: string; characterId: string; type: ActionType; start: number; duration: number; point?: Point; artwork?: 'provisional-v1' | 'greeting-side-v2' | 'greeting-side-v3'; seat?: 'chair' | 'sofa'; objectId?: string };
 export type SceneObject = { id: string; kind: 'toy-ball'; point: Point };
 /**
  * `phone` and `phoneIn` are optional, so scenes saved before Max's phone existed keep loading
  * unchanged. `phoneIn` carries the prop across a shot boundary: a scene that starts with the
  * phone already in hand means the previous shot did not put it away.
  */
-export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; objects?: SceneObject[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
+export type TimedScene = { id: string; name: string; duration: number; placeId: string; characters: Record<string, Point>; actions: TimedAction[]; camera?: CameraKeyframe[]; life?: CartoonLifeSettings; livingWorld?: LivingWorldSettings; objects?: SceneObject[]; audio?: AudioClip[]; phone?: PhoneAction[]; phoneIn?: PhoneHand | null };
 export type TimedLibrary = { version: 1; scenes: TimedScene[] };
 export type ExpressionState = { scaleX?: number; scaleY?: number; rotate?: number; offsetX?: number; offsetY?: number; anchor?: 'foot' };
-export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState; gestureFrame?: GestureFrame };
+export type SceneState = { visible: boolean; point: Point; pose: 'idle' | 'side' | 'wave'; frame: number; direction: -1 | 1; expression?: ExpressionState; gestureFrame?: GestureFrame; sideWaveFrame?: 1 | 2 | 3; greetingV3?: boolean };
 export type TimedResult = { ok: true; library: TimedLibrary } | { ok: false; error: string };
 export const EMPTY_TIMED_LIBRARY: TimedLibrary = { version: 1, scenes: [] };
 const characterId = /^(max|maxine|brightling-[a-f0-9-]{36})$/;
@@ -41,12 +44,18 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
     seen.add(scene.id);
     const ids = Object.keys(scene.characters);
     if (ids.length > 30 || ids.some(id => !characterId.test(id) || !point(scene.characters[id])) || scene.actions.length > 500) return { ok: false, error: 'A timed scene has invalid characters or positions.' };
+    if (!validCamera(scene)) return { ok: false, error: 'Camera keyframes overlap or have invalid settings.' };
+    if (scene.life !== undefined && (!scene.life || scene.life.enabled !== true || scene.life.ambience !== undefined && typeof scene.life.ambience !== 'boolean' || scene.life.mode !== undefined && scene.life.mode !== 'v2')) return { ok: false, error: 'Cartoon Life settings are invalid.' };
+    if (scene.livingWorld !== undefined) {
+      const world = scene.livingWorld;
+      if (!world || world.enabled !== true || world.mode !== undefined && world.mode !== 'v1.1' || scene.placeId !== 'living-room' || world.preferences !== undefined && (!world.preferences || typeof world.preferences !== 'object' || Array.isArray(world.preferences) || Object.entries(world.preferences).some(([id, values]) => !ids.includes(id) || !values || typeof values !== 'object' || ['activity', 'curiosity', 'sociability'].some(key => !finite(values[key as keyof typeof values]) || values[key as keyof typeof values] < 0 || values[key as keyof typeof values] > 1)))) return { ok: false, error: 'Living World settings are invalid.' };
+    }
     if (scene.objects !== undefined && (!Array.isArray(scene.objects) || scene.objects.length > 30 || scene.objects.some(object => !object || !uuidId.test(object.id) || object.kind !== 'toy-ball' || !point(object.point)) || new Set(scene.objects.map(object => object.id)).size !== scene.objects.length)) return { ok: false, error: 'A scene object is invalid.' };
     const actions = new Set<string>();
     const perCharacter = new Map<string, TimedAction[]>();
     for (const action of scene.actions) {
       const expressionActions = new Set<ActionType>(['wait', 'wave', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited']);
-      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited', 'sit-down', 'stand-up', 'pick-up', 'put-down'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear' || action.type === 'put-down') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type) || action.type === 'sit-down' || action.type === 'stand-up' || action.type === 'pick-up') && action.point !== undefined || action.artwork !== undefined && (action.artwork !== 'provisional-v1' || !(isGesture(action.type) || isFrameAction(action.type)) || action.characterId !== 'max' && action.characterId !== 'maxine') || isFrameAction(action.type) && (action.artwork !== 'provisional-v1' || action.duration < .4) || (action.type === 'sit-down' || action.type === 'stand-up') && (action.seat !== 'chair' && action.seat !== 'sofa' || action.objectId !== undefined) || action.type !== 'sit-down' && action.type !== 'stand-up' && action.seat !== undefined || (action.type === 'pick-up' || action.type === 'put-down') && (!action.objectId || !scene.objects?.some(object => object.id === action.objectId)) || action.type !== 'pick-up' && action.type !== 'put-down' && action.objectId !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
+      if (!action || !uuidId.test(action.id) || actions.has(action.id) || !ids.includes(action.characterId) || !['appear', 'walk', 'wait', 'wave', 'disappear', 'breathe', 'point', 'nod', 'shake', 'smile', 'surprise', 'clap', 'react', 'turn', 'jump', 'excited', 'sit-down', 'stand-up', 'pick-up', 'put-down'].includes(action.type) || !finite(action.start) || action.start < 0 || action.start > scene.duration || !finite(action.duration) || action.duration < 0 || ends(action) > scene.duration + 1e-7 || (action.type === 'appear' || action.type === 'disappear') && action.duration !== 0 || (action.type === 'walk' || action.type === 'appear' || action.type === 'put-down') && !point(action.point) || (action.type === 'wait' || action.type === 'wave' || action.type === 'disappear' || expressionActions.has(action.type) || action.type === 'sit-down' || action.type === 'stand-up' || action.type === 'pick-up') && action.point !== undefined || action.artwork !== undefined && !(action.characterId === 'max' || action.characterId === 'maxine') || action.artwork === 'provisional-v1' && !(isGesture(action.type) || isFrameAction(action.type)) || action.artwork === 'greeting-side-v2' && action.type !== 'walk' && action.type !== 'wave' || action.artwork === 'greeting-side-v3' && action.type !== 'walk' || action.artwork !== undefined && action.artwork !== 'provisional-v1' && action.artwork !== 'greeting-side-v2' && action.artwork !== 'greeting-side-v3' || isFrameAction(action.type) && (action.artwork !== 'provisional-v1' || action.duration < .4) || (action.type === 'sit-down' || action.type === 'stand-up') && (action.seat !== 'chair' && action.seat !== 'sofa' || action.objectId !== undefined) || action.type !== 'sit-down' && action.type !== 'stand-up' && action.seat !== undefined || (action.type === 'pick-up' || action.type === 'put-down') && (!action.objectId || !scene.objects?.some(object => object.id === action.objectId)) || action.type !== 'pick-up' && action.type !== 'put-down' && action.objectId !== undefined) return { ok: false, error: 'A timed action is invalid or extends beyond its scene.' };
       actions.add(action.id);
       perCharacter.set(action.characterId, [...(perCharacter.get(action.characterId) ?? []), action]);
     }
@@ -55,7 +64,10 @@ export function validateTimedLibrary(value: unknown, availablePlaces: string[] =
       for (let i = 1; i < list.length; i++) if (list[i].start < ends(list[i - 1]) - 1e-7) return { ok: false, error: 'Actions overlap for one Brightling.' };
       let seated = false;
       let seat: 'chair' | 'sofa' | null = null;
+      let sideFacing = false;
       for (const action of list) {
+        if (action.type === 'walk') sideFacing = action.artwork === 'greeting-side-v2' || action.artwork === 'greeting-side-v3';
+        if (action.type === 'wave' && action.artwork === 'greeting-side-v2' && !sideFacing) return { ok: false, error: 'A side-facing wave needs a side-facing walk first.' };
         if (action.type === 'sit-down') {
           if (seated || action.seat === 'sofa') return { ok: false, error: 'Sofa sitting needs separately layered furniture art. Use the provisional chair.' };
           seated = true;
@@ -166,10 +178,27 @@ export function gestureFramesForScene(scene: TimedScene, character: string): Ges
   return [...frames];
 }
 
+export const needsGreetingSideWave = (scene: TimedScene, character: string): boolean =>
+  scene.actions.some(action => action.characterId === character && action.type === 'wave' && action.artwork === 'greeting-side-v2');
+
+/** Continuous position with a constant approach speed followed by a short deceleration. */
+export function greetingV3WalkProgress(elapsed: number, duration: number): number {
+  if (duration <= 0) return 1;
+  const at = Math.max(0, Math.min(duration, elapsed));
+  const stop = Math.min(.45, duration * .4);
+  const cruise = duration - stop;
+  const distance = duration - stop / 2;
+  if (at <= cruise) return at / distance;
+  const intoStop = at - cruise;
+  return (cruise + intoStop - intoStop * intoStop / (2 * stop)) / distance;
+}
+
 export function stateAt(scene: TimedScene, character: string, time: number): SceneState {
   let position = { ...scene.characters[character] };
   let visible = false;
   let direction: -1 | 1 = 1;
+  let facingSide = false;
+  let greetingV3 = false;
   let seated = false;
   let carrying = false;
   const now = Math.max(0, Math.min(scene.duration, time));
@@ -198,16 +227,23 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       direction = directionTo(position, destination, direction);
       const origin = position;
       const turn = Math.min(action.duration, TURN_MS / 1000);
-      const progress = Math.max(0, Math.min(1, (now - action.start - turn) / Math.max(1e-6, action.duration - turn)));
+      const movement = Math.max(1e-6, action.duration - turn);
+      const elapsed = now - action.start - turn;
+      const progress = action.artwork === 'greeting-side-v3'
+        ? greetingV3WalkProgress(elapsed, movement)
+        : Math.max(0, Math.min(1, elapsed / movement));
       if (now < ends(action)) {
         const current = { x: origin.x + (destination.x - origin.x) * progress, y: origin.y + (destination.y - origin.y) * progress };
         const travelled = Math.hypot(current.x - origin.x, current.y - origin.y);
-        return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled), direction };
+        return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled), direction, greetingV3: action.artwork === 'greeting-side-v3' };
       }
       position = { ...destination };
+      facingSide = action.artwork === 'greeting-side-v2' || action.artwork === 'greeting-side-v3';
+      greetingV3 = action.artwork === 'greeting-side-v3';
     }
     if (action.type === 'wave' && now < ends(action)) {
       const frame = waveFrameAt((now - action.start) * 1000);
+      if (facingSide && action.artwork === 'greeting-side-v2') return { visible, point: position, pose: 'side', frame: 0, direction, sideWaveFrame: frame ? frame as 1 | 2 | 3 : undefined };
       return { visible, point: position, pose: frame ? 'wave' : 'idle', frame: frame ?? 0, direction };
     }
     if (action.artwork === 'provisional-v1' && isGesture(action.type) && now < ends(action)) {
@@ -218,7 +254,7 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       if (expression) return { visible, point: position, pose: 'idle', frame: 0, direction, expression };
     }
   }
-  return { visible, point: position, pose: 'idle', frame: 0, direction, gestureFrame: seated ? 'sit-seated' : carrying ? 'object-carry' : undefined };
+  return { visible, point: position, pose: facingSide ? 'side' : 'idle', frame: 0, direction, gestureFrame: seated ? 'sit-seated' : carrying ? 'object-carry' : undefined, greetingV3 };
 }
 
 export type ObjectState = { point: Point; heldBy: string | null; phase: 'floor' | 'reach' | 'lift' | 'held' | 'lower' };
@@ -263,7 +299,10 @@ export function pruneTimedScenes(library: TimedLibrary, availableCharacters: str
   return { version: 1, scenes: library.scenes.map(scene => {
     const characters = Object.fromEntries(Object.entries(scene.characters).filter(([id]) => allowed.has(id)));
     const phone = prunePhoneActions(scene.phone, Object.keys(characters));
-    return { ...scene, characters, actions: scene.actions.filter(action => allowed.has(action.characterId)), phone };
+    const livingWorld = scene.livingWorld?.preferences
+      ? { ...scene.livingWorld, preferences: Object.fromEntries(Object.entries(scene.livingWorld.preferences).filter(([id]) => allowed.has(id))) }
+      : scene.livingWorld;
+    return { ...scene, characters, actions: scene.actions.filter(action => allowed.has(action.characterId)), phone, livingWorld };
   }) };
 }
 

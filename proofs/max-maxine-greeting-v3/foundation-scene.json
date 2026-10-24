@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "scenes": [{
+    "id": "55555555-5555-4555-8555-000000000101",
+    "name": "Greeting V3 foundation - walk and stop only",
+    "duration": 4.2,
+    "placeId": "living-room",
+    "characters": {
+      "max": { "x": 350, "y": 790 },
+      "maxine": { "x": 1320, "y": 790 }
+    },
+    "actions": [
+      { "id": "55555555-5555-4555-8555-000000000102", "characterId": "max", "type": "appear", "start": 0, "duration": 0, "point": { "x": 350, "y": 790 } },
+      { "id": "55555555-5555-4555-8555-000000000103", "characterId": "maxine", "type": "appear", "start": 0, "duration": 0, "point": { "x": 1320, "y": 790 } },
+      { "id": "55555555-5555-4555-8555-000000000104", "characterId": "max", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 690, "y": 790 }, "artwork": "greeting-side-v3" },
+      { "id": "55555555-5555-4555-8555-000000000105", "characterId": "maxine", "type": "walk", "start": 0.5, "duration": 2.5, "point": { "x": 980, "y": 790 }, "artwork": "greeting-side-v3" }
+    ]
+  }]
+}
