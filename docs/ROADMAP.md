@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**Cartoon Engine V1.1 approval gate (2026-10-24):** Karl visually approved the 26-second Max and Maxine Living Room cartoon. The Studio bridge and Unity scene are checkpointed; further integration requires separate authorization. See [approval](../proofs/cartoon-engine-v1-1/APPROVAL.md).
+
 ## Unity Bridge V1 visual gate (23 October 2026)
 
 - [ ] **EXPERIMENTAL; KARL'S LIVE EDITOR RECHECK AND VISUAL APPROVAL PENDING.** Karl reproduced a `max.blink` timeout in his Editor. The [main-thread fix and two-blink Play mode scene test](../proofs/unity-bridge-v1-fix/REPORT.md) passed in a disposable Unity project copy. Restart Play mode in the normal Editor after compilation and verify the Studio button there before acceptance. The [original V1 artwork/import proof](../proofs/unity-bridge-v1/REPORT.md) remains. Do not start rigging, breathing, Maxine work or renderer migration.

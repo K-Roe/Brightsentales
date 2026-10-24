@@ -1,5 +1,7 @@
 # BrightTales Project Status
 
+**Cartoon Engine V1.1 — APPROVED by Karl on 2026-10-24.** The separate 26-second Unity Living Room scene and existing Studio bridge workflow are frozen in the [approval record](../proofs/cartoon-engine-v1-1/APPROVAL.md). The recording and Unity test evidence are committed in the Unity approval branch. Portal V1 and production renderer integration remain separate.
+
 **BrightTales × Unity Bridge V1 — EXPERIMENTAL; MAIN-THREAD FIX TESTED IN A DISPOSABLE PLAY MODE SCENE; KARL'S LIVE EDITOR RECHECK PENDING (23 October 2026).** Karl found that his open Unity Editor answered Connect/Ping but timed out on Blink Max. The receiver now runs when Studio has focus and checks its `Update()` heartbeat before reporting ready. [The fix report, two-blink MP4 and scene test](../proofs/unity-bridge-v1-fix/REPORT.md) show the updated source working in `MaxBridgeDemo`; the normal Editor had not reloaded the code during that test. The original [V1 artwork and import proof](../proofs/unity-bridge-v1/REPORT.md) remains. No renderer migration or new character action is approved.
 
 **BrightTales × Unity Bridge V0 — APPROVED by Karl in the Bridge V1 authorisation (23 October 2026).** The local-only Unity 6.6 Play mode HTTP receiver and opt-in Studio Connection tab provide the Connect/Ping/Pong proof. [Bridge V0 report](../proofs/unity-bridge-v0/REPORT.md).

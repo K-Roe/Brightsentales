@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**Cartoon Engine V1.1:** Karl visually approved the Living Room sequence on 2026-10-24. [Approval and review evidence](../proofs/cartoon-engine-v1-1/APPROVAL.md) are preserved separately from earlier baselines.
+
 ## Unity Bridge V1 — Max's first appearance (23 October 2026)
 
 **EXPERIMENTAL; KARL'S LIVE EDITOR RECHECK AND VISUAL APPROVAL PENDING.** Karl's normal Editor timed out on `max.blink` after successful Connect/Ping. [The main-thread fix report and two-blink scene test](../proofs/unity-bridge-v1-fix/REPORT.md) document a passing disposable Play mode run and the still-pending normal Editor reload. The [original Max import proof](../proofs/unity-bridge-v1/REPORT.md) remains. No rigging or production renderer change is approved.
