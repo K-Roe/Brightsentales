@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**Cartoon foundation Phase 1 (2026-10-24): IN PROGRESS; NOT VISUALLY APPROVED.** The isolated saved-scene draft supports Living Room, Max/Maxine, Appear/Walk/Wait/Wave/Disappear and load/play/status/reset. Its current [proof](../proofs/cartoon-foundation-phase1/REPORT.md) is a synthetic Play mode scene and Studio automated checks. A normal saved Studio scene sent through the browser has not yet been verified. Other actions, camera, audio and episodes remain explicitly unsupported.
+
 **Cartoon production foundation Phase 0 (2026-10-24):** Source audit and approved V1.1 remote backup are technically verified; see [Phase 0 report](../proofs/cartoon-foundation-phase0/REPORT.md). Saved-scene/episode Unity playback and Unity MP4 export remain open tasks. This backup does not approve any new visual behavior or change the existing animation gates.
 
 **Cartoon Engine V1.1 (24 October 2026):** Karl visually approved the 26-second Living Room cartoon. See the [approval record](../proofs/cartoon-engine-v1-1/APPROVAL.md) and review evidence.

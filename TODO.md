@@ -10,11 +10,12 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 - **Test completion:** `git ls-remote` matches both approved hashes; GitHub repo visibility is private; LFS batch API reports all objects available.
 - **Dependencies/blockers:** Git Credential Manager authentication. **Karl approval required:** no additional approval for this authorized backup; yes before future merge or visual promotion.
 
-## P1 — Saved Scene Maker scene to Unity [TODO]
+## P1 — Saved Scene Maker scene to Unity [IN PROGRESS]
 
 - **Files:** Studio `src/timedScenes.ts`, `src/unityBridge.ts`, `src/UnityConnection.tsx`, `src/SceneMaker.tsx`; Unity `Assets/BrightTalesBridgeV0.cs`, new isolated scene/controller.
 - **Implemented:** Scene Maker persists stable-ID actions/positions; bridge handles a separate fixed 26-second V1.1 demo.
-- **Remains:** Define versioned bounded scene payload, explicit compatibility report, map Max/Maxine and Living Room without substituting art, implement load/play/status/reset on Unity main thread from saved values, and add a saved-scene selector. Preserve old V1.1 command routing.
+- **Implemented:** Isolated version 1 payload and validation, Max/Maxine/Living Room scene references, saved-scene selector, and load/play/status/reset on one Unity clock. Unsupported features produce reasons. A synthetic Unity Play mode test passed before the latest request-validation edit; Studio focused/full tests and build passed. See `proofs/cartoon-foundation-phase1/REPORT.md`.
+- **Remains:** Use a disposable Studio profile to save, reopen, edit and send a real scene to the isolated Unity Editor; verify visual motion and replay. The focused Unity Play mode rerun passed 1/1 after the latest validation edit. No actual UI-to-Unity result is claimed yet.
 - **Test completion:** Edit and save a scene in disposable Studio profile, reopen, send, and observe those positions/timings in Unity; unsupported/rejected content fails with a reason; V1.1 and Blink/Director Controls still work.
 - **Dependencies/blockers:** Approved sprite coordinate mapping; Unity Editor/Play mode access. **Karl approval required:** visual review before baseline or production integration.
 

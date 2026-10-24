@@ -478,7 +478,7 @@ export default function App() {
       {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
       {activeTab === 'voice' && <VoiceMaker assets={audioAssets} characters={library} settings={voiceSettings} issue={voiceSettingsIssue} onSettingsChange={saveVoiceSettings} onSaveAsset={saveVoiceAsset} onDeleteAsset={deleteAudio} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
-      {activeTab === 'unity' && <UnityConnection />}
+      {activeTab === 'unity' && <UnityConnection scenes={timedScenes} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>
       {sceneIssue && <p className="storage-alert" role="alert">{sceneIssue}</p>}

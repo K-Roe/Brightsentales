@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**Cartoon foundation Phase 1 gate (2026-10-24): IN PROGRESS.** The saved-scene transfer draft is confined to the two `cartoon-foundation` worktrees. Finish Unity validation and a disposable-profile Studio save/reopen/edit/send/play/replay check before marking Phase 1 technically verified or starting Phase 2. The frozen V1.1 scene remains available.
+
 **Cartoon production foundation (2026-10-24):** Phase 0 source audit, isolated worktrees and private Unity/Studio approved-branch backup are complete. General saved-scene transfer is next, followed by timeline/camera, audio, episodes, Unity MP4 and the editable two-scene review. See [the audit](CARTOON_FOUNDATION_AUDIT.md) and [agent-ready TODO](../TODO.md). The approved V1.1 demo remains frozen; no new foundation visual approval exists.
 
 **Cartoon Engine V1.1 approved gate (24 October 2026):** Karl visually approved the separate scene and Studio workflow. The approved checkpoint preserves this version; later integration requires separate authorization. See [approval](../proofs/cartoon-engine-v1-1/APPROVAL.md).

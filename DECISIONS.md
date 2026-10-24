@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-24 — Phase 1 boundary
+
+Use an isolated experimental Unity scene copied from the approved V1.1 Living Room and a version 5 response on the existing `/command` route. The first transfer version supports only Max/Maxine, approved room artwork and the core five actions. Reject camera, audio, phone and other unmapped data explicitly until their later phases; never silently drop timeline content. Keep the fixed V1.1 controller unchanged. A three-second synthetic Play mode clip is technical evidence only; real Studio UI and visual acceptance remain separate gates.
+
 ## 2026-10-24 — Recovery and branch isolation
 
 The local Studio `main` (`39e089d`) contains Camera/Life/Scene Maker functionality absent from the frozen Studio V1.1 branch. It is not a descendant of that branch. Start new Studio work on `cartoon-foundation` from `main` and leave `cartoon-engine-v1-1-approved` frozen. Start Unity `cartoon-foundation` from the frozen approved Unity commit. Confirm integration behavior from actual source rather than assuming a remote branch is current.

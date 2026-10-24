@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { blinkMaxInUnity, connectToUnity, pingUnity, sendActingCommandToUnity, UnityBridgeUnavailableError, UNITY_BRIDGE_URL, type ActingCharacter, type ActingCommand } from './unityBridge';
 import PortalV1Panel from './PortalV1Panel';
 import CartoonEngineV1Panel from './CartoonEngineV1Panel';
+import StudioSceneUnityPanel from './StudioSceneUnityPanel';
+import type { TimedLibrary } from './timedScenes';
 
 type Status = 'disconnected' | 'connecting' | 'connected' | 'pinging' | 'commanding';
 
-export default function UnityConnection() {
+export default function UnityConnection({ scenes }: { scenes: TimedLibrary }) {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Connection is off.');
   const [actor, setActor] = useState<ActingCharacter>('max');
@@ -126,6 +128,7 @@ export default function UnityConnection() {
     </section>
     <PortalV1Panel connected={status === 'connected'} />
     <CartoonEngineV1Panel connected={status === 'connected'} />
+    <StudioSceneUnityPanel connected={status === 'connected'} library={scenes} />
     <small>Loopback address: {UNITY_BRIDGE_URL}. The connection is off until you press Connect.</small>
   </section>;
 }

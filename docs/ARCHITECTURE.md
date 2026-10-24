@@ -1,5 +1,7 @@
 # Application architecture
 
+**Experimental saved-scene seam (2026-10-24):** `StudioSceneUnityPanel.tsx` reads saved `TimedScene` objects supplied by `App.tsx`. `studioSceneBridge.ts` validates and converts the supported subset into a versioned payload, then posts `studio.*` commands to the existing loopback `/command` bridge. Unity's `BrightTalesBridgeV0.cs` queues requests onto the main thread; `CartoonFoundationExperimental/StudioScenePlayer.cs` validates the payload and evaluates approved sprites and Living Room at absolute scene time. The isolated `StudioLivingRoomExperimental.unity` references those assets. The fixed V1.1 scene remains separate. The first payload supports approved room/characters and core actions; camera, audio, phone, other actions and episodes must be added through this seam after proof, rather than silently omitted.
+
 **Unity integration audit (2026-10-24):** The current `unityBridge.ts`/`BrightTalesBridgeV0.cs` scene contract selects a fixed 26-second Living Room timeline. The saved `TimedScene` and `Episode` models are not yet transferred to Unity. `sceneVideoExport.ts` and `EpisodeMaker.tsx` do contain complete browser WebM episode export, so earlier descriptions here of episode export as only planned are historical. See [the source inventory](CARTOON_FOUNDATION_AUDIT.md) for the verified integration gap. Preserve browser export while extending the same localhost bridge on isolated branches.
 
 ## Unity Bridge V1 experimental Max import
