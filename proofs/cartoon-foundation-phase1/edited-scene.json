@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "35b27428-9ebf-401d-a22d-baa1f9bfab46",
+      "name": "Phase 1 Friendly Walk",
+      "duration": 8,
+      "placeId": "living-room",
+      "characters": {
+        "max": {
+          "x": 520,
+          "y": 790
+        },
+        "maxine": {
+          "x": 750,
+          "y": 790
+        }
+      },
+      "actions": [
+        {
+          "id": "c59102c9-7e3a-4846-beae-73ce3ce714e0",
+          "characterId": "max",
+          "type": "appear",
+          "start": 0,
+          "duration": 0,
+          "point": {
+            "x": 520,
+            "y": 790
+          }
+        },
+        {
+          "id": "609be5da-b9bb-4088-aa53-e584fe0d4316",
+          "characterId": "maxine",
+          "type": "appear",
+          "start": 0,
+          "duration": 0,
+          "point": {
+            "x": 750,
+            "y": 790
+          }
+        },
+        {
+          "id": "3e6ad30a-1543-4afe-b235-21115094abd8",
+          "characterId": "max",
+          "type": "walk",
+          "start": 0.5,
+          "duration": 1.2,
+          "point": {
+            "x": 900,
+            "y": 790
+          }
+        },
+        {
+          "id": "29d6f34e-5b09-4ae9-8872-ff7dc6cc924b",
+          "characterId": "max",
+          "type": "wait",
+          "start": 2,
+          "duration": 1.5
+        },
+        {
+          "id": "34decb9a-3f45-4566-88cb-33e96805bd7c",
+          "characterId": "max",
+          "type": "wave",
+          "start": 3.5,
+          "duration": 1.62
+        },
+        {
+          "id": "6b872a71-443d-4d24-80b9-99b005ee3529",
+          "characterId": "max",
+          "type": "disappear",
+          "start": 5.12,
+          "duration": 0
+        },
+        {
+          "id": "23dd988a-3fd3-4446-8e68-073b8b82e945",
+          "characterId": "maxine",
+          "type": "wait",
+          "start": 0,
+          "duration": 1.5
+        },
+        {
+          "id": "ff59319a-eadb-4109-8dce-068762fbdf78",
+          "characterId": "maxine",
+          "type": "wave",
+          "start": 3.6,
+          "duration": 1.62
+        },
+        {
+          "id": "05a708fc-39d7-4bfd-a88a-a94b1c0198fa",
+          "characterId": "maxine",
+          "type": "disappear",
+          "start": 5.220000000000001,
+          "duration": 0
+        }
+      ]
+    }
+  ]
+}

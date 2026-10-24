@@ -1,5 +1,13 @@
 # BrightSenAppsTales development roadmap
 
+**Studio 3.0 review gate (2026-10-24): TECHNICALLY VERIFIED; AWAITING KARL'S VISUAL DECISION.** The isolated `studio-3-experimental` branch presents Phase 2 through a default professional shell while retaining Classic and shared saved data. [Review screenshots, walkthrough and tests](../proofs/studio-3/REPORT.md) are ready. Karl alone may approve, request changes, reject, pause or skip under this roadmap's gate. Do not merge, promote a baseline or begin P3 from this implementation.
+
+**Cartoon foundation Phase 2 gate (2026-10-24): TECHNICALLY VERIFIED; AWAITING KARL'S VISUAL REVIEW.** The isolated Phase 2 branch transfers saved Look At, gentle walk, Calm Life v2 and Camera V1, and reorganizes Scene Maker. Fresh-profile Studio creation/save/reopen/edit, two real Unity Play Mode runs with reset/replay, browser WebM regression, full suite/build and review-media decode passed. See [Phase 2 report](../proofs/cartoon-foundation-phase2/REPORT.md). Stop before P3, baseline promotion or merge until Karl records his visual decision. The older Phase 1 gate below is historical; Karl authorized Phase 2 after that review.
+
+**Cartoon foundation Phase 1 gate (2026-10-24): TECHNICALLY COMPLETE; AWAITING KARL'S VISUAL REVIEW.** The saved-scene transfer stays confined to the two `cartoon-foundation` worktrees. The disposable-profile Studio create/save/reopen/edit/send and isolated Unity play/reset/replay check passed with real Max/Maxine Game-camera evidence. See [Phase 1 report](../proofs/cartoon-foundation-phase1/REPORT.md). Do not start Phase 2, freeze this foundation or merge before Karl's visual decision. The frozen V1.1 scene remains available.
+
+**Cartoon production foundation (2026-10-24):** Phase 0 source audit, isolated worktrees and private Unity/Studio approved-branch backup are complete. General saved-scene transfer is next, followed by timeline/camera, audio, episodes, Unity MP4 and the editable two-scene review. See [the audit](CARTOON_FOUNDATION_AUDIT.md) and [agent-ready TODO](../TODO.md). The approved V1.1 demo remains frozen; no new foundation visual approval exists.
+
 **Cartoon Engine V1.1 approved gate (24 October 2026):** Karl visually approved the separate scene and Studio workflow. The approved checkpoint preserves this version; later integration requires separate authorization. See [approval](../proofs/cartoon-engine-v1-1/APPROVAL.md).
 
 **Separate Unity experiment (24 October 2026):** 2.5D Cartoon Engine V1 has a 26-second Living Room review cut and remains gated on Karl's visual approval. See [its proof](../proofs/cartoon-engine-v1/REPORT.md). This does not resolve Greeting V3 artwork or advance any production animation gate.

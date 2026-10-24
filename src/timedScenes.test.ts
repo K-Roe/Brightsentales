@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_SCENE, STORAGE_KEY, WIDTH } from './scene';
 import { DEFAULT_COLOURS, LIBRARY_KEY, type Brightling } from './maker';
 import { createStudioBackup, restoreStudioBackup, validateStudioBackup } from './studioBackup';
-import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, gestureFrameAt, gestureFramesForScene, objectAt, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
+import { advanceSceneTime, decodeTimedLibrary, EMPTY_TIMED_LIBRARY, gentleWalkProgress, gestureFrameAt, gestureFramesForScene, objectAt, pruneTimedScenes, stateAt, TIMED_SCENES_KEY, validateTimedLibrary, type TimedScene } from './timedScenes';
 
 const id = (n: number) => `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`;
 const scene: TimedScene = {
@@ -21,6 +21,26 @@ const scene: TimedScene = {
 };
 
 describe('timed scene schedule', () => {
+  it('eases an opted-in walk and holds authored attention without changing legacy walks', () => {
+    const performance: TimedScene = { ...scene, duration: 6, characters: { max: { x: 500, y: 790 }, maxine: { x: 1050, y: 790 } }, actions: [
+      { id: id(90), characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 500, y: 790 } },
+      { id: id(91), characterId: 'maxine', type: 'appear', start: 0, duration: 0, point: { x: 1050, y: 790 } },
+      { id: id(92), characterId: 'max', type: 'walk', start: .5, duration: 2, point: { x: 850, y: 790 }, motion: 'gentle' },
+      { id: id(93), characterId: 'maxine', type: 'look-at', target: 'max', start: .6, duration: 2.5 },
+      { id: id(94), characterId: 'max', type: 'wave', start: 3, duration: 1.5 },
+    ] };
+    expect(validateTimedLibrary({ version: 1, scenes: [performance] }).ok).toBe(true);
+    expect(gentleWalkProgress(.1, 2)).toBeLessThan(.05);
+    expect(gentleWalkProgress(1, 2)).toBeCloseTo(.5125);
+    expect(gentleWalkProgress(2, 2)).toBe(1);
+    expect(stateAt(performance, 'max', 2.5).point.x).toBe(850);
+    expect(stateAt(performance, 'max', 2.7).pose).toBe('side');
+    expect(stateAt(performance, 'maxine', 1).pose).toBe('side');
+    expect(stateAt(performance, 'maxine', 3.2).direction).toBe(-1);
+    expect(stateAt(performance, 'max', 4.7).pose).toBe('idle');
+    expect(stateAt(performance, 'max', 1.2)).toEqual(stateAt(performance, 'max', 1.2));
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...performance, actions: performance.actions.map(action => action.type === 'look-at' ? { ...action, target: 'maxine' as const } : action) }] }).ok).toBe(false);
+  });
   it('advances by elapsed time even when a browser frame arrives late', () => {
     expect(advanceSceneTime(10, 1.4, 30)).toBe(11.4);
     expect(advanceSceneTime(29.5, 1.4, 30)).toBe(30);

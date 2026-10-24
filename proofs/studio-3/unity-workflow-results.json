@@ -1,0 +1,1046 @@
+{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\bright-foundation-phase2-chrome-66gi66",
+  "unityProof": "C:\\Users\\karlr\\AppData\\Local\\Temp\\bright-foundation-phase2-unity-HJCoae",
+  "studioUrl": "http://127.0.0.1:5177/",
+  "stages": {
+    "launch": "PASS",
+    "createAndSave": "PASS",
+    "closeReopen": "PASS",
+    "editAndSave": "PASS",
+    "isolatedUnityReady": "PASS",
+    "connect": "PASS",
+    "unityRun1": "PASS",
+    "unityRun2": "PASS",
+    "resetReplay": "PASS",
+    "sceneIdAndRevision": "PASS",
+    "unityPlayMode": "PASS",
+    "connectionLoss": "PASS"
+  },
+  "bridgeRequests": [
+    {
+      "command": "studio.load",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "config": {
+        "version": 2,
+        "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+        "environment": "living-room",
+        "duration": 9,
+        "calmLife": true,
+        "characters": [
+          {
+            "id": "max",
+            "x": 520,
+            "y": 790,
+            "facing": "front"
+          },
+          {
+            "id": "maxine",
+            "x": 750,
+            "y": 790,
+            "facing": "front"
+          }
+        ],
+        "actions": [
+          {
+            "id": "77cef8a0-0549-4c0a-8244-2eb08635d3d3",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "x": 520,
+            "y": 790,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "6eac1268-5dcd-4cee-9e2f-200142efe242",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "x": 750,
+            "y": 790,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7b7413d4-ab9e-4d35-9ed2-b8c63673a8d9",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0.7,
+            "duration": 2.2,
+            "x": 900,
+            "y": 790,
+            "target": "",
+            "motion": "gentle"
+          },
+          {
+            "id": "ca869ff7-917f-484a-ae85-da71619855a5",
+            "characterId": "max",
+            "type": "wait",
+            "start": 3.2,
+            "duration": 1.5,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7148533f-aba4-4ae4-988e-043b89c6d1aa",
+            "characterId": "max",
+            "type": "wave",
+            "start": 4.7,
+            "duration": 1.62,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "9acb5d05-bf66-4756-86a0-44907ce16d7f",
+            "characterId": "max",
+            "type": "disappear",
+            "start": 8.5,
+            "duration": 0,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7b34500e-a1b6-4c45-a4c2-74c0c5ef7311",
+            "characterId": "maxine",
+            "type": "look-at",
+            "start": 0.9,
+            "duration": 2.3,
+            "x": 0,
+            "y": 0,
+            "target": "max",
+            "motion": "linear"
+          },
+          {
+            "id": "06d3c7b2-93b0-4096-8f2c-c4d234470d03",
+            "characterId": "maxine",
+            "type": "wait",
+            "start": 3.1999999999999997,
+            "duration": 1.5,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "c9466be7-e007-43e6-8060-c230eb99ba7b",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 4.699999999999999,
+            "duration": 1.62,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "41df88fc-a4f0-453c-acc4-511af21f302a",
+            "characterId": "maxine",
+            "type": "disappear",
+            "start": 8.5,
+            "duration": 0,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          }
+        ],
+        "camera": [
+          {
+            "id": "693d24dc-a74a-43bf-8976-7a9bf0a05530",
+            "shot": "medium",
+            "focus": "group",
+            "x": 0,
+            "y": 0,
+            "follow": false,
+            "start": 3.2,
+            "duration": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "command": "studio.play",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.reset",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.load",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "config": {
+        "version": 2,
+        "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+        "environment": "living-room",
+        "duration": 9,
+        "calmLife": true,
+        "characters": [
+          {
+            "id": "max",
+            "x": 520,
+            "y": 790,
+            "facing": "front"
+          },
+          {
+            "id": "maxine",
+            "x": 750,
+            "y": 790,
+            "facing": "front"
+          }
+        ],
+        "actions": [
+          {
+            "id": "77cef8a0-0549-4c0a-8244-2eb08635d3d3",
+            "characterId": "max",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "x": 520,
+            "y": 790,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "6eac1268-5dcd-4cee-9e2f-200142efe242",
+            "characterId": "maxine",
+            "type": "appear",
+            "start": 0,
+            "duration": 0,
+            "x": 750,
+            "y": 790,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7b7413d4-ab9e-4d35-9ed2-b8c63673a8d9",
+            "characterId": "max",
+            "type": "walk",
+            "start": 0.7,
+            "duration": 2.2,
+            "x": 900,
+            "y": 790,
+            "target": "",
+            "motion": "gentle"
+          },
+          {
+            "id": "ca869ff7-917f-484a-ae85-da71619855a5",
+            "characterId": "max",
+            "type": "wait",
+            "start": 3.2,
+            "duration": 1.5,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7148533f-aba4-4ae4-988e-043b89c6d1aa",
+            "characterId": "max",
+            "type": "wave",
+            "start": 4.7,
+            "duration": 1.62,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "9acb5d05-bf66-4756-86a0-44907ce16d7f",
+            "characterId": "max",
+            "type": "disappear",
+            "start": 8.5,
+            "duration": 0,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "7b34500e-a1b6-4c45-a4c2-74c0c5ef7311",
+            "characterId": "maxine",
+            "type": "look-at",
+            "start": 0.9,
+            "duration": 2.3,
+            "x": 0,
+            "y": 0,
+            "target": "max",
+            "motion": "linear"
+          },
+          {
+            "id": "06d3c7b2-93b0-4096-8f2c-c4d234470d03",
+            "characterId": "maxine",
+            "type": "wait",
+            "start": 3.1999999999999997,
+            "duration": 1.5,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "c9466be7-e007-43e6-8060-c230eb99ba7b",
+            "characterId": "maxine",
+            "type": "wave",
+            "start": 4.699999999999999,
+            "duration": 1.62,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          },
+          {
+            "id": "41df88fc-a4f0-453c-acc4-511af21f302a",
+            "characterId": "maxine",
+            "type": "disappear",
+            "start": 8.5,
+            "duration": 0,
+            "x": 0,
+            "y": 0,
+            "target": "",
+            "motion": "linear"
+          }
+        ],
+        "camera": [
+          {
+            "id": "693d24dc-a74a-43bf-8976-7a9bf0a05530",
+            "shot": "medium",
+            "focus": "group",
+            "x": 0,
+            "y": 0,
+            "follow": false,
+            "start": 3.2,
+            "duration": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "command": "studio.play",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    },
+    {
+      "command": "studio.reset",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+    }
+  ],
+  "bridgeReplies": [
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.load",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "loaded",
+      "elapsed": 0,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.play",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 0,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 0.3940284550189972,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 1.0275037288665771,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 1.575434684753418,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 2.2187132835388184,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 2.816645383834839,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 3.389580726623535,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 3.974113941192627,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 4.571889877319336,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 5.219193458557129,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 5.805413246154785,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 6.385728359222412,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 6.972409725189209,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 7.57144832611084,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 8.217288970947266,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 8.802788734436035,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "complete",
+      "elapsed": 9,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.reset",
+      "runId": "a1f3d1d40f444e34b87defd2c8be6c9a",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "idle",
+      "elapsed": 0,
+      "duration": 0,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.load",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "loaded",
+      "elapsed": 0,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.play",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 0,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 0.6379883289337158,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 1.2222946882247925,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 1.815403938293457,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 2.4077322483062744,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 3.055279493331909,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 3.641415596008301,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 4.273609638214111,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 4.957596778869629,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 5.426130771636963,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 6.046806812286377,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 6.7567620277404785,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 7.321559429168701,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 7.819418907165527,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "playing",
+      "elapsed": 8.478758811950684,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.status",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "complete",
+      "elapsed": 9,
+      "duration": 9,
+      "reason": ""
+    },
+    {
+      "source": "unity",
+      "version": 5,
+      "command": "studio.reset",
+      "runId": "b2623a82e7164ae1ac47d62379ddb760",
+      "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+      "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e",
+      "status": "idle",
+      "elapsed": 0,
+      "duration": 0,
+      "reason": ""
+    }
+  ],
+  "errors": [
+    "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ],
+  "firstActions": [
+    {
+      "characterId": "max",
+      "type": "appear",
+      "start": 0,
+      "duration": 0
+    },
+    {
+      "characterId": "maxine",
+      "type": "appear",
+      "start": 0,
+      "duration": 0
+    },
+    {
+      "characterId": "max",
+      "type": "walk",
+      "start": 0.7,
+      "duration": 2.5
+    },
+    {
+      "characterId": "max",
+      "type": "wait",
+      "start": 3.2,
+      "duration": 1.5
+    },
+    {
+      "characterId": "max",
+      "type": "wave",
+      "start": 4.7,
+      "duration": 1.62
+    },
+    {
+      "characterId": "max",
+      "type": "disappear",
+      "start": 8.5,
+      "duration": 0
+    },
+    {
+      "characterId": "maxine",
+      "type": "look-at",
+      "start": 0.9,
+      "duration": 2.3
+    },
+    {
+      "characterId": "maxine",
+      "type": "wait",
+      "start": 3.1999999999999997,
+      "duration": 1.5
+    },
+    {
+      "characterId": "maxine",
+      "type": "wave",
+      "start": 4.699999999999999,
+      "duration": 1.62
+    },
+    {
+      "characterId": "maxine",
+      "type": "disappear",
+      "start": 8.5,
+      "duration": 0
+    }
+  ],
+  "sceneId": "8d0a3634-fd78-474f-9617-0cc00efe3aac",
+  "revision": "acbaf375e48739c3e4b0d0764660b82fb9c28d3aa55c34f221d7581508c21c4e"
+}

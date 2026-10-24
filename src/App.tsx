@@ -3,7 +3,7 @@ import { Brightling, LIBRARY_KEY, makeFrame, makePack } from './maker';
 import { decodeLibrary, ImportMode, prepareImport, pruneScene, withoutCharacter } from './library';
 import Characters from './Characters';
 import Places from './Places';
-import SceneMaker from './SceneMaker';
+import SceneMaker, { type SceneLeaveGuard } from './SceneMaker';
 import EpisodeMaker, { type EpisodeLeaveGuard } from './EpisodeMaker';
 import AudioLibrary from './AudioLibrary';
 import VoiceMaker from './VoiceMaker';
@@ -28,6 +28,8 @@ import { restoreStudioWithAudio } from './restoreCoordinator';
 import { decodePlaceOrganisation, DEFAULT_PLACE_ORGANISATION, PLACE_FOLDERS_KEY, PlaceOrganisation, placesIn, validatePlaceOrganisation } from './placeFolders';
 import { maxOutfitFrom, maxineOutfitFrom, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { readAppearance, resolveAppearance, saveAppearance, type Appearance } from './appearance';
+import { readWorkspace, saveWorkspace, type Workspace } from './workspacePreference';
+import { Studio3Projects, Studio3Sidebar, WorkspaceSettings, studioTabLabel, type StudioTab } from './Studio3Shell';
 
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
@@ -53,6 +55,8 @@ type Sprite = HTMLImageElement | HTMLCanvasElement;
 type Pack = { idle: Sprite; side: Sprite[]; wave: Sprite[] };
 
 export default function App() {
+  const [workspace, setWorkspace] = useState<Workspace>(readWorkspace);
+  const [workspaceIssue, setWorkspaceIssue] = useState<string | null>(null);
   const [appearance, setAppearance] = useState<Appearance>(() => readAppearance());
   const [systemDark, setSystemDark] = useState(() => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true);
   const resolvedTheme = resolveAppearance(appearance, systemDark);
@@ -68,6 +72,7 @@ export default function App() {
   const [recovery] = useState(() => recoverStudioRestore(localStorage, LIBRARY_KEY, STORAGE_KEY));
   const episodeLeaveGuard = useRef<EpisodeLeaveGuard | null>(null);
   const creditsLeaveGuard = useRef<CreditsLeaveGuard | null>(null);
+  const sceneLeaveGuard = useRef<SceneLeaveGuard | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const savedRef = useRef<Scene>(readScene());
   const positionsRef = useRef<Record<string, Point>>(Object.fromEntries(Object.entries(savedRef.current.characters).map(([id, value]) => [id, { ...value.start }])));
@@ -104,8 +109,11 @@ export default function App() {
   const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
   const [audioIssue, setAudioIssue] = useState<string | null>(null);
   const [sceneIssue, setSceneIssue] = useState<string | null>(() => { try { const raw = localStorage.getItem(STORAGE_KEY); return raw !== null && !parseScene(raw) ? 'Saved scene JSON is invalid. It has not been overwritten.' : null; } catch { return 'Browser scene storage is unavailable.'; } });
-  const [activeTab, setActiveTab] = useState<'characters' | 'places' | 'scenes' | 'intros' | 'episodes' | 'credits' | 'music' | 'voice' | 'audio' | 'playground' | 'unity'>('characters');
+  const [activeTab, setActiveTab] = useState<StudioTab>(() => workspace === 'studio3' ? 'projects' : 'characters');
+  const [unityStatus, setUnityStatus] = useState<'connected' | 'disconnected'>('disconnected');
+  const [sceneDirty, setSceneDirty] = useState(false);
   const [requestedSceneId, setRequestedSceneId] = useState<string | null>(null);
+  const [requestedPreviewSceneId, setRequestedPreviewSceneId] = useState<string | null>(null);
   const [selected, setSelected] = useState<CharacterId>('max');
   const [maxOutfit, setMaxOutfit] = useState<MaxOutfit>(() => maxOutfitFrom(savedRef.current.maxOutfit));
   const [maxineOutfit, setMaxineOutfit] = useState<MaxineOutfit>(() => maxineOutfitFrom(savedRef.current.maxineOutfit));
@@ -460,25 +468,45 @@ export default function App() {
     }
   };
 
-  return <div className="app-shell">
-    <aside className="studio-sidebar">
+  const navigate = (tab: StudioTab, sceneId?: string) => {
+    if (tab === activeTab && !sceneId) return;
+    const proceed = () => { setRequestedSceneId(sceneId ?? null); setActiveTab(tab); };
+    if (activeTab === 'scenes' && sceneLeaveGuard.current) sceneLeaveGuard.current(proceed);
+    else if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed);
+    else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section');
+    else proceed();
+  };
+  const chooseWorkspace = (next: Workspace) => {
+    if (next === workspace) return;
+    setWorkspace(next);
+    setWorkspaceIssue(saveWorkspace(next) ? null : 'The workspace changed for this session, but this browser could not save your preference.');
+    if (next === 'classic' && activeTab === 'projects') setActiveTab('characters');
+  };
+
+  return <div className={`app-shell ${workspace === 'studio3' ? 'studio3-shell' : 'classic-shell'}`}>
+    {workspace === 'studio3' ? <Studio3Sidebar activeTab={activeTab} onNavigate={navigate} /> : <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
-      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'music', 'voice', 'audio', 'playground', 'unity'] as const).map(tab => <button key={tab} onClick={() => { if (tab === activeTab) return; const proceed = () => { setRequestedSceneId(null); setActiveTab(tab); }; if (activeTab === 'episodes' && episodeLeaveGuard.current) episodeLeaveGuard.current(proceed); else if (activeTab === 'credits' && creditsLeaveGuard.current) creditsLeaveGuard.current(proceed, 'switch Studio section'); else proceed(); }} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', music: '♪', voice: '\u266c', audio: '♫', playground: '▶', unity: '◇' } as const)[tab]}</span><span>{tab === 'music' ? 'Music Studio' : tab === 'voice' ? 'Voice Maker' : tab === 'unity' ? 'Unity Connection' : tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
+      <nav className="studio-nav" aria-label="Studio sections">{(['characters', 'places', 'scenes', 'intros', 'episodes', 'credits', 'music', 'voice', 'audio', 'playground', 'unity'] as const).map(tab => <button key={tab} onClick={() => navigate(tab)} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined}><span className="section-icon" aria-hidden="true">{({ characters: '✦', places: '▧', scenes: '▤', intros: '★', episodes: '▣', credits: '❖', music: '♪', voice: '\u266c', audio: '♫', playground: '▶', unity: '◇' } as const)[tab]}</span><span>{tab === 'music' ? 'Music Studio' : tab === 'voice' ? 'Voice Maker' : tab === 'unity' ? 'Cartoon Preview' : tab[0].toUpperCase() + tab.slice(1)}</span></button>)}</nav>
       <label className="appearance-control">Appearance<select aria-label="Appearance" value={appearance} onChange={event => chooseAppearance(event.target.value as Appearance)}><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></label>
+      <button type="button" className="classic-settings-link" onClick={() => navigate('settings')}>Settings · Workspace</button>
       <span className="local-badge"><span /> Saved in this browser</span>
-    </aside>
+    </aside>}
     <main className={`main ${activeTab === 'music' ? 'main-music' : ''}`}>
+      {workspace === 'studio3' && <header className="studio3-topbar"><div><span className="studio3-topbar-overline">UNITY STUDIO 3.0 <span aria-hidden="true">/</span> {studioTabLabel(activeTab).toUpperCase()}</span><strong>{studioTabLabel(activeTab)}</strong></div><div className="studio3-topbar-actions"><span className={`studio3-unity-state ${unityStatus}`}><span aria-hidden="true" />Unity {unityStatus === 'connected' ? 'connected' : 'not connected'}</span><span className={`studio3-save-status ${sceneDirty ? 'needs-save' : ''}`}><span aria-hidden="true" /> {sceneDirty ? 'Changes to save' : 'Local workspace'}</span><button type="button" onClick={() => chooseWorkspace('classic')}>Classic Studio</button></div></header>}
+      {workspaceIssue && activeTab !== 'settings' && <p role="alert" className="storage-alert">{workspaceIssue}</p>}
+      {activeTab === 'projects' && <Studio3Projects scenes={timedScenes} episodes={episodes} places={places} onScene={id => navigate('scenes', id)} onNavigate={navigate} />}
+      {activeTab === 'settings' && <WorkspaceSettings workspace={workspace} appearance={appearance} onWorkspace={chooseWorkspace} onAppearance={chooseAppearance} storageIssue={workspaceIssue} />}
       {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} maxineOutfit={maxineOutfit} onMaxineOutfitChange={saveMaxineOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
-      {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} requestedSceneId={requestedSceneId} audioAssets={audioAssets} />}
+      {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} onRenderPreview={id => { setRequestedPreviewSceneId(id); navigate('unity'); }} requestedSceneId={requestedSceneId} audioAssets={audioAssets} professional={workspace === 'studio3'} leaveGuardRef={sceneLeaveGuard} onDirtyChange={setSceneDirty} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
-      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => { setRequestedSceneId(id); setActiveTab('scenes'); }} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
+      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => navigate('scenes', id)} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
       {activeTab === 'voice' && <VoiceMaker assets={audioAssets} characters={library} settings={voiceSettings} issue={voiceSettingsIssue} onSettingsChange={saveVoiceSettings} onSaveAsset={saveVoiceAsset} onDeleteAsset={deleteAudio} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}
-      {activeTab === 'unity' && <UnityConnection />}
+      {activeTab === 'unity' && <UnityConnection scenes={timedScenes} requestedSceneId={requestedPreviewSceneId} onStatusChange={setUnityStatus} />}
       <div className="playground-page" hidden={activeTab !== 'playground'}>
       <div className="intro"><div><p className="eyebrow">THE LITTLE LIVING ROOM</p><h1>Make a moment <em>move.</em></h1><p>Place your Brightlings, choose where they walk, and press play.</p></div><div className="step-pill">PLAYGROUND</div></div>
       {sceneIssue && <p className="storage-alert" role="alert">{sceneIssue}</p>}

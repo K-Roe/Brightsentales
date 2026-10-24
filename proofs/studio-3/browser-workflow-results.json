@@ -1,0 +1,25 @@
+{
+  "url": "http://127.0.0.1:5177/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\bright-studio3-chrome-ztpyyt",
+  "stages": {
+    "defaultStudio3": "PASS",
+    "classicSwitch": "PASS",
+    "classicPlayground": "PASS",
+    "classicSceneAndPlayback": "PASS",
+    "sharedSceneInStudio3": "PASS",
+    "unsavedNavigationGuard": "PASS",
+    "unsavedStateSurvivesSwitch": "PASS",
+    "unityOffline": "PASS",
+    "persistence": "PASS",
+    "existingAudioTools": "PASS",
+    "backupV8RoundTrip": "PASS"
+  },
+  "errors": [],
+  "requestsFailed": [],
+  "sceneId": "73458ffa-e9d1-4722-9672-6704ca50b711",
+  "dialogsCanceled": 1,
+  "backupImportState": {
+    "message": "Studio Backup restored. Characters, scenes, episodes and audio are ready.",
+    "files": 0
+  }
+}
