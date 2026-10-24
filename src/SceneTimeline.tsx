@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { editActionTiming, type TimingEdit } from './timelineEditing';
 import type { TimedAction, TimedScene } from './timedScenes';
 import type { CameraKeyframe } from './camera';
 
 type Props = {
+  professional?: boolean;
   scene: TimedScene;
   time: number;
   selectedCharacter: string | null;
@@ -26,8 +27,17 @@ const titles = {
 } as const;
 const LABEL_WIDTH = 116;
 
-export default function SceneTimeline({ scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming, selectedCamera, onSelectCamera, onCameraTiming }: Props) {
-  const [pixelsPerSecond, setPixelsPerSecond] = useState(24);
+export default function SceneTimeline({ professional = false, scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming, selectedCamera, onSelectCamera, onCameraTiming }: Props) {
+  const [zoom, setZoom] = useState<number | 'fit'>(professional ? 'fit' : 24);
+  const [availableWidth, setAvailableWidth] = useState(0);
+  const scroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!professional || !scroll.current) return;
+    const observer = new ResizeObserver(entries => setAvailableWidth(entries[0].contentRect.width));
+    observer.observe(scroll.current);
+    return () => observer.disconnect();
+  }, [professional]);
+  const pixelsPerSecond = zoom === 'fit' ? Math.max(14, Math.min(110, (availableWidth - LABEL_WIDTH - 40) / scene.duration || 24)) : zoom;
   const drag = useRef<{ id: string; mode: TimingEdit; x: number; base: TimedScene } | null>(null);
   const lanes: Lane[] = Object.keys(scene.characters).map(id => ({ id, kind: 'character', label: name(id) }));
   const ticks = Array.from({ length: Math.floor(scene.duration / (pixelsPerSecond < 20 ? 5 : 2)) + 1 }, (_, i) => i * (pixelsPerSecond < 20 ? 5 : 2));
@@ -38,8 +48,8 @@ export default function SceneTimeline({ scene, time, selectedCharacter, selected
     onSeek(Math.max(0, Math.min(scene.duration, Math.round(seconds * 10) / 10)));
   };
   return <section className="scene-timeline" aria-label="Visual scene timeline">
-    <div className="timeline-heading"><div><h2>Timeline</h2><p>Drag a block to move it. Drag its right edge to change its length.</p></div><label>Zoom<select aria-label="Timeline zoom" value={pixelsPerSecond} onChange={event => setPixelsPerSecond(Number(event.target.value))}><option value="14">Far</option><option value="24">Normal</option><option value="42">Close</option></select></label></div>
-    <div className="timeline-scroll" tabIndex={0} aria-label="Scrollable timeline"><div className="timeline-content" style={{ width }}>
+    <div className="timeline-heading"><div><h2>Timeline</h2><p>Drag a block to move it. Drag its right edge to change its length.</p></div><label>Zoom<select aria-label="Timeline zoom" value={zoom} onChange={event => setZoom(event.target.value === 'fit' ? 'fit' : Number(event.target.value))}>{professional && <option value="fit">Fit</option>}<option value="14">Far</option><option value="24">Normal</option><option value="42">Close</option></select></label></div>
+    <div className="timeline-scroll" ref={scroll} tabIndex={0} aria-label="Scrollable timeline"><div className="timeline-content" style={{ width }}>
       <div className="timeline-ruler" onPointerDown={event => { seek(event); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerMove={event => { if (event.currentTarget.hasPointerCapture(event.pointerId)) seek(event); }}>
         <span className="timeline-label">Time</span>{ticks.map(tick => <span className="timeline-tick" key={tick} style={{ left: LABEL_WIDTH + tick * pixelsPerSecond }}>{tick}s</span>)}
       </div>

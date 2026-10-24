@@ -2,6 +2,8 @@
 
 A local React/TypeScript 2D cartoon maker. The living room, Max, Maxine, and the V3 walking cycle are Milestone 1 artwork and behaviour approved by Karl.
 
+The experimental `studio-3-experimental` branch opens Unity Studio 3.0 by default. Use **Settings → Workspace → Preferred Studio** to choose Classic Studio; both layouts use the same saved projects and browser storage. Unity preview is optional and requires the separate local Unity Play Mode receiver. See the [Studio 3.0 review report](proofs/studio-3/REPORT.md).
+
 Start with the [user guide](docs/USER_GUIDE.md), [current project status](docs/PROJECT_STATUS.md), [development roadmap](docs/ROADMAP.md), and [architecture](docs/ARCHITECTURE.md). The Studio has Characters, Places, timed Scenes, Episodes, Audio and Playground sections. F2 MP3/OGG testing is implemented and awaits Karl's batch review; see [BATCH_REVIEW.md](docs/BATCH_REVIEW.md) for implementation and approval status.
 
 ## Milestone 2 wave

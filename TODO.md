@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## Current Studio 3.0 review gate
+
+The experimental `studio-3-experimental` branch is technically verified on the Phase 2 checkpoint. Review [Studio 3.0 evidence](proofs/studio-3/REPORT.md): professional shell, editor, Inspector, timeline, Classic, Settings, Unity connection, UI walkthrough and isolated Unity Game-camera run. Await Karl's visual decision before promotion or any P3 work. The P0–P2 records below remain historical; P3 is still TODO.
+
 Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGENT_HANDOVER.md`; protect the approved V1.1 commits. Status terms: DONE / IN PROGRESS / BLOCKED / TODO / DEFERRED / REJECTED. Source inventory: `docs/CARTOON_FOUNDATION_AUDIT.md`. Each task below is independently reviewable. Do not mark Karl's visual approval from automated checks.
 
 ## P0 — Verified GitHub recovery [DONE]

@@ -1,5 +1,9 @@
 # Cartoon foundation agent handover — 2026-10-24
 
+## Studio 3.0 experimental handover — 2026-10-24
+
+Current isolated Studio worktree: `C:\Users\karlr\repos\BrightTalesStudio3`, branch `studio-3-experimental`, based on Phase 2 Studio `db63024`. The primary `C:\Users\karlr\repos\brightsenappstales` `main`, Phase 2 Studio and Unity worktrees, and approved V1.1 baseline remain separate. The professional shell is the default, Classic is selectable in Settings, and both use the same `App.tsx` state and saved data. [Studio 3.0 report](proofs/studio-3/REPORT.md) contains the exact browser, Unity, backup, video and screenshot evidence and its limits. **Next action: Karl's visual review.** Do not begin P3, merge or promote an approved baseline. The original Unity worktree's two generated dirty ProjectSettings files were not staged or edited.
+
 **Current continuation (2026-10-24):** Phase 2 is technically verified on isolated `cartoon-foundation-phase2` branches and awaits Karl's visual review. A fresh disposable browser created, saved, closed/reopened, edited and sent a real scene with gentle walk, Look At, Calm Life v2 and Camera V1. Isolated Unity played, reset and replayed two matching Game-camera runs. The 28.083-second [review MP4](../BrightTalesCartoonFoundationUnity/CartoonFoundationP2Review/phase2-review.mp4) combines actual UI screenshots and both continuous Unity captures; it is not an in-app exporter. See `proofs/cartoon-foundation-phase2/REPORT.md`. Do not start P3, promote a baseline or merge before Karl's visual decision. The normal Unity Editor on the original worktree was not touched.
 
 ## Latest verified state and next action

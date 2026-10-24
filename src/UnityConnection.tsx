@@ -7,7 +7,7 @@ import type { TimedLibrary } from './timedScenes';
 
 type Status = 'disconnected' | 'connecting' | 'connected' | 'pinging' | 'commanding';
 
-export default function UnityConnection({ scenes, requestedSceneId }: { scenes: TimedLibrary; requestedSceneId?: string | null }) {
+export default function UnityConnection({ scenes, requestedSceneId, onStatusChange }: { scenes: TimedLibrary; requestedSceneId?: string | null; onStatusChange?: (status: 'connected' | 'disconnected') => void }) {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Connection is off.');
   const [actor, setActor] = useState<ActingCharacter>('max');
@@ -16,6 +16,8 @@ export default function UnityConnection({ scenes, requestedSceneId }: { scenes: 
   const pending = useRef<AbortController | null>(null);
 
   useEffect(() => () => { pending.current?.abort(); pending.current = null; }, []);
+  useEffect(() => { onStatusChange?.(status === 'connected' ? 'connected' : 'disconnected'); }, [status, onStatusChange]);
+  useEffect(() => () => onStatusChange?.('disconnected'), [onStatusChange]);
 
   const disconnect = () => {
     pending.current?.abort();
