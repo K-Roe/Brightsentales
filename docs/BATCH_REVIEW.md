@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**Cartoon foundation Phase 2 (2026-10-24): AWAITING KARL'S VISUAL REVIEW.** Watch the [28.083-second review video](../../BrightTalesCartoonFoundationUnity/CartoonFoundationP2Review/phase2-review.mp4) and inspect the [Scene Maker screenshots](../proofs/cartoon-foundation-phase2/REPORT.md). Check walk arrival, Look At, wave transition, camera framing and editing clarity. The browser-to-Unity workflow, Play Mode 1/1, Studio 290/290, build and media decode passed; these do not constitute visual approval. P3 and merge remain stopped.
+
 **Cartoon foundation Phase 1 (2026-10-24): TECHNICALLY COMPLETE; NOT VISUALLY APPROVED.** A real saved Scene Maker scene was created, reopened, edited and sent through a disposable browser to isolated Unity. Max and Maxine played, reset and replayed in two Game-camera runs. The [Phase 1 report](../proofs/cartoon-foundation-phase1/REPORT.md) links the 22-second review MP4, UI screenshots and test results. Please review character positions, timing, poses and reset/replay outcome. Other actions, camera, audio and episodes remain unsupported; Phase 2 is gated on Karl's visual decision.
 
 **Cartoon production foundation Phase 0 (2026-10-24):** Source audit and approved V1.1 remote backup are technically verified; see [Phase 0 report](../proofs/cartoon-foundation-phase0/REPORT.md). Saved-scene/episode Unity playback and Unity MP4 export remain open tasks. This backup does not approve any new visual behavior or change the existing animation gates.

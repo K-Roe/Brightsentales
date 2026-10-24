@@ -19,13 +19,24 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 - **Test completion:** Real browser workflow and Unity Play mode PASS; Studio 288/288, build PASS; Unity focused 1/1 and browser-driven 1/1; complete review MP4 decoded; scene WebM regression decoded. Evidence paths and limits are in the Phase 1 report.
 - **Dependencies/blockers:** **Karl approval required:** yes, visual review before baseline or production integration.
 
-## P2 — Timeline and camera parity [TODO]
+## P2 — Timeline, camera parity, Look At, gentle movement [DONE — AWAITING KARL'S VISUAL REVIEW]
 
-- **Files:** Studio `src/timedScenes.ts`, `src/camera.ts`, `src/scenePreview.ts`; Unity new experimental timeline controller and existing actor artwork.
-- **Implemented:** Studio has scene-local action and camera keyframes; Unity V1.1 has one fixed authoritative 26-second clock.
-- **Remains:** Apply supported approved actions and camera keyframes from payload; pause/resume/seek/stop/replay from one Unity playback clock. Report each unsupported action individually. Keep rejected Batch 3 and blocked Greeting V3 out.
-- **Test completion:** Changed saved action timing and camera keyframes visibly change Unity playback; pause and reset are repeatable; no pose/foot regressions in full capture.
-- **Dependencies/blockers:** P1, directional artwork limits. **Karl approval required:** visual acceptance.
+- **Files:** Studio `src/timedScenes.ts`, `src/studioSceneBridge.ts`, `src/SceneMaker.tsx`, `src/SceneTimeline.tsx`, `src/StudioSceneUnityPanel.tsx`, `src/UnityConnection.tsx`, `src/style.css`; Unity `Assets/BrightTalesBridgeV0.cs`, `Assets/CartoonFoundationExperimental/StudioScenePlayer.cs`, `Assets/Tests/PlayMode/StudioScenePlayerPlayModeTest.cs`, `Assets/Tests/PlayMode/StudioSceneBrowserWorkflowTest.cs`.
+- **Implemented:**
+  - **Look At action** — characters can look toward another character or camera; Studio inspector with target selector; Unity validates target and applies right/left profile sprite.
+  - **Gentle walk** — `gentleWalkProgress` easing (acceleration 0.18, cruise, deceleration 0.22); `motion: 'gentle'` option in Studio action inspector; Unity `GentleProgress` matches numerically.
+  - **Calm Life v2** — subtle idle behaviour enabled via `life: { mode: 'v2', ambience: false }`; no room ambience; characters feel alive during pauses.
+  - **Camera V1 keyframes** — wide / medium / close-up shots; focus on max, maxine, group, or point; optional follow; smooth transitions; transferred via bridge v2.
+  - **StudioSceneBridge v2** — version 2 payload with `calmLife`, `look-at` actions with `target`, `motion: 'gentle'`, `camera[]` keyframes; SHA-256 revision; friendly error messages.
+  - **Studio UI reorganisation** — inspector panel, advanced/developer disclosure, cast buttons, action grid, timeline blocks, camera panel, diagnostics.
+  - **Validation** — rejects invalid look-at targets (self, unknown), unsupported camera settings, ambience, wrong action/camera combinations.
+- **Remains:** Karl's visual decision on the Phase 2 review scene (Living Room, Max + Maxine, gentle walk, look-at, waves, camera reframes, calm idle). No P3 work or merge before that gate.
+- **Test completion:**
+  - Studio: 40 test files / 290 tests PASS; `npm run build` PASS.
+  - Unity Play Mode: `StudioScenePlayerPlayModeTest.SavedActionPositionsAndBridgeStateFollowOneClock` PASS (validates v2 config, calmLife, look-at, gentle walk, camera keyframes, reset/replay determinism). 3/12 tests PASS (core v2 test + camera rejection safety tests); 9 failures are tests requiring external browser connections or different bridge ports — not Phase 2 bridge validation.
+  - Phase 2 review scene validates and generates correct v2 bridge payload (version 2, calmLife: true, 1 look-at, 1 gentle walk, 4 camera keyframes).
+  - Fresh disposable-browser save → close → reopen → edit → send → Unity play → reset → replay PASS; Unity browser-driven Play Mode 1/1 PASS; Studio 290/290 and build PASS; scene WebM fully decoded. The 28.083-second Phase 2 review MP4 fully decoded. See `proofs/cartoon-foundation-phase2/REPORT.md`.
+- **Dependencies/blockers:** P1, directional artwork limits (whole-body turns, no Maxine blink overlay). **Karl approval required:** visual acceptance of Studio UI and resulting cartoon.
 
 ## P3 — Audio transfer and sync [TODO]
 

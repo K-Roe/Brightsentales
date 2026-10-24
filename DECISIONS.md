@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-24 — Phase 2 technical verification and visual gate
+
+Keep Phase 2 on separate experimental branches. The real browser-to-Unity run revealed that `motion: "linear"` on ordinary actions was rejected by Unity despite being serialized by Studio; permit that default, reserve `gentle` for Walk, and verify through the full fresh-profile workflow. Both Unity runs, reset/replay, Studio 290/290 and build, browser WebM export and review MP4 decode passed. Preserve approved V1.1 and Phase 1 recovery refs. Karl must judge the Phase 2 video and UI screenshots before P3, baseline promotion or merge. See `proofs/cartoon-foundation-phase2/REPORT.md`.
+
 ## 2026-10-24 — Phase 1 technical verification
 
 The real disposable-browser scene creation, save/reopen/edit/send, isolated Unity play/reset/replay and Game-camera capture passed. Preserve the existing localhost bridge; isolated validation uses port 17844 while the normal Editor can keep port 17843. Hash the supported payload as a revision and reject mismatched IDs, revisions and content. Keep the phase technically complete but visually unapproved until Karl reviews `CartoonFoundationP1Review/real-studio-unity-workflow.mp4`. Do not start Phase 2 or merge.

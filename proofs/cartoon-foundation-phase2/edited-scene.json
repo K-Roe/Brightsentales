@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "scenes": [
+    {
+      "id": "13e08972-a9a1-44aa-8b5d-f68505800366",
+      "name": "Max and Maxine — A Gentle Hello",
+      "duration": 9,
+      "placeId": "living-room",
+      "characters": {
+        "max": {
+          "x": 520,
+          "y": 790
+        },
+        "maxine": {
+          "x": 750,
+          "y": 790
+        }
+      },
+      "actions": [
+        {
+          "id": "7be67d3f-b9ee-4214-ae56-9aafc809c70a",
+          "characterId": "max",
+          "type": "appear",
+          "start": 0,
+          "duration": 0,
+          "point": {
+            "x": 520,
+            "y": 790
+          }
+        },
+        {
+          "id": "6808391f-0011-4c61-bdf8-5a6c5bf35493",
+          "characterId": "maxine",
+          "type": "appear",
+          "start": 0,
+          "duration": 0,
+          "point": {
+            "x": 750,
+            "y": 790
+          }
+        },
+        {
+          "id": "67ab9e47-2c07-49ab-83bd-f2dade3b9ec1",
+          "characterId": "max",
+          "type": "walk",
+          "start": 0.7,
+          "duration": 2.2,
+          "point": {
+            "x": 900,
+            "y": 790
+          },
+          "motion": "gentle"
+        },
+        {
+          "id": "54e1a496-fb5c-463b-9551-be7831f8f66f",
+          "characterId": "max",
+          "type": "wait",
+          "start": 3.2,
+          "duration": 1.5
+        },
+        {
+          "id": "e5ca345e-7575-4324-bc21-12f4613eed3e",
+          "characterId": "max",
+          "type": "wave",
+          "start": 4.7,
+          "duration": 1.62
+        },
+        {
+          "id": "9f02299d-8a3b-4f4c-9790-801d6833d7df",
+          "characterId": "max",
+          "type": "disappear",
+          "start": 8.5,
+          "duration": 0
+        },
+        {
+          "id": "29e4c85a-2fc7-4897-97df-265595411638",
+          "characterId": "maxine",
+          "type": "look-at",
+          "start": 0.9,
+          "duration": 2.3,
+          "target": "max"
+        },
+        {
+          "id": "b388b5be-7936-4452-a1dc-3d5945b5d1e8",
+          "characterId": "maxine",
+          "type": "wait",
+          "start": 3.1999999999999997,
+          "duration": 1.5
+        },
+        {
+          "id": "0f4393db-87f7-4e58-8e57-d93bd5c746dd",
+          "characterId": "maxine",
+          "type": "wave",
+          "start": 4.699999999999999,
+          "duration": 1.62
+        },
+        {
+          "id": "6f88e458-9323-4a82-808f-2563e1be249d",
+          "characterId": "maxine",
+          "type": "disappear",
+          "start": 8.5,
+          "duration": 0
+        }
+      ],
+      "life": {
+        "enabled": true,
+        "mode": "v2",
+        "ambience": false
+      },
+      "camera": [
+        {
+          "id": "9b8b4645-0a72-4ff8-8c8f-c6421e655422",
+          "shot": "medium",
+          "focus": "group",
+          "start": 3.2,
+          "duration": 1.5
+        }
+      ]
+    }
+  ]
+}
