@@ -20,6 +20,8 @@ The Studio focused contract test passed 3/3, full suite passed 287/287 and `npm 
 
 The bridge was subsequently tightened to reject a load request whose outer scene ID differs from its payload ID. The focused Unity Play mode test was rerun on 2026-10-24 and passed **1/1**, including that rejection; `cartoon-foundation-play-results.xml` holds the new result. The normal Unity Editor is open on Karl's original worktree and was not changed or stopped. The isolated scene uses bridge port 17844 for tests, while the normal connection panel targets 17843; a disposable browser route or isolated editor setup is needed for the UI-to-Unity check.
 
+The in-app Browser control tool required for disposable-profile interaction was unavailable in this run, and this worktree has no installed standalone Playwright/Puppeteer package. No normal-profile browser data was touched. This is a verification-capacity blocker for Phase 1's remaining UI acceptance check; do not advance Phase 2 on the strength of the synthetic Play mode result.
+
 ## Supported and remaining
 
 Phase 1 supports approved Living Room artwork, Max/Maxine, Appear, Walk, Wait, Wave and Disappear. It retains stable scene/action IDs and sends edited positions and timings. It does not yet support Camera V1 keyframes, custom Brightlings, other places, additional actions, Bright Speak, audio, episode playback, pause/seek, or Unity MP4 export. Missing or unsupported assets fail explicitly. Browser scene/episode WebM export remains the existing implementation, but was not retested through the UI in this phase.
