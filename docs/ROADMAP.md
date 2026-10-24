@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**Cartoon production foundation (2026-10-24):** Phase 0 source audit, isolated worktrees and private Unity/Studio approved-branch backup are complete. General saved-scene transfer is next, followed by timeline/camera, audio, episodes, Unity MP4 and the editable two-scene review. See [the audit](CARTOON_FOUNDATION_AUDIT.md) and [agent-ready TODO](../TODO.md). The approved V1.1 demo remains frozen; no new foundation visual approval exists.
+
 **Cartoon Engine V1.1 approved gate (24 October 2026):** Karl visually approved the separate scene and Studio workflow. The approved checkpoint preserves this version; later integration requires separate authorization. See [approval](../proofs/cartoon-engine-v1-1/APPROVAL.md).
 
 **Separate Unity experiment (24 October 2026):** 2.5D Cartoon Engine V1 has a 26-second Living Room review cut and remains gated on Karl's visual approval. See [its proof](../proofs/cartoon-engine-v1/REPORT.md). This does not resolve Greeting V3 artwork or advance any production animation gate.

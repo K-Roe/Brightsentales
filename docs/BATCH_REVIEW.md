@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**Cartoon production foundation Phase 0 (2026-10-24):** Source audit and approved V1.1 remote backup are technically verified; see [Phase 0 report](../proofs/cartoon-foundation-phase0/REPORT.md). Saved-scene/episode Unity playback and Unity MP4 export remain open tasks. This backup does not approve any new visual behavior or change the existing animation gates.
+
 **Cartoon Engine V1.1 (24 October 2026):** Karl visually approved the 26-second Living Room cartoon. See the [approval record](../proofs/cartoon-engine-v1-1/APPROVAL.md) and review evidence.
 
 ## Unity 2.5D Cartoon Engine V1 (24 October 2026)

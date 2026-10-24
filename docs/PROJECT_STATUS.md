@@ -1,5 +1,7 @@
 # BrightTales Project Status
 
+**Cartoon production foundation Phase 0 — AUDITED AND REMOTELY BACKED UP (24 October 2026).** The approved Studio and Unity V1.1 commits are pushed to their respective GitHub repositories; Unity is private and all 137 tracked LFS objects were reported available for download. The general saved-scene, audio, episode and Unity MP4 workflow is still unimplemented. See [the source audit](CARTOON_FOUNDATION_AUDIT.md), [Phase 0 proof](../proofs/cartoon-foundation-phase0/REPORT.md), and [takeover tasks](../TODO.md). No new visual approval is implied.
+
 **BrightTales x Unity Cartoon Engine V1.1 - APPROVED BY KARL (24 October 2026).** The separate 26-second Living Room scene and Studio bridge workflow are frozen for recovery. See [approval and review evidence](../proofs/cartoon-engine-v1-1/APPROVAL.md). The V1 baseline and earlier approved checkpoints remain unchanged; production renderer integration remains separate.
 
 **BrightTales x Unity 2.5D Cartoon Engine V1 - EXPERIMENTAL; TECHNICALLY VERIFIED; AWAITING KARL'S VISUAL REVIEW (24 October 2026).** The opt-in Unity Connection panel loaded and played a 26-second Max/Maxine Living Room scene in an isolated Unity copy. [The review report and continuous Game-camera recording](../proofs/cartoon-engine-v1/REPORT.md) document the result and the flattened-room occlusion limit. Approved Director Controls V2 and Character Acting V1/V1.1 checkpoints remain protected. Portal V1 was not modified. No production renderer integration or approval is implied.
