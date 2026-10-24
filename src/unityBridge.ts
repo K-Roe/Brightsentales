@@ -1,4 +1,6 @@
-export const UNITY_BRIDGE_URL = 'http://127.0.0.1:17843';
+// The alternate port is reserved for an isolated Unity Play mode verification run.
+export const UNITY_BRIDGE_URL = import.meta.env.VITE_UNITY_BRIDGE_PORT === '17844'
+  ? 'http://127.0.0.1:17844' : 'http://127.0.0.1:17843';
 
 type BridgeReply = { source: 'unity'; version: 0; status?: 'ready'; type?: 'pong' };
 

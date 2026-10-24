@@ -7,6 +7,7 @@ export default function StudioSceneUnityPanel({ connected, library }: { connecte
   const [selectedId, setSelectedId] = useState('');
   const [runId, setRunId] = useState(() => { try { return sessionStorage.getItem('brighttales.studio-scene.run') ?? ''; } catch { return ''; } });
   const [loadedId, setLoadedId] = useState(() => { try { return sessionStorage.getItem('brighttales.studio-scene.scene') ?? ''; } catch { return ''; } });
+  const [revision, setRevision] = useState(() => { try { return sessionStorage.getItem('brighttales.studio-scene.revision') ?? ''; } catch { return ''; } });
   const [phase, setPhase] = useState<'idle' | 'loaded' | 'playing' | 'complete' | 'unknown'>(() => {
     try { return sessionStorage.getItem('brighttales.studio-scene.run') ? 'unknown' : 'idle'; } catch { return 'idle'; }
   });
@@ -35,15 +36,19 @@ export default function StudioSceneUnityPanel({ connected, library }: { connecte
     }
     setMessage(`Waiting for Unity to ${action} the saved scene…`);
     try {
-      const reply = await studioSceneCommand(action, id, scene.id, controller.signal, config);
+      const reply = await studioSceneCommand(action, id, scene.id, controller.signal, action === 'load' ? { config } : { revision });
       if (pending.current !== controller) return;
+      if (action === 'load') {
+        setRevision(reply.revision);
+        try { sessionStorage.setItem('brighttales.studio-scene.revision', reply.revision); } catch { /* Current tab retains the run. */ }
+      }
       if (action === 'reset') {
-        setRunId(''); setLoadedId('');
-        try { sessionStorage.removeItem('brighttales.studio-scene.run'); sessionStorage.removeItem('brighttales.studio-scene.scene'); } catch { /* Current tab has been reset. */ }
+        setRunId(''); setLoadedId(''); setRevision('');
+        try { sessionStorage.removeItem('brighttales.studio-scene.run'); sessionStorage.removeItem('brighttales.studio-scene.scene'); sessionStorage.removeItem('brighttales.studio-scene.revision'); } catch { /* Current tab has been reset. */ }
       }
       setPhase(reply.status === 'idle' ? 'idle' : reply.status);
       setElapsed(reply.elapsed); setDuration(reply.duration);
-      setMessage(`Unity reports ${reply.status} for “${scene.name}” at ${reply.elapsed.toFixed(1)} / ${reply.duration.toFixed(1)} seconds.`);
+      setMessage(`Unity reports ${reply.status} for “${scene.name}” (revision ${reply.revision.slice(0, 12)}) at ${reply.elapsed.toFixed(1)} / ${reply.duration.toFixed(1)} seconds.`);
     } catch (error) {
       if (pending.current !== controller) return;
       setPhase('unknown');
@@ -77,8 +82,8 @@ export default function StudioSceneUnityPanel({ connected, library }: { connecte
       <button type="button" disabled={!connected || !runId || !!pending.current} onClick={() => void execute('reset')}>Reset</button>
       {phase === 'unknown' && runId && <button type="button" onClick={() => {
         if (!window.confirm('Only forget this run after checking Unity is stopped or reset. Forget it locally?')) return;
-        setRunId(''); setLoadedId(''); setPhase('idle');
-        try { sessionStorage.removeItem('brighttales.studio-scene.run'); sessionStorage.removeItem('brighttales.studio-scene.scene'); } catch { /* Storage may be unavailable. */ }
+        setRunId(''); setLoadedId(''); setRevision(''); setPhase('idle');
+        try { sessionStorage.removeItem('brighttales.studio-scene.run'); sessionStorage.removeItem('brighttales.studio-scene.scene'); sessionStorage.removeItem('brighttales.studio-scene.revision'); } catch { /* Storage may be unavailable. */ }
       }}>Forget local run</button>}
     </div>
     <p role="status">{message}</p>

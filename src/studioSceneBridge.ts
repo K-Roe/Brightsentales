@@ -14,8 +14,14 @@ export type StudioSceneConfig = {
 export type StudioSceneAction = 'load' | 'play' | 'status' | 'reset';
 export type StudioSceneReply = {
   source: 'unity'; version: 5; command: `studio.${StudioSceneAction}`; runId: string; sceneId: string;
-  status: 'idle' | 'loaded' | 'playing' | 'complete'; elapsed: number; duration: number; reason: string;
+  revision: string; status: 'idle' | 'loaded' | 'playing' | 'complete'; elapsed: number; duration: number; reason: string;
 };
+
+/** Fingerprints the actual supported payload, including saved positions and action timing. */
+export async function studioSceneRevision(config: StudioSceneConfig): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(config)));
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 /** Phase 1 accepts only artwork and actions with a faithful mapping in the isolated Unity scene. */
 export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
@@ -57,10 +63,12 @@ export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
 }
 
 export async function studioSceneCommand(action: StudioSceneAction, runId: string, sceneId: string,
-  signal: AbortSignal, config?: StudioSceneConfig, request: typeof fetch = fetch): Promise<StudioSceneReply> {
+  signal: AbortSignal, options: { config?: StudioSceneConfig; revision?: string } = {}, request: typeof fetch = fetch): Promise<StudioSceneReply> {
   if (!/^[a-f0-9]{32}$/.test(runId)) throw new Error('Invalid scene run ID.');
   if (!/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(sceneId)) throw new Error('Invalid saved scene ID.');
-  if (action === 'load' && (!config || config.sceneId !== sceneId)) throw new Error('Saved scene payload is missing or mismatched.');
+  if (action === 'load' && (!options.config || options.config.sceneId !== sceneId)) throw new Error('Saved scene payload is missing or mismatched.');
+  const revision = action === 'load' ? await studioSceneRevision(options.config!) : options.revision;
+  if (!revision || !/^[a-f0-9]{64}$/.test(revision)) throw new Error('Saved scene revision is missing or invalid.');
   const controller = new AbortController();
   const forward = () => controller.abort();
   signal.addEventListener('abort', forward, { once: true });
@@ -71,7 +79,7 @@ export async function studioSceneCommand(action: StudioSceneAction, runId: strin
     response = await request(`${UNITY_BRIDGE_URL}/command`, {
       method: 'POST', cache: 'no-store', signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: `studio.${action}`, runId, sceneId, ...(config ? { config } : {}) }),
+      body: JSON.stringify({ command: `studio.${action}`, runId, sceneId, revision, ...(options.config ? { config: options.config } : {}) }),
     });
   } catch (error) {
     if (controller.signal.aborted && !signal.aborted) throw new UnityBridgeTimeoutError('Unity did not answer the saved scene request within 3.5 seconds.');
@@ -86,7 +94,7 @@ export async function studioSceneCommand(action: StudioSceneAction, runId: strin
   const reply = value as Record<string, unknown>;
   if (!response.ok) throw new Error(typeof reply.reason === 'string' ? reply.reason : `Unity returned HTTP ${response.status}.`);
   if (reply.source !== 'unity' || reply.version !== 5 || reply.command !== `studio.${action}` ||
-      reply.runId !== runId || reply.sceneId !== sceneId ||
+      reply.runId !== runId || reply.sceneId !== sceneId || reply.revision !== revision ||
       !['idle', 'loaded', 'playing', 'complete'].includes(String(reply.status)) ||
       typeof reply.elapsed !== 'number' || !Number.isFinite(reply.elapsed) ||
       typeof reply.duration !== 'number' || !Number.isFinite(reply.duration) ||

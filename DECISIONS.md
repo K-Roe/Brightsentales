@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-24 — Phase 1 technical verification
+
+The real disposable-browser scene creation, save/reopen/edit/send, isolated Unity play/reset/replay and Game-camera capture passed. Preserve the existing localhost bridge; isolated validation uses port 17844 while the normal Editor can keep port 17843. Hash the supported payload as a revision and reject mismatched IDs, revisions and content. Keep the phase technically complete but visually unapproved until Karl reviews `CartoonFoundationP1Review/real-studio-unity-workflow.mp4`. Do not start Phase 2 or merge.
+
 ## 2026-10-24 — Phase 1 boundary
 
 Use an isolated experimental Unity scene copied from the approved V1.1 Living Room and a version 5 response on the existing `/command` route. The first transfer version supports only Max/Maxine, approved room artwork and the core five actions. Reject camera, audio, phone and other unmapped data explicitly until their later phases; never silently drop timeline content. Keep the fixed V1.1 controller unchanged. A three-second synthetic Play mode clip is technical evidence only; real Studio UI and visual acceptance remain separate gates.

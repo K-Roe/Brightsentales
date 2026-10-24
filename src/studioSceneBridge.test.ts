@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { studioSceneCommand, studioSceneConfig } from './studioSceneBridge';
+import { studioSceneCommand, studioSceneConfig, studioSceneRevision } from './studioSceneBridge';
 import type { TimedScene } from './timedScenes';
 
 const sceneId = '11111111-1111-4111-8111-111111111111';
@@ -22,6 +22,14 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
     expect(config.characters.map(character => character.id)).toEqual(['max', 'maxine']);
   });
 
+  it('changes the content revision when a saved timing or destination changes', async () => {
+    const original = studioSceneConfig(scene);
+    const edited = structuredClone(scene);
+    edited.actions[0].start = 4;
+    edited.actions[0].point = { x: 900, y: 790 };
+    expect(await studioSceneRevision(studioSceneConfig(edited))).not.toBe(await studioSceneRevision(original));
+  });
+
   it('rejects unsupported audio and rejected frame actions before transfer', () => {
     expect(() => studioSceneConfig({ ...scene, audio: [{ id: actionId, assetId: actionId, start: 0, volume: 1, trimStart: 0, trimEnd: 1, fadeIn: 0, fadeOut: 0 }] })).toThrow('Scene audio');
     expect(() => studioSceneConfig({ ...scene, actions: [{ ...scene.actions[0], type: 'sit-down', artwork: 'provisional-v1', seat: 'chair', point: undefined }] })).toThrow();
@@ -31,11 +39,11 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
     const config = studioSceneConfig(scene);
     const request = vi.fn(async (_url: string, init: RequestInit) => {
       const sent = JSON.parse(String(init.body));
-      return { ok: true, status: 202, json: async () => ({ source: 'unity', version: 5, command: sent.command, runId: sent.runId, sceneId: sent.sceneId, status: 'loaded', elapsed: 0, duration: 10, reason: '' }) };
+      return { ok: true, status: 202, json: async () => ({ source: 'unity', version: 5, command: sent.command, runId: sent.runId, sceneId: sent.sceneId, revision: sent.revision, status: 'loaded', elapsed: 0, duration: 10, reason: '' }) };
     }) as unknown as typeof fetch;
-    await expect(studioSceneCommand('load', runId, sceneId, new AbortController().signal, config, request)).resolves.toMatchObject({ status: 'loaded' });
+    await expect(studioSceneCommand('load', runId, sceneId, new AbortController().signal, { config }, request)).resolves.toMatchObject({ status: 'loaded' });
     expect(JSON.parse(String((request as ReturnType<typeof vi.fn>).mock.calls[0][1].body)).config.actions[0].x).toBe(800);
-    const mismatch = vi.fn(async () => ({ ok: true, status: 202, json: async () => ({ source: 'unity', version: 5, command: 'studio.load', runId, sceneId: 'other', status: 'loaded', elapsed: 0, duration: 10 }) })) as unknown as typeof fetch;
-    await expect(studioSceneCommand('load', runId, sceneId, new AbortController().signal, config, mismatch)).rejects.toThrow('did not acknowledge');
+    const mismatch = vi.fn(async () => ({ ok: true, status: 202, json: async () => ({ source: 'unity', version: 5, command: 'studio.load', runId, sceneId: 'other', revision: '0'.repeat(64), status: 'loaded', elapsed: 0, duration: 10 }) })) as unknown as typeof fetch;
+    await expect(studioSceneCommand('load', runId, sceneId, new AbortController().signal, { config }, mismatch)).rejects.toThrow('did not acknowledge');
   });
 });

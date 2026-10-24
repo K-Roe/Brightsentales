@@ -10,14 +10,14 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 - **Test completion:** `git ls-remote` matches both approved hashes; GitHub repo visibility is private; LFS batch API reports all objects available.
 - **Dependencies/blockers:** Git Credential Manager authentication. **Karl approval required:** no additional approval for this authorized backup; yes before future merge or visual promotion.
 
-## P1 — Saved Scene Maker scene to Unity [IN PROGRESS]
+## P1 — Saved Scene Maker scene to Unity [DONE]
 
 - **Files:** Studio `src/timedScenes.ts`, `src/unityBridge.ts`, `src/UnityConnection.tsx`, `src/SceneMaker.tsx`; Unity `Assets/BrightTalesBridgeV0.cs`, new isolated scene/controller.
 - **Implemented:** Scene Maker persists stable-ID actions/positions; bridge handles a separate fixed 26-second V1.1 demo.
-- **Implemented:** Isolated version 1 payload and validation, Max/Maxine/Living Room scene references, saved-scene selector, and load/play/status/reset on one Unity clock. Unsupported features produce reasons. A synthetic Unity Play mode test passed after the latest request-validation edit; Studio focused/full tests and build passed. Both implementation branches and the selected LFS proof were pushed. See `proofs/cartoon-foundation-phase1/REPORT.md`.
-- **Remains:** Use a disposable Studio profile to save, reopen, edit and send a real scene to the isolated Unity Editor; verify visual motion and replay. The focused Unity Play mode rerun passed 1/1 after the latest validation edit. No actual UI-to-Unity result is claimed yet.
-- **Test completion:** Edit and save a scene in disposable Studio profile, reopen, send, and observe those positions/timings in Unity; unsupported/rejected content fails with a reason; V1.1 and Blink/Director Controls still work.
-- **Dependencies/blockers:** Approved sprite coordinate mapping; Unity Editor/Play mode access. **Karl approval required:** visual review before baseline or production integration.
+- **Implemented:** Version 1 payload, content revision validation, Max/Maxine/Living Room mapping, saved-scene selector, and load/play/status/reset on one Unity clock. A real disposable Chrome profile created, saved, reopened and edited a scene, then sent it through the UI to isolated Unity. Two Unity Game-camera runs showed the edited walk and action order, with reset and matching replay. Unsupported features produce reasons. See `proofs/cartoon-foundation-phase1/REPORT.md`.
+- **Remains:** Karl's visual decision. Phase 2 and baseline promotion are gated on that decision. The original Editor's V1.1/Blink/Director Controls were preserved but not rechecked in its live session.
+- **Test completion:** Real browser workflow and Unity Play mode PASS; Studio 288/288, build PASS; Unity focused 1/1 and browser-driven 1/1; complete review MP4 decoded; scene WebM regression decoded. Evidence paths and limits are in the Phase 1 report.
+- **Dependencies/blockers:** **Karl approval required:** yes, visual review before baseline or production integration.
 
 ## P2 — Timeline and camera parity [TODO]
 
@@ -46,7 +46,7 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 ## P5 — Unity MP4 export [TODO]
 
 - **Files:** Unity capture/export integration; Studio existing `src/sceneVideoExport.ts` must remain working.
-- **Implemented:** Browser scene/episode WebM export exists. Unity review MP4 was captured for a fixed demo, not from saved Studio data.
+- **Implemented:** Browser scene/episode WebM export exists. Phase 1 has a real saved-scene Unity Game-camera review MP4, produced by a test capture and composite; this is not an in-app Unity MP4 exporter.
 - **Remains:** Inspect installed recorder/FFmpeg, implement deterministic 1280×720 24 fps H.264 plus audio export for saved scene and episode; expose progress and file path.
 - **Test completion:** FFprobe verifies dimensions, fps, duration, audio stream; entire decoded video is inspected, not a short clip. Browser WebM remains usable.
 - **Dependencies/blockers:** P1–P4, Unity capture and FFmpeg capability. **Karl approval required:** final visual/listening acceptance.
