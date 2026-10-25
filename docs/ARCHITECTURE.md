@@ -1,5 +1,11 @@
 # Application architecture
 
+## P7 episode production controls (2026-10-25)
+
+`EpisodeSequencePanel.tsx` still renders `productionBlocks` from the canonical P6 occurrence clock. `episodeTimeline.ts` derives display width, ruler ticks and global audio clip positions for Fit/1x/2x/4x zoom; the scene and audio rows share horizontal scrolling and the same playhead. Audio data comes from `episodePlaybackClips`; the overview only seeks, while the existing `AudioPanel` retains moving, trimming, volume and fades.
+
+`EpisodeInspector.tsx` adds duration nudges constrained by adjacent fade lengths and a Play-across-boundary action. `EpisodeMaker.tsx` exposes Replay and direct WebM export, using the same browser renderer/exporter. `episodeEditHistory.ts` stores up to 50 immutable in-memory episode edits for Undo/Redo; Save still writes the unchanged Episode v1 schema through the existing `onSave` path. Keyboard shortcuts operate only while an episode is open and avoid focused form controls for history/playback. `studioEpisodeBridge.ts`, Unity source and approved artwork are unchanged. Crossfade remains unsupported.
+
 ## P6 episode occurrence clock and transitions (2026-10-25)
 
 `Episode` v1 adds an optional `sceneSettings` array aligned with `sceneIds`. Its absent state means source durations and hard cuts, so P4/P5 records and backups keep their previous behavior. `episodeSequence.ts` moves, duplicates, appends and removes settings with their scene occurrences. `productionBlocks` supplies actual occurrence duration; browser preview, timeline, audio mapping, WebM export and the Unity episode bridge use that same clock. A short occurrence truncates source actions and scene audio; a long one evaluates the source scene through its end and holds its final visual state. Episode music remains on the global clock. Fade Through Black is a visual overlay centered on a cut, with half its duration on each adjacent occurrence and no overlap or length change; scene audio switches at the cut. Constraints are 0.2–2 seconds and no longer than either adjacent occurrence.

@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — P7 production polish
+
+Keep Episode v1, the P6 occurrence clock, AudioPanel and Unity episode bridge unchanged. Add zoom, scrub and read-only audio positions to the existing sequence timeline; detailed audio edits stay in AudioPanel. Keep Undo/Redo as capped local editor history, separate from saved episodes and backups. Expose Replay and WebM export directly in the episode controls. Do not add Crossfade without dual-scene rendering. The isolated P7 Unity branch has no source delta because a real browser-to-Unity v2 run passed on its exact base commit.
+
 ## 2026-10-25 — P6 scene timing and fades
 
 Keep `Episode` v1 and add optional per-occurrence settings indexed with `sceneIds`; preserve absent settings as legacy source duration and hard cut. Occurrence operations move timing with the reference. Shorter durations truncate scene actions/audio; longer durations hold the source's final visual state and do not extend source audio. Fade Through Black is visual-only, centred on the boundary, with 0.2–2 second duration bounded by both adjacent occurrences; it does not overlap scenes or restart episode music. Use Unity episode payload v2 only when settings exist; retain v1 for old episodes. Do not expose Crossfade until dual-scene rendering is reliably supported in Studio and Unity.

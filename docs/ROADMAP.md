@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**P7 technical status (25 October 2026):** Isolated Episode Production Polish implemented and verified: timeline zoom/navigation/scrub, synchronized audio overview, easier timing and boundary preview, session Undo/Redo, shortcuts, Replay and WebM export access. The [P7 proof](../proofs/cartoon-foundation-p7/REPORT.md) records Studio tests/build, disposable-browser export and browser-to-Unity checks. No Unity source or episode schema change was required. P7 remains unmerged until Karl's approval; Crossfade, Unity Game-view visual acceptance and physical audio listening remain outside technical completion.
+
 **Current P7 authority (25 October 2026):** Karl authorised P6 integration and isolated P7 Episode Production Polish. P6 merge commits are Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P7 scope: episode timeline navigation and zoom, easier occurrence duration, clearer fade boundary controls and previews, audio timeline visibility/controls, preview/replay/export usability, and practical keyboard shortcuts and undo/redo. Preserve episode storage, Unity bridge and Crossfade limitation. P7 must not merge without Karl's approval. Earlier roadmap authority notes below are historical.
 
 

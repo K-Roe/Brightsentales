@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**P7 episode polish review (25 October 2026):** The isolated P7 branch adds timeline zoom/scrub, audio overview, timing nudges, boundary preview, local Undo/Redo, Replay and clearer WebM export. Review [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Studio tests/build and browser-to-Unity Play Mode are technical checks; Unity Game-view visual acceptance, physical audio listening and Karl's usability decision remain pending. P7 must not merge without Karl's approval.
+
 **P6 integration update (25 October 2026):** Karl explicitly authorised P6 merging and P7 kickoff. P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending. P7 work is isolated and requires Karl's approval before merging. Earlier review gates below are historical.
 
 

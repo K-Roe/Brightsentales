@@ -1,5 +1,9 @@
 # Cartoon foundation agent handover — 2026-10-25
 
+## P7 Episode Production Polish — isolated technical checkpoint
+
+Studio and Unity branch `cartoon-foundation-p7-episode-production-polish` forked from pushed P6 integration heads Studio `ba9b73a58ba6d723aab03aab84819b7868ff6de9` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`. Studio source commit `0a13f09533d4237c5d959b2f1bffebda95dfbe13` improves the existing Episode Maker timeline, transport, Inspector and session-local edit history. No Unity source change or episode-format migration was needed. Studio 313/313, service/relay 12/12, build, disposable-browser workflow with complete WebM, and real browser-to-Unity Play Mode 1/1 passed. The Unity run used the warmed integration worktree at the same exact commit as the P7 Unity branch after a fresh-worktree cold import exceeded the browser harness ready window. See `proofs/cartoon-foundation-p7/REPORT.md` for screenshots, video, results and review steps. P7 is unmerged until Karl approves it. Unity Game-view visual acceptance and physical audio listening remain pending.
+
 ## P6 merged; P7 isolated kickoff — 2026-10-25
 
 Karl authorised P6 integration. Studio `main` merge `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` merge `0998a013fe5d33dd5c5d4c71a541564d49b28251` had no conflicts. Post-merge Studio tests 309/309, service/relay tests 12/12 and build passed. Unity episode tests 4/4, single-scene audio 1/1 and saved-action 1/1 passed. The P6 report and post-merge XML files are under `proofs/cartoon-foundation-p6/`. The branch-tree browser-to-Unity v2 run passed before merge; post-merge browser transfer was not repeated. Unity Game-view visuals and physical audio listening remain pending. P7 Episode Production Polish is authorised on fresh isolated branches; do not merge P7 without Karl's approval. Historical handover follows.

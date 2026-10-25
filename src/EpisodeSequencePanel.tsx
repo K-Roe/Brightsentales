@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import type { TimedLibrary } from './timedScenes';
 import type { IntroLibrary } from './introductions';
 import type { CreditsLibrary } from './credits';
+import type { AudioAsset } from './audio';
+import type { PlaybackClip } from './audioPlayback';
 import { productionBlocks, type Episode } from './episodes';
+import { episodeAudioSpan, episodeTimelineTicks, episodeTimelineWidth, type EpisodeZoom } from './episodeTimeline';
 
 type Props = {
   episode: Episode;
@@ -11,23 +14,40 @@ type Props = {
   credits: CreditsLibrary;
   time: number;
   total: number;
+  playing: boolean;
+  audioClips: PlaybackClip[];
+  audioAssets: AudioAsset[];
   selected: number | null;
   selectedBoundary: number | null;
   onSelect: (index: number, start: number) => void;
   onBoundarySelect: (index: number, start: number) => void;
+  onSeek: (time: number) => void;
   onReorder: (from: number, to: number) => void;
   placeName: (id: string) => string;
 };
 const clock = (time: number) => `${time.toFixed(1)}s`;
 
-export default function EpisodeSequence({ episode, scenes, intros, credits, time, total, selected, selectedBoundary, onSelect, onBoundarySelect, onReorder, placeName }: Props) {
+export default function EpisodeSequence({ episode, scenes, intros, credits, time, total, playing, audioClips, audioAssets, selected, selectedBoundary, onSelect, onBoundarySelect, onSeek, onReorder, placeName }: Props) {
   const [dragging, setDragging] = useState<number | null>(null);
+  const [zoom, setZoom] = useState<EpisodeZoom>(0);
+  const scroll = useRef<HTMLDivElement>(null);
   const blocks = productionBlocks(episode, scenes, intros, credits);
   const sceneBlocks = blocks.filter(block => block.kind === 'scene');
   const active = blocks.find(block => time >= block.start && time < block.start + block.duration) ?? blocks.at(-1);
   const reorder = (from: number, to: number) => {
     if (from === to) return;
     onReorder(from, to);
+  };
+  useEffect(() => {
+    if (!playing || zoom === 0 || !scroll.current || total <= 0) return;
+    const view = scroll.current;
+    const marker = time / total * (view.scrollWidth - 2);
+    if (marker > view.scrollLeft + view.clientWidth - 90 || marker < view.scrollLeft + 40)
+      view.scrollLeft = Math.max(0, marker - view.clientWidth * .35);
+  }, [playing, time, total, zoom]);
+  const seekOnRuler = (event: PointerEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    onSeek(Math.max(0, Math.min(total, (event.clientX - rect.left) / rect.width * total)));
   };
 
   return <section className="episode-sequence" aria-label="Episode sequence editor">
@@ -43,8 +63,10 @@ export default function EpisodeSequence({ episode, scenes, intros, credits, time
       </article>;
     })}</div>
     {episode.sceneIds.length === 0 && <p className="episode-empty">Choose a saved scene from the library to start the sequence.</p>}
-    <div className="episode-timeline-head"><h3>Episode timeline</h3><span>{clock(time)} / {clock(total)}</span></div>
-    <div className="episode-timeline-ruler" aria-hidden="true"><span>0s</span><span>{clock(total / 4)}</span><span>{clock(total / 2)}</span><span>{clock(total * .75)}</span><span>{clock(total)}</span></div>
+    <div className="episode-timeline-head"><h3>Episode timeline</h3><div className="episode-timeline-tools"><a href="#episode-audio-editor">Edit audio</a><label>Zoom <select aria-label="Episode timeline zoom" value={zoom} onChange={event => setZoom(Number(event.target.value) as EpisodeZoom)}><option value={0}>Fit</option><option value={1}>1x</option><option value={2}>2x</option><option value={4}>4x</option></select></label><span>{clock(time)} / {clock(total)}</span></div></div>
+    <div className="episode-timeline-scroll" ref={scroll}><div className="episode-timeline-content" style={{ width: episodeTimelineWidth(total, zoom) }}>
+    <div className="episode-timeline-ruler" aria-label="Episode time ruler" onPointerDown={seekOnRuler}>{episodeTimelineTicks(total, zoom).map(tick => <span key={tick} style={{ left: `${total ? tick / total * 100 : 0}%` }}>{clock(tick)}</span>)}</div>
+    <input className="episode-timeline-scrub" aria-label="Scrub episode timeline" type="range" min="0" max={total || 1} step="0.1" value={time} disabled={total <= 0} onChange={event => onSeek(Number(event.target.value))} />
     <div className="episode-timeline-track" aria-label="Episode timeline">
       {blocks.map(block => {
         const index = block.occurrenceIndex ?? null;
@@ -53,5 +75,12 @@ export default function EpisodeSequence({ episode, scenes, intros, credits, time
       {sceneBlocks.filter(block => block.occurrenceIndex && block.occurrenceIndex > 0).map(block => <button key={`boundary-${block.occurrenceIndex}`} className={`episode-boundary ${selectedBoundary === block.occurrenceIndex ? 'selected' : ''}`} style={{ left: `${block.start / Math.max(total, 1) * 100}%` }} aria-label={`Transition before scene ${block.occurrenceIndex! + 1}`} aria-pressed={selectedBoundary === block.occurrenceIndex} title={`Transition before scene ${block.occurrenceIndex! + 1}: ${episode.sceneSettings?.[block.occurrenceIndex!]?.transition ? 'Fade Through Black' : 'Hard Cut'}`} onClick={() => onBoundarySelect(block.occurrenceIndex!, block.start)}>◆</button>)}
       {total > 0 && <span className="episode-playhead" style={{ left: `${Math.min(100, Math.max(0, time / total * 100))}%` }} aria-hidden="true" />}
     </div>
+    {audioClips.length > 0 && <div className="episode-audio-lanes" aria-label="Episode audio positions">{audioClips.map(clip => {
+      const span = episodeAudioSpan(clip, total);
+      if (!span) return null;
+      const asset = audioAssets.find(item => item.id === clip.assetId);
+      return <div className="episode-audio-row" key={clip.key}><span>{clip.source === 'episode' ? 'Episode' : 'Scene'} {asset?.kind === 'speech' ? 'voice' : asset?.kind ?? 'audio'}</span><button className={`episode-audio-clip ${asset?.kind ?? 'missing'}`} style={{ left: `${span.left}%`, width: `${span.width}%` }} title={`${asset?.name ?? 'Missing audio'} at ${clock(clip.start)}`} onClick={() => onSeek(clip.start)}>{asset?.name ?? 'Missing audio'}</button></div>;
+    })}<span className="episode-audio-playhead" style={{ left: `${Math.min(100, Math.max(0, total ? time / total * 100 : 0))}%` }} aria-hidden="true" /></div>}
+    </div></div>
   </section>;
 }
