@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**Foundation authorisation update (25 October 2026):** Karl authorised continuous Studio/Unity foundation development, overriding routine milestone visual/listening pauses for P3/P4. This does not change historical artwork approvals or rejected animation gates. P3 integration and isolated P4 proof are recorded in [P4 report](../proofs/cartoon-foundation-p4/REPORT.md); the older batch review entries below remain historical.
+
 **Studio 3.1 Bright Speak amendment (25 October 2026): FINAL FREEZE REVIEW PENDING.** Karl approved the core editor workflow. Review the [editable message Inspector, timeline clips, two custom pop-ups, Classic playback and ten-second video](../proofs/studio-3.1/bright-speak-amendment/REPORT.md). Each Communicate Message clip keeps its own text across save/reopen/edit; older message-less actions keep the default. Tests and browser checks are technical evidence, not Karl's final approval. No merge or P3 work.
 
 **Studio 3.1 Direct Animation core (25 October 2026): APPROVED BY KARL.** The isolated branch `studio-3.1-direct-animation` opens the Cartoon Editor directly and supports mouse placement, Walk destination, Wave at the playhead, timeline editing and save/reopen. The [core screenshots and walkthrough](../proofs/studio-3.1/REPORT.md) remain available. This approval does not freeze the Bright Speak amendment, merge Studio 3.1 or advance P3.

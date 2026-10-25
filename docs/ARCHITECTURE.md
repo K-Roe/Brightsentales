@@ -1,5 +1,13 @@
 # Application architecture
 
+## P4 saved episode playback (2026-10-25)
+
+`Episode.sceneIds` and `productionBlocks` remain the ordered source of truth. Repeated scene IDs become separate occurrences with their own `index` and `start`; no episode schema or storage migration is introduced. `EpisodeMaker.tsx` retains its browser playback, audio, WebM and save/reopen flow and adds a compact `EpisodeUnityPreview` for saved episodes. Browser playback and Unity preview both use cuts at scene boundaries. Intros and credits remain available in the browser and are explicitly rejected by the current Unity episode preview.
+
+`studioEpisodeBridge.ts` maps each occurrence through the existing `studioSceneConfig` and hashes one versioned episode payload. `episodePlaybackClips` maps scene clips to episode time and leaves episode music on the global clock; clips are bounded to the episode end in the transfer payload without changing saved clips. `transferStudioAudioClips` reuses P3's same-origin relay and deduplicates media IDs. The bridge accepts `episode.load/play/pause/stop/status/reset` with revision validation and a bounded request body.
+
+The experimental Unity `StudioScenePlayer` now evaluates each occurrence's existing character/camera renderer at local time while its episode clock advances globally. It clears actors absent from the next scene at a cut, reuses P3 media download/hash/decode and AudioSources, and keeps episode music alive across cuts. Scene music is ducked while episode music is active, matching browser playback. Existing `studio.*` single-scene commands and the frozen Cartoon Engine V1.1 path remain separate. See [P4 proof](../proofs/cartoon-foundation-p4/REPORT.md).
+
 ## Isolated P3 scene audio transfer (2026-10-25)
 
 `AudioAsset.blob` remains in the existing IndexedDB Audio Library; `TimedScene.audio` and Studio Backup schemas are unchanged. For Unity preview, `studioAudioTransfer.ts` hashes only assets referenced by the saved scene and POSTs their raw bytes to `/api/studio-audio` on the current local Studio origin. The existing `scripts/studio.cjs` launcher owns a bounded, in-memory relay with same-origin upload, ID/MIME/size/SHA-256 checks and unguessable retrieval URLs. Bytes never enter the 32 KB Unity `/command` JSON. No media persists in the relay across launcher restarts.

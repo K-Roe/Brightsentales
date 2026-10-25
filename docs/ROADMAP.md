@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**Current foundation direction (25 October 2026):** Karl explicitly authorised continuous foundation development without routine per-milestone visual/listening stops. P3 audio synchronisation is integrated and pushed; P4 saved episode playback is technically verified on isolated branches. The prior review gates below remain historical records, while destructive operations, significant architecture changes and decisions outside the approved scope still require Karl's decision. See [P4 report](../proofs/cartoon-foundation-p4/REPORT.md).
+
 **Current gate (2026-10-25): Studio 3.1 APPROVED AND MERGED; P3 ISOLATED FOR REVIEW.** Karl's final Studio 3.1 approval was merged and pushed at `1d9d1068f9258f8bbeac0b049f3fb8afe9422518`. The [P3 audio transfer proof](../proofs/cartoon-foundation-p3/REPORT.md) covers local media upload, Unity decoding, scene-clock speech/music, save/reopen and missing/corrupt rejection. Await Karl's visual/listening review; do not merge P3 or begin P4. Episode-level cross-scene continuity remains dependent on P4. Previous gates below are historical.
 
 **Studio 3.1 final freeze gate (2026-10-25): AWAITING KARL'S DECISION ON BRIGHT SPEAK AMENDMENT.** Karl approved the core direct-animation workflow. The requested editable per-action Communicate Message amendment is technically verified on the same isolated branch; [screenshots, video and tests](../proofs/studio-3.1/bright-speak-amendment/REPORT.md) are ready. Only Karl may freeze or request changes. No merge, P3 or baseline promotion.
