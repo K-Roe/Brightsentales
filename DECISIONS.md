@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — P4 episode sequencing
+
+Use existing `Episode.sceneIds`, `productionBlocks`, `episodePlaybackClips`, local media relay and experimental `StudioScenePlayer`. Repeated scene IDs are separate indexed occurrences. The transition is a cut, matching current browser episode playback; do not invent a new transition schema. Episode music follows global time across cuts; scene clips follow each occurrence's local time and scene music ducks under episode music. Keep `studio.*` scene commands valid and use separate versioned `episode.*` commands for the larger payload. Explicitly reject Unity intro/credits, Bright Speak and unsupported artwork/places until they have faithful mappings; browser playback remains available. No P5 export or schema migration is part of P4.
+
 ## 2026-10-25 — Continuous foundation authorisation and P3 integration
 
 Karl's latest explicit instruction supersedes the earlier P3/P4 visual approval pauses. Merge tested P3 with history preserved; Studio uses `main`, while Unity uses its existing `cartoon-foundation` integration branch because that repository has no `main`. Preserve the frozen Unity V1.1 branch and Studio 3.1 workflow. Implement P4 on isolated branches using existing episode, scene, audio and localhost bridge models; do not begin P5 or expand the data format without a proven need.

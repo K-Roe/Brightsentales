@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p4-episode-0XmUes",
+  "stages": {
+    "audioImport": "PASS",
+    "twoSavedScenes": "PASS",
+    "episodeSave": "PASS",
+    "browserBoundary": "PASS",
+    "reopenReplay": "PASS",
+    "reviewRecording": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "sceneIds": [
+    "e4994fc7-bba5-4424-9fa0-6ad1a961ec24",
+    "9f39122a-4828-4931-b5bf-c6ca008d7d98",
+    "e4994fc7-bba5-4424-9fa0-6ad1a961ec24"
+  ],
+  "episodeId": "b87907b2-770a-44d3-98f7-5d6c1be93812"
+}
