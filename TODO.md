@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## Studio 3.1 direct animation review gate — 2026-10-25
+
+The Studio 3.0 shell is already merged into `main` at the Studio 3.1 baseline `35b8692`. Studio 3.1 work is isolated at `C:\Users\karlr\repos\BrightTalesStudio31` on `studio-3.1-direct-animation`. The Cartoon Editor now opens directly; the existing stage, Inspector, SceneTimeline, scene model and renderer support mouse placement, Walk destination, playhead Wave insertion, timeline edits, Play/Pause/Stop/Replay and save/reopen. Classic remains available. See `proofs/studio-3.1/REPORT.md` for exact verification and any Unity limitation. **Await Karl's visual review.** Do not merge, promote Unity baselines or start P3.
+
 ## Current Studio 3.0 review gate
 
 The experimental `studio-3-experimental` branch is technically verified on the Phase 2 checkpoint. Review [Studio 3.0 evidence](proofs/studio-3/REPORT.md): professional shell, editor, Inspector, timeline, Classic, Settings, Unity connection, UI walkthrough and isolated Unity Game-camera run. Await Karl's visual decision before promotion or any P3 work. The P0–P2 records below remain historical; P3 is still TODO.

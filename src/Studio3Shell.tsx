@@ -29,7 +29,7 @@ export function studioTabLabel(tab: StudioTab): string {
 
 export function Studio3Sidebar({ activeTab, onNavigate }: { activeTab: StudioTab; onNavigate: (tab: StudioTab) => void }) {
   const links = (items: typeof mainLinks) => items.map(({ tab, label, icon }) =>
-    <button key={tab} type="button" className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined} onClick={() => onNavigate(tab)}><span aria-hidden="true" className="studio3-nav-icon">{icon}</span><span>{label}</span></button>);
+    <button key={tab} type="button" title={label} className={activeTab === tab ? 'active' : ''} aria-current={activeTab === tab ? 'page' : undefined} onClick={() => onNavigate(tab)}><span aria-hidden="true" className="studio3-nav-icon">{icon}</span><span>{label}</span></button>);
   return <aside className="studio3-sidebar">
     <div className="studio3-brand"><span className="studio3-brand-mark" aria-hidden="true">✦</span><div><strong>BrightTales</strong><small>UNITY STUDIO 3.0</small></div></div>
     <div className="studio3-sidebar-scroll">
@@ -38,7 +38,7 @@ export function Studio3Sidebar({ activeTab, onNavigate }: { activeTab: StudioTab
       <p className="studio3-nav-caption">YOUR TOOLS</p>
       <nav className="studio3-nav studio3-nav-tools" aria-label="Creative tools">{links(toolLinks)}</nav>
     </div>
-    <div className="studio3-sidebar-footer"><button type="button" className={activeTab === 'settings' ? 'active' : ''} onClick={() => onNavigate('settings')}><span aria-hidden="true" className="studio3-nav-icon">⚙</span> Settings</button><p><span className="studio3-local-dot" /> Local workspace</p></div>
+    <div className="studio3-sidebar-footer"><button type="button" title="Settings" className={activeTab === 'settings' ? 'active' : ''} onClick={() => onNavigate('settings')}><span aria-hidden="true" className="studio3-nav-icon">⚙</span> Settings</button><p><span className="studio3-local-dot" /> Local workspace</p></div>
   </aside>;
 }
 

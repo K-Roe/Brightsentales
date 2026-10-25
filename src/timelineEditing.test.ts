@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { editActionTiming } from './timelineEditing';
+import { editActionTiming, nextActionStart } from './timelineEditing';
 import { validateTimedLibrary, type TimedScene } from './timedScenes';
 
 const uid = (n: number) => `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`;
@@ -11,6 +11,11 @@ const scene: TimedScene = { id: uid(1), name: 'Thirty seconds', duration: 30, pl
 ] };
 
 describe('visual timeline editing', () => {
+  it('places a new wave at the playhead or the next gap on its own track', () => {
+    expect(nextActionStart(scene, 'maxine', 8, 1.62)).toBe(8);
+    expect(nextActionStart(scene, 'max', 2, 1.62)).toBe(4);
+    expect(nextActionStart(scene, 'max', 29.5, 1.62)).toBeNull();
+  });
   it('snaps movement and prevents a same-character overlap', () => {
     expect(editActionTiming(scene, uid(3), 'move', .62)?.start).toBe(1.5);
     expect(editActionTiming(scene, uid(3), 'move', 4)?.start).toBe(3);

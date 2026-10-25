@@ -1,4 +1,8 @@
-# Cartoon foundation agent handover — 2026-10-24
+# Cartoon foundation agent handover — 2026-10-25
+
+## Current Studio 3.1 continuation
+
+Studio 3.0 is merged in the primary repository's `main` at baseline `35b86922e56ed390b2af7e051cc58933bccf0100`. The current isolated worktree is `C:\Users\karlr\repos\BrightTalesStudio31`, branch `studio-3.1-direct-animation`. It extends `App.tsx`, `SceneMaker.tsx`, `SceneTimeline.tsx` and the canonical `timedScenes`/`scenePreview` paths; it does not introduce another scene engine or change approved art. The editor opens by default and resumes the most recent saved scene. `proofs/studio-3.1/REPORT.md` contains screenshots and two nine-second review videos. A fresh-profile browser create/play/save/close/reopen/edit/replay and Classic playback passed; Studio 294/294, voice service 11/11 and production build passed. The browser sent that edited scene twice through the existing bridge to isolated Unity Play Mode; its browser-driven test passed 1/1 with reset/replay and matching revision. The normal live Unity Editor and automatic background launch remain unverified. **Next action: Karl's visual review or requested revisions.** Do not merge, start P3 or modify approved V1.1 Unity. The Studio 3.0 and older Phase 2 sections below are historical.
 
 ## Studio 3.0 experimental handover — 2026-10-24
 

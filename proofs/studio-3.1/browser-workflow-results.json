@@ -1,0 +1,32 @@
+{
+  "url": "http://127.0.0.1:4178/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\bright-studio31-chrome-e43Vvy",
+  "stages": {
+    "editorDefault": "PASS",
+    "directPlacement": "PASS",
+    "walkDestination": "PASS",
+    "waveAtPlayhead": "PASS",
+    "fullBrowserPlayback": "PASS",
+    "saveCloseReopen": "PASS",
+    "editSaveReplay": "PASS",
+    "classicRegression": "PASS"
+  },
+  "errors": [],
+  "requestsFailed": [],
+  "sceneId": "e7534a1f-25a3-4731-87ab-125f65f50eff",
+  "timelineDrag": {
+    "wave": {
+      "x": 463,
+      "y": 427.78125
+    },
+    "selectedWave": {
+      "x": 463,
+      "y": 479.890625
+    },
+    "halfSecond": 55,
+    "label": "Maxine Wave at 2.5 seconds",
+    "status": "Choose a scene or create one.",
+    "before": 2,
+    "after": 2.5
+  }
+}

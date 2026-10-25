@@ -8,6 +8,7 @@ import './theme.css';
 import './music-studio.css';
 import './voice-studio.css';
 import './studio3.css';
+import './studio31.css';
 
 const appearance = readAppearance();
 document.documentElement.dataset.theme = resolveAppearance(appearance, window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true);
