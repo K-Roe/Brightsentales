@@ -2,7 +2,7 @@
 
 ## 2026-10-25 integration update
 
-Karl authorised continuous foundation development and explicitly requested P3 integration followed by P4. This supersedes the historical review stops below. P3 has been merged locally into Studio `main` at `2cc5a95d7b7f41b0072c9adddff9ecfc5652926b` and Unity `cartoon-foundation` at `4041a103902bd333db8a4427699d812534e7afa0`. Studio post-merge tests: 298/298; voice-service: 12/12; production build: pass. Unity post-merge test and remote pushes are being completed. P4 scope remains the complete saved-episode playback task below. Preserve frozen V1.1 and Studio 3.1 behavior.
+Karl authorised continuous foundation development and explicitly requested P3 integration followed by P4. This supersedes the historical review stops below. P3 was merged and pushed in Studio `main` (merge `2cc5a95d7b7f41b0072c9adddff9ecfc5652926b`) and Unity `cartoon-foundation` (`4041a103902bd333db8a4427699d812534e7afa0`). Studio post-merge tests: 298/298; voice-service: 12/12; production build: pass. Unity post-merge audio Play Mode and Phase 2 regression: 1/1 each. P4 scope remains the complete saved-episode playback task below. Preserve frozen V1.1 and Studio 3.1 behavior.
 
 ## Current P3 checkpoint — isolated technical proof, review pending
 
