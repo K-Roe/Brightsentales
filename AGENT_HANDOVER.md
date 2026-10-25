@@ -1,8 +1,22 @@
+﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; do not merge or start P9. Unity worktree also has unrelated editor-modified settings and `P8CameraReview/`; preserve them.
+
+---
+
 # Cartoon foundation agent handover — 2026-10-25
 
-## P7 Episode Production Polish — isolated technical checkpoint
+## P8 Camera & Directing V1 — Studio work in progress
 
-Studio and Unity branch `cartoon-foundation-p7-episode-production-polish` forked from pushed P6 integration heads Studio `ba9b73a58ba6d723aab03aab84819b7868ff6de9` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`. Studio source commit `0a13f09533d4237c5d959b2f1bffebda95dfbe13` improves the existing Episode Maker timeline, transport, Inspector and session-local edit history. No Unity source change or episode-format migration was needed. Studio 313/313, service/relay 12/12, build, disposable-browser workflow with complete WebM, and real browser-to-Unity Play Mode 1/1 passed. The Unity run used the warmed integration worktree at the same exact commit as the P7 Unity branch after a fresh-worktree cold import exceeded the browser harness ready window. See `proofs/cartoon-foundation-p7/REPORT.md` for screenshots, video, results and review steps. P7 is unmerged until Karl approves it. Unity Game-view visual acceptance and physical audio listening remain pending.
+The isolated Studio worktree `C:\Users\karlr\repos\BrightTalesP8Camera` is on `cartoon-foundation-p8-camera-directing`, based on pushed P7 merge `e483838085f4b2583bb5f90bc6bafb34680110eb`. Current changes add optional episode camera shots, timeline clips, Inspector editing, deterministic preview/export framing, and a version 3 Unity episode payload. Studio tests (324/324), service/relay tests (12/12), and build pass. Unity episode/camera tests pass (5/5), as do saved scene player/bridge (1/1) and scene audio (1/1) regressions. The disposable-browser save/reopen/replay/export run and real browser-to-Unity camera transfer remain incomplete. P8 must remain isolated; no merge or P9. Unity Game-view visual acceptance and physical audio listening remain pending.
+
+## P7 Episode Production Polish — merged technical checkpoint
+
+Studio P7 was merged and pushed to `main` at `e483838085f4b2583bb5f90bc6bafb34680110eb`; P7 `961501ffa85e58a54ae2d4367b38dcd88aa0102b` is an ancestor. The Studio P7 source commit `0a13f09533d4237c5d959b2f1bffebda95dfbe13` improves the existing Episode Maker timeline, transport, Inspector and session-local edit history. The P7 proof records 313/313 Studio tests, 12/12 service/relay tests, build, disposable-browser workflow with complete WebM, and real browser-to-Unity Play Mode 1/1. Post-merge Studio main checks pass 313/313, 12/12 and build. Unity Game-view visual acceptance and physical audio listening remain pending.
 
 ## P6 merged; P7 isolated kickoff — 2026-10-25
 
@@ -93,3 +107,4 @@ Supported through the isolated Phase 1 Unity scene: real saved Studio scenes wit
 ## Next task
 
 Ask Karl to review `C:\Users\karlr\repos\BrightTalesCartoonFoundationUnity\CartoonFoundationP2Review\phase2-review.mp4` and the Studio screenshots in `proofs/cartoon-foundation-phase2/`. Check walk arrival, Look At direction, wave transition, camera framing and editing clarity. It is a composite of actual browser screenshots and two continuous Unity Game-camera clips, not a continuous desktop recording. Await **APPROVE / CHANGES / REJECT / PAUSE / SKIP** under the roadmap gate. Do not start P3, promote the foundation or merge before that visual decision. If Karl requests changes, stay within this experimental branch, rerun the real browser and Unity proof, and preserve approved baselines.
+

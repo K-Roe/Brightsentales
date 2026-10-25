@@ -1,0 +1,1096 @@
+{
+  "origin": "http://127.0.0.1:4177/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p8-camera-epsmkx",
+  "stages": {
+    "version3CameraTransfer": "PASS",
+    "unityCameraPlaybackReplayReset": "PASS"
+  },
+  "commands": [
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.load",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768",
+        "config": {
+          "version": 3,
+          "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+          "duration": 9,
+          "scenes": [
+            {
+              "index": 0,
+              "start": 0,
+              "duration": 3,
+              "scene": {
+                "version": 2,
+                "sceneId": "26ae2485-50d8-4876-8b08-15efdd00505f",
+                "environment": "living-room",
+                "duration": 3,
+                "calmLife": true,
+                "characters": [
+                  {
+                    "id": "max",
+                    "x": 520,
+                    "y": 790,
+                    "facing": "front"
+                  },
+                  {
+                    "id": "maxine",
+                    "x": 750,
+                    "y": 790,
+                    "facing": "front"
+                  }
+                ],
+                "actions": [
+                  {
+                    "id": "f6b2de85-1825-4dc9-96a1-609f8f75f876",
+                    "characterId": "max",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 520,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  },
+                  {
+                    "id": "67872929-2430-4f00-8c3a-3dc16e972cee",
+                    "characterId": "maxine",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 750,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  }
+                ],
+                "camera": []
+              }
+            },
+            {
+              "index": 1,
+              "start": 3,
+              "duration": 3,
+              "scene": {
+                "version": 2,
+                "sceneId": "cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f",
+                "environment": "living-room",
+                "duration": 3,
+                "calmLife": true,
+                "characters": [
+                  {
+                    "id": "max",
+                    "x": 520,
+                    "y": 790,
+                    "facing": "front"
+                  },
+                  {
+                    "id": "maxine",
+                    "x": 750,
+                    "y": 790,
+                    "facing": "front"
+                  }
+                ],
+                "actions": [
+                  {
+                    "id": "53d83ee9-e519-44e8-8921-922f79fedaa4",
+                    "characterId": "max",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 520,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  },
+                  {
+                    "id": "ace57a76-7d9c-4cd8-9691-1e5c67a15f0a",
+                    "characterId": "maxine",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 750,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  }
+                ],
+                "camera": []
+              }
+            },
+            {
+              "index": 2,
+              "start": 6,
+              "duration": 3,
+              "scene": {
+                "version": 2,
+                "sceneId": "26ae2485-50d8-4876-8b08-15efdd00505f",
+                "environment": "living-room",
+                "duration": 3,
+                "calmLife": true,
+                "characters": [
+                  {
+                    "id": "max",
+                    "x": 520,
+                    "y": 790,
+                    "facing": "front"
+                  },
+                  {
+                    "id": "maxine",
+                    "x": 750,
+                    "y": 790,
+                    "facing": "front"
+                  }
+                ],
+                "actions": [
+                  {
+                    "id": "f6b2de85-1825-4dc9-96a1-609f8f75f876",
+                    "characterId": "max",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 520,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  },
+                  {
+                    "id": "67872929-2430-4f00-8c3a-3dc16e972cee",
+                    "characterId": "maxine",
+                    "type": "appear",
+                    "start": 0,
+                    "duration": 0,
+                    "x": 750,
+                    "y": 790,
+                    "target": "",
+                    "motion": "linear"
+                  }
+                ],
+                "camera": []
+              }
+            }
+          ],
+          "camera": [
+            {
+              "id": "64ca0f01-8099-48a2-9930-6ccb5fbf4b9a",
+              "start": 0,
+              "duration": 1,
+              "shot": "wide",
+              "target": "point",
+              "x": 836,
+              "y": 470,
+              "zoom": 0,
+              "movement": "static"
+            },
+            {
+              "id": "d700b41a-8560-4e18-99d6-c2f4c41c6e15",
+              "start": 1,
+              "duration": 1.5,
+              "shot": "medium",
+              "target": "max",
+              "x": 0,
+              "y": 0,
+              "zoom": 0,
+              "movement": "static"
+            },
+            {
+              "id": "30cd33f8-a1ce-4ca8-9529-755a6524ffd5",
+              "start": 2.5,
+              "duration": 1.5,
+              "shot": "close-up",
+              "target": "maxine",
+              "x": 0,
+              "y": 0,
+              "zoom": 0,
+              "movement": "static"
+            },
+            {
+              "id": "8549fbde-073c-4568-8dfe-608e7bbddc41",
+              "start": 4,
+              "duration": 1.5,
+              "shot": "medium",
+              "target": "max",
+              "x": 0,
+              "y": 0,
+              "zoom": 0,
+              "movement": "pan"
+            },
+            {
+              "id": "859c86f7-7a61-4c39-92a5-3ef3d165f1f1",
+              "start": 5.5,
+              "duration": 3.5,
+              "shot": "custom",
+              "target": "maxine",
+              "x": 0,
+              "y": 0,
+              "zoom": 2.5,
+              "movement": "follow"
+            }
+          ],
+          "audioAssets": [
+            {
+              "id": "128f7fe1-7a7e-4e63-be22-3bc23397b4d9",
+              "kind": "music",
+              "mime": "audio/wav",
+              "duration": 9,
+              "size": 288044,
+              "sha256": "f04fe5031ccbddbc8f2702d473505be70b83e8248f152740c9c8fefe0c0f0fcd",
+              "url": "http://127.0.0.1:4177/api/studio-audio/ef844e53151dee07ee41b7f5e777e8466f0d823de8ecb23f"
+            }
+          ],
+          "audio": [
+            {
+              "id": "episode:2e082e7c-5896-444b-95ff-e8e7c4aeb10c",
+              "assetId": "128f7fe1-7a7e-4e63-be22-3bc23397b4d9",
+              "source": "episode",
+              "start": 0,
+              "trimStart": 0,
+              "trimEnd": 9,
+              "volume": 0.35,
+              "fadeIn": 0,
+              "fadeOut": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.play",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.play",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.status",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "body": {
+        "command": "episode.reset",
+        "runId": "1911de845b874ed1b0c864ba9b717c50",
+        "episodeId": "709033a8-5e58-4dc7-bf5d-491c5bf1c2c6",
+        "revision": "4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768"
+      }
+    },
+    {
+      "method": "OPTIONS",
+      "body": null
+    }
+  ],
+  "responses": [
+    {
+      "requestId": "8514CE749FA7F531C2DEA8FB4E45130F",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.77",
+      "status": 202,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.load\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"loading\",\"elapsed\":0.0,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "ED5A626943204A030537A73719C3F785",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.84",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"loaded\",\"elapsed\":0.0,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "D51E474F51F8D795A06A263B1E17FC82",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.85",
+      "status": 202,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.play\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":0.0,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "CA40C609D3B9A53710398D05B13DBA32",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.86",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":0.6137697696685791,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "37C465DFE0E6D3B38DDE6E57604BEC3B",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.87",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":1.2132917642593384,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "D3EDD1360B06E9096CEDEBFD87066794",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.88",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":1.8136459589004517,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "CF05DCA57E95C63E25539A25B5625288",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.89",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":2.412539005279541,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "DA1520B6AB16909A7ED6A0FA0D4F131E",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.90",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":3.012955665588379,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "21A1017D54AF089AE2E26E716A55C050",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.91",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":3.6129071712493896,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "77E82464420F3EA37D92845C725A9C4C",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.92",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":4.213600158691406,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "6D95449E5E1C9AA74617A823C864F24A",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.93",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":4.81358003616333,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "D9757F28A29AB9B8F425E0AAE0365102",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.94",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":5.412044525146484,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "6859FAF24E469EE7999515C86E2AC756",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.95",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":6.013319492340088,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "A3DDB7C5D81922E76A5EFCEB6AC64F24",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.96",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":6.612581729888916,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "F25EA2C99D3994544259CFAF64B97F72",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.97",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":7.212848663330078,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "2B4DFCBE733FB32854D07E4E5BA84BE9",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.98",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":7.813414096832275,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "4DF61BD5F2A1412D4BBE7CED62D7C449",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.99",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":8.412850379943848,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "4FADD7918EBDB50B73562C7862BC48E5",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.100",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"complete\",\"elapsed\":9.0,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "000547BB9803FA00EA9DDBF4C825AEE4",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.101",
+      "status": 202,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.play\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":0.0,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "DF12098DE4D15BE2B6CBD80F19548092",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.102",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":0.6085243821144104,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "53D25D1EF21540BECB9145B3D01F936B",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.103",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":1.2067610025405884,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "029190DC0E4A876026BF7E8B66E1AEAF",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.104",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":1.8068640232086182,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "9FC01548B90A2D16A0CB5EEE9D6D1428",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.105",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":2.4066741466522217,\"duration\":9.0,\"sceneIndex\":0,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "05E1F15832CE8D363A0429CF330A6EAD",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.106",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":3.0066330432891846,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "8A4BDB54206F7A9CAC4F486D3E35380D",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.107",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":3.607297420501709,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "BFFA3DAF9DB04AFB3916D05F1886DA3E",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.108",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":4.206007957458496,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "159F2D826320A65264007817FFE7AF0C",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.109",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":4.80579137802124,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "B4FEEAF88BC025E68DE24016F5D67093",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.110",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":5.40640115737915,\"duration\":9.0,\"sceneIndex\":1,\"sceneId\":\"cd1c1d98-0d95-43c4-a32a-a7e08b4fbf7f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "095E1937E67356C907A14B0884A31C27",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.111",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":6.0063557624816895,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "C449D21DB2E25476BE709EC39486364D",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.112",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":6.606556415557861,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "878A3ED0868AE03E0500360EB46CFA29",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.113",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":7.206329345703125,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "A5C67D416AC7569B83C4B432E47E57C1",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.114",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":7.806425094604492,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "7C3936CFCEBDF7874EF915D84586A181",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.115",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"playing\",\"elapsed\":8.406719207763672,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "2F4133179591E2151752EEBC64F285BF",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.116",
+      "status": 200,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.status\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"complete\",\"elapsed\":9.0,\"duration\":9.0,\"sceneIndex\":2,\"sceneId\":\"26ae2485-50d8-4876-8b08-15efdd00505f\",\"reason\":\"\"}"
+    },
+    {
+      "requestId": "454EA5AA80BEA79698767F3E162AE596",
+      "status": 204,
+      "url": "http://127.0.0.1:17844/command"
+    },
+    {
+      "requestId": "85068.117",
+      "status": 202,
+      "url": "http://127.0.0.1:17844/command",
+      "body": "{\"source\":\"unity\",\"version\":6,\"command\":\"episode.reset\",\"runId\":\"1911de845b874ed1b0c864ba9b717c50\",\"episodeId\":\"709033a8-5e58-4dc7-bf5d-491c5bf1c2c6\",\"revision\":\"4b6fe18fedf22c12da80f5e48364807f5d027e2d0dcee9f602bc7085eac87768\",\"status\":\"idle\",\"elapsed\":0.0,\"duration\":0.0,\"sceneIndex\":0,\"sceneId\":\"\",\"reason\":\"\"}"
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "unityMessage": "Preview full episode in UnityScenes cut in sequence; episode music continues across scene changes.Send saved episodePlay / ReplayPauseStopResetEpisode ready. Press Play. 0.0s · scene 1Unity preview supports saved Living Room scenes with Max and Maxine. Intros, credits and Bright Speak remain available in browser playback."
+}

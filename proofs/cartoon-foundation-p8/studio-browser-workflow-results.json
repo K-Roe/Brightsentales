@@ -1,0 +1,17 @@
+﻿{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p8-camera-epsmkx",
+  "stages": {
+    "localMusicAsset": "PASS",
+    "twoSavedScenesWithBothCharacters": "PASS",
+    "episodeSequence": "PASS",
+    "cameraShotsSaved": "PASS",
+    "scrubAndPreviewFraming": "PASS",
+    "playbackReplayAndReset": "PASS",
+    "completeEpisodeWebM": "PASS",
+    "closeReopenAndReplay": "PASS"
+  },
+  "consoleExceptions": 0,
+  "failedRequests": 0,
+  "export": "camera-directed-episode.webm",
+  "note": "The later browser-only rerun overwrote its JSON after timing out while waiting for Unity readiness. The above records the earlier completed browser-only stages; live Unity transfer is separately recorded in unity-camera-transfer-results.json and unity-browser-live-3/."
+}

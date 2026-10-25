@@ -1,8 +1,20 @@
+﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; do not merge or start P9. Unity worktree also has unrelated editor-modified settings and `P8CameraReview/`; preserve them.
+
+---
+
 # BrightTales Project Status
 
-**P7 isolated technical checkpoint (25 October 2026):** `cartoon-foundation-p7-episode-production-polish` extends the merged P6 episode editor with zoom/scrub, audio positions, duration nudges, boundary playback, local Undo/Redo and clearer Replay/WebM controls. Studio 313/313, service/relay 12/12, build, disposable browser save/reopen/replay and complete WebM pass. Real browser-to-Unity v2 episode playback/replay/reset passes 1/1 on the Unity P7 branch's exact head, which has no source changes. [P7 proof](../proofs/cartoon-foundation-p7/REPORT.md) contains media and limits. P7 is not merged; Karl's usability approval, Unity Game-view visual acceptance and physical audio listening remain pending.
+**P8 Camera & Directing V1 (25 October 2026): IN PROGRESS on isolated `cartoon-foundation-p8-camera-directing`.** Studio implementation adds episode camera shots, timeline clips, inspector editing, deterministic preview/export evaluation, optional Episode v1 persistence and a version 3 Unity transfer payload. Studio 324/324 tests, service/relay 12/12 and production build pass. Disposable-browser save/reopen/replay/export and Unity version 3 receiver verification are not complete in this session. Do not merge P8. Karl's visual and physical audio acceptance remain pending.
 
-**P6 integrated; P7 authorised (25 October 2026):** P6 merged without conflicts into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`. Post-merge Studio 309/309, service/relay 12/12 and build passed; Unity episode 4/4, audio 1/1 and saved-action 1/1 passed. [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md) is preserved. Unity Game-view visual acceptance and physical audio listening are pending. P7 Episode Production Polish must use new isolated branches and remain unmerged until Karl approves it. Older status notes below are historical.
+**P7 merged and Studio regression verified (25 October 2026):** Studio merge commit `e483838085f4b2583bb5f90bc6bafb34680110eb` is pushed to `main`, and P7 commit `961501ffa85e58a54ae2d4367b38dcd88aa0102b` is an ancestor. Post-merge Studio main checks pass: 313/313 tests, service/relay 12/12 and build. The [P7 proof](../proofs/cartoon-foundation-p7/REPORT.md) records its disposable-browser episode workflow and browser-to-Unity episode run. Unity Game-view visual acceptance and physical audio listening remain pending.
+
+**P6 integration record (historical, 25 October 2026):** P6 merged without conflicts into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`. Post-merge Studio 309/309, service/relay 12/12 and build passed; Unity episode 4/4, audio 1/1 and saved-action 1/1 passed. See the [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md).
 
 
 **P6 isolated milestone (25 October 2026):** P5 Studio merged and pushed at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1` after 304/304 tests, 12/12 service/relay tests and build. Unity P5 required no merge. P6 Scene Timing & Transitions is on isolated Studio and Unity branches `cartoon-foundation-p6-scene-timing-transitions`, with optional occurrence durations, Fade Through Black and a versioned Unity payload. The browser workflow, 309/309 Studio tests, 12/12 service tests and build pass. Unity episode 4/4, single-scene regressions 1/1 each and real browser-to-Unity episode run 1/1 pass. [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md) records evidence and limits; P6 is not merged.
@@ -121,3 +133,4 @@ M6.7 — Deliver Episode 1 first cut to Karl and Astra for review.
 - `npm test -- --run`: 189/189 passed.
 - `npm run build`: passed.
 - Exported V2 video: 173 s, VP9 + Opus stereo 48 kHz, mean volume −22.0 dB, max volume −1.4 dB.
+

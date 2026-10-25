@@ -1,8 +1,20 @@
+﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; do not merge or start P9. Unity worktree also has unrelated editor-modified settings and `P8CameraReview/`; preserve them.
+
+---
+
 # Batch review for Karl
 
-**P7 episode polish review (25 October 2026):** The isolated P7 branch adds timeline zoom/scrub, audio overview, timing nudges, boundary preview, local Undo/Redo, Replay and clearer WebM export. Review [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Studio tests/build and browser-to-Unity Play Mode are technical checks; Unity Game-view visual acceptance, physical audio listening and Karl's usability decision remain pending. P7 must not merge without Karl's approval.
+**P8 Camera & Directing V1 (25 October 2026): IMPLEMENTATION IN PROGRESS; REVIEW EVIDENCE NOT READY.** The isolated Studio branch now has episode camera shots, a timeline lane, Inspector controls, deterministic renderer evaluation and a version 3 Unity payload. Studio tests 324/324, service/relay 12/12 and build pass. Unity episode/camera tests 5/5, saved scene player/bridge 1/1 and audio regression 1/1 pass. The disposable-browser save/reopen/replay/export walkthrough and real browser-to-Unity transfer remain required before technical completion. No P8 merge, visual acceptance or physical audio acceptance is implied.
 
-**P6 integration update (25 October 2026):** Karl explicitly authorised P6 merging and P7 kickoff. P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending. P7 work is isolated and requires Karl's approval before merging. Earlier review gates below are historical.
+**P7 episode polish (25 October 2026): MERGED AND STUDIO REGRESSION VERIFIED.** Studio P7 is on `main` at `e483838085f4b2583bb5f90bc6bafb34680110eb`. Review the [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending.
+
+**P6 integration update (historical, 25 October 2026):** P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). P7 has since been merged under Karl's explicit authorisation.
 
 
 **P6 review (25 October 2026):** P5 is merged and pushed. The isolated P6 Scene Timing & Transitions milestone has browser screenshots, a walkthrough and complete exported WebM in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Different durations for repeated scenes and Fade Through Black are technically verified in Studio; Unity verification and its exact limits are recorded there. P6 is unmerged pending Karl's later visual/usability review. Earlier gates below are historical.
@@ -253,3 +265,4 @@ The notes below describe the earlier blocked attempt. The completion above super
 - **Limits:** Attribution is metadata only — no lip-sync or talking animation. Character speech must sit inside one scene; cross-scene character speech needs an episode-level clip. No in-app recording, text-to-speech or voice cleanup. Browser reload simulates interruption; subjective audio quality is unverified.
 - **Karl's check:** Import a real recorded voice as Speech & narration, attribute it to a Brightling and to the Narrator, then listen to [the recorded episode](../proofs/m6-4/dialogue-episode.mp4) for timing, trim and volume over music.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
+

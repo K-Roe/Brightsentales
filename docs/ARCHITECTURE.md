@@ -1,4 +1,18 @@
+﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; do not merge or start P9. Unity worktree also has unrelated editor-modified settings and `P8CameraReview/`; preserve them.
+
+---
+
 # Application architecture
+
+## P8 episode camera direction (2026-10-25, Studio implementation in progress)
+
+`Episode.camera` is an optional directing track on the existing episode occurrence clock. `episodeCamera.ts` validates shots and evaluates Wide, Medium, Close-Up and Custom framing with Static, Pan and Follow movement. Episode Maker uses that evaluator for its existing Canvas preview and WebM renderer; the timeline lane and contextual Inspector edit the same saved records. Legacy episodes without this field continue to use their saved scene cameras. `studioEpisodeBridge.ts` emits version 3 payloads when episode camera shots are present and rejects unsupported Brightling targets explicitly. Unity receiver implementation and browser/export acceptance remain unverified.
 
 ## P7 episode production controls (2026-10-25)
 
@@ -148,3 +162,4 @@ Voice Maker retains Backup v8 and adds an optional validated `voiceSettings` fie
 ## Verification boundaries
 
 `npm test -- --run` and `npm run build` are baseline gates. Browser checks must use disposable profiles and report console errors and missing assets. Screenshots show layout; playback recordings show timing; audio-output capture shows whether sound was produced by the browser. None of these substitutes for Karl's visual and listening approval. The project evidence reports are under `proofs/`.
+
