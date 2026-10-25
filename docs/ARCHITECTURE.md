@@ -1,5 +1,13 @@
 # Application architecture
 
+## Studio 3.1 Bright Speak message amendment (2026-10-25)
+
+Communicate Message was already represented by `PhoneAction.message` inside the existing `TimedScene.phone` array. The professional `SceneTimeline.tsx` now renders selectable phone clips, and `SceneMaker.tsx` edits the selected clip's text in its contextual Inspector. `phoneStateAt` and the shared `scenePreview.ts`/`phoneArt.ts` Canvas path still own timed playback and rendering. Missing `message` on an older saved action resolves to the original starter phrase in `phone.ts`; storage and Backup schemas remain unchanged. Text-only actions carry no speech clip ID. Optional saved speech remains on the existing audio path. [Amendment proof](../proofs/studio-3.1/bright-speak-amendment/REPORT.md).
+
+## Studio 3.1 direct animation layer (2026-10-25)
+
+Studio 3.0 is now part of main. Studio 3.1 changes the default Studio tab from Projects to Scenes; `App.tsx` remains the shared owner of saved libraries, workspace switching and persistence. `SceneMaker.tsx` resumes the most recent saved `TimedScene` or opens a Living Room draft and retains Classic's existing path. `Studio31Menu.tsx` provides working editor commands; `studio31.css` scopes the compact desktop layout to the professional editor using existing appearance tokens. The same stage Canvas, `scenePreview.ts` renderer, `timedScenes.ts` model, `SceneTimeline.tsx` and `timelineEditing.ts` handle character placement, Walk destination, actions, playback and timing. No scene schema, backup format, alternate animation engine, approved artwork or Unity bridge service was added. A saved scene still enters the existing `StudioSceneUnityPanel.tsx` and `studioSceneBridge.ts` path for optional Unity preview. See [Studio 3.1 proof](../proofs/studio-3.1/REPORT.md).
+
 ## Studio 3.0 experimental presentation layer (2026-10-24)
 
 `App.tsx` remains the single state owner for characters, places, timed scenes, episodes, audio, projects, backups and restore. `workspacePreference.ts` stores only the selected interface (`studio3` by default or `classic`) in a separate browser key, outside Studio Backup v8 and project schemas. Both layouts render the same tool components and use the same save and validation handlers. `Studio3Shell.tsx` supplies navigation, a project overview from the existing libraries, and Workspace Settings. `studio3.css` extends the existing appearance tokens and is scoped to the new shell.

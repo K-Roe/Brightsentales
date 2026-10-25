@@ -1,4 +1,12 @@
-# Cartoon foundation agent handover — 2026-10-24
+# Cartoon foundation agent handover — 2026-10-25
+
+## Studio 3.1 final freeze review — current
+
+Karl visually approved the Studio 3.1 core direct-animation workflow at `ae859ef5ff1f2a557afb6c69295033a10660a4d6`. The requested Editable Bright Speak Message amendment is technically verified on the same isolated `studio-3.1-direct-animation` branch in `C:\Users\karlr\repos\BrightTalesStudio31`. `src/phone.ts` supplies a legacy missing-message fallback; `src/SceneMaker.tsx` edits each existing phone action in the contextual Inspector; `src/SceneTimeline.tsx` selects Bright Speak clips. No schema, art, Unity source or voice-system change. The disposable-browser proof created two different messages, saved, closed/reopened, edited one, replayed, and verified Classic playback. Studio 295/295, voice-service 11/11 and build passed. See `proofs/studio-3.1/bright-speak-amendment/REPORT.md` and its media. **Next action: Karl's final freeze approval or requested changes.** No merge or P3. The sections below document earlier checkpoints.
+
+## Current Studio 3.1 continuation
+
+Studio 3.0 is merged in the primary repository's `main` at baseline `35b86922e56ed390b2af7e051cc58933bccf0100`. The current isolated worktree is `C:\Users\karlr\repos\BrightTalesStudio31`, branch `studio-3.1-direct-animation`. It extends `App.tsx`, `SceneMaker.tsx`, `SceneTimeline.tsx` and the canonical `timedScenes`/`scenePreview` paths; it does not introduce another scene engine or change approved art. The editor opens by default and resumes the most recent saved scene. `proofs/studio-3.1/REPORT.md` contains screenshots and two nine-second review videos. A fresh-profile browser create/play/save/close/reopen/edit/replay and Classic playback passed; Studio 294/294, voice service 11/11 and production build passed. The browser sent that edited scene twice through the existing bridge to isolated Unity Play Mode; its browser-driven test passed 1/1 with reset/replay and matching revision. The normal live Unity Editor and automatic background launch remain unverified. **Next action: Karl's visual review or requested revisions.** Do not merge, start P3 or modify approved V1.1 Unity. The Studio 3.0 and older Phase 2 sections below are historical.
 
 ## Studio 3.0 experimental handover — 2026-10-24
 

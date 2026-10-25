@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   PHONE_RAISE_SECONDS,
   PHONE_SPEECH_LEAD_SECONDS,
+  communicationMessage,
   illustratedPhoneFrameAt,
   isPhonePosition,
   isPhoneSymbol,
@@ -17,7 +18,7 @@ import {
   type PhoneAction,
   type PhoneHand,
 } from './phone';
-import { validateTimedLibrary, type TimedScene } from './timedScenes';
+import { decodeTimedLibrary, validateTimedLibrary, type TimedScene } from './timedScenes';
 import { HEIGHT, WIDTH } from './scene';
 import type { AudioAssetInfo } from './audio';
 
@@ -50,9 +51,13 @@ describe('phone interaction validation', () => {
     expect(carried.ok).toBe(true);
   });
 
-  it('requires a real message, symbol and position for a communication', () => {
-    const missing = validatePhoneActions([action({ id: uuid('1'), type: 'communicate', duration: 2 })], { sceneDuration: 10, characterIds: ['max'] });
-    expect(missing).toEqual({ ok: false, error: 'A communication message must be 1 to 80 characters.' });
+  it('accepts editable text and preserves the legacy default for an omitted message', () => {
+    const empty = validatePhoneActions([action({ id: uuid('1'), type: 'communicate', message: '', duration: 2, symbol: 'food', position: 'above-right' })], { sceneDuration: 10, characterIds: ['max'] });
+    expect(empty).toEqual({ ok: false, error: 'A communication message must be 1 to 80 characters.' });
+    const older = action({ id: uuid('1'), type: 'communicate', duration: 2, symbol: 'food', position: 'above-right' });
+    expect(validatePhoneActions([older], { sceneDuration: 10, characterIds: ['max'] })).toEqual({ ok: true });
+    expect(communicationMessage(older)).toBe("I'm hungry!");
+    expect(phoneStateAt(base([older], 'left'), 'max', 0.5).popup?.message).toBe("I'm hungry!");
     const bad = validatePhoneActions([action({ id: uuid('1'), type: 'communicate', message: 'Hi', duration: 2, symbol: 'burger' as never, position: 'above-right' })], { sceneDuration: 10, characterIds: ['max'] });
     expect(bad).toEqual({ ok: false, error: 'Choose a communication symbol.' });
     const lonely = validatePhoneActions([action({ id: uuid('1'), type: 'communicate', message: 'Hi', duration: 2, symbol: 'food', position: 'above-right', assetId: uuid('9') })], { sceneDuration: 10, characterIds: ['max'] });
@@ -266,6 +271,23 @@ describe('scene integration', () => {
     });
     expect(validateTimedLibrary({ version: 1, scenes: [full] }).ok).toBe(true);
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...full, phoneIn: 'left' }] }).ok).toBe(true);
+  });
+
+  it('keeps independent messages through save, reopen, edit and playback', () => {
+    const first = action({ id: uuid('3'), type: 'communicate', start: 1, duration: 2, message: 'Can I have a drink?', symbol: 'drink', position: 'above-right' });
+    const second = action({ id: uuid('4'), type: 'communicate', start: 4, duration: 2, message: 'I need a break.', symbol: 'help', position: 'above-right' });
+    const library = { version: 1 as const, scenes: [scene({ phoneIn: 'left', phone: [first, second] })] };
+    const reopened = decodeTimedLibrary(JSON.stringify(library));
+    expect(reopened.ok).toBe(true);
+    if (!reopened.ok) return;
+    expect(phoneStateAt(reopened.library.scenes[0], 'max', 1.5).popup?.message).toBe('Can I have a drink?');
+    expect(phoneStateAt(reopened.library.scenes[0], 'max', 4.5).popup?.message).toBe('I need a break.');
+    const edited = { ...reopened.library.scenes[0], phone: reopened.library.scenes[0].phone?.map(item => item.id === second.id ? { ...item, message: 'Thank you!' } : item) };
+    const savedAgain = decodeTimedLibrary(JSON.stringify({ version: 1, scenes: [edited] }));
+    expect(savedAgain.ok).toBe(true);
+    if (!savedAgain.ok) return;
+    expect(phoneStateAt(savedAgain.library.scenes[0], 'max', 1.5).popup?.message).toBe('Can I have a drink?');
+    expect(phoneStateAt(savedAgain.library.scenes[0], 'max', 4.5).popup?.message).toBe('Thank you!');
   });
 
   it('drops phone interactions when their Brightling is removed', () => {

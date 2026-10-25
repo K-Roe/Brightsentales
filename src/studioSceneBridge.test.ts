@@ -48,6 +48,7 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
   it('rejects unsupported audio and rejected frame actions before transfer', () => {
     expect(() => studioSceneConfig({ ...scene, audio: [{ id: actionId, assetId: actionId, start: 0, volume: 1, trimStart: 0, trimEnd: 1, fadeIn: 0, fadeOut: 0 }] })).toThrow('Scene audio');
     expect(() => studioSceneConfig({ ...scene, actions: [{ ...scene.actions[0], type: 'sit-down', artwork: 'provisional-v1', seat: 'chair', point: undefined }] })).toThrow();
+    expect(() => studioSceneConfig({ ...scene, phone: [{ id: '33333333-3333-4333-8333-333333333333', characterId: 'max', type: 'communicate', start: 0, duration: 2, message: 'Can I have a drink?', symbol: 'drink', position: 'above-right' }] })).toThrow('Bright Speak is not supported by Unity playback yet.');
   });
 
   it('requires the matching Unity acknowledgement', async () => {

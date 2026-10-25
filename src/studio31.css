@@ -1,0 +1,53 @@
+/* Studio 3.1 keeps the existing editor and renderer; these rules only arrange its professional workspace. */
+.studio3-shell.editor-active{grid-template-columns:72px minmax(0,1fr)}
+.studio3-shell.editor-active .studio3-sidebar{align-items:stretch}
+.studio3-shell.editor-active .studio3-brand{justify-content:center;padding:15px 5px}
+.studio3-shell.editor-active .studio3-brand>div,.studio3-shell.editor-active .studio3-nav-caption,.studio3-shell.editor-active .studio3-nav button>span:last-child,.studio3-shell.editor-active .studio3-sidebar-footer p{display:none}
+.studio3-shell.editor-active .studio3-sidebar-scroll{padding:10px 7px}
+.studio3-shell.editor-active .studio3-nav button,.studio3-shell.editor-active .studio3-sidebar-footer button{justify-content:center;padding:8px 4px;font-size:0}
+.studio3-shell.editor-active .studio3-nav-icon{font-size:19px}
+.studio3-shell.editor-active .studio3-sidebar-footer{padding:10px 7px}
+.studio3-shell.editor-active>.main{padding:0 14px 28px}
+.studio3-shell.editor-active .studio3-topbar{min-height:53px;margin:0 -14px 11px;padding:7px 18px}
+.studio3-shell.editor-active .studio3-topbar-overline{font-size:8px;margin-bottom:2px}
+.studio3-shell.editor-active .studio3-topbar strong{font-size:13px}
+.studio3-shell.editor-active .scene-visual .scene-heading{margin-bottom:8px}
+.studio3-shell.editor-active .scene-visual .scene-heading-title h1{font-size:19px}
+.studio3-shell.editor-active .scene-visual .scene-setup{margin-bottom:7px}
+.studio3-shell.editor-active .scene-visual .scene-stage-main{grid-template-columns:var(--studio31-left,184px) minmax(0,1fr) var(--studio31-right,286px)}
+.studio3-shell.editor-active .scene-visual .scene-stage-main.hierarchy-collapsed{grid-template-columns:47px minmax(0,1fr) var(--studio31-right,286px)}
+.studio3-shell.editor-active .scene-inspector-rail{max-height:720px}
+.studio3-shell.editor-active .scene-visual .scene-stage canvas{width:100%;height:auto}
+.studio3-shell.editor-active .scene-hierarchy{max-height:720px;overflow:auto;scrollbar-width:thin}
+.studio31-menu{display:flex;align-items:center;gap:2px;min-height:35px;margin:0 0 7px;padding:0 5px;border:1px solid var(--studio3-line);border-radius:8px;background:var(--studio3-panel);position:relative;z-index:10}
+.studio31-menu details{position:relative;color:var(--ui-text)}
+.studio31-menu summary{list-style:none;cursor:pointer;padding:7px 10px;border-radius:5px;font-size:12px;font-weight:700}
+.studio31-menu summary::-webkit-details-marker{display:none}
+.studio31-menu summary:hover,.studio31-menu details[open]>summary{background:var(--ui-surface-soft)}
+.studio31-menu details>div{position:absolute;top:calc(100% + 3px);left:0;min-width:184px;display:grid;gap:2px;padding:7px;border:1px solid var(--ui-border);border-radius:9px;background:var(--ui-surface);box-shadow:0 12px 28px var(--ui-shadow);z-index:20}
+.studio31-menu button{min-height:31px;width:100%;padding:6px 10px;border:0;border-radius:5px;background:transparent;color:var(--ui-text);text-align:left;font-size:12px}
+.studio31-menu button:hover:not(:disabled){background:var(--ui-surface-soft)}
+.studio31-menu button:disabled{opacity:.45;cursor:not-allowed}
+.studio31-menu label{display:grid;gap:3px;padding:5px 8px;color:var(--ui-muted);font-size:11px;white-space:nowrap}
+.studio31-menu input[type=range]{width:170px}
+.studio31-help{margin:0 0 7px;padding:8px 12px;border:1px solid var(--ui-border);border-radius:7px;background:var(--ui-surface-soft);color:var(--ui-text);font-size:12px}
+.studio31-left-tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:12px 3px 5px}
+.studio31-left-tabs button{min-height:29px;border:1px solid var(--ui-border);border-radius:6px;background:var(--ui-surface);color:var(--ui-muted);font-size:10px;font-weight:700}
+.studio31-left-tabs button.active{background:var(--ui-accent-soft);color:var(--ui-text);border-color:var(--ui-accent)}
+.studio31-assets{display:grid;gap:5px;padding:0 3px}
+.studio31-assets button{display:flex;align-items:center;gap:8px;min-width:0;min-height:53px;padding:4px;border:1px solid var(--ui-border);border-radius:7px;background:var(--ui-surface);color:var(--ui-text);text-align:left;font-size:11px;font-weight:700}
+.studio31-assets button:hover:not(:disabled){border-color:var(--ui-accent)}
+.studio31-assets button:disabled{opacity:.55;cursor:default}
+.studio31-assets img,.studio31-asset-placeholder{width:42px;height:42px;flex:none;object-fit:contain;border-radius:5px;background:var(--ui-surface-soft)}
+.studio31-asset-placeholder{display:grid;place-items:center;color:var(--ui-accent);font-size:22px}
+.studio31-assets button>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.studio31-assets small{display:block;margin-top:2px;color:var(--ui-muted);font-size:9px;font-weight:500}
+.studio3-shell.editor-active .scene-visual .scene-stage canvas{cursor:crosshair}
+.studio3-shell.editor-active .timeline-phone-lane .timeline-label{font-size:10px;line-height:1.2}
+.studio3-shell.editor-active .timeline-phone{cursor:pointer!important;border-color:var(--ui-accent);color:var(--ui-text);background:var(--ui-accent-soft)}
+.studio3-shell.editor-active .timeline-phone>span{overflow:hidden;text-overflow:ellipsis}
+.studio3-shell.editor-active .scene-inspector-message{grid-column:1/-1}
+.studio3-shell.editor-active .scene-inspector-message input{width:100%}
+@media(max-width:1180px){.studio3-shell.editor-active .scene-visual .scene-stage-main,.studio3-shell.editor-active .scene-visual .scene-stage-main.hierarchy-collapsed{grid-template-columns:var(--studio31-left,184px) minmax(0,1fr)}.studio3-shell.editor-active .scene-inspector-rail{grid-column:2;grid-row:2;max-height:none;overflow:visible}}
+@media(max-width:900px){.studio3-shell.editor-active{display:block}.studio3-shell.editor-active .studio3-sidebar{height:auto}.studio3-shell.editor-active .studio3-sidebar-scroll{padding:4px 10px}.studio3-shell.editor-active .studio3-nav button{min-width:40px}.studio3-shell.editor-active .studio3-sidebar-footer{padding:4px 10px}.studio3-shell.editor-active .studio3-brand{display:none}}
+@media(max-width:700px){.studio3-shell.editor-active .scene-visual .scene-stage-main,.studio3-shell.editor-active .scene-visual .scene-stage-main.hierarchy-collapsed{grid-template-columns:1fr}.studio3-shell.editor-active .scene-inspector-rail{grid-column:1;grid-row:auto}.studio31-menu{overflow-x:auto;overflow-y:visible}.studio31-menu details{flex:none}}

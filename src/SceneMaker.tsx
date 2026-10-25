@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { Brightling } from './maker';
 import SceneTimeline from './SceneTimeline';
+import Studio31Menu from './Studio31Menu';
+import { nextActionStart } from './timelineEditing';
 import CameraPanel from './CameraPanel';
 import { cameraAt, validCamera, type CameraKeyframe } from './camera';
 import AudioPanel from './AudioPanel';
 import type { AudioAsset } from './audio';
 import { scenePlaybackClips, useAudioPlayback } from './audioPlayback';
 import { HEIGHT, Point, WIDTH } from './scene';
-import { type MaxOutfit, type MaxineOutfit } from './outfit';
+import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { advanceSceneTime, gestureFramesForScene, isFrameAction, isGesture, needsGreetingSideWave, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
 import { livingWorldAt } from './livingWorld';
 import { renderSceneVideo } from './sceneVideoExport';
 import { drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
-import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
+import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, communicationMessage, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
 
 export type SceneLeaveGuard = (proceed: () => void) => void;
-type Props = { library: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: TimedLibrary) => boolean; onRenderPreview?: (sceneId: string) => void; requestedSceneId?: string | null; audioAssets?: AudioAsset[]; professional?: boolean; leaveGuardRef?: RefObject<SceneLeaveGuard | null>; onDirtyChange?: (dirty: boolean) => void };
+type Props = { library: TimedLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: TimedLibrary) => boolean; onRenderPreview?: (sceneId: string) => void; onProjects?: () => void; onClassic?: () => void; requestedSceneId?: string | null; audioAssets?: AudioAsset[]; professional?: boolean; leaveGuardRef?: RefObject<SceneLeaveGuard | null>; onDirtyChange?: (dirty: boolean) => void };
 const loadImage = (url: string): Promise<HTMLImageElement> => new Promise((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = url; });
 const initialPoint = (index: number): Point => ({ x: 520 + index * 230, y: 790 });
 const clone = (scene: TimedScene): TimedScene => structuredClone(scene);
@@ -30,21 +32,30 @@ const actionNames: Record<ActionType, string> = {
 const fmt = (time: number) => `${time.toFixed(1)}s`;
 const stagePoint = (event: React.PointerEvent<HTMLCanvasElement>, scene: TimedScene, time: number): Point => { const box = event.currentTarget.getBoundingClientRect(); const view = cameraAt(scene, time); return { x: Math.round(view.x + ((event.clientX - box.left) * WIDTH / box.width - WIDTH / 2) / view.zoom), y: Math.round(view.y + ((event.clientY - box.top) * HEIGHT / box.height - HEIGHT / 2) / view.zoom) }; };
 
-export default function SceneMaker({ library, characters, places, maxOutfit, maxineOutfit, issue, onSave, onRenderPreview, requestedSceneId, audioAssets = [], professional = false, leaveGuardRef, onDirtyChange }: Props) {
+export default function SceneMaker({ library, characters, places, maxOutfit, maxineOutfit, issue, onSave, onRenderPreview, onProjects, onClassic, requestedSceneId, audioAssets = [], professional = false, leaveGuardRef, onDirtyChange }: Props) {
   const readyPlaces = placesIn(places).filter(place => place.artworkAvailable && place.background);
-  const [scene, setScene] = useState<TimedScene | null>(null);
+  const [scene, setScene] = useState<TimedScene | null>(() => {
+    if (!professional || issue) return null;
+    const recent = library.scenes.find(item => item.id === requestedSceneId) ?? library.scenes.at(-1);
+    return recent ? clone(recent) : readyPlaces[0] ? newScene(readyPlaces[0].id) : null;
+  });
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const [message, setMessage] = useState('Choose a scene or create one.');
   const [hierarchyOpen, setHierarchyOpen] = useState(true);
+  const [leftPanel, setLeftPanel] = useState<'hierarchy' | 'assets'>('hierarchy');
+  const [leftWidth, setLeftWidth] = useState(184);
+  const [inspectorWidth, setInspectorWidth] = useState(286);
+  const [showHelp, setShowHelp] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [targetAction, setTargetAction] = useState<string | null>(null);
   const [selectedPhoneId, setSelectedPhoneId] = useState<string | null>(null);
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const [cameraPreview, setCameraPreview] = useState<CameraKeyframe | null>(null);
+  const [targetHover, setTargetHover] = useState<Point | null>(null);
   const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -97,22 +108,23 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     if (!scene || !room || !canvas.current) return;
     const context = canvas.current.getContext('2d');
     if (!context) return;
-    context.clearRect(0, 0, WIDTH, HEIGHT);
-    context.drawImage(room, 0, 0, WIDTH, HEIGHT);
-    if (activeAction?.type === 'walk' && activeAction.point) {
-      const start = stateAt(scene, activeAction.characterId, activeAction.start).point;
-      const end = activeAction.point;
-      const edge = { x: Math.max(18, Math.min(WIDTH - 18, end.x)), y: Math.max(370, Math.min(HEIGHT - 18, end.y)) };
-      context.save(); context.strokeStyle = '#744cdb'; context.fillStyle = '#744cdb'; context.lineWidth = 8; context.setLineDash([20, 13]);
-      context.beginPath(); context.moveTo(start.x, start.y - 20); context.lineTo(edge.x, edge.y - 20); context.stroke(); context.setLineDash([]);
-      context.beginPath(); context.arc(edge.x, edge.y - 20, 19, 0, Math.PI * 2); context.fill();
-      if (end.x !== edge.x || end.y !== edge.y) { context.font = 'bold 27px Segoe UI'; context.fillText('Exit', Math.max(12, edge.x - 28), edge.y - 47); }
-      context.restore();
-    }
     // The editor uses the one shared scene renderer, so what you direct is exactly what plays
     // back and what the WebM export records. Only the selection ring is added on top.
     const previewScene = cameraPreview && !playing ? { ...scene, camera: [...(scene.camera ?? []).filter(key => key.start < time), { ...cameraPreview, start: time, duration: 0 }] } : scene;
     drawScenePreview(context, previewScene, time, room, packs);
+    if (activeAction?.type === 'walk' && activeAction.point && !playing) {
+      const start = stateAt(scene, activeAction.characterId, activeAction.start).point;
+      const end = targetAction === activeAction.id && targetHover ? targetHover : activeAction.point;
+      const edge = { x: Math.max(18, Math.min(WIDTH - 18, end.x)), y: Math.max(370, Math.min(HEIGHT - 18, end.y)) };
+      const view = cameraAt(previewScene, time);
+      context.save(); context.translate(WIDTH / 2, HEIGHT / 2); context.scale(view.zoom, view.zoom); context.translate(-view.x, -view.y);
+      context.strokeStyle = '#7658ed'; context.fillStyle = '#7658ed'; context.lineWidth = 6; context.setLineDash([15, 10]);
+      context.beginPath(); context.moveTo(start.x, start.y - 18); context.lineTo(edge.x, edge.y - 18); context.stroke(); context.setLineDash([]);
+      context.beginPath(); context.arc(edge.x, edge.y - 18, 16, 0, Math.PI * 2); context.fill();
+      context.strokeStyle = '#ffffff'; context.lineWidth = 3; context.stroke();
+      if (end.x !== edge.x || end.y !== edge.y) { context.font = 'bold 25px Segoe UI'; context.fillText('Exit', Math.max(12, edge.x - 28), edge.y - 44); }
+      context.restore();
+    }
     if (selectedCharacter) {
       const selected = stateAt(scene, selectedCharacter, time);
       if (selected.visible && packs[selectedCharacter]) {
@@ -123,7 +135,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
         context.restore();
       }
     }
-  }, [scene, time, room, packs, selectedCharacter, selectedAction, cameraPreview, playing]);
+  }, [scene, time, room, packs, selectedCharacter, selectedAction, targetAction, targetHover, cameraPreview, playing]);
 
   useEffect(() => {
     if (!playing || !scene) return;
@@ -173,14 +185,23 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     const previous = value.characters[id];
     return { ...value, characters: { ...value.characters, [id]: next }, actions: value.actions.map(action => action.characterId === id && action.type === 'appear' && action.start === 0 && action.point?.x === previous.x && action.point?.y === previous.y ? { ...action, point: next } : action) };
   });
+  const addCharacter = (id: string) => {
+    if (!scene || !cast.some(item => item.id === id) || Object.hasOwn(scene.characters, id)) return;
+    const point = initialPoint(Object.keys(scene.characters).length);
+    update(value => ({ ...value, characters: { ...value.characters, [id]: point }, actions: [...value.actions, { id: crypto.randomUUID(), characterId: id, type: 'appear', start: 0, duration: 0, point }] }));
+    setSelectedCharacter(id); setSelectedAction(null); setTime(0);
+    setMessage(`Drag ${characterName(id)} on the stage to set the starting position.`);
+  };
   const addAction = (type: ActionType) => {
     if (!scene || !selectedCharacter) return;
     if ((['sit-down', 'stand-up', 'pick-up', 'put-down'] as ActionType[]).includes(type)) { setMessage('Batch 3 actions were visually rejected and are unavailable for new scenes while they are repaired.'); return; }
     if ((isGesture(type) || isFrameAction(type)) && !supportsGesture(selectedCharacter)) { setMessage('Provisional pose frames are available for Max and Maxine in their original outfits only.'); return; }
     const actions = scene.actions.filter(item => item.characterId === selectedCharacter);
-    const start = Math.min(scene.duration, Math.max(time, 0, ...actions.map(item => item.start + item.duration)));
-    const current = stateAt(scene, selectedCharacter, start);
     const defaultDuration = type === 'wave' ? waveDurationSeconds : type === 'turn' ? 0.4 : type === 'react' || type === 'surprise' ? 0.8 : type === 'clap' || type === 'jump' ? 1 : 1.5;
+    const proposed = professional && type !== 'appear' && type !== 'disappear' ? nextActionStart(scene, selectedCharacter, time, defaultDuration) : null;
+    const start = proposed ?? Math.min(scene.duration, Math.max(time, 0, ...actions.map(item => item.start + item.duration)));
+    if (professional && type !== 'appear' && type !== 'disappear' && proposed === null) { setMessage('No free time remains on this track. Move the playhead earlier or extend the scene.'); return; }
+    const current = stateAt(scene, selectedCharacter, start);
     const duration = type === 'appear' || type === 'disappear' ? 0 : Math.min(defaultDuration, Math.max(0, scene.duration - start));
     if ((type === 'wave' && duration < waveDurationSeconds) || (type !== 'appear' && type !== 'disappear' && duration <= 0)) { setMessage('Move the playhead earlier or extend the scene to make room.'); return; }
     const objectId = scene.objects?.[0]?.id;
@@ -188,14 +209,19 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     const action: TimedAction = { id: crypto.randomUUID(), characterId: selectedCharacter, type, start, duration: isFrameAction(type) ? Math.max(.4, duration) : duration, ...((isGesture(type) || isFrameAction(type)) ? { artwork: 'provisional-v1' as const } : {}), ...(type === 'walk' || type === 'appear' || type === 'put-down' ? { point: type === 'walk' ? { x: Math.min(WIDTH + 200, current.point.x + 250), y: current.point.y } : type === 'put-down' ? { x: current.point.x - 72, y: current.point.y } : current.point } : {}), ...(type === 'walk' ? { motion: 'gentle' as const } : {}), ...(type === 'look-at' ? { target: (['max', 'maxine'] as const).find(id => id !== selectedCharacter && !!scene.characters[id]) ?? 'camera' } : {}), ...(type === 'sit-down' || type === 'stand-up' ? { seat: 'chair' as const } : {}), ...(type === 'pick-up' || type === 'put-down' ? { objectId } : {}) };
     update(value => ({ ...value, actions: [...value.actions, action] }));
     setSelectedAction(action.id); setTime(start);
-    if (type === 'walk' || type === 'appear' || type === 'put-down') { setTargetAction(action.id); setMessage('Click the stage to choose a floor position.'); }
+    if (type === 'walk' || type === 'appear' || type === 'put-down') { setTargetAction(action.id); setTargetHover(null); setMessage('Click the stage to choose a floor position.'); }
     else setMessage(`${actionNames[type]} added. Drag its block on the timeline to change when it happens.`);
   };
-  const selectAction = (id: string) => { const action = scene?.actions.find(item => item.id === id); if (!action) return; setSelectedCharacter(action.characterId); setSelectedAction(id); setTargetAction(null); setPlaying(false); setTime(action.start); };
+  const selectAction = (id: string) => { const action = scene?.actions.find(item => item.id === id); if (!action) return; setSelectedCharacter(action.characterId); setSelectedAction(id); setSelectedPhoneId(null); setTargetAction(null); setPlaying(false); setTime(action.start); };
   const speechAssets = audioAssets.filter(asset => asset.kind === 'speech');
   const selectedPhone = scene?.phone?.find(action => action.id === selectedPhoneId) ?? null;
   const phoneNow = selectedCharacter && scene ? phoneStateAt(scene, selectedCharacter, time) : null;
   const phoneActions = scene && selectedCharacter ? (scene.phone ?? []).filter(action => action.characterId === selectedCharacter).sort((a, b) => a.start - b.start) : [];
+  const selectPhoneAction = (id: string) => {
+    const action = scene?.phone?.find(item => item.id === id);
+    if (!action) return;
+    setSelectedCharacter(action.characterId); setSelectedPhoneId(id); setSelectedAction(null); setSelectedCamera(null); setTargetAction(null); setPlaying(false); setTime(action.start);
+  };
 
   const commitPhone = (change: (current: TimedScene) => TimedScene) => update(current => {
     const before = current;
@@ -235,24 +261,25 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     const action: PhoneAction = {
       id: crypto.randomUUID(), characterId: selectedCharacter, type, start, duration,
       ...(type === 'take-out' ? { hand } : {}),
-      ...(type === 'communicate' ? { message: PHONE_MESSAGES[0], symbol: 'food', position: 'above-right', clipId: crypto.randomUUID() } : {}),
+      ...(type === 'communicate' ? { message: '', symbol: 'food', position: 'above-right' } : {}),
     };
     commitPhone(value => ({ ...value, phone: [...(value.phone ?? []), action] }));
-    setSelectedPhoneId(action.id); setSelectedAction(null); setTime(start);
-    setMessage(`${phoneActionNames[type]} added at ${fmt(start)}. The phone speaks for the Brightling; they never speak it themselves.`);
+    setSelectedPhoneId(action.id); setSelectedAction(null); setSelectedCamera(null); setTime(professional && type === 'take-out' ? Math.min(scene.duration, start + duration) : start);
+    setMessage(type === 'communicate' ? 'Type the message Bright Speak should show, then save or play.' : `${phoneActionNames[type]} added at ${fmt(start)}.`);
   };
 
   const changePhone = (id: string, patch: Partial<PhoneAction>) => commitPhone(value => ({ ...value, phone: (value.phone ?? []).map(action => action.id === id ? { ...action, ...patch } : action) }));
   const pointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (!scene || playing) return;
     const p = stagePoint(event, scene, time);
-    if (targetAction) { if (p.y >= 350) { changeAction(targetAction, { point: p }); setTargetAction(null); setMessage('Position set. The path now shows the destination.'); } return; }
+    if (targetAction) { if (p.y >= 350) { changeAction(targetAction, { point: p }); setTargetAction(null); setTargetHover(null); setMessage('Destination set. Drag the clip on the timeline to change when the walk begins.'); } else setMessage('Choose a spot on the floor.'); return; }
     const hit = Object.keys(scene.characters).filter(id => livingWorldAt(scene, id, time).state.visible).sort((a, b) => livingWorldAt(scene, b, time).state.point.y - livingWorldAt(scene, a, time).state.point.y).find(id => { const q = livingWorldAt(scene, id, time).state.point; return Math.abs(p.x - q.x) < 107 && p.y >= q.y - 335 && p.y <= q.y + 12; });
     if (!hit) return;
-    setSelectedCharacter(hit); setSelectedAction(null);
+    setSelectedCharacter(hit); setSelectedAction(null); setSelectedPhoneId(null);
     if (time <= .001) { drag.current = { id: hit, down: p, moved: false }; event.currentTarget.setPointerCapture(event.pointerId); }
   };
   const pointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (targetAction && scene) { const point = stagePoint(event, scene, time); setTargetHover(point.y >= 350 ? point : null); return; }
     const current = drag.current;
     if (!current || !scene) return;
     const p = stagePoint(event, scene, time);
@@ -260,6 +287,11 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     if (current.moved) placeInitial(current.id, { x: Math.max(0, Math.min(WIDTH, p.x)), y: Math.max(350, Math.min(HEIGHT, p.y)) });
   };
   const pointerUp = (event: React.PointerEvent<HTMLCanvasElement>) => { if (drag.current?.moved) setMessage('Starting position updated. Save the scene to keep it.'); drag.current = null; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); };
+  const openLibrary = () => { if (unsaved && !window.confirm('This scene has unsaved changes. Leave without saving?')) return; setPlaying(false); setScene(null); };
+  const createScene = () => { if (!readyPlaces[0] || unsaved && !window.confirm('This scene has unsaved changes. Leave without saving?')) return; openScene(newScene(readyPlaces[0].id)); };
+  const stop = () => { setPlaying(false); setTime(0); };
+  const playPause = () => { if (playing) { setPlaying(false); return; } const start = time >= scene!.duration ? 0 : time; if (start !== time) setTime(start); audio.startAt(start); setPlaying(true); };
+  const replay = () => { setPlaying(false); setTime(0); audio.startAt(0); setPlaying(true); };
 
   if (!scene) return <section className="scene-maker"><div className="intro"><div><p className="eyebrow">SCENE STUDIO</p><h1>Make a timed scene.</h1><p>Choose when each Brightling appears, walks and waves.</p></div></div>
     {issue && <p role="alert" className="storage-alert">{issue}</p>}
@@ -269,7 +301,9 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     {library.scenes.length === 0 && <p className="scene-empty">No timed scenes yet. Create one to begin.</p>}<p role="status">{message}</p></section>;
 
   const selectedPosition = selectedCharacter ? scene.characters[selectedCharacter] : null;
-  return <section className="scene-maker scene-visual"><div className="scene-heading"><div className="scene-heading-title"><button onClick={() => { if (!unsaved || window.confirm('This scene has unsaved changes. Leave without saving?')) { setPlaying(false); setScene(null); } }}>← All scenes</button><div><p className="eyebrow">{professional ? 'CARTOON EDITOR' : 'SCENE MAKER'}</p><h1>{scene.name}</h1><span className={`scene-save-state ${unsaved ? 'needs-save' : ''}`}>{unsaved ? 'Changes to save' : 'Saved in this browser'}</span></div></div><div className="scene-heading-actions"><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button><button disabled={unsaved || !validation?.ok || !onRenderPreview} title={unsaved ? 'Save your changes before previewing the performance' : undefined} onClick={() => onRenderPreview?.(scene.id)}>{professional ? 'Preview in Unity' : 'Preview cartoon'}</button><details className="scene-export-menu"><summary>More</summary><button disabled={!!issue || !validation?.ok || !room || Object.keys(scene.characters).some(id => !packs[id]) || exporting} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export scene video (WebM)'}</button></details></div></div>
+  return <section className="scene-maker scene-visual">
+    {professional && <Studio31Menu canSave={!!validation?.ok && !issue} canPlay={!!validation?.ok} hasSelection={!!selectedCharacter || !!selectedAction || !!selectedPhoneId || !!selectedCamera} hasCharacter={!!selectedCharacter} hasMax={!!scene.characters.max} hasMaxine={!!scene.characters.maxine} isLivingRoom={scene.placeId === 'living-room' || !readyPlaces.some(place => place.id === 'living-room')} playing={playing} leftWidth={leftWidth} inspectorWidth={inspectorWidth} showHelp={showHelp} onNew={createScene} onOpen={openLibrary} onSave={save} onProjects={onProjects} onDeselect={() => { setSelectedCharacter(null); setSelectedAction(null); setSelectedPhoneId(null); setSelectedCamera(null); setTargetAction(null); }} onHierarchy={() => { setLeftPanel('hierarchy'); setHierarchyOpen(true); }} onAssets={() => { setLeftPanel('assets'); setHierarchyOpen(true); }} onLeftWidth={setLeftWidth} onInspectorWidth={setInspectorWidth} onAddMax={() => addCharacter('max')} onAddMaxine={() => addCharacter('maxine')} onLivingRoom={() => update(value => ({ ...value, placeId: 'living-room' }))} onWalk={() => addAction('walk')} onWave={() => addAction('wave')} onPlayPause={playPause} onStop={stop} onReplay={replay} onClassic={onClassic} onHelp={() => setShowHelp(value => !value)} />}
+    <div className="scene-heading"><div className="scene-heading-title"><button onClick={openLibrary}>← All scenes</button><div><p className="eyebrow">{professional ? 'CARTOON EDITOR' : 'SCENE MAKER'}</p><h1>{scene.name}</h1><span className={`scene-save-state ${unsaved ? 'needs-save' : ''}`}>{unsaved ? 'Changes to save' : 'Saved in this browser'}</span></div></div><div className="scene-heading-actions"><button className="scene-primary" disabled={!!issue || !validation?.ok} onClick={save}>Save Scene</button><button disabled={unsaved || !validation?.ok || !onRenderPreview} title={unsaved ? 'Save your changes before previewing the performance' : undefined} onClick={() => onRenderPreview?.(scene.id)}>{professional ? 'Preview in Unity' : 'Preview cartoon'}</button><details className="scene-export-menu"><summary>More</summary><button disabled={!!issue || !validation?.ok || !room || Object.keys(scene.characters).some(id => !packs[id]) || exporting} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : 'Export scene video (WebM)'}</button></details></div></div>
     <div className="scene-setup"><label>Scene name<input aria-label="Scene name" maxLength={80} value={scene.name} onChange={event => update(value => ({ ...value, name: event.target.value }))} /></label><label>Place<select aria-label="Scene place" value={scene.placeId} onChange={event => update(value => ({ ...value, placeId: event.target.value, livingWorld: event.target.value === 'living-room' ? value.livingWorld : undefined }))}>{readyPlaces.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}</select></label><label>Duration (seconds)<input aria-label="Scene duration" type="number" min="1" max="3600" step="1" value={scene.duration} onChange={event => update(value => ({ ...value, duration: Number(event.target.value) }))} /></label></div>
     <details className="scene-performance-settings"><summary>Character life and optional settings</summary>
     <label className="cartoon-life-toggle"><input aria-label="Cartoon Life experimental" type="checkbox" checked={!!scene.life?.enabled && scene.life.mode !== 'v2'} onChange={event => update(value => ({ ...value, life: event.target.checked ? { enabled: true, ambience: true } : undefined }))} /> Cartoon Life V1 <span>Original experimental comparison</span></label>
@@ -280,11 +314,14 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     {scene.actions.some(action => isFrameAction(action.type)) && <p role="alert" className="episode-warning">This scene contains rejected Batch 3 actions. They remain available for review of saved work, but their motion and artwork are not approved for production.</p>}
     {scene.actions.some(action => action.artwork === 'provisional-v1' && !supportsGesture(action.characterId)) && <p role="status" className="episode-warning">Some provisional gestures need Max or Maxine's original outfit. They show the standing pose with the current outfit until it is restored.</p>}
     {scene.actions.some(action => action.artwork === 'greeting-side-v2' && !supportsGesture(action.characterId)) && <p role="alert" className="episode-warning">Greeting V2 side waves require Max and Maxine's original outfits. Restore those outfits before export.</p>}
-    <div className={`scene-stage-main ${professional && !hierarchyOpen ? 'hierarchy-collapsed' : ''}`}>
-      {professional && <aside className="scene-hierarchy" aria-label="Scene hierarchy"><div className="scene-hierarchy-heading"><div><p className="eyebrow">SCENE</p><h2>Hierarchy</h2></div><button type="button" aria-label={hierarchyOpen ? 'Collapse scene hierarchy' : 'Expand scene hierarchy'} onClick={() => setHierarchyOpen(value => !value)}>{hierarchyOpen ? '‹' : '›'}</button></div>{hierarchyOpen && <><p className="scene-hierarchy-caption">Brightlings</p>{Object.keys(scene.characters).map(id => <button type="button" key={id} className={selectedCharacter === id ? 'active' : ''} onClick={() => { setSelectedCharacter(id); setSelectedAction(null); setSelectedCamera(null); setTargetAction(null); }}><span aria-hidden="true">✦</span>{characterName(id)}</button>)}<p className="scene-hierarchy-caption">Camera shots</p>{(scene.camera ?? []).map((key, index) => <button type="button" key={key.id} className={selectedCamera === key.id ? 'active' : ''} onClick={() => { setSelectedCamera(key.id); setSelectedAction(null); setPlaying(false); setTime(key.start); }}><span aria-hidden="true">◇</span>{key.shot} · {index + 1}</button>)}{!(scene.camera ?? []).length && <small>No camera keyframes yet</small>}<p className="scene-hierarchy-hint">Props and Bright Speak are in the Inspector when supported.</p></>}</aside>}
-      <div className="scene-stage"><div className="scene-stage-caption"><strong>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Scene'}</strong><span>{targetAction ? 'Click the stage to set the position' : time === 0 ? 'Click a Brightling, then drag to place' : 'Select a Brightling or scrub to a new time'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} aria-label="Timed scene stage: select Brightlings, drag at zero seconds, or click a walking destination" />
-      <div className="scene-playback"><button onClick={() => { if (!playing) audio.startAt(time); setPlaying(value => !value); }} disabled={!validation?.ok || time >= scene.duration && !playing}>{playing ? 'Pause' : 'Play'}</button><button onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
-      <div className="scene-inspector-rail"><aside className="scene-director"><h2>{professional ? 'Inspector' : 'Direct your Brightlings'}</h2><label>Add Brightling<select aria-label="Add Brightling" value="" onChange={event => { const id = event.target.value; if (!id) return; const point = initialPoint(Object.keys(scene.characters).length); update(value => ({ ...value, characters: { ...value.characters, [id]: point }, actions: [...value.actions, { id: crypto.randomUUID(), characterId: id, type: 'appear', start: 0, duration: 0, point }] })); setSelectedCharacter(id); setSelectedAction(null); setTime(0); setMessage(`Drag ${characterName(id)} on the stage to set the starting position.`); }}><option value="">Choose a Brightling…</option>{cast.filter(item => !Object.hasOwn(scene.characters, item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+    <div className={`scene-stage-main ${professional && !hierarchyOpen ? 'hierarchy-collapsed' : ''}`} style={professional ? { '--studio31-left': `${leftWidth}px`, '--studio31-right': `${inspectorWidth}px` } as React.CSSProperties : undefined}>
+      {professional && <aside className="scene-hierarchy" aria-label="Scene hierarchy and assets"><div className="scene-hierarchy-heading"><div><p className="eyebrow">SCENE</p><h2>{leftPanel === 'assets' ? 'Assets' : 'Hierarchy'}</h2></div><button type="button" aria-label={hierarchyOpen ? 'Collapse left panel' : 'Expand left panel'} onClick={() => setHierarchyOpen(value => !value)}>{hierarchyOpen ? '‹' : '›'}</button></div>{hierarchyOpen && <>
+        <div className="studio31-left-tabs"><button className={leftPanel === 'hierarchy' ? 'active' : ''} onClick={() => setLeftPanel('hierarchy')}>Hierarchy</button><button className={leftPanel === 'assets' ? 'active' : ''} onClick={() => setLeftPanel('assets')}>Assets</button></div>
+        {leftPanel === 'hierarchy' ? <><p className="scene-hierarchy-caption">Background</p><button type="button" onClick={() => { setSelectedCharacter(null); setSelectedAction(null); setSelectedCamera(null); setMessage('Choose a place in the scene settings above.'); }}><span aria-hidden="true">▧</span>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Place unavailable'}</button><p className="scene-hierarchy-caption">Characters</p>{Object.keys(scene.characters).map(id => <button type="button" key={id} className={selectedCharacter === id ? 'active' : ''} onClick={() => { setSelectedCharacter(id); setSelectedAction(null); setSelectedCamera(null); setTargetAction(null); }}><span aria-hidden="true">✦</span>{characterName(id)}</button>)}<p className="scene-hierarchy-caption">Camera shots</p>{(scene.camera ?? []).map((key, index) => <button type="button" key={key.id} className={selectedCamera === key.id ? 'active' : ''} onClick={() => { setSelectedCamera(key.id); setSelectedAction(null); setPlaying(false); setTime(key.start); }}><span aria-hidden="true">◇</span>{key.shot} · {index + 1}</button>)}{!(scene.camera ?? []).length && <small>No camera keyframes yet</small>}{!!scene.objects?.length && <><p className="scene-hierarchy-caption">Saved props</p>{scene.objects.map((object, index) => <small key={object.id}>Toy {index + 1} · review only</small>)}</>}</> : <><p className="scene-hierarchy-caption">Characters</p><div className="studio31-assets">{cast.map(({ id, name }) => <button type="button" key={id} disabled={!!scene.characters[id]} onClick={() => addCharacter(id)}>{id === 'max' || id === 'maxine' ? <img src={id === 'max' ? maxSpriteSource(maxOutfit, 'idle') : maxineSpriteSource(maxineOutfit, 'idle')} alt="" /> : <span className="studio31-asset-placeholder" aria-hidden="true">✦</span>}<span>{name}<small>{scene.characters[id] ? 'In scene' : 'Add to scene'}</small></span></button>)}</div><p className="scene-hierarchy-caption">Places</p><div className="studio31-assets">{readyPlaces.map(place => <button type="button" key={place.id} disabled={scene.placeId === place.id} onClick={() => update(value => ({ ...value, placeId: place.id, livingWorld: place.id === 'living-room' ? value.livingWorld : undefined }))}>{place.background && <img src={place.background} alt="" />}<span>{place.name}<small>{scene.placeId === place.id ? 'Current place' : 'Use place'}</small></span></button>)}</div><p className="scene-hierarchy-caption">Props</p><small>Bright Speak controls appear in the selected Brightling's Inspector. New toy actions remain unavailable.</small></>}
+      </>}</aside>}
+      <div className="scene-stage"><div className="scene-stage-caption"><strong>{readyPlaces.find(place => place.id === scene.placeId)?.name ?? 'Scene'}</strong><span>{targetAction ? 'Click the stage to set the position' : time === 0 ? 'Click a Brightling, then drag to place' : 'Select a Brightling or scrub to a new time'}</span></div><canvas ref={canvas} width={WIDTH} height={HEIGHT} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onPointerLeave={() => setTargetHover(null)} aria-label="Timed scene stage: select Brightlings, drag at zero seconds, or click a walking destination" />
+      <div className="scene-playback"><button onClick={playPause} disabled={!validation?.ok}>{playing ? 'Pause' : 'Play'}</button>{professional && <button onClick={stop}>Stop</button>}<button onClick={professional ? replay : stop}>{professional ? 'Replay' : 'Restart'}</button><strong>{fmt(time)} / {fmt(scene.duration)}</strong></div></div>
+      <div className="scene-inspector-rail"><aside className="scene-director"><h2>{professional ? 'Inspector' : 'Direct your Brightlings'}</h2><label>Add Brightling<select aria-label="Add Brightling" value="" onChange={event => event.target.value && addCharacter(event.target.value)}><option value="">Choose a Brightling…</option>{cast.filter(item => !Object.hasOwn(scene.characters, item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
         <div className="director-cast">{Object.keys(scene.characters).map(id => <button key={id} className={selectedCharacter === id ? 'active' : ''} onClick={() => { setSelectedCharacter(id); setSelectedAction(null); setTargetAction(null); }}>{characterName(id)}</button>)}</div>
         <details className="scene-advanced-features"><summary>Props and advanced interactions</summary><div className="director-phone"><p className="eyebrow">BATCH 3 TOY · REVIEW ONLY</p><button disabled title="Batch 3 was visually rejected; new toy actions are unavailable during repair" onClick={() => { if (!selectedCharacter) { setMessage('Choose Max or Maxine before adding a toy.'); return; } const p = stateAt(scene, selectedCharacter, time).point; update(value => ({ ...value, objects: [...(value.objects ?? []), { id: crypto.randomUUID(), kind: 'toy-ball' as const, point: { x: p.x - 72, y: p.y } }] })); setMessage('Toy ball added near the Brightling. Use Pick up and Put down to animate it.'); }}>Add toy ball</button>{(scene.objects ?? []).map((object, index) => <div key={object.id}><strong>Toy {index + 1}</strong><label>X<input aria-label={`Toy ${index + 1} X`} type="number" value={object.point.x} onChange={event => update(value => ({ ...value, objects: value.objects?.map(item => item.id === object.id ? { ...item, point: { ...item.point, x: Number(event.target.value) } } : item) }))} /></label><label>Floor Y<input aria-label={`Toy ${index + 1} floor Y`} type="number" value={object.point.y} onChange={event => update(value => ({ ...value, objects: value.objects?.map(item => item.id === object.id ? { ...item, point: { ...item.point, y: Number(event.target.value) } } : item) }))} /></label><button onClick={() => { if (!window.confirm('Remove this toy and its actions?')) return; update(value => ({ ...value, objects: value.objects?.filter(item => item.id !== object.id), actions: value.actions.filter(item => item.objectId !== object.id) })); }}>Remove toy</button></div>)}</div></details>
         {selectedCharacter ? <><p className="director-tip">{time === 0 ? `Drag ${characterName(selectedCharacter)} on the stage to place them.` : `Direct ${characterName(selectedCharacter)} at ${fmt(time)}.`}</p><p className="eyebrow">ADD AN ACTION</p><div className="director-actions scene-action-choices">{(['walk', 'look-at', 'wait', 'wave', 'disappear', 'appear'] as ActionType[]).map(type => <button key={type} onClick={() => addAction(type)}>{actionNames[type]}</button>)}</div><details className="scene-extra-actions"><summary>More Studio actions</summary><p className="director-tip">These actions stay editable in Studio. The cartoon preview currently supports the main actions above.</p><div className="director-actions">{(Object.keys(actionNames) as ActionType[]).filter(type => !['walk', 'look-at', 'wait', 'wave', 'disappear', 'appear'].includes(type)).map(type => <button key={type} disabled={isFrameAction(type) || isGesture(type) && !supportsGesture(selectedCharacter)} title={isFrameAction(type) ? 'Batch 3 was visually rejected; this action is unavailable during repair' : isGesture(type) && !supportsGesture(selectedCharacter) ? 'Provisional frames require Max or Maxine in their original outfit' : undefined} onClick={() => addAction(type)}>{actionNames[type]}</button>)}</div></details>
@@ -295,7 +332,7 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
             <div className="director-actions">{(['take-out', 'hold', 'tap', 'communicate', 'put-away'] as PhoneActionType[]).map(type => <button key={type} onClick={() => addPhoneAction(type)}>{phoneActionNames[type]}</button>)}</div>
             <label className="phone-carry">Start this shot with the phone already in hand<select aria-label="Phone already in hand" value={scene.phoneIn ?? ''} onChange={event => update(value => ({ ...value, phoneIn: event.target.value === '' ? null : event.target.value as PhoneHand }))}><option value="">No — put it away</option><option value="right">Yes — right hand</option><option value="left">Yes — left hand</option></select></label>
             <p className="director-tip">Illustrated holding and tapping is available for Max in his original hoodie, standing still, with Bright Speak in his left hand. Other poses use the existing Bright Speak prop.</p>
-            {phoneActions.length > 0 && <ul className="phone-list" aria-label="Phone interactions">{phoneActions.map(action => <li key={action.id}><button className={selectedPhoneId === action.id ? 'active' : ''} onClick={() => { setSelectedPhoneId(action.id); setTime(action.start); setPlaying(false); }}>{phoneActionNames[action.type]} · {fmt(action.start)}</button></li>)}</ul>}
+            {phoneActions.length > 0 && <ul className="phone-list" aria-label="Phone interactions">{phoneActions.map(action => <li key={action.id}><button className={selectedPhoneId === action.id ? 'active' : ''} onClick={() => selectPhoneAction(action.id)}>{phoneActionNames[action.type]} · {fmt(action.start)}</button></li>)}</ul>}
           </div></details>
           <button className="director-remove" onClick={() => { if (!window.confirm(`Remove ${characterName(selectedCharacter)} from this scene?`)) return; const id = selectedCharacter; update(value => { const next = clone(value); delete next.characters[id]; next.actions = next.actions.filter(action => action.characterId !== id); next.phone = (next.phone ?? []).filter(action => action.characterId !== id); return next; }); setSelectedCharacter(null); setSelectedAction(null); }}>Remove Brightling</button>
         </> : <p className="director-tip">Choose a Brightling here or tap one on the stage.</p>}
@@ -312,15 +349,18 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
       {activeAction.point && <div className="inspector-edges"><span>Entrance or exit:</span><button onClick={() => changeAction(activeAction.id, { point: { x: -150, y: activeAction.point!.y } })}>← Left edge</button><button onClick={() => changeAction(activeAction.id, { point: { x: WIDTH + 150, y: activeAction.point!.y } })}>Right edge →</button></div>}
       {activeAction.point && <details className="advanced-position"><summary>Advanced position</summary><div><label>X<input aria-label="Destination X" type="number" min="-250" max={WIDTH + 250} value={activeAction.point.x} onChange={event => changeAction(activeAction.id, { point: { ...activeAction.point!, x: Number(event.target.value) } })} /></label><label>Y<input aria-label="Destination Y" type="number" min="350" max={HEIGHT + 150} value={activeAction.point.y} onChange={event => changeAction(activeAction.id, { point: { ...activeAction.point!, y: Number(event.target.value) } })} /></label></div></details>}
     </section>}
-    {selectedPosition && !activeAction && <details className="advanced-position scene-initial-advanced"><summary>Advanced starting position for {characterName(selectedCharacter!)}</summary><div><label>X<input aria-label={`${characterName(selectedCharacter!)} initial X`} type="number" value={selectedPosition.x} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, x: Number(event.target.value) })} /></label><label>Y<input aria-label={`${characterName(selectedCharacter!)} initial Y`} type="number" value={selectedPosition.y} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, y: Number(event.target.value) })} /></label></div></details>}
+    {selectedPosition && !activeAction && !selectedPhone && <details className="advanced-position scene-initial-advanced"><summary>Advanced starting position for {characterName(selectedCharacter!)}</summary><div><label>X<input aria-label={`${characterName(selectedCharacter!)} initial X`} type="number" value={selectedPosition.x} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, x: Number(event.target.value) })} /></label><label>Y<input aria-label={`${characterName(selectedCharacter!)} initial Y`} type="number" value={selectedPosition.y} onChange={event => placeInitial(selectedCharacter!, { ...selectedPosition, y: Number(event.target.value) })} /></label></div></details>}
     {selectedPhone && <section className="scene-inspector" aria-label="Selected phone interaction"><div className="inspector-heading"><div><p className="eyebrow">SELECTED PHONE INTERACTION</p><h2>{characterName(selectedPhone.characterId)} · {phoneActionNames[selectedPhone.type]}</h2></div><button onClick={() => removePhoneAction(selectedPhone.id)}>Remove interaction</button></div>
       <div className="inspector-fields">
+        {selectedPhone.type === 'communicate' && <>
+          <label className="scene-inspector-message">Message<input aria-label="Communication message" maxLength={80} placeholder="Type the message Bright Speak should show" value={communicationMessage(selectedPhone)} onChange={event => changePhone(selectedPhone.id, { message: event.target.value })} /></label>
+          <button type="button" className="scene-inspector-message" disabled={!communicationMessage(selectedPhone).trim()} onClick={() => { setPlaying(false); setTime(Math.min(scene.duration, selectedPhone.start + Math.min(0.4, selectedPhone.duration / 2))); }}>Preview message on stage</button>
+        </>}
         <label>Start at (seconds)<input aria-label="Phone interaction start time" type="number" min="0" max={scene.duration} step="0.1" value={selectedPhone.start} onChange={event => changePhone(selectedPhone.id, { start: Number(event.target.value) })} /></label>
         {selectedPhone.type !== 'tap' && <label>Length (seconds)<input aria-label="Phone interaction duration" type="number" min={selectedPhone.type === 'communicate' ? 0.8 : 0.1} max={selectedPhone.type === 'communicate' ? 12 : 3} step="0.1" value={selectedPhone.duration} onChange={event => changePhone(selectedPhone.id, { duration: Number(event.target.value) })} /></label>}
         {selectedPhone.type === 'take-out' && <label>Which hand<select aria-label="Phone hand" value={selectedPhone.hand ?? 'right'} onChange={event => changePhone(selectedPhone.id, { hand: event.target.value as PhoneHand })}><option value="right">Right hand</option><option value="left">Left hand</option></select></label>}
         {selectedPhone.type === 'communicate' && <>
-          <label>Message<input aria-label="Communication message" maxLength={80} value={selectedPhone.message ?? ''} onChange={event => changePhone(selectedPhone.id, { message: event.target.value })} /></label>
-          <label>Quick messages<select aria-label="Quick communication messages" value="" onChange={event => event.target.value && changePhone(selectedPhone.id, { message: event.target.value })}><option value="">Choose a message…</option>{PHONE_MESSAGES.map(item => <option key={item} value={item}>{item}</option>)}</select></label>
+          {professional ? <details className="scene-inspector-message"><summary>Optional message starters</summary><label>Quick messages<select aria-label="Quick communication messages" value="" onChange={event => event.target.value && changePhone(selectedPhone.id, { message: event.target.value })}><option value="">Choose a message…</option>{PHONE_MESSAGES.map(item => <option key={item} value={item}>{item}</option>)}</select></label></details> : <label>Quick messages<select aria-label="Quick communication messages" value="" onChange={event => event.target.value && changePhone(selectedPhone.id, { message: event.target.value })}><option value="">Choose a message…</option>{PHONE_MESSAGES.map(item => <option key={item} value={item}>{item}</option>)}</select></label>}
           <label>Symbol<select aria-label="Communication symbol" value={selectedPhone.symbol ?? 'food'} onChange={event => changePhone(selectedPhone.id, { symbol: event.target.value as PhoneAction['symbol'] })}>{PHONE_SYMBOLS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
           <label>Pop-up position<select aria-label="Communication pop-up position" value={selectedPhone.position ?? 'above-right'} onChange={event => changePhone(selectedPhone.id, { position: event.target.value as PhoneAction['position'] })}>{PHONE_POSITIONS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
           <label>Phone voice<select aria-label="Phone voice" value={selectedPhone.assetId ?? ''} onChange={event => changePhone(selectedPhone.id, { assetId: event.target.value || undefined, clipId: event.target.value ? selectedPhone.clipId ?? crypto.randomUUID() : undefined })}><option value="">Silent — text only</option>{speechAssets.map(asset => <option key={asset.id} value={asset.id}>{asset.name}</option>)}</select></label>
@@ -329,7 +369,12 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
       </div>
     </section>}
       </aside><CameraPanel scene={scene} time={time} selectedId={selectedCamera} onSelect={setSelectedCamera} onPreview={setCameraPreview} onChange={camera => update(value => ({ ...value, camera }))} /></div></div>
-    <SceneTimeline professional={professional} scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} selectedCamera={selectedCamera} name={characterName} onSeek={value => { setPlaying(false); setTime(value); setCameraPreview(null); }} onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); }} onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} onSelectCamera={id => { setSelectedCamera(id); setCameraPreview(null); setPlaying(false); const key = scene.camera?.find(item => item.id === id); if (key) setTime(key.start); }} onCameraTiming={key => { const camera = (scene.camera ?? []).map(item => item.id === key.id ? key : item); if (validCamera({ ...scene, camera })) update(value => ({ ...value, camera })); }} />
+    <SceneTimeline professional={professional} scene={scene} time={time} selectedCharacter={selectedCharacter} selectedAction={selectedAction} selectedPhone={selectedPhoneId} selectedCamera={selectedCamera} name={characterName}
+      onSeek={value => { setPlaying(false); setTime(value); setCameraPreview(null); }}
+      onSelectCharacter={id => { setSelectedCharacter(id); setSelectedAction(null); setSelectedPhoneId(null); }}
+      onSelectAction={selectAction} onTiming={action => changeAction(action.id, action)} onSelectPhone={selectPhoneAction}
+      onSelectCamera={id => { setSelectedCamera(id); setSelectedPhoneId(null); setCameraPreview(null); setPlaying(false); const key = scene.camera?.find(item => item.id === id); if (key) setTime(key.start); }}
+      onCameraTiming={key => { const camera = (scene.camera ?? []).map(item => item.id === key.id ? key : item); if (validCamera({ ...scene, camera })) update(value => ({ ...value, camera })); }} />
     <AudioPanel label="Scene" clips={scene.audio ?? []} assets={audioAssets} speakers={Object.keys(scene.characters).map(id => ({ id, name: characterName(id) }))} duration={scene.duration} time={time} onChange={clips => update(value => ({ ...value, audio: clips }))} onExtendDuration={seconds => update(value => ({ ...value, duration: Math.max(value.duration, Math.min(3600, seconds)) }))} onSeek={value => { setPlaying(false); setTime(value); }} />
     {validation && !validation.ok && <p role="alert" className="storage-alert">{validation.error}</p>}<p role="status" className="scene-status">{message}</p>
   </section>;

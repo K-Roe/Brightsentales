@@ -1,5 +1,13 @@
 # Cartoon production foundation — takeover list
 
+## Studio 3.1 final freeze review — 2026-10-25
+
+Karl approved the Studio 3.1 core direct-animation workflow at `ae859ef`. The requested Editable Bright Speak Message amendment is technically verified on the same isolated branch. Each Communicate Message interaction has its own free text, appears on the timeline and opens in the contextual Inspector; legacy actions without text show the original default. See `proofs/studio-3.1/bright-speak-amendment/REPORT.md` for browser, video, tests and remaining scope. **Wait for Karl's final freeze approval or changes.** Do not merge or start P3.
+
+## Studio 3.1 direct animation core — APPROVED BY KARL; historical checkpoint
+
+The Studio 3.0 shell is already merged into `main` at the Studio 3.1 baseline `35b8692`. Studio 3.1 work is isolated at `C:\Users\karlr\repos\BrightTalesStudio31` on `studio-3.1-direct-animation`. The Cartoon Editor now opens directly; the existing stage, Inspector, SceneTimeline, scene model and renderer support mouse placement, Walk destination, playhead Wave insertion, timeline edits, Play/Pause/Stop/Replay and save/reopen. Classic remains available. See `proofs/studio-3.1/REPORT.md` for the original core verification and Unity limits. Karl approved this core workflow in the amendment request; the new amendment still awaits the final freeze decision. Do not merge, promote Unity baselines or start P3.
+
 ## Current Studio 3.0 review gate
 
 The experimental `studio-3-experimental` branch is technically verified on the Phase 2 checkpoint. Review [Studio 3.0 evidence](proofs/studio-3/REPORT.md): professional shell, editor, Inspector, timeline, Classic, Settings, Unity connection, UI walkthrough and isolated Unity Game-camera run. Await Karl's visual decision before promotion or any P3 work. The P0–P2 records below remain historical; P3 is still TODO.

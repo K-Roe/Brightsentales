@@ -109,7 +109,7 @@ export default function App() {
   const [audioAssets, setAudioAssets] = useState<AudioAsset[]>([]);
   const [audioIssue, setAudioIssue] = useState<string | null>(null);
   const [sceneIssue, setSceneIssue] = useState<string | null>(() => { try { const raw = localStorage.getItem(STORAGE_KEY); return raw !== null && !parseScene(raw) ? 'Saved scene JSON is invalid. It has not been overwritten.' : null; } catch { return 'Browser scene storage is unavailable.'; } });
-  const [activeTab, setActiveTab] = useState<StudioTab>(() => workspace === 'studio3' ? 'projects' : 'characters');
+  const [activeTab, setActiveTab] = useState<StudioTab>(() => workspace === 'studio3' ? 'scenes' : 'characters');
   const [unityStatus, setUnityStatus] = useState<'connected' | 'disconnected'>('disconnected');
   const [sceneDirty, setSceneDirty] = useState(false);
   const [requestedSceneId, setRequestedSceneId] = useState<string | null>(null);
@@ -483,7 +483,7 @@ export default function App() {
     if (next === 'classic' && activeTab === 'projects') setActiveTab('characters');
   };
 
-  return <div className={`app-shell ${workspace === 'studio3' ? 'studio3-shell' : 'classic-shell'}`}>
+  return <div className={`app-shell ${workspace === 'studio3' ? `studio3-shell ${activeTab === 'scenes' ? 'editor-active' : ''}` : 'classic-shell'}`}>
     {workspace === 'studio3' ? <Studio3Sidebar activeTab={activeTab} onNavigate={navigate} /> : <aside className="studio-sidebar">
       <div className="brand"><span className="brand-star">✦</span><div><strong>BrightSenAppsTales</strong><small>2D CARTOON STUDIO</small></div></div>
       <p className="sidebar-caption">STUDIO</p>
@@ -499,7 +499,7 @@ export default function App() {
       {activeTab === 'settings' && <WorkspaceSettings workspace={workspace} appearance={appearance} onWorkspace={chooseWorkspace} onAppearance={chooseAppearance} storageIssue={workspaceIssue} />}
       {activeTab === 'characters' && <Characters library={library} thumbnails={thumbnails} inScene={sceneIds} maxOutfit={maxOutfit} onMaxOutfitChange={saveMaxOutfit} maxineOutfit={maxineOutfit} onMaxineOutfitChange={saveMaxineOutfit} storageIssue={libraryIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} sceneIssue={sceneIssue} onSave={saveBrightling} onDelete={deleteBrightling} onImport={importBrightlings} onAdd={addBrightling} onExportStudio={exportStudio} onImportStudio={importStudio} />}
       {activeTab === 'places' && <Places organisation={places} storageIssue={placesIssue ?? (recovery.ok ? null : recovery.error ?? 'Studio recovery failed.')} onSave={savePlaces} />}
-      {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} onRenderPreview={id => { setRequestedPreviewSceneId(id); navigate('unity'); }} requestedSceneId={requestedSceneId} audioAssets={audioAssets} professional={workspace === 'studio3'} leaveGuardRef={sceneLeaveGuard} onDirtyChange={setSceneDirty} />}
+      {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} onRenderPreview={id => { setRequestedPreviewSceneId(id); navigate('unity'); }} onProjects={() => navigate('projects')} onClassic={() => chooseWorkspace('classic')} requestedSceneId={requestedSceneId} audioAssets={audioAssets} professional={workspace === 'studio3'} leaveGuardRef={sceneLeaveGuard} onDirtyChange={setSceneDirty} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
       {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => navigate('scenes', id)} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}

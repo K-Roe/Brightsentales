@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { editActionTiming, type TimingEdit } from './timelineEditing';
 import type { TimedAction, TimedScene } from './timedScenes';
 import type { CameraKeyframe } from './camera';
+import { communicationMessage, phoneActionNames } from './phone';
 
 type Props = {
   professional?: boolean;
@@ -15,6 +16,8 @@ type Props = {
   onSelectAction: (id: string) => void;
   onTiming: (action: TimedAction) => void;
   selectedCamera?: string | null;
+  selectedPhone?: string | null;
+  onSelectPhone?: (id: string) => void;
   onSelectCamera?: (id: string) => void;
   onCameraTiming?: (key: CameraKeyframe) => void;
 };
@@ -27,7 +30,7 @@ const titles = {
 } as const;
 const LABEL_WIDTH = 116;
 
-export default function SceneTimeline({ professional = false, scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming, selectedCamera, onSelectCamera, onCameraTiming }: Props) {
+export default function SceneTimeline({ professional = false, scene, time, selectedCharacter, selectedAction, name, onSeek, onSelectCharacter, onSelectAction, onTiming, selectedCamera, selectedPhone, onSelectPhone, onSelectCamera, onCameraTiming }: Props) {
   const [zoom, setZoom] = useState<number | 'fit'>(professional ? 'fit' : 24);
   const [availableWidth, setAvailableWidth] = useState(0);
   const scroll = useRef<HTMLDivElement>(null);
@@ -48,7 +51,7 @@ export default function SceneTimeline({ professional = false, scene, time, selec
     onSeek(Math.max(0, Math.min(scene.duration, Math.round(seconds * 10) / 10)));
   };
   return <section className="scene-timeline" aria-label="Visual scene timeline">
-    <div className="timeline-heading"><div><h2>Timeline</h2><p>Drag a block to move it. Drag its right edge to change its length.</p></div><label>Zoom<select aria-label="Timeline zoom" value={zoom} onChange={event => setZoom(event.target.value === 'fit' ? 'fit' : Number(event.target.value))}>{professional && <option value="fit">Fit</option>}<option value="14">Far</option><option value="24">Normal</option><option value="42">Close</option></select></label></div>
+    <div className="timeline-heading"><div><h2>Timeline</h2><p>{professional ? 'Drag cartoon actions to change timing. Select Bright Speak clips to edit them in the Inspector.' : 'Drag a block to move it. Drag its right edge to change its length.'}</p></div><label>Zoom<select aria-label="Timeline zoom" value={zoom} onChange={event => setZoom(event.target.value === 'fit' ? 'fit' : Number(event.target.value))}>{professional && <option value="fit">Fit</option>}<option value="14">Far</option><option value="24">Normal</option><option value="42">Close</option></select></label></div>
     <div className="timeline-scroll" ref={scroll} tabIndex={0} aria-label="Scrollable timeline"><div className="timeline-content" style={{ width }}>
       <div className="timeline-ruler" onPointerDown={event => { seek(event); event.currentTarget.setPointerCapture(event.pointerId); }} onPointerMove={event => { if (event.currentTarget.hasPointerCapture(event.pointerId)) seek(event); }}>
         <span className="timeline-label">Time</span>{ticks.map(tick => <span className="timeline-tick" key={tick} style={{ left: LABEL_WIDTH + tick * pixelsPerSecond }}>{tick}s</span>)}
@@ -63,16 +66,26 @@ export default function SceneTimeline({ professional = false, scene, time, selec
           style={{ left: LABEL_WIDTH + action.start * pixelsPerSecond, width: Math.max(58, action.duration * pixelsPerSecond) }}
           onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelectAction(action.id); } }}
           onPointerDown={event => { event.stopPropagation(); onSelectAction(action.id); drag.current = { id: action.id, mode: (event.target as HTMLElement).closest('.timeline-resize') ? 'resize' : 'move', x: event.clientX, base: structuredClone(scene) }; event.currentTarget.setPointerCapture(event.pointerId); }}
-          onPointerMove={event => { const current = drag.current; if (!current || current.id !== action.id || !event.currentTarget.hasPointerCapture(event.pointerId)) return; const result = editActionTiming(current.base, current.id, current.mode, (event.clientX - current.x) / pixelsPerSecond); if (result) onTiming(result); }}
+          onPointerMove={event => { const current = drag.current; if (!current || current.id !== action.id) return; const result = editActionTiming(current.base, current.id, current.mode, (event.clientX - current.x) / pixelsPerSecond); if (result) onTiming(result); }}
           onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}
         ><span>{titles[action.type]}</span>{action.duration > 0 && <span className="timeline-resize" aria-hidden="true" />}</div>)}
+      </div>)}
+      {professional && onSelectPhone && lanes.filter(lane => scene.phone?.some(action => action.characterId === lane.id)).map(lane => <div className={`timeline-lane timeline-phone-lane ${selectedCharacter === lane.id ? 'selected' : ''}`} key={`phone-${lane.id}`} data-lane-kind="bright-speak">
+        <span className="timeline-label">{lane.label} · Bright Speak</span><div className="timeline-track" style={{ left: LABEL_WIDTH }} />
+        {scene.phone?.filter(action => action.characterId === lane.id).map(action => <div key={action.id} role="button" tabIndex={0} data-phone-id={action.id}
+          aria-label={`${lane.label} ${phoneActionNames[action.type]} at ${action.start} seconds${action.type === 'communicate' ? `: ${communicationMessage(action)}` : ''}`}
+          title={`${phoneActionNames[action.type]} at ${action.start}s${action.type === 'communicate' ? `: ${communicationMessage(action)}` : ''}`}
+          className={`timeline-block timeline-phone ${selectedPhone === action.id ? 'selected' : ''}`}
+          style={{ left: LABEL_WIDTH + action.start * pixelsPerSecond, width: Math.max(58, action.duration * pixelsPerSecond) }}
+          onClick={() => onSelectPhone(action.id)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelectPhone(action.id); } }}
+        ><span>{phoneActionNames[action.type]}</span></div>)}
       </div>)}
       {onSelectCamera && onCameraTiming && <div className="timeline-lane" data-lane-kind="camera"><span className="timeline-label">Camera</span><div className="timeline-track" style={{ left: LABEL_WIDTH }} />
         {(scene.camera ?? []).map(key => <div key={key.id} role="button" tabIndex={0} aria-label={`${key.shot} camera at ${key.start} seconds`} className={`timeline-block timeline-camera ${selectedCamera === key.id ? 'selected' : ''}`} style={{ left: LABEL_WIDTH + key.start * pixelsPerSecond, width: Math.max(58, key.duration * pixelsPerSecond) }}
           onClick={() => onSelectCamera(key.id)}
           onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelectCamera(key.id); } }}
           onPointerDown={event => { event.stopPropagation(); onSelectCamera(key.id); drag.current = { id: key.id, mode: (event.target as HTMLElement).closest('.timeline-resize') ? 'resize' : 'move', x: event.clientX, base: structuredClone(scene) }; event.currentTarget.setPointerCapture(event.pointerId); }}
-          onPointerMove={event => { const current = drag.current; if (!current || current.id !== key.id || !event.currentTarget.hasPointerCapture(event.pointerId)) return; const original = current.base.camera?.find(item => item.id === key.id); if (!original) return; const delta = Math.round((event.clientX - current.x) / pixelsPerSecond * 10) / 10; const next = current.mode === 'resize' ? { ...original, duration: Math.max(original.start === 0 ? 0 : .6, Math.min(15, current.base.duration - original.start, original.duration + delta)) } : { ...original, start: Math.max(0, Math.min(current.base.duration - original.duration, original.start + delta)) }; onCameraTiming(next); }}
+          onPointerMove={event => { const current = drag.current; if (!current || current.id !== key.id) return; const original = current.base.camera?.find(item => item.id === key.id); if (!original) return; const delta = Math.round((event.clientX - current.x) / pixelsPerSecond * 10) / 10; const next = current.mode === 'resize' ? { ...original, duration: Math.max(original.start === 0 ? 0 : .6, Math.min(15, current.base.duration - original.start, original.duration + delta)) } : { ...original, start: Math.max(0, Math.min(current.base.duration - original.duration, original.start + delta)) }; onCameraTiming(next); }}
           onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}><span>{key.shot === 'close-up' ? 'Close-Up' : key.shot === 'medium' ? 'Medium' : 'Wide'}</span><span className="timeline-resize" aria-hidden="true" /></div>)}
       </div>}
       <div className="timeline-playhead" style={{ left: LABEL_WIDTH + time * pixelsPerSecond }} aria-hidden="true"><span /></div>
