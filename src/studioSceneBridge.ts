@@ -11,7 +11,7 @@ export type StudioSceneConfig = {
   calmLife: boolean;
   characters: { id: 'max' | 'maxine'; x: number; y: number; facing: 'front' | 'left' | 'right' }[];
   actions: { id: string; characterId: 'max' | 'maxine'; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at'; start: number; duration: number; x: number; y: number; target: string; motion: 'gentle' | 'linear' }[];
-  camera: { id: string; shot: 'wide' | 'medium' | 'close-up'; focus: 'max' | 'maxine' | 'group' | 'point'; x: number; y: number; follow: boolean; start: number; duration: number }[];
+  camera: { id: string; shot: 'wide' | 'medium' | 'close-up' | 'custom'; focus: string; x: number; y: number; follow: boolean; start: number; duration: number; zoom: number }[];
   audioAssets?: StudioAudioAsset[];
   audio?: { id: string; assetId: string; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number }[];
 };
@@ -71,7 +71,7 @@ export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[])
     camera: (scene.camera ?? []).map(key => ({
       id: key.id, shot: key.shot, focus: key.focus,
       x: key.point?.x ?? 0, y: key.point?.y ?? 0, follow: !!key.follow,
-      start: key.start, duration: key.duration,
+      start: key.start, duration: key.duration, zoom: key.shot === 'custom' ? key.zoom ?? 2 : 0,
     })),
     ...(scene.audio?.length ? { audioAssets: media, audio: scene.audio.map(clip => ({
       id: clip.id, assetId: clip.assetId, start: clip.start, trimStart: clip.trimStart,

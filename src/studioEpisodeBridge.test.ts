@@ -53,6 +53,26 @@ describe('P4 episode transfer', () => {
     expect(JSON.stringify(config)).not.toContain('RIFF');
   });
 
+  it('transfers episode camera shots in a version 3 payload', async () => {
+    const directed: Episode = { ...episode, camera: [
+      { id: id(31), start: 0, duration: 2, shot: 'wide', target: 'max', movement: 'static' },
+      { id: id(32), start: 2, duration: 3, shot: 'medium', target: 'max', movement: 'pan' },
+      { id: id(33), start: 5, duration: 2, shot: 'custom', target: 'point', movement: 'static', x: 700, y: 500, zoom: 2.5 },
+      { id: id(34), start: 7, duration: 2, shot: 'close-up', target: 'maxine', movement: 'follow' },
+    ] };
+    const config = studioEpisodeConfig(directed, scenes);
+    expect(config.version).toBe(3);
+    expect(config.scenes[0].duration).toBe(4);
+    expect(config.camera?.map(shot => [shot.start, shot.duration, shot.shot, shot.target, shot.movement])).toEqual([
+      [0, 2, 'wide', 'max', 'static'], [2, 3, 'medium', 'max', 'pan'],
+      [5, 2, 'custom', 'point', 'static'], [7, 2, 'close-up', 'maxine', 'follow'],
+    ]);
+    expect(config.camera?.[2]).toMatchObject({ x: 700, y: 500, zoom: 2.5 });
+    expect(await studioEpisodeRevision(config)).not.toBe(await studioEpisodeRevision(studioEpisodeConfig(episode, scenes)));
+    expect(() => studioEpisodeConfig({ ...directed, camera: [{ ...directed.camera![0], target: 'other-brightling' }] }, scenes)).toThrow('not in this episode');
+    expect(() => studioEpisodeConfig({ ...directed, camera: [directed.camera![0], { ...directed.camera![1], start: 0 }] }, scenes)).toThrow('overlap');
+  });
+
   it('rejects missing scenes and unsupported intro before transfer', () => {
     expect(() => studioEpisodeConfig({ ...episode, sceneIds: [id(99)] }, scenes)).toThrow('missing saved scene');
     expect(() => studioEpisodeConfig({ ...episode, introId: id(98) }, scenes)).toThrow('intros or credits');

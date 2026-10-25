@@ -2,15 +2,17 @@ import type { AudioAsset } from './audio';
 import { episodePlaybackClips, type PlaybackClip } from './audioPlayback';
 import { episodeTimingIssue, missingSceneIds, productionBlocks, productionDuration, type Episode } from './episodes';
 import type { TimedLibrary } from './timedScenes';
+import { episodeCameraIssue } from './episodeCamera';
 import { studioSceneConfig, type StudioSceneConfig } from './studioSceneBridge';
 import { transferStudioAudioClips, type StudioAudioAsset } from './studioAudioTransfer';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
 
 export type StudioEpisodeConfig = {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   episodeId: string;
   duration: number;
   scenes: { index: number; start: number; duration?: number; transition?: { type: 'fade-black'; duration: number }; scene: StudioSceneConfig }[];
+  camera?: { id: string; start: number; duration: number; shot: 'wide' | 'medium' | 'close-up' | 'custom'; target: string; x: number; y: number; zoom: number; movement: 'static' | 'pan' | 'follow' }[];
   audioAssets: StudioAudioAsset[];
   audio: { id: string; assetId: string; source: 'scene' | 'episode'; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number }[];
 };
@@ -38,19 +40,28 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
   if (timingIssue) throw new Error(timingIssue);
   const blocks = productionBlocks(episode, library);
   const duration = productionDuration(episode, library);
+  const cameraIssue = episodeCameraIssue(episode, library, duration);
+  if (cameraIssue) throw new Error(cameraIssue);
+  if (episode.camera?.some(shot => shot.target !== 'point' && shot.target !== 'max' && shot.target !== 'maxine'))
+    throw new Error('Unity camera preview supports Max, Maxine or a fixed position. This shot targets another Brightling.');
   if (duration <= 0 || duration > 3600) throw new Error('Unity episode preview supports up to 60 minutes.');
   const clips = episodeClips(episode, library, duration);
   if (clips.length > 200) throw new Error('Unity episode preview supports up to 200 audio clips.');
   const mediaIds = new Set(media.map(asset => asset.id));
   if (mediaIds.size !== media.length || clips.some(clip => !mediaIds.has(clip.assetId)))
     throw new Error('Transfer every episode and scene audio file before sending to Unity.');
-  const version = episode.sceneSettings?.some(setting => setting.duration !== undefined || setting.transition !== undefined) ? 2 : 1;
+  const version = episode.camera?.length ? 3 : episode.sceneSettings?.some(setting => setting.duration !== undefined || setting.transition !== undefined) ? 2 : 1;
   return {
     version, episodeId: episode.id, duration,
     scenes: blocks.map(block => {
       const scene = studioSceneConfig(block.scene, media);
-      return { index: block.index, start: block.start, ...(version === 2 ? { duration: block.duration, ...(block.occurrenceIndex === undefined ? {} : { transition: episode.sceneSettings?.[block.occurrenceIndex]?.transition }) } : {}), scene: { ...scene, version: 2, audioAssets: undefined, audio: undefined } };
+      return { index: block.index, start: block.start, ...(version >= 2 ? { duration: block.duration, ...(block.occurrenceIndex === undefined ? {} : { transition: episode.sceneSettings?.[block.occurrenceIndex]?.transition }) } : {}), scene: { ...scene, version: 2, audioAssets: undefined, audio: undefined } };
     }),
+    ...(episode.camera?.length ? { camera: episode.camera.map(shot => ({
+      id: shot.id, start: shot.start, duration: shot.duration, shot: shot.shot, target: shot.target,
+      x: shot.target === 'point' ? shot.x! : 0, y: shot.target === 'point' ? shot.y! : 0,
+      zoom: shot.shot === 'custom' ? shot.zoom ?? 2 : 0, movement: shot.movement,
+    })) } : {}),
     audioAssets: media,
     audio: clips.map(clip => {
       const length = clip.trimEnd - clip.trimStart;
