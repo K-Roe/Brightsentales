@@ -1,0 +1,104 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p7-unity-KwLtEG",
+  "stages": {
+    "transferAndDecode": "PASS",
+    "playAllScenes": "PASS",
+    "replayAndReset": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "audioUploads": 1,
+  "unityCommands": [
+    "episode.load",
+    "command",
+    "episode.status",
+    "command",
+    "episode.play",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.play",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "command",
+    "episode.status",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.status",
+    "command",
+    "episode.reset",
+    "command"
+  ],
+  "transfer": {
+    "version": 2,
+    "duration": 7.5,
+    "audio": [
+      {
+        "source": "episode",
+        "start": 0,
+        "trimStart": 0,
+        "trimEnd": 7.5
+      }
+    ],
+    "scenes": [
+      {
+        "start": 0,
+        "duration": 2
+      },
+      {
+        "start": 2,
+        "duration": 4,
+        "transition": {
+          "type": "fade-black",
+          "duration": 0.6
+        }
+      },
+      {
+        "start": 6,
+        "duration": 1.5
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p7-episode-3Wzk3O",
+  "stages": {
+    "audioImport": "PASS",
+    "twoSavedScenes": "PASS",
+    "occurrenceEdit": "PASS",
+    "reorder": "PASS",
+    "independentDurations": "PASS",
+    "undoRedoAndDurationNudge": "PASS",
+    "zoomAndScrub": "PASS",
+    "fadeAuthoring": "PASS",
+    "boundaryPreview": "PASS",
+    "audioVisibility": "PASS",
+    "episodeSave": "PASS",
+    "fadePlayback": "PASS",
+    "browserBoundary": "PASS",
+    "stop": "PASS",
+    "completeEpisodeExport": "PASS",
+    "reopenEditSave": "PASS",
+    "reopenReplay": "PASS",
+    "replayControl": "PASS",
+    "reviewRecording": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "sceneIds": [
+    "3ddaff23-6c36-487f-8fe9-cc524de9d03f",
+    "aca89b98-1b1a-465f-ad4e-6edce6b8b25d",
+    "3ddaff23-6c36-487f-8fe9-cc524de9d03f"
+  ],
+  "episodeId": "f603a332-a341-4278-807d-bc6c0578ff83"
+}

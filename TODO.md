@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## P7 technical checkpoint — 2026-10-25
+
+The isolated P7 Studio editor polish is implemented and verified: zoom/scrub/audio overview, duration nudges, boundary preview, local Undo/Redo and shortcuts, Replay and direct WebM export. Studio 313/313, service/relay 12/12, build, disposable browser and complete WebM passed. Browser-to-Unity playback/replay/reset passed 1/1 against the Unity P7 head; Unity source is unchanged. See `proofs/cartoon-foundation-p7/REPORT.md`. Keep P7 unmerged. Remaining acceptance: Karl's visual/usability decision, Unity Game-view visual review and physical audio listening. Do not start Crossfade or another milestone without direction.
+
 ## P7 Episode Production Polish — authorised 2026-10-25
 
 P6 merged into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`, with passing post-merge Studio 309/309, service/relay 12/12, build and Unity episode/audio/action 4/4, 1/1, 1/1. Unity Game-view visual acceptance and physical audio listening remain pending. Begin P7 on fresh isolated Studio and Unity branches. Improve timeline navigation/zoom, occurrence duration editing, transition editing/preview, audio timeline controls, preview/replay/export usability and practical shortcuts/undo/redo. Keep Crossfade unavailable without real dual-scene support. Do not merge P7 without Karl's approval.

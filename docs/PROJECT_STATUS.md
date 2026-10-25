@@ -1,5 +1,7 @@
 # BrightTales Project Status
 
+**P7 isolated technical checkpoint (25 October 2026):** `cartoon-foundation-p7-episode-production-polish` extends the merged P6 episode editor with zoom/scrub, audio positions, duration nudges, boundary playback, local Undo/Redo and clearer Replay/WebM controls. Studio 313/313, service/relay 12/12, build, disposable browser save/reopen/replay and complete WebM pass. Real browser-to-Unity v2 episode playback/replay/reset passes 1/1 on the Unity P7 branch's exact head, which has no source changes. [P7 proof](../proofs/cartoon-foundation-p7/REPORT.md) contains media and limits. P7 is not merged; Karl's usability approval, Unity Game-view visual acceptance and physical audio listening remain pending.
+
 **P6 integrated; P7 authorised (25 October 2026):** P6 merged without conflicts into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`. Post-merge Studio 309/309, service/relay 12/12 and build passed; Unity episode 4/4, audio 1/1 and saved-action 1/1 passed. [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md) is preserved. Unity Game-view visual acceptance and physical audio listening are pending. P7 Episode Production Polish must use new isolated branches and remain unmerged until Karl approves it. Older status notes below are historical.
 
 
