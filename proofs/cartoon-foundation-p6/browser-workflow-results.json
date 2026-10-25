@@ -1,0 +1,28 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p6-episode-v1HwxP",
+  "stages": {
+    "audioImport": "PASS",
+    "twoSavedScenes": "PASS",
+    "occurrenceEdit": "PASS",
+    "reorder": "PASS",
+    "independentDurations": "PASS",
+    "fadeAuthoring": "PASS",
+    "episodeSave": "PASS",
+    "fadePlayback": "PASS",
+    "browserBoundary": "PASS",
+    "stop": "PASS",
+    "completeEpisodeExport": "PASS",
+    "reopenEditSave": "PASS",
+    "reopenReplay": "PASS",
+    "reviewRecording": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "sceneIds": [
+    "0ca2a517-f04a-4401-a5b8-154f5d24821b",
+    "df46e269-c687-46f4-b0d1-a4b50bfa112b",
+    "0ca2a517-f04a-4401-a5b8-154f5d24821b"
+  ],
+  "episodeId": "76e6e01c-78bb-4703-81f1-86472e97cf90"
+}
