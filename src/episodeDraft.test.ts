@@ -14,6 +14,10 @@ describe('episode draft comparison', () => {
     expect(episodeHasUnsavedChanges({ ...episode, creditsId: '66666666-6666-4666-8666-666666666666' }, saved)).toBe(true);
     expect(episodeHasUnsavedChanges(episode, null)).toBe(true); // New episode has no saved copy.
     expect(episodeSnapshot({ ...episode, audio: [] })).toBe(episodeSnapshot({ ...episode, audio: undefined }));
+    expect(episodeSnapshot({ ...episode, sceneSettings: [{}] })).toBe(episodeSnapshot(episode));
+    expect(episodeHasUnsavedChanges({ ...episode, sceneSettings: [{ duration: 4 }] }, saved)).toBe(true);
+    const twoScenes = { ...episode, sceneIds: [...episode.sceneIds, '55555555-5555-4555-8555-555555555555'] };
+    expect(episodeHasUnsavedChanges({ ...twoScenes, sceneSettings: [{}, { transition: { type: 'fade-black', duration: .6 } }] }, episodeSnapshot(twoScenes))).toBe(true);
   });
   it('detects order, clip timing, trim, fades, volume and removal, then clears after save', () => {
     const saved = episodeSnapshot(episode);

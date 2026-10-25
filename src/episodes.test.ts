@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { advanceSceneTime, stateAt, type TimedLibrary, type TimedScene } from './timedScenes';
-import { decodeEpisodeLibrary, episodeDuration, episodePosition, missingSceneIds, productionBlocks, productionDuration, productionPosition, speechFitsEpisode, validateEpisodeLibrary, type Episode } from './episodes';
+import { decodeEpisodeLibrary, episodeDuration, episodeFadeAt, episodePosition, episodeTimingIssue, missingSceneIds, productionBlocks, productionDuration, productionPosition, speechFitsEpisode, validateEpisodeLibrary, type Episode } from './episodes';
 import { episodePlaybackClips } from './audioPlayback';
 import type { IntroLibrary } from './introductions';
 import type { CreditsLibrary } from './credits';
@@ -29,6 +29,40 @@ describe('episode timing and references', () => {
     const repeated = { ...episode, sceneIds: [id(3), id(1), id(1)] };
     expect(episodeDuration(repeated, scenes)).toBe(28);
     expect(episodePosition(repeated, scenes, 18)?.index).toBe(2);
+  });
+  it('gives repeated occurrences independent durations without changing their source scene', () => {
+    const edited: Episode = { ...episode, sceneIds: [id(1), id(2), id(1)], sceneSettings: [{ duration: 4 }, {}, { duration: 6 }] };
+    expect(productionBlocks(edited, scenes).map(block => [block.start, block.duration])).toEqual([[0, 4], [4, 15], [19, 6]]);
+    expect(episodeDuration(edited, scenes)).toBe(25);
+    expect(episodePosition(edited, scenes, 4)).toMatchObject({ index: 1, start: 4, localTime: 0 });
+    expect(episodePosition(edited, scenes, 24)).toMatchObject({ index: 2, start: 19, localTime: 5 });
+    expect(scenes.scenes[0].duration).toBe(10);
+    expect(decodeEpisodeLibrary(JSON.stringify({ version: 1, episodes: [edited] })).ok).toBe(true);
+    expect(episodeTimingIssue(edited, scenes)).toBeNull();
+  });
+  it('keeps hard cuts by default and centres a bounded black fade on a boundary', () => {
+    const edited: Episode = { ...episode, sceneIds: [id(1), id(2)], sceneSettings: [{ duration: 4 }, { duration: 5, transition: { type: 'fade-black', duration: 1 } }] };
+    expect(episodeFadeAt(episode, scenes, 10)).toBe(0);
+    expect(episodeFadeAt(edited, scenes, 3.5)).toBe(0);
+    expect(episodeFadeAt(edited, scenes, 3.75)).toBeCloseTo(.5);
+    expect(episodeFadeAt(edited, scenes, 4)).toBe(1);
+    expect(episodeFadeAt(edited, scenes, 4.25)).toBeCloseTo(.5);
+    expect(episodeFadeAt(edited, scenes, 4.5)).toBe(0);
+    expect(episodePosition(edited, scenes, 4)?.index).toBe(1);
+    expect(episodeTimingIssue(edited, scenes)).toBeNull();
+    expect(episodeTimingIssue({ ...edited, sceneSettings: [{ duration: .4 }, edited.sceneSettings![1]] }, scenes)).toMatch(/Fade duration/);
+    expect(validateEpisodeLibrary({ version: 1, episodes: [{ ...edited, sceneSettings: [{}, { transition: { type: 'fade-black', duration: 3 } }] }] }).ok).toBe(false);
+    expect(validateEpisodeLibrary({ version: 1, episodes: [{ ...edited, sceneSettings: [{}] }] }).ok).toBe(false);
+  });
+  it('trims scene audio to each occurrence while episode music keeps its global clock', () => {
+    const clip = { id: id(91), assetId: id(92), start: 2, trimStart: 0, trimEnd: 8, volume: 1, fadeIn: 0, fadeOut: 0 };
+    const withAudio: TimedLibrary = { version: 1, scenes: [{ ...scenes.scenes[0], audio: [clip] }] };
+    const edited: Episode = { ...episode, sceneIds: [id(1), id(1)], sceneSettings: [{ duration: 4 }, { duration: 6 }], audio: [{ ...clip, id: id(93), start: 0, trimEnd: 10 }] };
+    expect(episodePlaybackClips(edited, withAudio).map(item => [item.source, item.start, item.trimEnd, item.key])).toEqual([
+      ['episode', 0, 10, `episode:${id(93)}`],
+      ['scene', 2, 2, `scene:0:${id(91)}`],
+      ['scene', 6, 4, `scene:1:${id(91)}`],
+    ]);
   });
   it('blocks playback when a referenced scene is missing and validates persisted data', () => {
     const missing = { ...episode, sceneIds: [...episode.sceneIds, id(90)] };
