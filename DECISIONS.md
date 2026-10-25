@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — Studio 3.1 approval and P3 local media policy
+
+Karl's explicit final approval freezes Studio 3.1 at `b2218a8`; no-ff merge `1d9d1068f9258f8bbeac0b049f3fb8afe9422518` is pushed main. Implement P3 on new isolated Studio and Unity branches. Keep browser Audio Library blobs as the source of truth; relay only referenced media in the local Studio launcher, bounded in memory and verified by SHA-256, outside command JSON. The Unity scene player may use a v3 audio config while v2 remains valid for existing no-audio scenes. Do not reinterpret single-scene audio as complete episode music continuity. The isolated P3 branch requires Karl's visual/listening review before any merge; do not start P4.
+
 ## 2026-10-24 — Phase 2 technical verification and visual gate
 
 Keep Phase 2 on separate experimental branches. The real browser-to-Unity run revealed that `motion: "linear"` on ordinary actions was rejected by Unity despite being serialized by Studio; permit that default, reserve `gentle` for Walk, and verify through the full fresh-profile workflow. Both Unity runs, reset/replay, Studio 290/290 and build, browser WebM export and review MP4 decode passed. Preserve approved V1.1 and Phase 1 recovery refs. Karl must judge the Phase 2 video and UI screenshots before P3, baseline promotion or merge. See `proofs/cartoon-foundation-phase2/REPORT.md`.

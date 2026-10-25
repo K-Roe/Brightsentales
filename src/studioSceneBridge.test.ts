@@ -45,8 +45,21 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
     expect(() => studioSceneConfig({ ...sceneWithCamera, life: { enabled: true, mode: 'v2', ambience: true } })).toThrow('Calm Life');
   });
 
-  it('rejects unsupported audio and rejected frame actions before transfer', () => {
-    expect(() => studioSceneConfig({ ...scene, audio: [{ id: actionId, assetId: actionId, start: 0, volume: 1, trimStart: 0, trimEnd: 1, fadeIn: 0, fadeOut: 0 }] })).toThrow('Scene audio');
+  it('transfers timed audio references in v3 without media bytes in scene JSON', async () => {
+    const clip = { id: actionId, assetId: '33333333-3333-4333-8333-333333333333', start: 2, volume: .6, trimStart: 0, trimEnd: 2, fadeIn: .3, fadeOut: .2 };
+    const withAudio = { ...scene, audio: [clip] };
+    const media = [{ id: clip.assetId, kind: 'speech' as const, mime: 'audio/wav', duration: 2, size: 10, sha256: 'a'.repeat(64), url: 'http://127.0.0.1:4177/api/studio-audio/' + 'b'.repeat(48) }];
+    expect(() => studioSceneConfig(withAudio)).toThrow('Transfer every scene audio file');
+    const config = studioSceneConfig(withAudio, media);
+    expect(config).toMatchObject({ version: 3, audio: [{ assetId: clip.assetId, start: 2, volume: .6 }], audioAssets: media });
+    expect(JSON.stringify(config)).not.toContain('RIFF');
+    expect(await studioSceneRevision({ ...config, audio: [{ ...config.audio![0], start: 3 }] })).not.toBe(await studioSceneRevision(config));
+    const longMusic = { ...withAudio, audio: [{ ...clip, start: 9, trimEnd: 2 }] };
+    expect(studioSceneConfig(longMusic, media).audio![0].trimEnd).toBe(1);
+    expect(longMusic.audio[0].trimEnd).toBe(2);
+  });
+
+  it('rejects rejected frame actions and unsupported Bright Speak before transfer', () => {
     expect(() => studioSceneConfig({ ...scene, actions: [{ ...scene.actions[0], type: 'sit-down', artwork: 'provisional-v1', seat: 'chair', point: undefined }] })).toThrow();
     expect(() => studioSceneConfig({ ...scene, phone: [{ id: '33333333-3333-4333-8333-333333333333', characterId: 'max', type: 'communicate', start: 0, duration: 2, message: 'Can I have a drink?', symbol: 'drink', position: 'above-right' }] })).toThrow('Bright Speak is not supported by Unity playback yet.');
   });

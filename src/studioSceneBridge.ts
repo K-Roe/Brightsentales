@@ -1,9 +1,10 @@
 import { clampPoint } from './scene';
 import { validateTimedLibrary, type TimedScene } from './timedScenes';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
+import type { StudioAudioAsset } from './studioAudioTransfer';
 
 export type StudioSceneConfig = {
-  version: 2;
+  version: 2 | 3;
   sceneId: string;
   environment: 'living-room';
   duration: number;
@@ -11,12 +12,14 @@ export type StudioSceneConfig = {
   characters: { id: 'max' | 'maxine'; x: number; y: number; facing: 'front' | 'left' | 'right' }[];
   actions: { id: string; characterId: 'max' | 'maxine'; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at'; start: number; duration: number; x: number; y: number; target: string; motion: 'gentle' | 'linear' }[];
   camera: { id: string; shot: 'wide' | 'medium' | 'close-up'; focus: 'max' | 'maxine' | 'group' | 'point'; x: number; y: number; follow: boolean; start: number; duration: number }[];
+  audioAssets?: StudioAudioAsset[];
+  audio?: { id: string; assetId: string; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number }[];
 };
 
 export type StudioSceneAction = 'load' | 'play' | 'status' | 'reset';
 export type StudioSceneReply = {
   source: 'unity'; version: 5; command: `studio.${StudioSceneAction}`; runId: string; sceneId: string;
-  revision: string; status: 'idle' | 'loaded' | 'playing' | 'complete'; elapsed: number; duration: number; reason: string;
+  revision: string; status: 'idle' | 'loading' | 'loaded' | 'playing' | 'complete'; elapsed: number; duration: number; reason: string;
 };
 
 /** Fingerprints the actual supported payload, including saved positions and action timing. */
@@ -26,12 +29,14 @@ export async function studioSceneRevision(config: StudioSceneConfig): Promise<st
 }
 
 /** Transfers only artwork and actions with a faithful mapping in the isolated Unity scene. */
-export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
+export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[]): StudioSceneConfig {
   if (scene.placeId !== 'living-room') throw new Error('Unity currently supports the approved Living Room artwork only.');
   const validated = validateTimedLibrary({ version: 1, scenes: [scene] }, ['living-room']);
   if (!validated.ok) throw new Error(validated.error);
   if (scene.duration > 120) throw new Error('Unity saved-scene playback is limited to 120 seconds.');
-  if (scene.audio?.length) throw new Error('Scene audio is not supported by Unity playback yet.');
+  if (scene.audio?.length && (!media || new Set(media.map(asset => asset.id)).size !== media.length ||
+      scene.audio.some(clip => !media.some(asset => asset.id === clip.assetId))))
+    throw new Error('Transfer every scene audio file before sending this scene to Unity.');
   if (scene.phone?.length || scene.phoneIn) throw new Error('Bright Speak is not supported by Unity playback yet.');
   if (scene.objects?.length) throw new Error('Scene objects are not supported by Unity playback yet.');
   if (scene.life && (scene.life.mode !== 'v2' || scene.life.ambience !== false) || scene.livingWorld)
@@ -48,7 +53,7 @@ export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
       throw new Error(`${action.type} destination is outside the approved Unity stage.`);
   }
   return {
-    version: 2, sceneId: scene.id, environment: 'living-room', duration: scene.duration,
+    version: scene.audio?.length ? 3 : 2, sceneId: scene.id, environment: 'living-room', duration: scene.duration,
     calmLife: scene.life?.mode === 'v2',
     characters: ids.map(id => {
       const point = scene.characters[id];
@@ -68,6 +73,11 @@ export function studioSceneConfig(scene: TimedScene): StudioSceneConfig {
       x: key.point?.x ?? 0, y: key.point?.y ?? 0, follow: !!key.follow,
       start: key.start, duration: key.duration,
     })),
+    ...(scene.audio?.length ? { audioAssets: media, audio: scene.audio.map(clip => ({
+      id: clip.id, assetId: clip.assetId, start: clip.start, trimStart: clip.trimStart,
+      trimEnd: Math.min(clip.trimEnd, clip.trimStart + scene.duration - clip.start),
+      volume: clip.volume, fadeIn: clip.fadeIn, fadeOut: clip.fadeOut,
+    })) } : {}),
   };
 }
 
@@ -104,7 +114,7 @@ export async function studioSceneCommand(action: StudioSceneAction, runId: strin
   if (!response.ok) throw new Error(typeof reply.reason === 'string' ? reply.reason : `Unity returned HTTP ${response.status}.`);
   if (reply.source !== 'unity' || reply.version !== 5 || reply.command !== `studio.${action}` ||
       reply.runId !== runId || reply.sceneId !== sceneId || reply.revision !== revision ||
-      !['idle', 'loaded', 'playing', 'complete'].includes(String(reply.status)) ||
+      !['idle', 'loading', 'loaded', 'playing', 'complete'].includes(String(reply.status)) ||
       typeof reply.elapsed !== 'number' || !Number.isFinite(reply.elapsed) ||
       typeof reply.duration !== 'number' || !Number.isFinite(reply.duration) ||
       response.status !== (action === 'status' ? 200 : 202))
