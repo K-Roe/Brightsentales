@@ -21,7 +21,7 @@ The existing Unity bridge sends camera episodes as version 3 while retaining ver
 ## Automated verification
 
 - Studio full suite: `npm test -- --run` — 325/325 passed.
-- Service and relay: `npm run test:service` — 12/12 passed in the completed run. A subsequent repeat emitted all passing test cases but left a Node process lingering; that repeat was interrupted after the results, so it is not counted as a clean run.
+- Service and relay: `npm run test:service` — a completed clean run passed 12/12. A subsequent normal rerun emitted passing cases but left Node lingering; a `--test-force-exit` attempt triggered a Windows libuv assertion in the relay worker. Those reruns are not counted as clean evidence; the earlier clean 12/12 run is the reported result.
 - Production build: `npm run build` passed with `VITE_UNITY_BRIDGE_PORT=17844`; Vite reported its existing large-chunk advisory.
 - Unity episode/camera regression: 5/5 passed (`unity-episode-regression.xml`).
 - Unity saved-scene player regression: 1/1 passed (`unity-scene-player-regression.xml`).
