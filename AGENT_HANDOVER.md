@@ -1,5 +1,9 @@
 # Cartoon foundation agent handover — 2026-10-25
 
+## P5 Episode Production Workflow — 2026-10-25
+
+Karl's current P5 authorisation supersedes the historical Unity MP4-export label. Isolated Studio worktree: `C:\Users\karlr\repos\BrightTalesP5Episode`; isolated Unity worktree: `C:\Users\karlr\repos\BrightTalesP5Unity`; both branch `cartoon-foundation-p5-episode-production` from pushed P4 integration. Episode Maker reuses `Episode.sceneIds`, global production clock, P3 audio playback and P4 Unity episode preview. Studio now has scene occurrence selection, drag/arrow reorder, duplicate/remove, contextual timing inspector, timeline ruler/playhead, obvious Preview Episode and Stop, source thumbnails, and intro/credits unsaved-change protection. Studio 304/304 tests, service/relay 12/12 and build pass. Disposable-browser P5 creation/music/occurrence edits/save/reopen/replay passed with no console or failed-request errors. See `proofs/cartoon-foundation-p5/REPORT.md`. P5 must not merge without Karl approval; no Unity P5 source edits were needed. Historical sections follow.
+
 ## P4 integration and P5 authority — 2026-10-25
 
 Karl authorised merging P4 and beginning P5 Episode Production Workflow on isolated branches. P4 merged without conflicts into Studio `main` at `e04c17fb2d6624b55cd07228acfd3d9d6e382a57` and Unity `cartoon-foundation` at `b8821b089adcb87ab6b2f9f31119f982f1a63690`; both merge trees equal their P4 branch tips. Unity target is pushed. Post-merge Studio: 302/302 tests, 12/12 service/relay tests, build pass. Unity episode 2/2, scene audio 1/1, saved-scene action/clock 1/1. P5 is the newly authorised episode authoring workflow, not the older roadmap's MP4-export label. Keep P5 isolated and do not merge without Karl's approval. Historical gates below reflect prior authorisations.

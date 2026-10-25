@@ -1,5 +1,7 @@
 # Batch review for Karl
 
+**P5 episode production review (25 October 2026):** P4 is merged and pushed. P5 is technically verified on isolated Studio/Unity `cartoon-foundation-p5-episode-production` branches and remains unmerged. [P5 proof](../proofs/cartoon-foundation-p5/REPORT.md) includes the episode workspace, scene Inspector, timeline, browser save/reopen/replay, screenshots and walkthrough. Karl's full visual/usability review is pending. Older review gates below are historical under the current foundation authorisation.
+
 **Foundation authorisation update (25 October 2026):** Karl authorised continuous Studio/Unity foundation development, overriding routine milestone visual/listening pauses for P3/P4. This does not change historical artwork approvals or rejected animation gates. P3 integration and isolated P4 proof are recorded in [P4 report](../proofs/cartoon-foundation-p4/REPORT.md); the older batch review entries below remain historical.
 
 **Studio 3.1 Bright Speak amendment (25 October 2026): FINAL FREEZE REVIEW PENDING.** Karl approved the core editor workflow. Review the [editable message Inspector, timeline clips, two custom pop-ups, Classic playback and ten-second video](../proofs/studio-3.1/bright-speak-amendment/REPORT.md). Each Communicate Message clip keeps its own text across save/reopen/edit; older message-less actions keep the default. Tests and browser checks are technical evidence, not Karl's final approval. No merge or P3 work.

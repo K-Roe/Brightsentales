@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## Current P5 Episode Production Workflow — 2026-10-25
+
+Karl authorised P4 integration and P5 episode authoring. P4 is merged/pushed to Studio `main` `a2fd628d15536352df53ac4dda762a3a5f0e7a76` (merge `e04c17fb`) and Unity `cartoon-foundation` `b8821b089adcb87ab6b2f9f31119f982f1a63690`. P5 is isolated on `cartoon-foundation-p5-episode-production`: episode scene occurrence reorder/duplicate/remove, contextual properties, timeline/playhead, browser preview/transport, existing episode audio and save/reopen. Tests 304/304, service 12/12, build and disposable browser passed. Final proof/branch pushes are pending. The older P5 Unity MP4-export item below is outside Karl's current P5 scope. Do not merge P5 without Karl approval.
+
 ## P4 development checkpoint — 2026-10-25
 
 P3 integration is pushed to Studio `main` and Unity `cartoon-foundation`. P4 saved-episode playback is implemented on isolated `cartoon-foundation-p4-episode-playback` branches in `C:\Users\karlr\repos\BrightTalesP4Episode` and `C:\Users\karlr\repos\BrightTalesP4Unity`. The existing episode sequence, browser preview and saved data remain canonical. Unity preview now transfers repeated scene occurrences, plays across cuts on one clock, keeps episode music through boundaries, and supports Play/Pause/Stop/Replay/Reset. Studio 302/302 tests, 12/12 service tests, build, browser save/reopen/replay, Unity episode Play Mode 2/2, P3 audio and P2 regression 1/1 each, and browser-to-Unity episode run 1/1 passed. See `proofs/cartoon-foundation-p4/REPORT.md` for exact evidence and limits. P4 remains on branches rather than merged `main`.

@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — P5 episode production scope
+
+Karl's new P5 Episode Production Workflow supersedes the earlier P5 MP4-export label for this milestone. Keep `Episode` v1 and the existing browser/Unity clocks. A scene occurrence refers to its source scene; duration and actions come from that source. Reordering, duplication and removal operate on occurrence positions. Editing the source remains an explicit action and affects every reference. Scene transitions remain the existing hard cuts. Unity P5 source changes are unnecessary for this interface milestone; unsupported Unity mappings still report their limits. P5 remains isolated until Karl approves its merge.
+
 ## 2026-10-25 — P4 episode sequencing
 
 Use existing `Episode.sceneIds`, `productionBlocks`, `episodePlaybackClips`, local media relay and experimental `StudioScenePlayer`. Repeated scene IDs are separate indexed occurrences. The transition is a cut, matching current browser episode playback; do not invent a new transition schema. Episode music follows global time across cuts; scene clips follow each occurrence's local time and scene music ducks under episode music. Keep `studio.*` scene commands valid and use separate versioned `episode.*` commands for the larger payload. Explicitly reject Unity intro/credits, Bright Speak and unsupported artwork/places until they have faithful mappings; browser playback remains available. No P5 export or schema migration is part of P4.

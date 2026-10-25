@@ -1,5 +1,9 @@
 # Application architecture
 
+## P5 episode production UI (2026-10-25)
+
+`EpisodeMaker.tsx` continues to edit canonical `Episode` v1 `sceneIds` and `audio`. `EpisodeSequencePanel.tsx` presents occurrence selection, order, timeline ruler and global playhead; `episodeSequence.ts` edits references by occurrence index without changing saved source scenes. The contextual inspector reports source timing and offers sequence operations. Browser playback remains `productionPosition` plus `useAudioPlayback` on the global episode clock. Unity transfer remains P4's `studioEpisodeBridge.ts`. The v1 episode/backup format, P3 audio relay and P4 scene player are unchanged.
+
 ## P4 saved episode playback (2026-10-25)
 
 `Episode.sceneIds` and `productionBlocks` remain the ordered source of truth. Repeated scene IDs become separate occurrences with their own `index` and `start`; no episode schema or storage migration is introduced. `EpisodeMaker.tsx` retains its browser playback, audio, WebM and save/reopen flow and adds a compact `EpisodeUnityPreview` for saved episodes. Browser playback and Unity preview both use cuts at scene boundaries. Intros and credits remain available in the browser and are explicitly rejected by the current Unity episode preview.
