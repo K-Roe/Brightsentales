@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## 2026-10-25 integration update
+
+Karl authorised continuous foundation development and explicitly requested P3 integration followed by P4. This supersedes the historical review stops below. P3 has been merged locally into Studio `main` at `2cc5a95d7b7f41b0072c9adddff9ecfc5652926b` and Unity `cartoon-foundation` at `4041a103902bd333db8a4427699d812534e7afa0`. Studio post-merge tests: 298/298; voice-service: 12/12; production build: pass. Unity post-merge test and remote pushes are being completed. P4 scope remains the complete saved-episode playback task below. Preserve frozen V1.1 and Studio 3.1 behavior.
+
 ## Current P3 checkpoint — isolated technical proof, review pending
 
 Studio 3.1 is finally approved and pushed to `main` at merge `1d9d1068f9258f8bbeac0b049f3fb8afe9422518`. The current P3 branches add local audio transfer and Unity scene-clock playback without changing saved scene data or the approved Studio 3.1 editor. Studio 298/298, service 12/12, build, Unity audio Play Mode 1/1, Phase 2 regression 1/1 and browser-to-Unity audio run 1/1 passed. See `proofs/cartoon-foundation-p3/REPORT.md`. P3 still needs Karl's visual/listening review and further work on cross-scene music with P4's episode clock; do not merge P3 or start P4.

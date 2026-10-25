@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — Continuous foundation authorisation and P3 integration
+
+Karl's latest explicit instruction supersedes the earlier P3/P4 visual approval pauses. Merge tested P3 with history preserved; Studio uses `main`, while Unity uses its existing `cartoon-foundation` integration branch because that repository has no `main`. Preserve the frozen Unity V1.1 branch and Studio 3.1 workflow. Implement P4 on isolated branches using existing episode, scene, audio and localhost bridge models; do not begin P5 or expand the data format without a proven need.
+
 ## 2026-10-25 — Studio 3.1 approval and P3 local media policy
 
 Karl's explicit final approval freezes Studio 3.1 at `b2218a8`; no-ff merge `1d9d1068f9258f8bbeac0b049f3fb8afe9422518` is pushed main. Implement P3 on new isolated Studio and Unity branches. Keep browser Audio Library blobs as the source of truth; relay only referenced media in the local Studio launcher, bounded in memory and verified by SHA-256, outside command JSON. The Unity scene player may use a v3 audio config while v2 remains valid for existing no-audio scenes. Do not reinterpret single-scene audio as complete episode music continuity. The isolated P3 branch requires Karl's visual/listening review before any merge; do not start P4.

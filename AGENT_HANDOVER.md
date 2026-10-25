@@ -1,5 +1,9 @@
 # Cartoon foundation agent handover — 2026-10-25
 
+## Latest integration handover — 2026-10-25
+
+Karl explicitly authorised continuous foundation development and instructed P3 integration, then P4 Episode Playback. The former P3 review stop below is historical. Studio `main` merged P3 without conflicts at `2cc5a95d7b7f41b0072c9adddff9ecfc5652926b`; Unity has no `main`, so its existing `cartoon-foundation` integration branch merged P3 at `4041a103902bd333db8a4427699d812534e7afa0`. Studio post-merge: 298/298 tests, 12/12 voice-service/relay tests and production build pass. Unity post-merge Play Mode and pushes are pending. The original Unity `cartoon-engine-v1-1-approved` worktree contains unrelated untracked files and was not modified. P4 scope is `TODO.md`'s saved-episode playback using the existing `Episode`, scene/audio bridge and experimental Unity player. Start P4 in new isolated Studio and Unity worktrees after P3 integration is pushed and verified.
+
 ## Current handover — approved Studio 3.1 baseline and isolated P3 audio
 
 Karl's final Studio 3.1 approval is recorded for `b2218a86312b787220181b983feda083bf31f69d`. The approved branch was clean and matched its remote; main was unchanged from `35b8692` before the no-conflict, no-ff merge. Pushed `main` is `1d9d1068f9258f8bbeac0b049f3fb8afe9422518`; its tree matches the approved Studio 3.1 branch. On merged main, Studio 295/295, voice-service 11/11 and build passed. Do not modify the approved Studio 3.1 workflow during P3.
