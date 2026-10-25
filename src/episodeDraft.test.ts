@@ -10,6 +10,8 @@ describe('episode draft comparison', () => {
     expect(episodeHasUnsavedChanges(structuredClone(episode), saved)).toBe(false);
     expect(episodeHasUnsavedChanges(null, saved)).toBe(false);
     expect(episodeHasUnsavedChanges({ ...episode, name: 'Changed' }, saved)).toBe(true);
+    expect(episodeHasUnsavedChanges({ ...episode, introId: '55555555-5555-4555-8555-555555555555' }, saved)).toBe(true);
+    expect(episodeHasUnsavedChanges({ ...episode, creditsId: '66666666-6666-4666-8666-666666666666' }, saved)).toBe(true);
     expect(episodeHasUnsavedChanges(episode, null)).toBe(true); // New episode has no saved copy.
     expect(episodeSnapshot({ ...episode, audio: [] })).toBe(episodeSnapshot({ ...episode, audio: undefined }));
   });

@@ -1,0 +1,23 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p5-episode-nppHI0",
+  "stages": {
+    "audioImport": "PASS",
+    "twoSavedScenes": "PASS",
+    "occurrenceEdit": "PASS",
+    "reorder": "PASS",
+    "episodeSave": "PASS",
+    "browserBoundary": "PASS",
+    "stop": "PASS",
+    "reopenReplay": "PASS",
+    "reviewRecording": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "sceneIds": [
+    "2a90cb01-4dd3-4f57-be25-a4e3e7981ff6",
+    "35f1af14-b406-4288-a2f6-666de2b75b00",
+    "2a90cb01-4dd3-4f57-be25-a4e3e7981ff6"
+  ],
+  "episodeId": "52532cf7-cf1a-4441-ace1-a5336cc9d672"
+}

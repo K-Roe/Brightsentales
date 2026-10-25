@@ -6,6 +6,8 @@ export function episodeSnapshot(episode: Episode): string {
     id: episode.id,
     name: episode.name,
     sceneIds: episode.sceneIds,
+    introId: episode.introId ?? null,
+    creditsId: episode.creditsId ?? null,
     audio: [...(episode.audio ?? [])].sort((left, right) => left.id.localeCompare(right.id)).map(clip => ({
       id: clip.id, assetId: clip.assetId, start: clip.start, trimStart: clip.trimStart,
       trimEnd: clip.trimEnd, volume: clip.volume, fadeIn: clip.fadeIn, fadeOut: clip.fadeOut,
