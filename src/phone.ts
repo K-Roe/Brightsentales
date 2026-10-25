@@ -92,6 +92,9 @@ export const PHONE_MESSAGES: readonly string[] = [
   'It hurts.',
 ];
 
+/** Older saved interactions may omit message; keep their original starter text. */
+export const communicationMessage = (action: Pick<PhoneAction, 'message'>): string => action.message ?? PHONE_MESSAGES[0];
+
 export const isPhoneSymbol = (value: unknown): value is PhoneSymbolId => PHONE_SYMBOLS.some(item => item.id === value);
 export const isPhonePosition = (value: unknown): value is PhonePopupPosition => PHONE_POSITIONS.some(item => item.id === value);
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
@@ -135,7 +138,7 @@ export function validatePhoneActions(value: unknown, options: { sceneDuration: n
     if (type === 'tap' && (action.message !== undefined || action.symbol !== undefined || action.assetId !== undefined || action.clipId !== undefined)) return { ok: false, error: 'Only Communicate Message can carry a message or a voice.' };
     if (type === 'hold' && (action.message !== undefined || action.symbol !== undefined || action.assetId !== undefined || action.clipId !== undefined)) return { ok: false, error: 'Only Communicate Message can carry a message or a voice.' };
     if (type === 'communicate') {
-      if (typeof action.message !== 'string' || !action.message.trim() || action.message !== action.message.trim() || action.message.length > 80) return { ok: false, error: 'A communication message must be 1 to 80 characters.' };
+      if (action.message !== undefined && (typeof action.message !== 'string' || !action.message.trim() || action.message.length > 80)) return { ok: false, error: 'A communication message must be 1 to 80 characters.' };
       if (!isPhoneSymbol(action.symbol)) return { ok: false, error: 'Choose a communication symbol.' };
       if (!isPhonePosition(action.position)) return { ok: false, error: 'Choose where the communication pop-up appears.' };
       if (action.duration < 0.8) return { ok: false, error: 'A communication pop-up needs at least 0.8 seconds to read.' };
@@ -200,7 +203,7 @@ export function phoneStateAt(scene: { phone?: PhoneAction[]; phoneIn?: PhoneHand
       const fade = Math.min(PHONE_FADE_SECONDS, action.duration / 2);
       const opacity = local < fade ? smooth(clamp01(local / fade)) : 1 - smooth(clamp01((local - (action.duration - fade)) / fade));
       popup = {
-        message: action.message ?? '',
+        message: communicationMessage(action),
         symbol: (action.symbol ?? 'help') as PhoneSymbolId,
         position: (action.position ?? 'above-right') as PhonePopupPosition,
         opacity: clamp01(opacity),

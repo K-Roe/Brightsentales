@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:4178/",
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\bright-speak-amendment-HpOWFN",
+  "stages": {
+    "firstCustomMessage": "PASS",
+    "independentMessages": "PASS",
+    "reopenAndSelect": "PASS",
+    "editSaveReplay": "PASS",
+    "classicPlayback": "PASS"
+  },
+  "errors": [],
+  "requestsFailed": [],
+  "sceneId": "b26f11d7-7ba5-4a03-8606-df00b07357b2",
+  "phoneActions": [
+    {
+      "id": "8c5908bd-af51-470a-86eb-8a9dea45ed07",
+      "type": "take-out",
+      "start": 0,
+      "duration": 0.55
+    },
+    {
+      "id": "7194a0cb-bf59-47ca-862c-3dc240d53eb1",
+      "type": "communicate",
+      "start": 0.55,
+      "duration": 3,
+      "message": "Can I have a drink?"
+    },
+    {
+      "id": "d5d5279c-fe19-403b-9ffb-f550defbd3f7",
+      "type": "communicate",
+      "start": 3.55,
+      "duration": 3,
+      "message": "Thank you!"
+    }
+  ]
+}

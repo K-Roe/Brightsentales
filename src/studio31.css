@@ -43,6 +43,11 @@
 .studio31-assets button>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .studio31-assets small{display:block;margin-top:2px;color:var(--ui-muted);font-size:9px;font-weight:500}
 .studio3-shell.editor-active .scene-visual .scene-stage canvas{cursor:crosshair}
+.studio3-shell.editor-active .timeline-phone-lane .timeline-label{font-size:10px;line-height:1.2}
+.studio3-shell.editor-active .timeline-phone{cursor:pointer!important;border-color:var(--ui-accent);color:var(--ui-text);background:var(--ui-accent-soft)}
+.studio3-shell.editor-active .timeline-phone>span{overflow:hidden;text-overflow:ellipsis}
+.studio3-shell.editor-active .scene-inspector-message{grid-column:1/-1}
+.studio3-shell.editor-active .scene-inspector-message input{width:100%}
 @media(max-width:1180px){.studio3-shell.editor-active .scene-visual .scene-stage-main,.studio3-shell.editor-active .scene-visual .scene-stage-main.hierarchy-collapsed{grid-template-columns:var(--studio31-left,184px) minmax(0,1fr)}.studio3-shell.editor-active .scene-inspector-rail{grid-column:2;grid-row:2;max-height:none;overflow:visible}}
 @media(max-width:900px){.studio3-shell.editor-active{display:block}.studio3-shell.editor-active .studio3-sidebar{height:auto}.studio3-shell.editor-active .studio3-sidebar-scroll{padding:4px 10px}.studio3-shell.editor-active .studio3-nav button{min-width:40px}.studio3-shell.editor-active .studio3-sidebar-footer{padding:4px 10px}.studio3-shell.editor-active .studio3-brand{display:none}}
 @media(max-width:700px){.studio3-shell.editor-active .scene-visual .scene-stage-main,.studio3-shell.editor-active .scene-visual .scene-stage-main.hierarchy-collapsed{grid-template-columns:1fr}.studio3-shell.editor-active .scene-inspector-rail{grid-column:1;grid-row:auto}.studio31-menu{overflow-x:auto;overflow-y:visible}.studio31-menu details{flex:none}}

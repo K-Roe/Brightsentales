@@ -1,6 +1,8 @@
 # Batch review for Karl
 
-**Studio 3.1 Direct Animation (25 October 2026): AWAITING KARL'S VISUAL REVIEW.** The isolated branch `studio-3.1-direct-animation` opens the Cartoon Editor directly and supports mouse placement, Walk destination, Wave at the playhead, timeline editing and save/reopen. Review the [screenshots, walkthrough and exact verification limits](../proofs/studio-3.1/REPORT.md). Classic and existing production paths remain available. This does not approve a new animation, merge Studio 3.1 or advance P3.
+**Studio 3.1 Bright Speak amendment (25 October 2026): FINAL FREEZE REVIEW PENDING.** Karl approved the core editor workflow. Review the [editable message Inspector, timeline clips, two custom pop-ups, Classic playback and ten-second video](../proofs/studio-3.1/bright-speak-amendment/REPORT.md). Each Communicate Message clip keeps its own text across save/reopen/edit; older message-less actions keep the default. Tests and browser checks are technical evidence, not Karl's final approval. No merge or P3 work.
+
+**Studio 3.1 Direct Animation core (25 October 2026): APPROVED BY KARL.** The isolated branch `studio-3.1-direct-animation` opens the Cartoon Editor directly and supports mouse placement, Walk destination, Wave at the playhead, timeline editing and save/reopen. The [core screenshots and walkthrough](../proofs/studio-3.1/REPORT.md) remain available. This approval does not freeze the Bright Speak amendment, merge Studio 3.1 or advance P3.
 
 **Studio 3.0 experimental review (24 October 2026):** The professional workspace and Classic compatibility layer are technically verified on an isolated branch. Review the [Studio 3.0 screenshots and walkthrough](../proofs/studio-3/REPORT.md), including the canvas, Inspector, timeline, Workspace Settings and Unity status. The Phase 2 cartoon result remains subject to Karl's separate visual decision. No new animation, approved art, baseline, P3 audio transfer or main merge is included.
 
