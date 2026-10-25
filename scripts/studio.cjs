@@ -3,16 +3,18 @@ const { readFile, stat } = require('node:fs/promises');
 const { existsSync } = require('node:fs');
 const path = require('node:path');
 const { VoiceServiceManager, handleVoiceRequest } = require('./voice-lifecycle.cjs');
+const { createStudioAudioRelay } = require('./studio-audio-relay.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const mode = process.argv[2] === 'dev' ? 'dev' : 'production';
 const manager = new VoiceServiceManager();
+const studioAudio = createStudioAudioRelay();
 let closeWeb = async () => {};
 let closing = false;
 
 function middleware(request, response, next) {
-  void handleVoiceRequest(request, response, manager).then(handled => { if (!handled) next(); }).catch(() => {
+  void studioAudio.handle(request, response).then(handled => handled || handleVoiceRequest(request, response, manager)).then(handled => { if (!handled) next(); }).catch(() => {
     if (!response.headersSent) response.writeHead(500);
     response.end('Local voice request failed.');
   });
