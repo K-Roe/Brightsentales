@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -133,4 +133,3 @@ M6.7 — Deliver Episode 1 first cut to Karl and Astra for review.
 - `npm test -- --run`: 189/189 passed.
 - `npm run build`: passed.
 - Exported V2 video: 173 s, VP9 + Opus stereo 48 kHz, mean volume −22.0 dB, max volume −1.4 dB.
-

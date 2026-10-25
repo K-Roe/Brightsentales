@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -36,4 +36,3 @@ Phase 2 is technically verified on isolated `cartoon-foundation-phase2` Studio a
 Phase 0 audit and approved-branch GitHub backup are complete. Phase 1 is technically complete in the isolated `cartoon-foundation` branches, awaiting Karl's visual review. A disposable browser created, saved, reopened, edited and sent a real scene; isolated Unity played, reset and replayed matching Max/Maxine Game-camera runs. Studio tests 288/288 and build passed, Unity tests 1/1 focused and 1/1 browser-driven passed, and the existing scene WebM export decoded. The real-workflow review MP4 is in the Unity `CartoonFoundationP1Review` folder. See `proofs/cartoon-foundation-phase1/REPORT.md`, `TODO.md` and `AGENT_HANDOVER.md` for exact commits and limitations. Unity audio, full episodes and Unity MP4 export are not implemented.
 
 The approved 26-second V1.1 Living Room experiment is preserved at Studio `137219da60565a780995c44201834ce820d41544` and Unity `9cf90954a54c66fd53d0a05890b18fa4cb7c0d21`. Neither approved branch has been merged into main. Unity remote is private. The earlier visual approval covers the fixed V1.1 scene only.
-

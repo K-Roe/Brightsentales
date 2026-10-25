@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -265,4 +265,3 @@ The notes below describe the earlier blocked attempt. The completion above super
 - **Limits:** Attribution is metadata only — no lip-sync or talking animation. Character speech must sit inside one scene; cross-scene character speech needs an episode-level clip. No in-app recording, text-to-speech or voice cleanup. Browser reload simulates interruption; subjective audio quality is unverified.
 - **Karl's check:** Import a real recorded voice as Speech & narration, attribute it to a Brightling and to the Narrator, then listen to [the recorded episode](../proofs/m6-4/dialogue-episode.mp4) for timing, trim and volume over music.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
-

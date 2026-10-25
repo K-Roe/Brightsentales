@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -164,4 +164,3 @@ These are separate approval-gated milestones. They do not block the first finish
 ## Milestone workflow
 
 During Karl's temporary batch authorisation, work on one milestone at a time: inspect the code, define acceptance criteria, implement, run focused/full tests and production build, exercise the UI in an isolated browser profile, check console/assets, capture evidence, update this roadmap and `PROJECT_STATUS.md`, then record the result in [BATCH_REVIEW.md](BATCH_REVIEW.md). Continue to the next ordered milestone only after technical verification passes. Implementation is not Karl's approval. Stop if Karl asks, a significant blocker occurs, or the next milestone cannot be verified properly. When batch authorisation ends, resume individual approval gates. Karl's **CHANGES**, **REJECT**, **PAUSE** and **SKIP** take precedence.
-

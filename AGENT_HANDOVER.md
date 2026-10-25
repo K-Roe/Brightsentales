@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -107,4 +107,3 @@ Supported through the isolated Phase 1 Unity scene: real saved Studio scenes wit
 ## Next task
 
 Ask Karl to review `C:\Users\karlr\repos\BrightTalesCartoonFoundationUnity\CartoonFoundationP2Review\phase2-review.mp4` and the Studio screenshots in `proofs/cartoon-foundation-phase2/`. Check walk arrival, Look At direction, wave transition, camera framing and editing clarity. It is a composite of actual browser screenshots and two continuous Unity Game-camera clips, not a continuous desktop recording. Await **APPROVE / CHANGES / REJECT / PAUSE / SKIP** under the roadmap gate. Do not start P3, promote the foundation or merge before that visual decision. If Karl requests changes, stay within this experimental branch, rerun the real browser and Unity proof, and preserve approved baselines.
-

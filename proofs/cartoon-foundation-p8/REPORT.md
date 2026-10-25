@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — technical review
+# P8 Camera & Directing V1 — technical review
 
 **Status:** technically verified on isolated branches; awaiting Karl's visual and listening review. P8 is not merged. P9 has not started.
 
@@ -67,4 +67,3 @@ The bridge supports Max, Maxine and fixed-position targets. Studio can direct an
 3. Confirm framing, transitions, playback/replay, and audio by eye and ear.
 
 **Pending:** Karl's Studio visual review, Unity Game-view visual review, and physical audio listening. P8 remains isolated pending separate merge authorization.
-

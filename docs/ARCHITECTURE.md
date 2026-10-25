@@ -1,4 +1,4 @@
-﻿# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Camera & Directing V1 — current handover (2026-10-25)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -162,4 +162,3 @@ Voice Maker retains Backup v8 and adds an optional validated `voiceSettings` fie
 ## Verification boundaries
 
 `npm test -- --run` and `npm run build` are baseline gates. Browser checks must use disposable profiles and report console errors and missing assets. Screenshots show layout; playback recordings show timing; audio-output capture shows whether sound was produced by the browser. None of these substitutes for Karl's visual and listening approval. The project evidence reports are under `proofs/`.
-
