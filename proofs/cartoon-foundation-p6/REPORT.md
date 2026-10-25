@@ -1,6 +1,6 @@
 # P6 Scene Timing & Transitions — technical proof
 
-**Status (25 October 2026):** Isolated Studio and Unity branches `cartoon-foundation-p6-scene-timing-transitions`. P6 is **not merged**. Karl authorised this milestone after approving the P5 merge. P5 Studio `main` merged without conflicts at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1`, passed post-merge 304/304 Studio tests, 12/12 service/relay tests and production build, and was pushed. Unity P5 had no source changes; its `cartoon-foundation` baseline remains `b8821b089adcb87ab6b2f9f31119f982f1a63690`.
+**Status (25 October 2026):** Karl authorised and P6 merged into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`, with history preserved and no conflicts. The isolated source branches remain. P5 Studio `main` previously merged at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1`. Unity Game-view visual acceptance and physical audio listening remain **pending**.
 
 Studio implementation commit: `d4154750976d462ba8f6d1359f0a92eedb125f77`. Unity implementation commit: `3ec24ca6330bd211e72b59694a30b592a99969d6` (pushed). Both are isolated from their integration branches. The Studio branch also carries this report, media proof and handover in a subsequent documentation commit.
 
@@ -15,6 +15,8 @@ The contextual Inspector edits occurrence duration or the selected boundary's Ha
 Source files: Studio `src/episodes.ts`, `src/episodeSequence.ts`, `src/episodeDraft.ts`, `src/audioPlayback.ts`, `src/EpisodeMaker.tsx`, `src/EpisodeSequencePanel.tsx`, new `src/EpisodeInspector.tsx`, `src/studioEpisodeBridge.ts`, scoped CSS and focused tests. Unity `Assets/CartoonFoundationExperimental/StudioScenePlayer.cs` and `Assets/Tests/PlayMode/StudioEpisodePlayModeTest.cs`. Architecture/state/roadmap/handover documents were updated.
 
 ## Verification
+
+After merging P6, Studio `npm test` passed 309/309, `npm run test:service` passed 12/12, and `npm run build` passed. From the merged Unity integration worktree, [episode Play Mode](postmerge-unity-episode.xml) passed 4/4, [single-scene audio](postmerge-unity-audio.xml) passed 1/1, and [saved-scene actions](postmerge-unity-scene.xml) passed 1/1. Browser-driven Unity transfer below was captured on the identical P6 branch tree before merging; a separate post-merge browser transfer was not performed.
 
 | Check | Result |
 | --- | --- |
@@ -35,12 +37,12 @@ The bridge run also exposed a real parser mismatch: Unity `JsonUtility` material
 
 ## Karl review steps
 
-1. In the isolated P6 Studio worktree, run `npm run build` then `npm start`. Open the printed URL in a disposable browser profile.
+1. From Studio `main`, run `npm run build` then `npm start`. Open the printed URL in a disposable browser profile.
 2. Save two scenes, create an episode, and add the first scene again as a third occurrence.
 3. Select each occurrence to set a different **Episode duration**. Confirm source scenes stay unchanged and timeline blocks/total duration update.
 4. Select the boundary marker before scene 2. Switch Hard Cut to Fade Through Black and adjust the fade duration. Preview, scrub through the boundary, pause/stop/restart, save, close/reopen, edit and replay.
-5. Add episode music and, if desired, export WebM. Unity preview requires the isolated P6 Unity runtime; unsupported scene mappings still report their limits.
+5. Add episode music and, if desired, export WebM. Unity preview requires the merged `cartoon-foundation` Unity runtime; unsupported scene mappings still report their limits.
 
 ## Limits and next step
 
-Crossfade is unavailable because the existing Studio and Unity renderers evaluate one scene at a time; adding dual-scene compositing would be a separate architectural milestone. Fade Through Black is visual-only; scene audio switches at the cut while episode music stays continuous. Intros and credits retain their existing hard boundaries. Unity still supports only its mapped Living Room scenes/actions/audio and lacks automatic launch, embedded Game view and MP4 export. No Unity Game-view capture or physical listening was performed. Karl's later visual/usability review remains the gate for merging P6. The next recommended milestone is a deliberate review of episode playback/export and any gaps Karl identifies, before choosing another foundation feature.
+Crossfade is unavailable because the existing Studio and Unity renderers evaluate one scene at a time; adding dual-scene compositing would be a separate architectural milestone. Fade Through Black is visual-only; scene audio switches at the cut while episode music stays continuous. Intros and credits retain their existing hard boundaries. Unity still supports only its mapped Living Room scenes/actions/audio and lacks automatic launch, embedded Game view and MP4 export. No Unity Game-view capture or physical listening was performed. Those acceptance checks remain pending. P7 Episode Production Polish is authorised on new isolated branches and must remain unmerged until Karl approves it.

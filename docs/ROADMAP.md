@@ -1,5 +1,8 @@
 # BrightSenAppsTales development roadmap
 
+**Current P7 authority (25 October 2026):** Karl authorised P6 integration and isolated P7 Episode Production Polish. P6 merge commits are Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P7 scope: episode timeline navigation and zoom, easier occurrence duration, clearer fade boundary controls and previews, audio timeline visibility/controls, preview/replay/export usability, and practical keyboard shortcuts and undo/redo. Preserve episode storage, Unity bridge and Crossfade limitation. P7 must not merge without Karl's approval. Earlier roadmap authority notes below are historical.
+
+
 **Current P6 authority (25 October 2026):** Karl authorised merging the verified P5 episode workspace and implementing isolated P6 Scene Timing & Transitions. P5 Studio `main` is pushed at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1`; Unity had no P5 change. P6 covers independent occurrence duration, hard cuts, Fade Through Black, audio continuity and browser/Unity parity where supported. Crossfade is deferred because the current runtime renders one scene at a time. P6 stays unmerged until Karl's next milestone decision. Earlier roadmap gates below are historical.
 
 **Current P5 authority (25 October 2026):** Karl authorised P4 integration and a new P5 **Episode Production Workflow**: episode workspace, sequence timeline, episode music, continuous preview and save/reopen. This supersedes the older P5 Unity MP4-export label in the historical roadmap below. P4 is pushed to Studio `main` and Unity `cartoon-foundation`. P5 remains isolated until Karl approves its merge. The original MP4-export task is not part of this milestone.

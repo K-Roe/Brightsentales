@@ -1,5 +1,10 @@
 # Cartoon production foundation — takeover list
 
+## P7 Episode Production Polish — authorised 2026-10-25
+
+P6 merged into Studio `main` at `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `cartoon-foundation` at `0998a013fe5d33dd5c5d4c71a541564d49b28251`, with passing post-merge Studio 309/309, service/relay 12/12, build and Unity episode/audio/action 4/4, 1/1, 1/1. Unity Game-view visual acceptance and physical audio listening remain pending. Begin P7 on fresh isolated Studio and Unity branches. Improve timeline navigation/zoom, occurrence duration editing, transition editing/preview, audio timeline controls, preview/replay/export usability and practical shortcuts/undo/redo. Keep Crossfade unavailable without real dual-scene support. Do not merge P7 without Karl's approval.
+
+
 ## P6 Scene Timing & Transitions — 2026-10-25
 
 P5 Studio is merged/pushed at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1`; Unity P5 needed no merge. P6 isolated branch `cartoon-foundation-p6-scene-timing-transitions` implements occurrence duration editing, timeline recalculation, Fade Through Black, audio clock continuity and a compatible Unity episode v2 payload. Legacy v1 episodes retain source durations and cuts. Studio 309/309, service 12/12, build and disposable browser including save/reopen/edit/replay/export pass. Unity episode 4/4, single-scene audio/action 1/1 each and browser-to-Unity workflow 1/1 pass. P6 technical work is complete in isolation; do not merge without Karl's next decision. The older P5 MP4 label below remains historical.

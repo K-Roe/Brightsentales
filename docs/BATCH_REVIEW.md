@@ -1,5 +1,8 @@
 # Batch review for Karl
 
+**P6 integration update (25 October 2026):** Karl explicitly authorised P6 merging and P7 kickoff. P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending. P7 work is isolated and requires Karl's approval before merging. Earlier review gates below are historical.
+
+
 **P6 review (25 October 2026):** P5 is merged and pushed. The isolated P6 Scene Timing & Transitions milestone has browser screenshots, a walkthrough and complete exported WebM in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Different durations for repeated scenes and Fade Through Black are technically verified in Studio; Unity verification and its exact limits are recorded there. P6 is unmerged pending Karl's later visual/usability review. Earlier gates below are historical.
 
 **P5 episode production review (25 October 2026):** P4 is merged and pushed. P5 is technically verified on isolated Studio/Unity `cartoon-foundation-p5-episode-production` branches and remains unmerged. [P5 proof](../proofs/cartoon-foundation-p5/REPORT.md) includes the episode workspace, scene Inspector, timeline, browser save/reopen/replay, screenshots and walkthrough. Karl's full visual/usability review is pending. Older review gates below are historical under the current foundation authorisation.
