@@ -10,9 +10,9 @@ export const scenePlaybackClips = (clips: AudioClip[] = []): PlaybackClip[] => c
 
 export function episodePlaybackClips(episode: Episode, scenes: TimedLibrary, intros?: IntroLibrary, credits?: CreditsLibrary): PlaybackClip[] {
   const output: PlaybackClip[] = (episode.audio ?? []).map(clip => ({ ...clip, key: `episode:${clip.id}`, source: 'episode' }));
-  productionBlocks(episode, scenes, intros, credits).forEach(({ scene, index, start, kind }) => {
+  productionBlocks(episode, scenes, intros, credits).forEach(({ scene, index, start, duration, kind }) => {
     for (const clip of scene.audio ?? []) {
-      const remaining = scene.duration - clip.start;
+      const remaining = Math.min(scene.duration, duration) - clip.start;
       if (remaining <= 0) continue;
       output.push({ ...clip, start: start + clip.start, trimEnd: Math.min(clip.trimEnd, clip.trimStart + remaining), key: `${kind}:${index}:${clip.id}`, source: 'scene' });
     }

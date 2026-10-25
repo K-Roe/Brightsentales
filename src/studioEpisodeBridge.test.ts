@@ -17,6 +17,7 @@ const music = { id: id(22), assetId: media.id, start: 0, trimStart: 0, trimEnd: 
 describe('P4 episode transfer', () => {
   it('keeps repeated scenes as distinct ordered occurrences and one global clock', async () => {
     const config = studioEpisodeConfig(episode, scenes);
+    expect(config.version).toBe(1);
     expect(config.scenes.map(item => [item.index, item.start, item.scene.sceneId])).toEqual([
       [0, 0, first.id], [1, 4, second.id], [2, 7, first.id],
     ]);
@@ -24,6 +25,18 @@ describe('P4 episode transfer', () => {
     expect(config.scenes[2].scene.actions[0].start).toBe(1);
     expect(config.scenes[2].scene.version).toBe(2);
     expect(await studioEpisodeRevision({ ...config, scenes: config.scenes.slice(0, 2) })).not.toBe(await studioEpisodeRevision(config));
+  });
+
+  it('transfers occurrence durations and fade boundaries in a versioned payload', async () => {
+    const edited: Episode = { ...episode, sceneSettings: [{ duration: 2 }, { transition: { type: 'fade-black', duration: .6 } }, { duration: 5 }] };
+    const config = studioEpisodeConfig(edited, scenes);
+    expect(config.version).toBe(2);
+    expect(config.duration).toBe(10);
+    expect(config.scenes.map(item => [item.start, item.duration, item.scene.duration, item.transition?.duration])).toEqual([
+      [0, 2, 4, undefined], [2, 3, 3, .6], [5, 5, 4, undefined],
+    ]);
+    expect(await studioEpisodeRevision(config)).not.toBe(await studioEpisodeRevision(studioEpisodeConfig(episode, scenes)));
+    expect(() => studioEpisodeConfig({ ...edited, sceneSettings: [{ duration: .4 }, { transition: { type: 'fade-black', duration: 1 } }, {}] }, scenes)).toThrow('Fade duration');
   });
 
   it('retains episode music through boundaries and schedules scene audio per occurrence', () => {

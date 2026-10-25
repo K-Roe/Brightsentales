@@ -1,5 +1,9 @@
 # Cartoon foundation decisions
 
+## 2026-10-25 — P6 scene timing and fades
+
+Keep `Episode` v1 and add optional per-occurrence settings indexed with `sceneIds`; preserve absent settings as legacy source duration and hard cut. Occurrence operations move timing with the reference. Shorter durations truncate scene actions/audio; longer durations hold the source's final visual state and do not extend source audio. Fade Through Black is visual-only, centred on the boundary, with 0.2–2 second duration bounded by both adjacent occurrences; it does not overlap scenes or restart episode music. Use Unity episode payload v2 only when settings exist; retain v1 for old episodes. Do not expose Crossfade until dual-scene rendering is reliably supported in Studio and Unity.
+
 ## 2026-10-25 — P5 episode production scope
 
 Karl's new P5 Episode Production Workflow supersedes the earlier P5 MP4-export label for this milestone. Keep `Episode` v1 and the existing browser/Unity clocks. A scene occurrence refers to its source scene; duration and actions come from that source. Reordering, duplication and removal operate on occurrence positions. Editing the source remains an explicit action and affects every reference. Scene transitions remain the existing hard cuts. Unity P5 source changes are unnecessary for this interface milestone; unsupported Unity mappings still report their limits. P5 remains isolated until Karl approves its merge.

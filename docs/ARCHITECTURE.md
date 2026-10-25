@@ -1,5 +1,11 @@
 # Application architecture
 
+## P6 episode occurrence clock and transitions (2026-10-25)
+
+`Episode` v1 adds an optional `sceneSettings` array aligned with `sceneIds`. Its absent state means source durations and hard cuts, so P4/P5 records and backups keep their previous behavior. `episodeSequence.ts` moves, duplicates, appends and removes settings with their scene occurrences. `productionBlocks` supplies actual occurrence duration; browser preview, timeline, audio mapping, WebM export and the Unity episode bridge use that same clock. A short occurrence truncates source actions and scene audio; a long one evaluates the source scene through its end and holds its final visual state. Episode music remains on the global clock. Fade Through Black is a visual overlay centered on a cut, with half its duration on each adjacent occurrence and no overlap or length change; scene audio switches at the cut. Constraints are 0.2–2 seconds and no longer than either adjacent occurrence.
+
+`studioEpisodeBridge.ts` retains version 1 payloads for legacy episodes and emits version 2 only when occurrence settings are present. Unity `StudioScenePlayer` validates both versions, uses occurrence durations, clamps source scene evaluation and applies a runtime black SpriteRenderer overlay; single-scene `studio.*` remains separate. Crossfade is unavailable because the current renderer evaluates one scene at a time. No second episode engine, destructive migration or new asset was added.
+
 ## P5 episode production UI (2026-10-25)
 
 `EpisodeMaker.tsx` continues to edit canonical `Episode` v1 `sceneIds` and `audio`. `EpisodeSequencePanel.tsx` presents occurrence selection, order, timeline ruler and global playhead; `episodeSequence.ts` edits references by occurrence index without changing saved source scenes. The contextual inspector reports source timing and offers sequence operations. Browser playback remains `productionPosition` plus `useAudioPlayback` on the global episode clock. Unity transfer remains P4's `studioEpisodeBridge.ts`. The v1 episode/backup format, P3 audio relay and P4 scene player are unchanged.

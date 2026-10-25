@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## P6 Scene Timing & Transitions — 2026-10-25
+
+P5 Studio is merged/pushed at `7f47119b68d95bd5aefa839dad14f3e112f2e1d1`; Unity P5 needed no merge. P6 isolated branch `cartoon-foundation-p6-scene-timing-transitions` implements occurrence duration editing, timeline recalculation, Fade Through Black, audio clock continuity and a compatible Unity episode v2 payload. Legacy v1 episodes retain source durations and cuts. Studio 309/309, service 12/12, build and disposable browser including save/reopen/edit/replay/export pass. Unity episode 4/4, single-scene audio/action 1/1 each and browser-to-Unity workflow 1/1 pass. P6 technical work is complete in isolation; do not merge without Karl's next decision. The older P5 MP4 label below remains historical.
+
 ## Current P5 Episode Production Workflow — 2026-10-25
 
 Karl authorised P4 integration and P5 episode authoring. P4 is merged/pushed to Studio `main` `a2fd628d15536352df53ac4dda762a3a5f0e7a76` (merge `e04c17fb`) and Unity `cartoon-foundation` `b8821b089adcb87ab6b2f9f31119f982f1a63690`. P5 is isolated on `cartoon-foundation-p5-episode-production`: episode scene occurrence reorder/duplicate/remove, contextual properties, timeline/playhead, browser preview/transport, existing episode audio and save/reopen. Tests 304/304, service 12/12, build and disposable browser passed. Final proof/branch pushes are pending. The older P5 Unity MP4-export item below is outside Karl's current P5 scope. Do not merge P5 without Karl approval.

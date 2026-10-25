@@ -1,16 +1,16 @@
 import type { AudioAsset } from './audio';
 import { episodePlaybackClips, type PlaybackClip } from './audioPlayback';
-import { missingSceneIds, productionBlocks, type Episode } from './episodes';
+import { episodeTimingIssue, missingSceneIds, productionBlocks, productionDuration, type Episode } from './episodes';
 import type { TimedLibrary } from './timedScenes';
 import { studioSceneConfig, type StudioSceneConfig } from './studioSceneBridge';
 import { transferStudioAudioClips, type StudioAudioAsset } from './studioAudioTransfer';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
 
 export type StudioEpisodeConfig = {
-  version: 1;
+  version: 1 | 2;
   episodeId: string;
   duration: number;
-  scenes: { index: number; start: number; scene: StudioSceneConfig }[];
+  scenes: { index: number; start: number; duration?: number; transition?: { type: 'fade-black'; duration: number }; scene: StudioSceneConfig }[];
   audioAssets: StudioAudioAsset[];
   audio: { id: string; assetId: string; source: 'scene' | 'episode'; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number }[];
 };
@@ -34,19 +34,22 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
   if (episode.sceneIds.length === 0) throw new Error('Add a saved scene before previewing this episode in Unity.');
   const missing = missingSceneIds(episode, library);
   if (missing.length) throw new Error(`Restore the missing saved scene before Unity preview: ${missing[0]}`);
+  const timingIssue = episodeTimingIssue(episode, library);
+  if (timingIssue) throw new Error(timingIssue);
   const blocks = productionBlocks(episode, library);
-  const duration = blocks.reduce((sum, block) => sum + block.scene.duration, 0);
+  const duration = productionDuration(episode, library);
   if (duration <= 0 || duration > 3600) throw new Error('Unity episode preview supports up to 60 minutes.');
   const clips = episodeClips(episode, library, duration);
   if (clips.length > 200) throw new Error('Unity episode preview supports up to 200 audio clips.');
   const mediaIds = new Set(media.map(asset => asset.id));
   if (mediaIds.size !== media.length || clips.some(clip => !mediaIds.has(clip.assetId)))
     throw new Error('Transfer every episode and scene audio file before sending to Unity.');
+  const version = episode.sceneSettings?.some(setting => setting.duration !== undefined || setting.transition !== undefined) ? 2 : 1;
   return {
-    version: 1, episodeId: episode.id, duration,
+    version, episodeId: episode.id, duration,
     scenes: blocks.map(block => {
       const scene = studioSceneConfig(block.scene, media);
-      return { index: block.index, start: block.start, scene: { ...scene, version: 2, audioAssets: undefined, audio: undefined } };
+      return { index: block.index, start: block.start, ...(version === 2 ? { duration: block.duration, ...(block.occurrenceIndex === undefined ? {} : { transition: episode.sceneSettings?.[block.occurrenceIndex]?.transition }) } : {}), scene: { ...scene, version: 2, audioAssets: undefined, audio: undefined } };
     }),
     audioAssets: media,
     audio: clips.map(clip => {
@@ -60,7 +63,7 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
 
 export async function prepareStudioEpisode(episode: Episode, library: TimedLibrary, assets: AudioAsset[], signal: AbortSignal,
   request: typeof fetch = fetch, origin = window.location.origin): Promise<StudioEpisodeConfig> {
-  const duration = productionBlocks(episode, library).reduce((sum, block) => sum + block.scene.duration, 0);
+  const duration = productionDuration(episode, library);
   const clips = episodeClips(episode, library, duration);
   // Validate all artwork/actions before uploading any media.
   studioEpisodeConfig(episode, library, clips.map(clip => clip.assetId)
