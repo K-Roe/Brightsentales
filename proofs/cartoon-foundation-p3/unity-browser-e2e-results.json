@@ -1,0 +1,13 @@
+{
+  "profile": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p3-audio-yHhBmA",
+  "url": "http://127.0.0.1:4179/",
+  "stages": {
+    "transferAndDecode": "PASS",
+    "playAndReset": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "audioUploads": 2,
+  "unityCommands": 28,
+  "unityAudioSample": "1.5000695,0.35,0.5"
+}

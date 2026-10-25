@@ -1,5 +1,11 @@
 # Application architecture
 
+## Isolated P3 scene audio transfer (2026-10-25)
+
+`AudioAsset.blob` remains in the existing IndexedDB Audio Library; `TimedScene.audio` and Studio Backup schemas are unchanged. For Unity preview, `studioAudioTransfer.ts` hashes only assets referenced by the saved scene and POSTs their raw bytes to `/api/studio-audio` on the current local Studio origin. The existing `scripts/studio.cjs` launcher owns a bounded, in-memory relay with same-origin upload, ID/MIME/size/SHA-256 checks and unguessable retrieval URLs. Bytes never enter the 32 KB Unity `/command` JSON. No media persists in the relay across launcher restarts.
+
+`studioSceneBridge.ts` adds audio asset references and clip timing to version 3 scene config, included in the existing revision hash. Audio-free scenes continue using version 2. A clip extending beyond the scene end is truncated in the preview payload only, preserving stored data. The isolated Unity Phase 2 `StudioScenePlayer` validates the references, downloads/rehashes/decodes before Play, and uses its scene clock for start, trim, volume and fades. `studio.status` reports loading and media failure; Reset disposes clip sources. `StudioSceneUnityPanel.tsx` coordinates transfer, loading status and playback through the existing bridge. Full episode playback and cross-scene music continuity remain outside the single-scene player; see [P3 proof](../proofs/cartoon-foundation-p3/REPORT.md).
+
 ## Studio 3.1 Bright Speak message amendment (2026-10-25)
 
 Communicate Message was already represented by `PhoneAction.message` inside the existing `TimedScene.phone` array. The professional `SceneTimeline.tsx` now renders selectable phone clips, and `SceneMaker.tsx` edits the selected clip's text in its contextual Inspector. `phoneStateAt` and the shared `scenePreview.ts`/`phoneArt.ts` Canvas path still own timed playback and rendering. Missing `message` on an older saved action resolves to the original starter phrase in `phone.ts`; storage and Backup schemas remain unchanged. Text-only actions carry no speech clip ID. Optional saved speech remains on the existing audio path. [Amendment proof](../proofs/studio-3.1/bright-speak-amendment/REPORT.md).

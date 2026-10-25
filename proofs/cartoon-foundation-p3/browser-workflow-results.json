@@ -1,0 +1,36 @@
+{
+  "origin": "http://127.0.0.1:4179/",
+  "disposable": "C:\\Users\\karlr\\AppData\\Local\\Temp\\brighttales-p3-audio-yHhBmA",
+  "stages": {
+    "import": "PASS",
+    "authorSave": "PASS",
+    "reopenPlayback": "PASS",
+    "reviewRecording": "PASS"
+  },
+  "errors": [],
+  "failedRequests": [],
+  "playbackDebug": {
+    "clock": "Pause\nStop\nReplay\n2.0s / 6.0s",
+    "status": "Choose a scene or create one.",
+    "buttons": [
+      "Pause",
+      "Stop",
+      "Replay"
+    ]
+  },
+  "sceneId": "251a6094-d2ad-4388-b71a-393188d1e0ce",
+  "audio": [
+    {
+      "id": "3ce9062e-9d1d-4a06-a10a-186dfe4d3638",
+      "assetId": "c158e662-9525-4632-ac28-c0b9c316b242",
+      "start": 0,
+      "volume": 0.35
+    },
+    {
+      "id": "d47c010c-0e44-4afc-85fb-b7b929dd18af",
+      "assetId": "14f05f97-c365-460d-b241-30c87f53e576",
+      "start": 1,
+      "volume": 0.5
+    }
+  ]
+}

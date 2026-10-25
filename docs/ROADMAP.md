@@ -1,5 +1,7 @@
 # BrightSenAppsTales development roadmap
 
+**Current gate (2026-10-25): Studio 3.1 APPROVED AND MERGED; P3 ISOLATED FOR REVIEW.** Karl's final Studio 3.1 approval was merged and pushed at `1d9d1068f9258f8bbeac0b049f3fb8afe9422518`. The [P3 audio transfer proof](../proofs/cartoon-foundation-p3/REPORT.md) covers local media upload, Unity decoding, scene-clock speech/music, save/reopen and missing/corrupt rejection. Await Karl's visual/listening review; do not merge P3 or begin P4. Episode-level cross-scene continuity remains dependent on P4. Previous gates below are historical.
+
 **Studio 3.1 final freeze gate (2026-10-25): AWAITING KARL'S DECISION ON BRIGHT SPEAK AMENDMENT.** Karl approved the core direct-animation workflow. The requested editable per-action Communicate Message amendment is technically verified on the same isolated branch; [screenshots, video and tests](../proofs/studio-3.1/bright-speak-amendment/REPORT.md) are ready. Only Karl may freeze or request changes. No merge, P3 or baseline promotion.
 
 **Studio 3.1 Direct Animation core (2026-10-25): APPROVED BY KARL.** Studio 3.0 was merged into main before this milestone. The isolated Studio 3.1 branch resumes the Cartoon Editor and improves direct stage animation and the existing timeline; [the core report](../proofs/studio-3.1/REPORT.md) gives evidence and limits. The Bright Speak amendment above is the remaining freeze gate. Keep the branch isolated; no P3, Unity baseline promotion or main merge.

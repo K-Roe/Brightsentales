@@ -1,5 +1,9 @@
 # Cartoon production foundation — takeover list
 
+## Current P3 checkpoint — isolated technical proof, review pending
+
+Studio 3.1 is finally approved and pushed to `main` at merge `1d9d1068f9258f8bbeac0b049f3fb8afe9422518`. The current P3 branches add local audio transfer and Unity scene-clock playback without changing saved scene data or the approved Studio 3.1 editor. Studio 298/298, service 12/12, build, Unity audio Play Mode 1/1, Phase 2 regression 1/1 and browser-to-Unity audio run 1/1 passed. See `proofs/cartoon-foundation-p3/REPORT.md`. P3 still needs Karl's visual/listening review and further work on cross-scene music with P4's episode clock; do not merge P3 or start P4.
+
 ## Studio 3.1 final freeze review — 2026-10-25
 
 Karl approved the Studio 3.1 core direct-animation workflow at `ae859ef`. The requested Editable Bright Speak Message amendment is technically verified on the same isolated branch. Each Communicate Message interaction has its own free text, appears on the timeline and opens in the contextual Inspector; legacy actions without text show the original default. See `proofs/studio-3.1/bright-speak-amendment/REPORT.md` for browser, video, tests and remaining scope. **Wait for Karl's final freeze approval or changes.** Do not merge or start P3.
