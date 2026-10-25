@@ -27,6 +27,10 @@ The experimental Unity `StudioScenePlayer` evaluates the existing character/came
 
 The Unity Play Mode test observes actual `AudioSource` playback and scene indices. Batch mode with `-nographics` could not create a `RenderTexture` for Game-view capture, so this proof does not claim a Unity visual recording or physical listening. The earlier test harness capture attempt failed for that reason; its capture code was removed and the playback assertions reran successfully. The browser video records browser playback, not Unity export.
 
+## Post-merge verification — 25 October 2026
+
+Karl authorised P4 integration. No-conflict merge commits: Studio `main` `e04c17fb2d6624b55cd07228acfd3d9d6e382a57`; Unity `cartoon-foundation` `b8821b089adcb87ab6b2f9f31119f982f1a63690`. Both merge trees match the verified P4 branch tips. On the merged Studio tree, `npm test` passed 302/302, `npm run test:service` passed 12/12 and `npm run build` passed. On the merged Unity tree, [episode Play Mode](unity-post-merge-episode-results.xml) passed 2/2, [single-scene audio regression](unity-post-merge-audio-results.xml) passed 1/1, and [saved-scene action/clock regression](unity-post-merge-phase2-results.xml) passed 1/1. Unity target was pushed; Studio main push follows this proof commit. The original P4 review media remains branch-era evidence and was not recaptured on the identical merge tree.
+
 ## Supported limits
 
 Unity episode preview currently supports approved Living Room scenes with Max and Maxine and the scene actions/camera/audio mapped by P2/P3. It uses hard cuts, as the browser episode player already does. Intro and credits overlays, Bright Speak interactions, other places/artwork, automatic Unity launch, embedded Game view and Unity MP4 export remain unsupported and are reported rather than silently discarded. Browser playback and WebM export retain their broader existing capabilities. Saved episode and backup schemas were not changed.
