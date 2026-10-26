@@ -4,8 +4,10 @@ param(
     [switch]$StudioOnly,
     [switch]$NoBrowser,
     [string]$StudioPath,
-    [string]$UnityPath = 'C:\Users\karlr\repos\BrightTalesP10MakerUnity',
+    [string]$UnityPath = 'C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration',
     [string]$UnityExePath = 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe',
+    [string]$ExpectedStudioBranch = 'main',
+    [string]$ExpectedUnityBranch = 'cartoon-foundation',
     [int]$BridgePort = 17844,
     [int]$StudioPort = 5177
 )
@@ -28,7 +30,7 @@ Start-Transcript -Path $transcript -Force | Out-Null
 try {
     Write-Host 'BrightTales P8-P11 Review Launcher' -ForegroundColor Cyan
     Write-Host "Logs: $logRoot"
-    $preflight = Get-BrightTalesReviewPreflight -StudioPath $StudioPath -UnityPath $UnityPath -UnityExePath $UnityExePath -BridgePort $BridgePort -StudioPort $StudioPort
+    $preflight = Get-BrightTalesReviewPreflight -StudioPath $StudioPath -UnityPath $UnityPath -UnityExePath $UnityExePath -ExpectedStudioBranch $ExpectedStudioBranch -ExpectedUnityBranch $ExpectedUnityBranch -BridgePort $BridgePort -StudioPort $StudioPort
     Write-BrightTalesReviewSummary -Preflight $preflight
 
     if ($preflight.BlockingCount -gt 0) {

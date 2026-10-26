@@ -1,4 +1,8 @@
-# P11 Episode Production & Polish (2026-10-26)
+# P8-P11 integration update (2026-10-26)
+
+P8-P11 and the review launcher are integrated on Studio `main` (`a68d58772a54a93682b204a87ccf34bcd49aa013`) and Unity `cartoon-foundation` (`fa532c22d27e3cf71d4f539c911251b766dabb1d`). Studio tests/build/service and launcher checks pass; Unity's focused six-fixture suite passes 12/12 with graphics enabled. `proofs/cartoon-foundation-integration/REPORT.md` records commits, the launcher fix, exact checks and the null-graphics limitation. Human visual and physical-audio approvals remain pending, and P11's full live workflow is unverified.
+
+## P11 technical detail recorded before integration
 
 P11 implementation is committed on the active Studio/Unity development branches. Studio 342/342 tests and build pass; Unity modular episode/camera Play Mode passes 1/1 and existing episode/audio/camera regressions pass 5/5. The full browser-to-Unity author/save/reopen/replay/export workflow was not run, and the demo episode is a manifest fixture rather than an exported Studio episode. Review details and exact evidence are in [P11 report](../proofs/cartoon-foundation-p11/REPORT.md). P8–P11 visual/audio approvals are pending; protected branches are unchanged.
 

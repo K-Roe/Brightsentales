@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Passed" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 13:17:38Z" end-time="2026-10-26 13:18:17Z" duration="39.376746">
+  <test-suite type="TestSuite" id="1047" name="BrightTalesUnityTest" fullname="BrightTalesUnityTest" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-26 13:17:38Z" end-time="2026-10-26 13:18:17Z" duration="39.376746" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1090" name="BrightTalesRigV1PlayTests.dll" fullname="C:/Users/karlr/AppData/Local/Temp/BrightTales P8-P11 Integration Unity Tests/Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-10-26 13:17:38Z" end-time="2026-10-26 13:18:17Z" duration="39.362942" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="92720" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestFixture" id="1048" name="BrightlingAutoBuilderBridgeWorkflowTest" fullname="BrightlingAutoBuilderBridgeWorkflowTest" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 13:17:38Z" end-time="2026-10-26 13:17:39Z" duration="1.252884" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1049" name="LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" fullname="BrightlingAutoBuilderBridgeWorkflowTest.LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" methodname="LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" seed="1131282973" result="Passed" start-time="2026-10-26 13:17:38Z" end-time="2026-10-26 13:17:39Z" duration="1.233918" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17844
+BrightTales Bridge V0 listening on http://127.0.0.1:17844
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1050" name="BrightlingAutoBuilderPlayModeTest" fullname="BrightlingAutoBuilderPlayModeTest" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 13:17:39Z" end-time="2026-10-26 13:17:42Z" duration="2.700727" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1051" name="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" fullname="BrightlingAutoBuilderPlayModeTest.ImportValidatesBuildsUpdatesAndRegistersSupportedActions" methodname="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" seed="1604029709" result="Passed" start-time="2026-10-26 13:17:39Z" end-time="2026-10-26 13:17:41Z" duration="1.807139" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1052" name="ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" fullname="BrightlingAutoBuilderPlayModeTest.ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" methodname="ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" seed="1921099640" result="Passed" start-time="2026-10-26 13:17:41Z" end-time="2026-10-26 13:17:42Z" duration="0.890784" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1053" name="BrightlingSceneCastPlayModeTest" fullname="BrightlingSceneCastPlayModeTest" classname="BrightlingSceneCastPlayModeTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 13:17:42Z" end-time="2026-10-26 13:17:52Z" duration="10.184124" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1055" name="EpisodeBuildsTwoModularBrightlingsAndDirectsCameraToTheirIds" fullname="BrightlingSceneCastPlayModeTest.EpisodeBuildsTwoModularBrightlingsAndDirectsCameraToTheirIds" methodname="EpisodeBuildsTwoModularBrightlingsAndDirectsCameraToTheirIds" classname="BrightlingSceneCastPlayModeTest" runstate="Runnable" seed="381429535" result="Passed" start-time="2026-10-26 13:17:42Z" end-time="2026-10-26 13:17:47Z" duration="5.290465" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1054" name="SavedSceneBuildsAndDirectsTheExistingCustomActor" fullname="BrightlingSceneCastPlayModeTest.SavedSceneBuildsAndDirectsTheExistingCustomActor" methodname="SavedSceneBuildsAndDirectsTheExistingCustomActor" classname="BrightlingSceneCastPlayModeTest" runstate="Runnable" seed="1917543892" result="Passed" start-time="2026-10-26 13:17:47Z" end-time="2026-10-26 13:17:52Z" duration="4.891055" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1072" name="StudioEpisodePlayModeTest" fullname="StudioEpisodePlayModeTest" classname="StudioEpisodePlayModeTest" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-26 13:17:52Z" end-time="2026-10-26 13:18:07Z" duration="15.026275" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1074" name="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" fullname="StudioEpisodePlayModeTest.EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" methodname="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="2123665635" result="Passed" start-time="2026-10-26 13:17:52Z" end-time="2026-10-26 13:17:53Z" duration="1.405719" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1075" name="OccurrenceTimingAndFadeUseOneEpisodeClock" fullname="StudioEpisodePlayModeTest.OccurrenceTimingAndFadeUseOneEpisodeClock" methodname="OccurrenceTimingAndFadeUseOneEpisodeClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1521614836" result="Passed" start-time="2026-10-26 13:17:53Z" end-time="2026-10-26 13:17:56Z" duration="2.432684" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1073" name="OrderedScenesPauseStopAndReplayOnOneClock" fullname="StudioEpisodePlayModeTest.OrderedScenesPauseStopAndReplayOnOneClock" methodname="OrderedScenesPauseStopAndReplayOnOneClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1873244941" result="Passed" start-time="2026-10-26 13:17:56Z" end-time="2026-10-26 13:18:01Z" duration="5.280412" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1076" name="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" fullname="StudioEpisodePlayModeTest.Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" methodname="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="140951370" result="Passed" start-time="2026-10-26 13:18:01Z" end-time="2026-10-26 13:18:03Z" duration="1.871112" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1077" name="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" fullname="StudioEpisodePlayModeTest.Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" methodname="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1910672918" result="Passed" start-time="2026-10-26 13:18:03Z" end-time="2026-10-26 13:18:07Z" duration="4.034114" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1080" name="StudioSceneAudioPlayModeTest" fullname="StudioSceneAudioPlayModeTest" classname="StudioSceneAudioPlayModeTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 13:18:07Z" end-time="2026-10-26 13:18:10Z" duration="3.116252" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1081" name="SpeechAndMusicDecodeAndFollowTheSavedClock" fullname="StudioSceneAudioPlayModeTest.SpeechAndMusicDecodeAndFollowTheSavedClock" methodname="SpeechAndMusicDecodeAndFollowTheSavedClock" classname="StudioSceneAudioPlayModeTest" runstate="Runnable" seed="1369659130" result="Passed" start-time="2026-10-26 13:18:07Z" end-time="2026-10-26 13:18:10Z" duration="3.113433" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1084" name="StudioScenePlayerPlayModeTest" fullname="StudioScenePlayerPlayModeTest" classname="StudioScenePlayerPlayModeTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 13:18:10Z" end-time="2026-10-26 13:18:17Z" duration="7.075537" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1085" name="SavedActionPositionsAndBridgeStateFollowOneClock" fullname="StudioScenePlayerPlayModeTest.SavedActionPositionsAndBridgeStateFollowOneClock" methodname="SavedActionPositionsAndBridgeStateFollowOneClock" classname="StudioScenePlayerPlayModeTest" runstate="Runnable" seed="1814301462" result="Passed" start-time="2026-10-26 13:18:10Z" end-time="2026-10-26 13:18:17Z" duration="7.074532" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17844
+BrightTales Bridge V0 listening on http://127.0.0.1:17844
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

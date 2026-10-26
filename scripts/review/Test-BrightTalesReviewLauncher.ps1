@@ -101,14 +101,15 @@ try {
     $tcpListener.Stop(); $tcpListener = $null
 
     $studioRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-    $unityRoot = 'C:\Users\karlr\repos\BrightTalesP10MakerUnity'
+    $unityRoot = 'C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration'
     $realUnity = 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe'
-    $expectedBranch = (& git -C $studioRoot branch --show-current).Trim()
-    $missingStudio = Get-BrightTalesReviewPreflight -StudioPath (Join-Path $temp 'Missing Studio Workspace') -UnityPath $unityRoot -UnityExePath $realUnity -ExpectedBranch $expectedBranch
+    $missingStudio = Get-BrightTalesReviewPreflight -StudioPath (Join-Path $temp 'Missing Studio Workspace') -UnityPath $unityRoot -UnityExePath $realUnity -ExpectedStudioBranch 'main' -ExpectedUnityBranch 'cartoon-foundation'
     Assert-Review (($missingStudio.Checks | Where-Object Name -eq 'Studio workspace').Status -eq 'BLOCK') 'Missing Studio workspace is reported as a blocking failure'
-    $missingUnity = Get-BrightTalesReviewPreflight -StudioPath $studioRoot -UnityPath $unityRoot -UnityExePath (Join-Path $temp 'Missing Unity.exe') -ExpectedBranch $expectedBranch
+    $missingUnity = Get-BrightTalesReviewPreflight -StudioPath $studioRoot -UnityPath $unityRoot -UnityExePath (Join-Path $temp 'Missing Unity.exe') -ExpectedStudioBranch 'main' -ExpectedUnityBranch 'cartoon-foundation'
     Assert-Review (($missingUnity.Checks | Where-Object Name -eq 'Unity Editor executable').Status -eq 'BLOCK') 'Missing Unity executable is reported as a blocking failure'
-    $missingDeps = Get-BrightTalesReviewPreflight -StudioPath $studioRoot -UnityPath $unityRoot -UnityExePath $realUnity -ExpectedBranch $expectedBranch -NodeModulesPath (Join-Path $temp 'Missing node modules')
+    Assert-Review ((($missingUnity.Checks | Where-Object Name -eq 'Studio branch and working tree').Status) -eq 'PASS') 'Integrated Studio main branch is accepted by preflight'
+    Assert-Review ((($missingUnity.Checks | Where-Object Name -eq 'Unity branch and working tree').Status) -eq 'PASS') 'Integrated Unity cartoon-foundation branch is accepted by preflight'
+    $missingDeps = Get-BrightTalesReviewPreflight -StudioPath $studioRoot -UnityPath $unityRoot -UnityExePath $realUnity -ExpectedStudioBranch 'main' -ExpectedUnityBranch 'cartoon-foundation' -NodeModulesPath (Join-Path $temp 'Missing node modules')
     Assert-Review (($missingDeps.Checks | Where-Object Name -eq 'Studio dependencies').Status -eq 'BLOCK') 'Missing Studio dependencies are reported without installing anything'
 
     Write-Host "Review launcher checks passed: $script:passed" -ForegroundColor Green

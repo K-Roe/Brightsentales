@@ -1,6 +1,8 @@
-# P11 Episode Production & Polish - technical review (2026-10-26)
+# P8-P11 integration (2026-10-26): MERGED, TECHNICALLY VERIFIED; HUMAN REVIEW OPEN
 
-P11 extends the existing Episode Maker and Unity bridge/player. Studio focused tests 27/27, complete suite 342/342 and production build pass. The Unity modular episode/camera test and existing episode timing/audio/camera regression class pass 1/1 and 5/5. A separate broad Test Runner stalled in an existing browser-transfer test awaiting Studio and produced no overall results XML. The two-character episode exists as a manifest fixture, not a live UI-authored saved episode. Disposable-browser save/reopen/replay, complete Unity transfer/playback, full WebM export, real application screenshots, Karl Studio/Unity visual acceptance and physical audio acceptance remain outstanding. Read `proofs/cartoon-foundation-p11/REPORT.md`. No protected-branch merge or P12.
+Karl authorized integration after confirming the review launcher. P8-P11 and the launcher are integrated on Studio `main` and Unity `cartoon-foundation`. Studio post-merge results: 342/342 tests, build, service/relay 12/12, launcher 17/17 and preflight 13 pass / 1 optional voice-service warning / 0 blockers. Unity focused regressions: 12/12 pass with graphics enabled; the null-graphics attempt had one RenderTexture failure and is not counted as the passing run. The broad Unity suite was not run because its existing browser-transfer case waits for live Studio. Details: [integration report](../proofs/cartoon-foundation-integration/REPORT.md).
+
+**Still pending Karl:** P8 Studio camera and Unity Game-view review plus physical listening; P9/P10 visual review; and the complete P11 live episode save/reopen/transfer/play/export walk-through. Integration and automated tests do not grant these approvals.
 
 # P10 Brightling Maker V2 - technical review (historical, 2026-10-26)
 

@@ -1,5 +1,11 @@
 # BrightTales Active Development
 
+## Integrated P8-P11 baseline (2026-10-26)
+
+P8 camera, P9 Brightling Auto-Builder, P10 modular Maker, P11 episode polish and the one-click review launcher are integrated into Studio `main` via `a68d58772a54a93682b204a87ccf34bcd49aa013` and Unity `cartoon-foundation` via `fa532c22d27e3cf71d4f539c911251b766dabb1d`. Post-merge checks and the launcher fix are recorded in [the integration report](../proofs/cartoon-foundation-integration/REPORT.md). Karl's P8-P11 visual, Unity Game-view, physical-audio and full P11 end-to-end acceptance remain pending.
+
+Start the integrated review with `C:\Users\karlr\repos\brightsenappstales\Start-BrightTales-Review.cmd`. It expects Studio `main` and opens Unity worktree `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration` on `cartoon-foundation`. Follow [the review guide](P8_P11_REVIEW_GUIDE.md). The active-development launch instructions below are retained as historical context.
+
 Updated 2026-10-26.
 
 ## Current workspaces

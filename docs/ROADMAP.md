@@ -1,6 +1,6 @@
-# P11 Episode Production & Polish (2026-10-26)
+# P8-P11 Integration and review state (2026-10-26)
 
-Karl-authorized P11 is implemented on the active development branches. Studio focused tests 27/27, complete suite 342/342 and production build pass. Unity episode camera target validation accepts modular Brightling targets only when the character is present in the episode cast; the new two-character test plus the existing episode/audio/camera Play Mode class pass **1/1 and 5/5**. A separate broad Unity run stalled in an existing browser-transfer test awaiting an external Studio request and has no overall result XML. The two-character episode exists as a manifest fixture, not a live UI-authored/exported episode. Human visual/audio review remains pending. Do not merge to protected branches. See `proofs/cartoon-foundation-p11/REPORT.md`; no P12.
+Karl authorized merging the current P8-P11 development work after confirming the review launcher. The work is integrated on Studio `main` and Unity `cartoon-foundation`; exact source/target refs and post-merge verification are in `proofs/cartoon-foundation-integration/REPORT.md`. P8-P11 visual, Unity Game-view and physical-audio acceptance remains pending. P11's live episode authoring/transfer/playback/full-WebM workflow remains unverified; its demo is a manifest fixture. No P12.
 
 # P9 Brightling Auto-Builder V1 - historical isolated milestone (2026-10-26)
 

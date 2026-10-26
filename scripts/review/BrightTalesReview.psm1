@@ -197,9 +197,10 @@ function Get-BrightTalesReviewPreflight {
     [CmdletBinding()]
     param(
         [string]$StudioPath = (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent),
-        [string]$UnityPath = 'C:\Users\karlr\repos\BrightTalesP10MakerUnity',
+        [string]$UnityPath = 'C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration',
         [string]$UnityExePath = 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe',
-        [string]$ExpectedBranch = 'brighttales-active-development',
+        [string]$ExpectedStudioBranch = 'main',
+        [string]$ExpectedUnityBranch = 'cartoon-foundation',
         [int]$BridgePort = 17844,
         [int]$StudioPort = 5177,
         [string]$NodeModulesPath,
@@ -239,9 +240,9 @@ function Get-BrightTalesReviewPreflight {
     $unityExeExists = Test-Path -LiteralPath $UnityExePath -PathType Leaf
     Add-ReviewCheck $checks 'Unity Editor executable' $(if ($unityExeExists) {'PASS'} else {'BLOCK'}) "Unity executable: $UnityExePath"
 
-    $studioGit = if ($studioExists) { Get-ReviewGitState -Path $StudioPath -ExpectedBranch $ExpectedBranch } else { [pscustomobject]@{ Status='BLOCK'; Detail='Studio workspace is missing.' } }
+    $studioGit = if ($studioExists) { Get-ReviewGitState -Path $StudioPath -ExpectedBranch $ExpectedStudioBranch } else { [pscustomobject]@{ Status='BLOCK'; Detail='Studio workspace is missing.' } }
     Add-ReviewCheck $checks 'Studio branch and working tree' $studioGit.Status $studioGit.Detail
-    $unityGit = if ($unityExists) { Get-ReviewGitState -Path $UnityPath -ExpectedBranch $ExpectedBranch } else { [pscustomobject]@{ Status='BLOCK'; Detail='Unity workspace is missing.' } }
+    $unityGit = if ($unityExists) { Get-ReviewGitState -Path $UnityPath -ExpectedBranch $ExpectedUnityBranch } else { [pscustomobject]@{ Status='BLOCK'; Detail='Unity workspace is missing.' } }
     Add-ReviewCheck $checks 'Unity branch and working tree' $unityGit.Status $unityGit.Detail
 
     $bridgeFile = if ($unityExists) { Join-Path $UnityPath 'Assets/BrightTalesBridgeV0.cs' } else { '' }

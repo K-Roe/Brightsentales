@@ -2,13 +2,13 @@
 
 ## Start Studio and Unity
 
-1. In File Explorer, open `C:\Users\karlr\repos\BrightTalesP10MakerStudio`.
+1. In File Explorer, open `C:\Users\karlr\repos\brightsenappstales`.
 2. Double-click **Start-BrightTales-Review.cmd**.
 3. Read the preflight summary. PASS items are ready; WARN items need attention but do not block; BLOCK items stop startup. The launcher never kills processes, installs packages, changes Unity settings, or alters Git worktrees.
 4. When ready, it opens Studio in your default browser and opens the Unity project. In Unity, open `Assets/Scenes/StudioLivingRoomExperimental.unity` from the Project window and press **Play**.
 5. In Studio, use its existing Unity connection panel and press **Connect**. The launcher checks that the bridge port is free or belongs to this Unity project; it does not claim a Studio connection until Studio confirms it.
 
-The launcher writes timestamped logs under `%LOCALAPPDATA%\BrightTales\ReviewLauncher`. `Check-BrightTales-Review.cmd` runs preflight only and does not start applications. To override a workspace for diagnosis, pass documented script options from a terminal; normal review needs no command line or environment setup.
+The launcher expects Studio `main` and Unity `cartoon-foundation`; it opens `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`. It writes timestamped logs under `%LOCALAPPDATA%\BrightTales\ReviewLauncher`. `Check-BrightTales-Review.cmd` runs preflight only and does not start applications. Normal review needs no command line or environment setup.
 
 ## P8 — Camera and audio
 

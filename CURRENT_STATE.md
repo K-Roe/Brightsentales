@@ -1,4 +1,8 @@
-# P11 Episode Production & Polish (2026-10-26)
+# P8-P11 integration checkpoint (2026-10-26)
+
+P8-P11 and the review launcher are integrated locally into Studio `main` (`a68d58772a54a93682b204a87ccf34bcd49aa013`) and Unity `cartoon-foundation` (`fa532c22d27e3cf71d4f539c911251b766dabb1d`). Studio post-merge verification passed: 342/342 tests, build, service/relay 12/12, launcher tests 17/17 and integrated preflight 13 pass / 1 warning / 0 blockers. Unity focused builder, bridge, modular-scene, episode, camera, player and audio tests passed 12/12 with graphics enabled. No broad Unity-suite pass is claimed. Karl's P8-P11 visual, Unity Game-view and physical-audio acceptance remains pending; P11's full live workflow remains unverified. See `proofs/cartoon-foundation-integration/REPORT.md`.
+
+## P11 implementation detail recorded before integration
 
 P11 is implemented on the consolidated `brighttales-active-development` Studio and Unity branches, but the full live workflow is not yet technically verified. Studio tests pass 342/342 and the production build passes. Unity's focused modular episode/camera test passes 1/1; existing episode timing/audio/camera regressions pass 5/5. Studio now labels the canonical wait action as Idle / Wait, resolves saved modular character names in the episode camera Inspector, and preserves modular episode cast/camera/audio information in the bridge. The experimental Pip and Mallow two-scene episode manifest is `proofs/cartoon-foundation-p11/demo-episode.json`; it is not a live saved Studio episode or visual evidence.
 

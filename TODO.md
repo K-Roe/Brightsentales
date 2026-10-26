@@ -1,4 +1,11 @@
-# Active P10 verification and review gates (2026-10-26)
+# P8-P11 integration follow-up (2026-10-26)
+
+- [x] Integrate active P8-P11 and review-launcher heads into Studio `main` and Unity `cartoon-foundation`; preserve milestone history, backups and unrelated worktree changes.
+- [x] Run Studio suite/build/service checks, launcher regression tests and focused Unity builder/bridge/scene/episode/camera/player/audio tests. Results: `proofs/cartoon-foundation-integration/REPORT.md`.
+- [x] Fix the launcher's stale active-branch defaults; it now targets Studio `main` and Unity `cartoon-foundation`.
+- [ ] Karl: review P8 camera in Studio and Unity, physically listen to audio, then review P9/P10 appearance and the complete P11 live episode/WebM workflow.
+
+# Historical P10 verification and review gates (2026-10-26)
 
 - P10 focused checks are complete: Unity builder 2/2, bridge import/update/actions 1/1, custom saved-scene/episode 1/1; Studio 337/337 and build pass. The broad Unity run's headless/config/browser failures are in the P10 report.
 - Still needed: Karl's P8 camera and physical audio review, P9 visual review, and P10 Maker/Unity visual review. P10 Studio UI/browser walkthrough and legible application screenshots are NOT VERIFIED.
