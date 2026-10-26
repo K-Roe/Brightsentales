@@ -1,3 +1,7 @@
+# P10 decision record (2026-10-26)
+
+Extend the P9 Maker and transfer system with optional validated appearance metadata and deterministic vector-derived full-body frames. Studio-generated pose PNGs remain the shared rendered representation imported by Unity; reuse Unity's existing actor/player and stable-ID update. Keep legacy/classic characters and Max/Maxine art untouched. Support only the feature combinations listed in the P10 report. Human visual acceptance remains Karl's decision; P8/P9/P10 merges are not authorized.
+
 # P9 Auto-Builder V1 decisions (2026-10-26)
 
 Use the existing Brightling Maker, `makeFrame` artwork and localhost bridge. Version 1 transfers one bounded whole-body layer plus the existing nine poses, palette and supported Idle/Blink/Walk/Wave identifiers with SHA-256 hashes. Unity rejects unsupported fields/assets and acknowledges only after construction; stable IDs update the same runtime actor. Keep this experimental and isolated. No Max/Maxine source art changes, no new anatomy claims, no AI, no prefab/editor asset generation. Blink is a short squash because there is no closed-eye pose. Custom Brightlings are not yet integrated with saved Studio scene/episode cast validation.

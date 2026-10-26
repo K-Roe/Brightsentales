@@ -15,6 +15,7 @@ export function canonicalDefinition(definition: BrightlingDefinition): string {
   const ordered = { command: 'brightling.import', schema: definition.schema, version: definition.version, character: {
     id: definition.character.id, name: definition.character.name, template: definition.character.template,
     body: definition.character.body.toLowerCase(), hair: definition.character.hair.toLowerCase(), clothing: definition.character.clothing.toLowerCase(),
+    ...(definition.character.appearance ? { appearance: definition.character.appearance } : {}),
   }, templateVersion: definition.templateVersion, bodyPart: definition.bodyPart, animations: definition.animations,
   assets: [...definition.assets].sort((a, b) => FRAMES.indexOf(a.frame) - FRAMES.indexOf(b.frame)).map(a => ({ frame: a.frame, mime: a.mime, sha256: a.sha256, data: a.data })) };
   return JSON.stringify(ordered).replace(/[^\x00-\x7F]/g, c => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`);

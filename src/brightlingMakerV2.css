@@ -1,0 +1,12 @@
+.maker-shape-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 12px;
+  max-width: 780px;
+  padding: 10px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  background: var(--ui-surface);
+}
+.maker-shape-controls label { margin: 5px 0; }
+@media (max-width: 520px) { .maker-shape-controls { grid-template-columns: 1fr; } }

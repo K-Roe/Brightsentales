@@ -150,3 +150,10 @@ M6.7 — Deliver Episode 1 first cut to Karl and Astra for review.
 - `npm test -- --run`: 189/189 passed.
 - `npm run build`: passed.
 - Exported V2 video: 173 s, VP9 + Opus stereo 48 kHz, mean volume −22.0 dB, max volume −1.4 dB.
+# P10 Brightling Maker V2 — isolated, technical evidence only (2026-10-26)
+
+P10 is implemented on `cartoon-foundation-p10-brightling-maker-v2` in separate Studio and Unity worktrees based on P9 development heads. Studio adds deterministic modular whole-body options and extends the existing library/transfer path; Unity receives the generated pose PNGs and supports custom cast entries in saved-scene/episode payloads. Studio tests pass 337/337 and build passes. Unity focused Play Mode passes: builder 2/2, modular bridge 1/1, custom saved scene/episode cast 1/1. A P8 regression class has 1/2 passing; the second case waits for a live Studio browser send. P10 UI walkthrough and Studio screenshot are unavailable; Studio/Unity visual acceptance remains pending. P8, P9 and P10 remain unmerged. See [P10 report](../proofs/cartoon-foundation-p10/REPORT.md).
+
+# P9 application verification (2026-10-26)
+
+The P9 direct Maker workflow has now been exercised in the applications: save/reopen, genuine import/action/update acknowledgements, no duplicate on update, and character restore after Unity restart. Real application screenshots are in the P9 proof folder. Unity bridge health after restart and Studio/Unity human visual approval remain unverified/pending. P9 remains isolated; P10 extends its custom cast to saved scenes/episodes. See [P9 proof](../proofs/cartoon-foundation-p9/REPORT.md).

@@ -1,3 +1,10 @@
+# Active P10 verification and review gates (2026-10-26)
+
+- P10 focused checks are complete: Unity builder 2/2, bridge import/update/actions 1/1, custom saved-scene/episode 1/1; Studio 337/337 and build pass. The broad Unity run's headless/config/browser failures are in the P10 report.
+- Still needed: Karl's P8 camera and physical audio review, P9 visual review, and P10 Maker/Unity visual review. P10 Studio UI/browser walkthrough and legible application screenshots are NOT VERIFIED.
+- Karl review order: P8 camera/audio, P9 direct auto-builder, P10 modular Maker. Keep all branches unmerged pending explicit decisions.
+- No P11.
+
 # Current P9 Brightling Auto-Builder V1 review (2026-10-26)
 
 - [x] Create isolated Studio and Unity branches from the verified P8 development refs.

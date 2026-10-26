@@ -1,0 +1,29 @@
+[
+  {
+    "id": "brightling-11111111-1111-4111-8111-111111111111",
+    "name": "Pip",
+    "template": "male",
+    "body": "#91d9f1",
+    "hair": "#274b9c",
+    "clothing": "#43b9b0",
+    "appearance": { "version": 2, "headShape": "round", "eyeStyle": "round", "earShape": "short", "hairStyle": "tuft", "headDecoration": "none", "bodyShape": "standard", "clothingStyle": "hoodie" }
+  },
+  {
+    "id": "brightling-22222222-2222-4222-8222-222222222222",
+    "name": "Mallow",
+    "template": "female",
+    "body": "#f7b788",
+    "hair": "#8740b6",
+    "clothing": "#d94b55",
+    "appearance": { "version": 2, "headShape": "wide", "eyeStyle": "sparkle", "earShape": "long", "hairStyle": "swoop", "headDecoration": "star", "bodyShape": "standard", "clothingStyle": "jacket" }
+  },
+  {
+    "id": "brightling-33333333-3333-4333-8333-333333333333",
+    "name": "Juniper",
+    "template": "male",
+    "body": "#66dcaa",
+    "hair": "#87502e",
+    "clothing": "#ebcb53",
+    "appearance": { "version": 2, "headShape": "round", "eyeStyle": "sparkle", "earShape": "long", "hairStyle": "tuft", "headDecoration": "none", "bodyShape": "tall", "clothingStyle": "hoodie" }
+  }
+]

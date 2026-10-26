@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="23" result="Failed(Child)" total="23" passed="6" failed="17" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 09:44:08Z" end-time="2026-10-26 09:44:24Z" duration="16.5636093">
+  <test-suite type="TestSuite" id="1045" name="BrightTalesUnityTest" fullname="BrightTalesUnityTest" runstate="Runnable" testcasecount="23" result="Failed" site="Child" start-time="2026-10-26 09:44:08Z" end-time="2026-10-26 09:44:24Z" duration="16.563609" total="23" passed="6" failed="17" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1086" name="BrightTalesRigV1PlayTests.dll" fullname="C:/Users/karlr/repos/BrightTalesP10MakerUnity/Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll" runstate="Runnable" testcasecount="23" result="Failed" site="Child" start-time="2026-10-26 09:44:08Z" end-time="2026-10-26 09:44:24Z" duration="16.551767" total="23" passed="6" failed="17" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="96336" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestFixture" id="1046" name="BrightlingAutoBuilderBridgeWorkflowTest" fullname="BrightlingAutoBuilderBridgeWorkflowTest" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:08Z" end-time="2026-10-26 09:44:11Z" duration="2.898809" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1047" name="LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" fullname="BrightlingAutoBuilderBridgeWorkflowTest.LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" methodname="LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" seed="2104495565" result="Failed" label="Error" start-time="2026-10-26 09:44:08Z" end-time="2026-10-26 09:44:11Z" duration="2.881228" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (An error occurred while sending the request)
+  ----> System.Net.Http.HttpRequestException : An error occurred while sending the request
+  ----> System.Net.WebException : Error: ConnectFailure (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at BrightlingAutoBuilderBridgeWorkflowTest+<LoopbackBridgeImportsUpdatesAndRunsAllAdvertisedActions>d__1.MoveNext () [0x002c1] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\BrightlingAutoBuilderBridgeWorkflowTest.cs:38
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--HttpRequestException
+  at System.Net.Http.MonoWebRequestHandler.SendAsync (System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) [0x00509] in <42e60172fd98406bacce7f82583b459d>:0
+  at System.Net.Http.HttpClient.SendAsyncWorker (System.Net.Http.HttpRequestMessage request, System.Net.Http.HttpCompletionOption completionOption, System.Threading.CancellationToken cancellationToken) [0x000e8] in <42e60172fd98406bacce7f82583b459d>:0
+  at BrightlingAutoBuilderBridgeWorkflowTest+<>c__DisplayClass3_0.<Post>b__0 () [0x00062] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\BrightlingAutoBuilderBridgeWorkflowTest.cs:77
+--WebException
+  at System.Net.WebConnection.Connect (System.Net.WebOperation operation, System.Threading.CancellationToken cancellationToken) [0x0025d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.WebConnection.InitConnection (System.Net.WebOperation operation, System.Threading.CancellationToken cancellationToken) [0x000cc] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.WebOperation.Run () [0x0009a] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.WebCompletionSource`1[T].WaitForCompletion () [0x00094] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.HttpWebRequest.RunWithTimeoutWorker[T] (System.Threading.Tasks.Task`1[TResult] workerTask, System.Int32 timeout, System.Action abort, System.Func`1[TResult] aborted, System.Threading.CancellationTokenSource cts) [0x000f8] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.Http.MonoWebRequestHandler.SendAsync (System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) [0x00378] in <42e60172fd98406bacce7f82583b459d>:0
+--SocketException
+  at System.Net.Sockets.SocketAsyncResult.CheckIfThrowDelayedException () [0x00014] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.Sockets.Socket.EndConnect (System.IAsyncResult asyncResult) [0x0002c] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Net.WebConnection+<>c.<Connect>b__16_1 (System.IAsyncResult asyncResult) [0x00006] in <c23996773f934adabd730531fe6fc1bc>:0
+  at System.Threading.Tasks.TaskFactory`1[TResult].FromAsyncCoreLogic (System.IAsyncResult iar, System.Func`2[T,TResult] endFunction, System.Action`1[T] endAction, System.Threading.Tasks.Task`1[TResult] promise, System.Boolean requiresSynchronization) [0x00019] in <a8858c8db8794c73aac95c6a07c9f981>:0
+--- End of stack trace from previous location where exception was thrown ---
+
+  at System.Net.WebConnection.Connect (System.Net.WebOperation operation, System.Threading.CancellationToken cancellationToken) [0x001e1] in <c23996773f934adabd730531fe6fc1bc>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1048" name="BrightlingAutoBuilderPlayModeTest" fullname="BrightlingAutoBuilderPlayModeTest" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:11Z" end-time="2026-10-26 09:44:11Z" duration="0.623061" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1049" name="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" fullname="BrightlingAutoBuilderPlayModeTest.ImportValidatesBuildsUpdatesAndRegistersSupportedActions" methodname="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" seed="1169594132" result="Failed" start-time="2026-10-26 09:44:11Z" end-time="2026-10-26 09:44:11Z" duration="0.621129" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  Expected: String containing "SHA-256"
+  But was:  "Modular Brightling appearance is unsupported."
+]]></message>
+            <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00008] in <8b63e8ac0a4746599ed207982825ae6c>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00001] in <8b63e8ac0a4746599ed207982825ae6c>:0
+at BrightlingAutoBuilderPlayModeTest+<ImportValidatesBuildsUpdatesAndRegistersSupportedActions>d__3.MoveNext () [0x001da] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs:37
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1050" name="BrightlingSceneCastPlayModeTest" fullname="BrightlingSceneCastPlayModeTest" classname="BrightlingSceneCastPlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:11Z" end-time="2026-10-26 09:44:12Z" duration="0.643178" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1051" name="SavedSceneBuildsAndDirectsTheExistingCustomActor" fullname="BrightlingSceneCastPlayModeTest.SavedSceneBuildsAndDirectsTheExistingCustomActor" methodname="SavedSceneBuildsAndDirectsTheExistingCustomActor" classname="BrightlingSceneCastPlayModeTest" runstate="Runnable" seed="1579999294" result="Failed" start-time="2026-10-26 09:44:11Z" end-time="2026-10-26 09:44:12Z" duration="0.642140" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  Unsupported or invalid saved action
+  Expected: True
+  But was:  False
+]]></message>
+            <stack-trace><![CDATA[at BrightlingSceneCastPlayModeTest+<SavedSceneBuildsAndDirectsTheExistingCustomActor>d__3.MoveNext () [0x002a6] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\BrightlingSceneCastPlayModeTest.cs:40
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+[Brightling Auto-Builder] Saved import skipped: Modular Brightling appearance is unsupported.
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1055" name="CartoonEngineV1_1PlayModeTest" fullname="CartoonEngineV1_1PlayModeTest" classname="CartoonEngineV1_1PlayModeTest" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-26 09:44:12Z" end-time="2026-10-26 09:44:16Z" duration="4.190595" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1057" name="CameraRejectionAndExistingCommandsRemainSafe" fullname="CartoonEngineV1_1PlayModeTest.CameraRejectionAndExistingCommandsRemainSafe" methodname="CameraRejectionAndExistingCommandsRemainSafe" classname="CartoonEngineV1_1PlayModeTest" runstate="Runnable" seed="2108321282" result="Failed" label="Error" start-time="2026-10-26 09:44:12Z" end-time="2026-10-26 09:44:14Z" duration="2.103387" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at CartoonEngineV1_1PlayModeTest+<CameraRejectionAndExistingCommandsRemainSafe>d__4.MoveNext () [0x00267] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1_1PlayModeTest.cs:105
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--SocketException
+  at System.Net.Sockets.TcpClient..ctor (System.String hostname, System.Int32 port) [0x0006d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at CartoonEngineV1_1PlayModeTest+<>c__DisplayClass5_0.<Send>b__0 () [0x00000] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1_1PlayModeTest.cs:149
+  at (wrapper delegate-invoke) System.Func`1[System.ValueTuple`2[System.Int32,System.String]].invoke_TResult()
+  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <a8858c8db8794c73aac95c6a07c9f981>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+]]></output>
+        </test-case>
+        <test-case id="1056" name="StudioLoadsAndPlaysLivingRoomCartoon" fullname="CartoonEngineV1_1PlayModeTest.StudioLoadsAndPlaysLivingRoomCartoon" methodname="StudioLoadsAndPlaysLivingRoomCartoon" classname="CartoonEngineV1_1PlayModeTest" runstate="Runnable" seed="65335138" result="Failed" label="Error" start-time="2026-10-26 09:44:14Z" end-time="2026-10-26 09:44:16Z" duration="2.085993" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at CartoonEngineV1_1PlayModeTest+<StudioLoadsAndPlaysLivingRoomCartoon>d__3.MoveNext () [0x00134] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1_1PlayModeTest.cs:37
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--SocketException
+  at System.Net.Sockets.TcpClient..ctor (System.String hostname, System.Int32 port) [0x0006d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at CartoonEngineV1_1PlayModeTest+<>c__DisplayClass5_0.<Send>b__0 () [0x00000] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1_1PlayModeTest.cs:149
+  at (wrapper delegate-invoke) System.Func`1[System.ValueTuple`2[System.Int32,System.String]].invoke_TResult()
+  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <a8858c8db8794c73aac95c6a07c9f981>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1052" name="CartoonEngineV1PlayModeTest" fullname="CartoonEngineV1PlayModeTest" classname="CartoonEngineV1PlayModeTest" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-26 09:44:16Z" end-time="2026-10-26 09:44:20Z" duration="4.173116" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1054" name="CameraRejectionAndExistingCommandsRemainSafe" fullname="CartoonEngineV1PlayModeTest.CameraRejectionAndExistingCommandsRemainSafe" methodname="CameraRejectionAndExistingCommandsRemainSafe" classname="CartoonEngineV1PlayModeTest" runstate="Runnable" seed="1312421663" result="Failed" label="Error" start-time="2026-10-26 09:44:16Z" end-time="2026-10-26 09:44:18Z" duration="2.089056" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at CartoonEngineV1PlayModeTest+<CameraRejectionAndExistingCommandsRemainSafe>d__4.MoveNext () [0x00263] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1PlayModeTest.cs:104
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--SocketException
+  at System.Net.Sockets.TcpClient..ctor (System.String hostname, System.Int32 port) [0x0006d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at CartoonEngineV1PlayModeTest+<>c__DisplayClass5_0.<Send>b__0 () [0x00000] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1PlayModeTest.cs:144
+  at (wrapper delegate-invoke) System.Func`1[System.ValueTuple`2[System.Int32,System.String]].invoke_TResult()
+  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <a8858c8db8794c73aac95c6a07c9f981>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+]]></output>
+        </test-case>
+        <test-case id="1053" name="StudioLoadsAndPlaysLivingRoomCartoon" fullname="CartoonEngineV1PlayModeTest.StudioLoadsAndPlaysLivingRoomCartoon" methodname="StudioLoadsAndPlaysLivingRoomCartoon" classname="CartoonEngineV1PlayModeTest" runstate="Runnable" seed="1680971627" result="Failed" label="Error" start-time="2026-10-26 09:44:18Z" end-time="2026-10-26 09:44:20Z" duration="2.082991" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at CartoonEngineV1PlayModeTest+<StudioLoadsAndPlaysLivingRoomCartoon>d__3.MoveNext () [0x00134] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1PlayModeTest.cs:36
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--SocketException
+  at System.Net.Sockets.TcpClient..ctor (System.String hostname, System.Int32 port) [0x0006d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at CartoonEngineV1PlayModeTest+<>c__DisplayClass5_0.<Send>b__0 () [0x00000] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\CartoonEngineV1PlayModeTest.cs:144
+  at (wrapper delegate-invoke) System.Func`1[System.ValueTuple`2[System.Int32,System.String]].invoke_TResult()
+  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <a8858c8db8794c73aac95c6a07c9f981>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1082" name="CharacterActingV1_2PlayModeTest" fullname="CharacterActingV1_2PlayModeTest" classname="CharacterActingV1_2PlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:20Z" end-time="2026-10-26 09:44:21Z" duration="0.494858" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1083" name="SavedSceneRunsReusableCommandsAndRecordsCamera" fullname="CharacterActingV1_2PlayModeTest.SavedSceneRunsReusableCommandsAndRecordsCamera" methodname="SavedSceneRunsReusableCommandsAndRecordsCamera" classname="CharacterActingV1_2PlayModeTest" runstate="Runnable" seed="38641035" result="Failed" start-time="2026-10-26 09:44:20Z" end-time="2026-10-26 09:44:21Z" duration="0.493842" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+CharacterActingV1_2PlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/V1_2/CharacterActingV1_2PlayModeTest.cs:83)
+CharacterActingV1_2PlayModeTest/<SavedSceneRunsReusableCommandsAndRecordsCamera>d__0:MoveNext () (at Assets/Tests/PlayMode/V1_2/CharacterActingV1_2PlayModeTest.cs:38)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Failed to set the active render target, ensure that it is a valid render target.
+Failed to set the active render target, ensure that it is a valid render target.
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1084" name="DirectorControlsBridgeV2PlayModeTest" fullname="DirectorControlsBridgeV2PlayModeTest" classname="DirectorControlsBridgeV2PlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.126542" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1085" name="StudioCommandsReachBothActorsOnMainThread" fullname="DirectorControlsBridgeV2PlayModeTest.StudioCommandsReachBothActorsOnMainThread" methodname="StudioCommandsReachBothActorsOnMainThread" classname="DirectorControlsBridgeV2PlayModeTest" runstate="Runnable" seed="1581817202" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.111446" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+DirectorControlsBridgeV2PlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/V1_2/DirectorControlsBridgeV2PlayModeTest.cs:137)
+DirectorControlsBridgeV2PlayModeTest/<StudioCommandsReachBothActorsOnMainThread>d__0:MoveNext () (at Assets/Tests/PlayMode/V1_2/DirectorControlsBridgeV2PlayModeTest.cs:59)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1058" name="MaxNoticesMaxinePlayModeTest" fullname="MaxNoticesMaxinePlayModeTest" classname="MaxNoticesMaxinePlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.088145" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1059" name="PlaysSavedSceneAndRecordsCamera" fullname="MaxNoticesMaxinePlayModeTest.PlaysSavedSceneAndRecordsCamera" methodname="PlaysSavedSceneAndRecordsCamera" classname="MaxNoticesMaxinePlayModeTest" runstate="Runnable" seed="287499489" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.085721" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+MaxNoticesMaxinePlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/MaxNoticesMaxinePlayModeTest.cs:75)
+MaxNoticesMaxinePlayModeTest/<PlaysSavedSceneAndRecordsCamera>d__2:MoveNext () (at Assets/Tests/PlayMode/MaxNoticesMaxinePlayModeTest.cs:45)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1060" name="MaxNoticesMaxineV1_1PlayModeTest" fullname="MaxNoticesMaxineV1_1PlayModeTest" classname="MaxNoticesMaxineV1_1PlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.074703" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1061" name="PlaysSavedSceneAndRecordsCamera" fullname="MaxNoticesMaxineV1_1PlayModeTest.PlaysSavedSceneAndRecordsCamera" methodname="PlaysSavedSceneAndRecordsCamera" classname="MaxNoticesMaxineV1_1PlayModeTest" runstate="Runnable" seed="373971412" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.073572" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+MaxNoticesMaxineV1_1PlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/MaxNoticesMaxineV1_1PlayModeTest.cs:69)
+MaxNoticesMaxineV1_1PlayModeTest/<PlaysSavedSceneAndRecordsCamera>d__0:MoveNext () (at Assets/Tests/PlayMode/MaxNoticesMaxineV1_1PlayModeTest.cs:38)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1062" name="MaxRigV1PlayModeTest" fullname="MaxRigV1PlayModeTest" classname="MaxRigV1PlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.094457" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1063" name="RigBreathesAndKeepsFeetStill" fullname="MaxRigV1PlayModeTest.RigBreathesAndKeepsFeetStill" methodname="RigBreathesAndKeepsFeetStill" classname="MaxRigV1PlayModeTest" runstate="Runnable" seed="154473801" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.093270" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+MaxRigV1PlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/MaxRigV1PlayModeTest.cs:124)
+MaxRigV1PlayModeTest/<RigBreathesAndKeepsFeetStill>d__8:MoveNext () (at Assets/Tests/PlayMode/MaxRigV1PlayModeTest.cs:86)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1064" name="PortalV1PlayModeTest" fullname="PortalV1PlayModeTest" classname="PortalV1PlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.150553" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1065" name="StudioTransferArrivesAndExistingCommandsStillWork" fullname="PortalV1PlayModeTest.StudioTransferArrivesAndExistingCommandsStillWork" methodname="StudioTransferArrivesAndExistingCommandsStillWork" classname="PortalV1PlayModeTest" runstate="Runnable" seed="1947172666" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.147698" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[Unhandled log message: '[Error] RenderTexture.Create failed'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+            <stack-trace><![CDATA[UnityEngine.Camera:Render ()
+PortalV1PlayModeTest:Capture (UnityEngine.Camera,string) (at Assets/Tests/PlayMode/PortalV1PlayModeTest.cs:130)
+PortalV1PlayModeTest/<StudioTransferArrivesAndExistingCommandsStillWork>d__4:MoveNext () (at Assets/Tests/PlayMode/PortalV1PlayModeTest.cs:63)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+Renderer2D Pass: Unable to find surface for attachment 0
+Renderer2D Pass: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+]]></output>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1066" name="StudioEpisodeBrowserWorkflowTest" fullname="StudioEpisodeBrowserWorkflowTest" classname="StudioEpisodeBrowserWorkflowTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.005969" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1067" name="SavedBrowserEpisodePlaysAllOccurrencesAndReplays" fullname="StudioEpisodeBrowserWorkflowTest.SavedBrowserEpisodePlaysAllOccurrencesAndReplays" methodname="SavedBrowserEpisodePlaysAllOccurrencesAndReplays" classname="StudioEpisodeBrowserWorkflowTest" runstate="Runnable" seed="1465860091" result="Failed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:21Z" duration="0.004409" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Timeout" value="180000" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  An isolated proof directory is required.
+  Expected: False
+  But was:  True
+]]></message>
+            <stack-trace><![CDATA[at StudioEpisodeBrowserWorkflowTest+<SavedBrowserEpisodePlaysAllOccurrencesAndReplays>d__1.MoveNext () [0x0004e] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\StudioEpisodeBrowserWorkflowTest.cs:20
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1068" name="StudioEpisodePlayModeTest" fullname="StudioEpisodePlayModeTest" classname="StudioEpisodePlayModeTest" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:22Z" duration="0.712382" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1070" name="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" fullname="StudioEpisodePlayModeTest.EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" methodname="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1165998123" result="Passed" start-time="2026-10-26 09:44:21Z" end-time="2026-10-26 09:44:22Z" duration="0.126582" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1071" name="OccurrenceTimingAndFadeUseOneEpisodeClock" fullname="StudioEpisodePlayModeTest.OccurrenceTimingAndFadeUseOneEpisodeClock" methodname="OccurrenceTimingAndFadeUseOneEpisodeClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="2055479979" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.163120" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1069" name="OrderedScenesPauseStopAndReplayOnOneClock" fullname="StudioEpisodePlayModeTest.OrderedScenesPauseStopAndReplayOnOneClock" methodname="OrderedScenesPauseStopAndReplayOnOneClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="571239406" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.235099" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1072" name="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" fullname="StudioEpisodePlayModeTest.Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" methodname="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="531248597" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.084864" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1073" name="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" fullname="StudioEpisodePlayModeTest.Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" methodname="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="801625904" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.100287" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1074" name="StudioSceneAudioBrowserWorkflowTest" fullname="StudioSceneAudioBrowserWorkflowTest" classname="StudioSceneAudioBrowserWorkflowTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.002845" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1075" name="BrowserTransfersSpeechAndMusicThenPlaysAndResets" fullname="StudioSceneAudioBrowserWorkflowTest.BrowserTransfersSpeechAndMusicThenPlaysAndResets" methodname="BrowserTransfersSpeechAndMusicThenPlaysAndResets" classname="StudioSceneAudioBrowserWorkflowTest" runstate="Runnable" seed="1995976027" result="Failed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.001868" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Timeout" value="180000" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  An isolated P3 proof directory is required.
+  Expected: False
+  But was:  True
+]]></message>
+            <stack-trace><![CDATA[at StudioSceneAudioBrowserWorkflowTest+<BrowserTransfersSpeechAndMusicThenPlaysAndResets>d__0.MoveNext () [0x00046] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\StudioSceneAudioBrowserWorkflowTest.cs:18
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1076" name="StudioSceneAudioPlayModeTest" fullname="StudioSceneAudioPlayModeTest" classname="StudioSceneAudioPlayModeTest" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.161957" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1077" name="SpeechAndMusicDecodeAndFollowTheSavedClock" fullname="StudioSceneAudioPlayModeTest.SpeechAndMusicDecodeAndFollowTheSavedClock" methodname="SpeechAndMusicDecodeAndFollowTheSavedClock" classname="StudioSceneAudioPlayModeTest" runstate="Runnable" seed="1751773950" result="Passed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.160879" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1078" name="StudioSceneBrowserWorkflowTest" fullname="StudioSceneBrowserWorkflowTest" classname="StudioSceneBrowserWorkflowTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.004245" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1079" name="SavedBrowserScenePlaysResetsAndReplays" fullname="StudioSceneBrowserWorkflowTest.SavedBrowserScenePlaysResetsAndReplays" methodname="SavedBrowserScenePlaysResetsAndReplays" classname="StudioSceneBrowserWorkflowTest" runstate="Runnable" seed="1201643955" result="Failed" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:22Z" duration="0.002922" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Timeout" value="180000" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  An isolated evidence directory is required.
+  Expected: False
+  But was:  True
+]]></message>
+            <stack-trace><![CDATA[at StudioSceneBrowserWorkflowTest+<SavedBrowserScenePlaysResetsAndReplays>d__2.MoveNext () [0x00046] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\StudioSceneBrowserWorkflowTest.cs:38
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1080" name="StudioScenePlayerPlayModeTest" fullname="StudioScenePlayerPlayModeTest" classname="StudioScenePlayerPlayModeTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:24Z" duration="2.100942" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1081" name="SavedActionPositionsAndBridgeStateFollowOneClock" fullname="StudioScenePlayerPlayModeTest.SavedActionPositionsAndBridgeStateFollowOneClock" methodname="SavedActionPositionsAndBridgeStateFollowOneClock" classname="StudioScenePlayerPlayModeTest" runstate="Runnable" seed="1419493826" result="Failed" label="Error" start-time="2026-10-26 09:44:22Z" end-time="2026-10-26 09:44:24Z" duration="2.099939" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[System.AggregateException : One or more errors occurred. (No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000)
+  ----> System.Net.Sockets.SocketException : No connection could be made because the target machine actively refused it.
+\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000]]></message>
+            <stack-trace><![CDATA[  at System.Threading.Tasks.Task.ThrowIfExceptional (System.Boolean includeTaskCanceledExceptions) [0x00011] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].GetResultCore (System.Boolean waitCompletionNotification) [0x0002b] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task`1[TResult].get_Result () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at StudioScenePlayerPlayModeTest+<SavedActionPositionsAndBridgeStateFollowOneClock>d__3.MoveNext () [0x0034b] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\StudioScenePlayerPlayModeTest.cs:47
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+--SocketException
+  at System.Net.Sockets.TcpClient..ctor (System.String hostname, System.Int32 port) [0x0006d] in <c23996773f934adabd730531fe6fc1bc>:0
+  at StudioScenePlayerPlayModeTest+<>c__DisplayClass5_0.<Send>b__0 () [0x00000] in C:\Users\karlr\repos\BrightTalesP10MakerUnity\Assets\Tests\PlayMode\StudioScenePlayerPlayModeTest.cs:159
+  at (wrapper delegate-invoke) System.Func`1[System.ValueTuple`2[System.Int32,System.String]].invoke_TResult()
+  at System.Threading.Tasks.Task`1[TResult].InnerInvoke () [0x0000f] in <a8858c8db8794c73aac95c6a07c9f981>:0
+  at System.Threading.Tasks.Task.Execute () [0x00000] in <a8858c8db8794c73aac95c6a07c9f981>:0 ]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17843
+BrightTales Bridge V0 listening on http://127.0.0.1:17843
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

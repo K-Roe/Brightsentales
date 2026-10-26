@@ -41,4 +41,16 @@ describe('deterministic Brightling generator', () => {
       expect(frame).not.toContain('/art/max');
     }
   });
+
+  it('renders supported modular head, ear, body and decoration choices deterministically', () => {
+    const modular = { ...OLIVER_SPEC, headShape: 'wide' as const, earShape: 'long' as const,
+      bodyShape: 'tall' as const, headDecoration: 'star' as const };
+    const frames = generateBrightlingFrames(modular);
+    expect(frames).toEqual(generateBrightlingFrames({ ...modular }));
+    expect(frames.idle).toContain('scale(1.13 1)');
+    expect(frames.idle).toContain('M112 222Q79 202');
+    expect(frames.idle).toContain('M216 35l7 15');
+    expect(frames.idle).toContain('scale(1 1.1)');
+    expect(generateBrightlingFrames(OLIVER_SPEC).idle).not.toBe(frames.idle);
+  });
 });

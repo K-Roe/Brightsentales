@@ -5,6 +5,7 @@ import type { Episode } from './episodes';
 import type { TimedLibrary } from './timedScenes';
 import { prepareStudioEpisode, studioEpisodeCommand, type StudioEpisodeAction, type StudioEpisodeReply } from './studioEpisodeBridge';
 import { connectToUnity } from './unityBridge';
+import type { Brightling } from './maker';
 
 const storageKey = 'brighttales.studio-episode.preview';
 type Run = { runId: string; episodeId: string; revision: string };
@@ -15,8 +16,8 @@ function storedRun(): Run | null {
   } catch { return null; }
 }
 
-export default function EpisodeUnityPreview({ episode, scenes, audioAssets, saved }: {
-  episode: Episode; scenes: TimedLibrary; audioAssets: AudioAsset[]; saved: boolean;
+export default function EpisodeUnityPreview({ episode, scenes, characters, audioAssets, saved }: {
+  episode: Episode; scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; saved: boolean;
 }) {
   const [run, setRun] = useState<Run | null>(storedRun);
   const [phase, setPhase] = useState<StudioEpisodeReply['status'] | 'unknown'>(run ? 'unknown' : 'idle');
@@ -24,8 +25,8 @@ export default function EpisodeUnityPreview({ episode, scenes, audioAssets, save
   const [sceneIndex, setSceneIndex] = useState(0);
   const [message, setMessage] = useState(saved ? 'Send the saved episode to Unity when the preview scene is open.' : 'Save the episode, then preview it in Unity.');
   const pending = useRef<AbortController | null>(null);
-  const current = useRef({ run, episode, scenes, audioAssets, saved });
-  current.current = { run, episode, scenes, audioAssets, saved };
+  const current = useRef({ run, episode, scenes, characters, audioAssets, saved });
+  current.current = { run, episode, scenes, characters, audioAssets, saved };
   useEffect(() => () => pending.current?.abort(), []);
   useEffect(() => { if (!run && phase === 'idle') setMessage(saved ? 'Send the saved episode to Unity when the preview scene is open.' : 'Save the episode, then preview it in Unity.'); }, [saved, run, phase]);
 
@@ -41,7 +42,7 @@ export default function EpisodeUnityPreview({ episode, scenes, audioAssets, save
     setMessage(action === 'load' ? 'Preparing the saved episode and its audio…' : `Unity: ${action}…`);
     try {
       if (action === 'load') await connectToUnity(controller.signal);
-      const config = action === 'load' ? await prepareStudioEpisode(state.episode, state.scenes, state.audioAssets, controller.signal) : undefined;
+      const config = action === 'load' ? await prepareStudioEpisode(state.episode, state.scenes, state.audioAssets, controller.signal, fetch, window.location.origin, state.characters) : undefined;
       const reply = await studioEpisodeCommand(action, id, target, controller.signal,
         action === 'load' ? { config } : { revision: state.run?.revision });
       if (pending.current !== controller) return;

@@ -1,8 +1,12 @@
+# P10 active state (2026-10-26)
+
+P10 is implemented on isolated Studio and Unity branches. Studio full suite 337/337 and build pass. Unity focused Play Mode: builder 2/2, modular bridge import/update/actions 1/1, saved-scene custom cast 1/1 pass. P8 regression class: 1/2 pass; the remaining browser-to-Unity test needs a live Studio browser send. First broad `-nographics` run passed 6/23; its 17 failures include rendering, unconfigured bridge/proof directories, browser-dependent tests and P10 defects fixed by focused follow-up runs. Do not merge P8/P9/P10. Full facts: proofs/cartoon-foundation-p10/REPORT.md.
+
 # P9 complete technical checkpoint and P10 active (2026-10-26)
 
-P9 remains isolated on Studio `cartoon-foundation-p9-brightling-auto-builder` at `c026d83d185ecac250939389b65993b6e74ae5b7` and Unity at `fe40c5282e5e03ab6cb858a749a63926dcee8e81`. The real Studio Maker-to-Unity workflow was completed: create, recolour, save/reopen, import acknowledgement, four action acknowledgements, same-ID update and visible persisted appearance after Unity application restart. Unity bridge health after restart was not available. Screenshots and exact limitations are in `proofs/cartoon-foundation-p9/REPORT.md`.
+P9 remains isolated on Studio `cartoon-foundation-p9-brightling-auto-builder` at `6a471a133490d4b32ac3d1e6d9a725f4d0c709a8` and Unity at `fe40c5282e5e03ab6cb858a749a63926dcee8e81`. The real Studio Maker-to-Unity workflow was completed: create, recolour, save/reopen, import acknowledgement, four action acknowledgements, same-ID update and visible persisted appearance after Unity application restart. Unity bridge health after restart was not available. Screenshots and exact limitations are in `proofs/cartoon-foundation-p9/REPORT.md`.
 
-Automated results: Studio 330/330 and build passed; service/relay 12/12; Unity builder 1/1 and loopback import/update/action 1/1; P8 episode/camera, scene player and audio regressions 5/5, 1/1 and 1/1. The Windows Node shutdown issue did not recur. P9 does not yet transfer custom Brightling casts through the Unity saved-scene/episode contract. P10 is authorized on new isolated branches from the P9 development tips to implement modular characters and continue that integration. P8 acceptance and all P9/P10 human visual gates remain pending; no merge is authorized.
+Automated results: Studio 330/330 and build passed; service/relay 12/12; Unity builder 1/1 and loopback import/update/action 1/1; P8 episode/camera, scene player and audio regressions 5/5, 1/1 and 1/1. The Windows Node shutdown issue did not recur. P9 itself does not transfer custom Brightling casts through saved scenes/episodes; the P10 branch adds that integration and focused Unity scene playback coverage. P8 acceptance and all P9/P10 human visual gates remain pending; no merge is authorized.
 
 ---
 

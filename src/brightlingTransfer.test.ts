@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_COLOURS, FRAMES, type Brightling } from './maker';
+import { DEFAULT_COLOURS, FRAMES, validateBrightling, type Brightling } from './maker';
 
 vi.mock('./maker', async () => {
   const actual = await vi.importActual<typeof import('./maker')>('./maker');
@@ -20,6 +20,18 @@ describe('Brightling transfer contract', () => {
     expect(first.assets.every(asset => /^[a-f0-9]{64}$/.test(asset.sha256))).toBe(true);
     expect(canonicalDefinition(first)).toBe(canonicalDefinition(second));
     expect(canonicalDefinition(first)).toContain('"command":"brightling.import"');
+  });
+
+  it('preserves modular appearance metadata in stable Unity transfer serialization', async () => {
+    const { buildBrightlingDefinition, canonicalDefinition } = await import('./brightlingTransfer');
+    const modular = { ...character, appearance: { version: 2 as const, headShape: 'wide' as const,
+      eyeStyle: 'sparkle' as const, earShape: 'long' as const, hairStyle: 'swoop' as const,
+      headDecoration: 'star' as const, bodyShape: 'tall' as const, clothingStyle: 'jacket' as const } };
+    const definition = await buildBrightlingDefinition(modular);
+    const serialized = canonicalDefinition(definition);
+    expect(serialized).toContain('"appearance":{"version":2,"headShape":"wide"');
+    expect(canonicalDefinition(await buildBrightlingDefinition(modular))).toBe(serialized);
+    expect(validateBrightling({ ...modular, appearance: { ...modular.appearance, earShape: 'wings' as never } })).toBe(false);
   });
 
   it('rejects an invalid or traversal-like identity before rendering assets', async () => {

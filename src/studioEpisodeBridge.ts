@@ -6,6 +6,8 @@ import { episodeCameraIssue } from './episodeCamera';
 import { studioSceneConfig, type StudioSceneConfig } from './studioSceneBridge';
 import { transferStudioAudioClips, type StudioAudioAsset } from './studioAudioTransfer';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
+import type { Brightling } from './maker';
+import { buildBrightlingDefinition, type BrightlingDefinition } from './brightlingTransfer';
 
 export type StudioEpisodeConfig = {
   version: 1 | 2 | 3;
@@ -31,7 +33,7 @@ function episodeClips(episode: Episode, library: TimedLibrary, duration: number)
 }
 
 /** The episode is an ordered list of occurrences. Repeated scene IDs keep separate clocks. */
-export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, media: StudioAudioAsset[] = []): StudioEpisodeConfig {
+export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, media: StudioAudioAsset[] = [], definitions: BrightlingDefinition[] = []): StudioEpisodeConfig {
   if (episode.introId || episode.creditsId) throw new Error('Unity episode preview does not yet render intros or credits. Browser playback is available.');
   if (episode.sceneIds.length === 0) throw new Error('Add a saved scene before previewing this episode in Unity.');
   const missing = missingSceneIds(episode, library);
@@ -42,8 +44,10 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
   const duration = productionDuration(episode, library);
   const cameraIssue = episodeCameraIssue(episode, library, duration);
   if (cameraIssue) throw new Error(cameraIssue);
-  if (episode.camera?.some(shot => shot.target !== 'point' && shot.target !== 'max' && shot.target !== 'maxine'))
-    throw new Error('Unity camera preview supports Max, Maxine or a fixed position. This shot targets another Brightling.');
+  if (episode.camera?.some(shot => shot.target !== 'point' && !episode.sceneIds.some(id => {
+    const scene = library.scenes.find(item => item.id === id);
+    return !!scene && Object.prototype.hasOwnProperty.call(scene.characters, shot.target);
+  }))) throw new Error('A Unity camera target is not in this episode.');
   if (duration <= 0 || duration > 3600) throw new Error('Unity episode preview supports up to 60 minutes.');
   const clips = episodeClips(episode, library, duration);
   if (clips.length > 200) throw new Error('Unity episode preview supports up to 200 audio clips.');
@@ -54,7 +58,9 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
   return {
     version, episodeId: episode.id, duration,
     scenes: blocks.map(block => {
-      const scene = studioSceneConfig(block.scene, media);
+      const customIds = Object.keys(block.scene.characters).filter(id => id.startsWith('brightling-'));
+      const used = definitions.filter(definition => customIds.includes(definition.character.id));
+      const scene = studioSceneConfig(block.scene, media, used);
       return { index: block.index, start: block.start, ...(version >= 2 ? { duration: block.duration, ...(block.occurrenceIndex === undefined ? {} : { transition: episode.sceneSettings?.[block.occurrenceIndex]?.transition }) } : {}), scene: { ...scene, version: 2, audioAssets: undefined, audio: undefined } };
     }),
     ...(episode.camera?.length ? { camera: episode.camera.map(shot => ({
@@ -73,14 +79,26 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
 }
 
 export async function prepareStudioEpisode(episode: Episode, library: TimedLibrary, assets: AudioAsset[], signal: AbortSignal,
-  request: typeof fetch = fetch, origin = window.location.origin): Promise<StudioEpisodeConfig> {
+  request: typeof fetch = fetch, origin = window.location.origin, characters: Brightling[] = []): Promise<StudioEpisodeConfig> {
   const duration = productionDuration(episode, library);
   const clips = episodeClips(episode, library, duration);
+  // Package the unique custom cast before audio upload; no media transfers on invalid cast.
+  const blocks = productionBlocks(episode, library);
+  const customIds = [...new Set(blocks.flatMap(block => Object.keys(block.scene.characters).filter(id => id.startsWith('brightling-'))))];
+  if (customIds.length > 4) throw new Error('Unity episode preview supports up to four custom Brightlings.');
+  const definitions = await Promise.all(customIds.map(async id => {
+    const character = characters.find(item => item.id === id);
+    if (!character) throw new Error(`Restore saved Brightling ${id} before sending this episode to Unity.`);
+    return buildBrightlingDefinition(character);
+  }));
   // Validate all artwork/actions before uploading any media.
   studioEpisodeConfig(episode, library, clips.map(clip => clip.assetId)
-    .filter((id, index, all) => all.indexOf(id) === index).map(id => ({ id } as StudioAudioAsset)));
+    .filter((id, index, all) => all.indexOf(id) === index).map(id => ({ id } as StudioAudioAsset)), definitions);
   const media = await transferStudioAudioClips(clips, assets, signal, request, origin);
-  return studioEpisodeConfig(episode, library, media);
+  const config = studioEpisodeConfig(episode, library, media, definitions);
+  if (new TextEncoder().encode(JSON.stringify(config)).length > 7_800_000)
+    throw new Error('This episode and its custom Brightling artwork exceed Unity’s 8 MB transfer limit. Shorten it or reduce the number of scenes using custom characters.');
+  return config;
 }
 
 export async function studioEpisodeRevision(config: StudioEpisodeConfig): Promise<string> {

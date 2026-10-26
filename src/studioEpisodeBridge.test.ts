@@ -2,6 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { studioEpisodeCommand, studioEpisodeConfig, studioEpisodeRevision } from './studioEpisodeBridge';
 import type { TimedLibrary, TimedScene } from './timedScenes';
 import type { Episode } from './episodes';
+import type { Brightling } from './maker';
+import type { BrightlingDefinition } from './brightlingTransfer';
+import { DEFAULT_COLOURS } from './maker';
 
 const id = (digit: number) => `${String(digit).padStart(8, '0')}-1111-4111-8111-111111111111`;
 const first: TimedScene = { id: id(1), name: 'First', placeId: 'living-room', duration: 4,
@@ -71,6 +74,23 @@ describe('P4 episode transfer', () => {
     expect(await studioEpisodeRevision(config)).not.toBe(await studioEpisodeRevision(studioEpisodeConfig(episode, scenes)));
     expect(() => studioEpisodeConfig({ ...directed, camera: [{ ...directed.camera![0], target: 'other-brightling' }] }, scenes)).toThrow('not in this episode');
     expect(() => studioEpisodeConfig({ ...directed, camera: [directed.camera![0], { ...directed.camera![1], start: 0 }] }, scenes)).toThrow('overlap');
+  });
+
+  it('keeps a custom Brightling in scene occurrences and permits its camera target', () => {
+    const characterId = 'brightling-12345678-1234-4123-8123-123456789abc';
+    const customScene: TimedScene = { ...first, characters: { [characterId]: { x: 700, y: 790 } }, actions: [
+      { ...first.actions[0], characterId, type: 'wave', point: undefined, start: 1, duration: 1.2 },
+    ] };
+    const character: Brightling = { id: characterId, name: 'Nova', template: 'female', ...DEFAULT_COLOURS.female };
+    const definition = { schema: 'brighttales.brightling', version: 1, character, templateVersion: 1,
+      bodyPart: { kind: 'whole-body', layer: 0, pivot: { x: .5, y: 0 }, scale: 1 },
+      animations: ['idle', 'blink', 'walk', 'wave'], assets: [] } as unknown as BrightlingDefinition;
+    const directed: Episode = { id: id(3), name: 'Custom cast', sceneIds: [customScene.id], camera: [
+      { id: id(33), start: 0, duration: 4, shot: 'close-up', target: characterId, movement: 'follow' },
+    ] };
+    const config = studioEpisodeConfig(directed, { version: 1, scenes: [customScene] }, [], [definition]);
+    expect(config.scenes[0].scene).toMatchObject({ characters: [{ id: characterId }], brightlings: [{ character: { id: characterId } }] });
+    expect(config.camera?.[0].target).toBe(characterId);
   });
 
   it('rejects missing scenes and unsupported intro before transfer', () => {

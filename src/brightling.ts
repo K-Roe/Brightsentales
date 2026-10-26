@@ -7,7 +7,22 @@ export type BrightlingSpec = {
   eyeStyle: 'round' | 'sparkle';
   clothingStyle: 'hoodie' | 'jacket';
   clothingColour: string;
+  headShape?: 'round' | 'wide';
+  earShape?: 'short' | 'long';
+  bodyShape?: 'standard' | 'tall';
+  headDecoration?: 'none' | 'star';
   seed?: number;
+};
+
+export type ModularAppearance = {
+  version: 2;
+  headShape: 'round' | 'wide';
+  eyeStyle: 'round' | 'sparkle';
+  earShape: 'short' | 'long';
+  hairStyle: 'tuft' | 'swoop';
+  headDecoration: 'none' | 'star';
+  bodyShape: 'standard' | 'tall';
+  clothingStyle: 'hoodie' | 'jacket';
 };
 
 export type BrightlingFrames = { idle: string; side: [string, string, string, string, string]; wave: [string, string, string] };
@@ -20,7 +35,9 @@ export function validateBrightlingSpec(value: BrightlingSpec): BrightlingSpec {
   if (!/^[a-z][a-z0-9-]{1,31}$/.test(value.id) || !/^[\p{L}][\p{L} '-]{0,39}$/u.test(value.name)) throw new Error('Invalid Brightling identity');
   for (const key of ['bodyColour', 'hairColour', 'clothingColour'] as const) if (!colour.test(value[key])) throw new Error(`Invalid ${key}`);
   if (!['tuft', 'swoop'].includes(value.hairStyle) || !['round', 'sparkle'].includes(value.eyeStyle) ||
-      !['hoodie', 'jacket'].includes(value.clothingStyle)) throw new Error('Unsupported Brightling style');
+      !['hoodie', 'jacket'].includes(value.clothingStyle) || !['round', 'wide', undefined].includes(value.headShape) ||
+      !['short', 'long', undefined].includes(value.earShape) || !['standard', 'tall', undefined].includes(value.bodyShape) ||
+      !['none', 'star', undefined].includes(value.headDecoration)) throw new Error('Unsupported Brightling style');
   if (value.seed !== undefined && (!Number.isSafeInteger(value.seed) || value.seed < 0)) throw new Error('Invalid variation seed');
   return { ...value };
 }
@@ -89,30 +106,40 @@ function frontArm(spec: BrightlingSpec, wave: 0 | 1 | 2 | 3, left: boolean): str
 
 function front(spec: BrightlingSpec, wave: 0 | 1 | 2 | 3): string {
   const coat = spec.clothingColour;
+  const headScale = spec.headShape === 'wide' ? 1.13 : 1;
+  const bodyScale = spec.bodyShape === 'tall' ? 1.10 : 1;
+  const ear = spec.earShape === 'long'
+    ? `<path d="M112 222Q79 202 72 164Q71 143 88 151Q109 158 122 199M322 201Q345 162 372 158Q391 161 381 184Q371 209 352 225" fill="url(#skin)" ${line}/>`
+    : `<path d="M115 200Q88 188 76 214Q60 250 83 283Q105 300 126 275M320 201Q348 189 361 216Q375 250 354 283Q333 301 312 278" fill="url(#skin)" ${line}/>`;
+  const decoration = spec.headDecoration === 'star'
+    ? `<path d="M216 35l7 15 17 2-13 11 4 16-15-9-15 9 4-16-13-11 17-2z" fill="#ffe26d" stroke="#d89033" stroke-width="4" stroke-linejoin="round"/>` : '';
   const body = `<g transform="translate(${wave ? 33 : 0} 0)">
     ${frontLegs(spec)}
     <path d="M148 349Q126 350 108 376L142 408Q171 394 183 369Z M251 369Q269 396 298 408L327 376Q307 350 286 349Z" fill="${shade(coat, -25)}" ${line}/>
     ${frontArm(spec, wave, true)}${frontArm(spec, 0, false)}
-    <path d="M141 374Q172 353 217 355Q263 353 294 374Q315 419 309 502Q288 528 218 529Q146 528 125 503Q119 425 141 374Z" fill="url(#coat)" ${line}/>
+    <path transform="translate(0 ${bodyScale === 1 ? 0 : -36}) scale(1 ${bodyScale})" d="M141 374Q172 353 217 355Q263 353 294 374Q315 419 309 502Q288 528 218 529Q146 528 125 503Q119 425 141 374Z" fill="url(#coat)" ${line}/>
     <path d="M129 501Q211 519 307 501L304 520Q217 540 132 520Z" fill="${shade(coat, -34)}" ${line}/>
     <path d="M157 466Q216 479 278 466Q270 505 217 506Q161 506 157 466Z" fill="none" stroke="${shade(coat, -44)}" stroke-width="4" opacity=".6"/>
     ${spec.clothingStyle === 'hoodie' ? `<path d="M179 366L215 401 254 366Q217 348 179 366Z" fill="${shade(coat, -35)}" ${line}/>
       <path d="M196 392L193 429M237 392L241 429" stroke="#fff4d9" stroke-width="5" stroke-linecap="round"/>` : `<path d="M193 368L217 408 239 368" fill="#fff4d9" ${line}/>
       <path d="M217 409L217 509" fill="none" stroke="${shade(coat, -40)}" stroke-width="5"/>`}
     ${star}
-    <path d="M115 200Q88 188 76 214Q60 250 83 283Q105 300 126 275M320 201Q348 189 361 216Q375 250 354 283Q333 301 312 278" fill="url(#skin)" ${line}/>
-    <path d="M99 227Q81 218 87 253M337 227Q354 220 348 254" fill="none" stroke="${shade(spec.bodyColour, -40)}" stroke-width="6" stroke-linecap="round"/>
-    <path d="M217 104Q323 99 348 197Q363 262 323 315Q285 357 217 362Q149 357 110 315Q69 264 86 195Q107 104 217 104Z" fill="url(#skin)" ${line}/>
-    ${frontHair(spec)}
-    <path d="M137 221Q158 201 181 214M254 214Q278 201 298 221" fill="none" stroke="${shade(spec.hairColour, -8)}" stroke-width="10" stroke-linecap="round"/>
-    ${eye(166, spec.eyeStyle)}${eye(268, spec.eyeStyle)}
-    <ellipse cx="217" cy="279" rx="17" ry="11" fill="${shade(spec.bodyColour, -53)}" ${line}/>
-    <ellipse cx="212" cy="275" rx="7" ry="3" fill="#fff" opacity=".55"/>
-    <path d="M169 303Q217 347 265 303Q259 339 217 344Q175 339 169 303Z" fill="#542838" ${line}/>
-    <path d="M186 324Q217 313 246 326Q227 346 209 340Q192 338 186 324Z" fill="#f0787e"/>
-    <ellipse cx="126" cy="296" rx="18" ry="9" fill="#ff9fa6" opacity=".24"/>
-    <ellipse cx="307" cy="296" rx="18" ry="9" fill="#ff9fa6" opacity=".24"/>
-    <path d="M112 198Q115 164 147 150" fill="none" stroke="#fff" stroke-width="9" opacity=".25" stroke-linecap="round"/>
+    <g transform="translate(217 230) scale(${headScale} 1) translate(-217 -230)">
+      ${ear}
+      <path d="M99 227Q81 218 87 253M337 227Q354 220 348 254" fill="none" stroke="${shade(spec.bodyColour, -40)}" stroke-width="6" stroke-linecap="round"/>
+      <path d="M217 104Q323 99 348 197Q363 262 323 315Q285 357 217 362Q149 357 110 315Q69 264 86 195Q107 104 217 104Z" fill="url(#skin)" ${line}/>
+      ${frontHair(spec)}
+      ${decoration}
+      <path d="M137 221Q158 201 181 214M254 214Q278 201 298 221" fill="none" stroke="${shade(spec.hairColour, -8)}" stroke-width="10" stroke-linecap="round"/>
+      ${eye(166, spec.eyeStyle)}${eye(268, spec.eyeStyle)}
+      <ellipse cx="217" cy="279" rx="17" ry="11" fill="${shade(spec.bodyColour, -53)}" ${line}/>
+      <ellipse cx="212" cy="275" rx="7" ry="3" fill="#fff" opacity=".55"/>
+      <path d="M169 303Q217 347 265 303Q259 339 217 344Q175 339 169 303Z" fill="#542838" ${line}/>
+      <path d="M186 324Q217 313 246 326Q227 346 209 340Q192 338 186 324Z" fill="#f0787e"/>
+      <ellipse cx="126" cy="296" rx="18" ry="9" fill="#ff9fa6" opacity=".24"/>
+      <ellipse cx="307" cy="296" rx="18" ry="9" fill="#ff9fa6" opacity=".24"/>
+      <path d="M112 198Q115 164 147 150" fill="none" stroke="#fff" stroke-width="9" opacity=".25" stroke-linecap="round"/>
+    </g>
   </g>`;
   return wrap(spec, wave ? 500 : 434, body);
 }
@@ -145,6 +172,13 @@ function sideHair(spec: BrightlingSpec): string {
 function side(spec: BrightlingSpec, frame: 0 | 1 | 2 | 3 | 4): string {
   const pose = frame ? gait[frame - 1] : { near: [249, 249, 622], far: [190, 183, 622] };
   const nearForward = frame === 1 || frame === 2;
+  const headScale = spec.headShape === 'wide' ? 1.10 : 1;
+  const bodyScale = spec.bodyShape === 'tall' ? 1.08 : 1;
+  const ear = spec.earShape === 'long'
+    ? '<path d="M126 231Q99 206 98 165Q99 145 114 154Q133 166 140 213Z" fill="url(#skin)" stroke="#272047" stroke-width="5.5" stroke-linejoin="round"/>'
+    : '<path d="M126 220Q101 206 96 234Q95 262 119 274L140 258Z" fill="url(#skin)" stroke="#272047" stroke-width="5.5" stroke-linejoin="round"/>';
+  const decoration = spec.headDecoration === 'star'
+    ? '<path d="M246 34l7 15 17 2-13 11 4 16-15-9-15 9 4-16-13-11 17-2z" fill="#ffe26d" stroke="#d89033" stroke-width="4" stroke-linejoin="round"/>' : '';
   const backArm = nearForward
     ? 'M189 382Q168 388 155 421L127 465Q132 485 156 493L180 474L222 413Z'
     : 'M189 382Q162 389 154 418L166 480Q185 496 201 478L221 413Z';
@@ -156,24 +190,26 @@ function side(spec: BrightlingSpec, frame: 0 | 1 | 2 | 3 | 4): string {
     <path d="${backArm}" fill="${shade(spec.clothingColour, -31)}" ${line}/>
     <path d="M148 468Q131 460 121 475Q112 493 130 505Q143 514 158 497L170 482Z" fill="url(#skin)" ${line}/>
     ${sideLeg(256, pose.near[0], pose.near[1], pose.near[2], true)}
-    <path d="M190 362Q225 347 262 369Q286 392 289 434L297 512Q252 538 190 521Q174 485 178 424Q176 381 190 362Z" fill="url(#coat)" ${line}/>
+    <path transform="translate(0 ${bodyScale === 1 ? 0 : -29}) scale(1 ${bodyScale})" d="M190 362Q225 347 262 369Q286 392 289 434L297 512Q252 538 190 521Q174 485 178 424Q176 381 190 362Z" fill="url(#coat)" ${line}/>
     <path d="M188 504Q244 520 296 504L296 522Q242 540 190 521Z" fill="${shade(spec.clothingColour, -31)}" ${line}/>
     <path d="M222 410l11 21 21 4-16 16 4 23-20-11-20 11 4-23-16-16 22-4Z" fill="#ffe26d" stroke="#f7b545" stroke-width="4"/>
     <path d="${nearArm}" fill="url(#coat)" ${line}/>
     <path d="${nearForward ? 'M281 470Q302 466 315 478Q331 489 320 505Q308 517 291 508L275 489Z' : 'M306 454Q325 444 339 458Q349 473 332 488Q318 497 301 480Z'}" fill="url(#skin)" ${line}/>
-    <path d="M126 220Q101 206 96 234Q95 262 119 274L140 258Z" fill="url(#skin)" ${line}/>
-    <path d="M205 106Q294 99 338 161Q360 185 365 225Q390 231 390 248Q388 268 366 270Q353 323 292 350Q223 372 159 325Q109 286 111 223Q111 145 205 106Z" fill="url(#skin)" ${line}/>
-    ${sideHair(spec)}
-    <path d="M306 214Q323 200 337 211" fill="none" stroke="${shade(spec.hairColour, -8)}" stroke-width="10" stroke-linecap="round"/>
-    <ellipse cx="320" cy="252" rx="31" ry="43" fill="#fffefa" ${line}/>
-    <ellipse cx="332" cy="256" rx="19" ry="29" fill="${spec.eyeStyle === 'sparkle' ? '#4b2585' : '#40221d'}"/>
-    <ellipse cx="337" cy="259" rx="13" ry="23" fill="#171425"/>
-    <ellipse cx="324" cy="242" rx="8" ry="11" fill="#fff"/>
-    <circle cx="344" cy="268" r="4" fill="#fff"/>
-    <ellipse cx="375" cy="242" rx="12" ry="8" fill="${shade(spec.bodyColour, -56)}" ${line}/>
-    <path d="M323 295Q346 320 369 294" fill="none" stroke="#5d283e" stroke-width="6" stroke-linecap="round"/>
-    <ellipse cx="277" cy="295" rx="18" ry="9" fill="#ff9fa6" opacity=".2"/>
-    <path d="M130 177Q132 146 161 133" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".25"/>
+    <g transform="translate(250 230) scale(${headScale} 1) translate(-250 -230)">
+      ${ear}
+      <path d="M205 106Q294 99 338 161Q360 185 365 225Q390 231 390 248Q388 268 366 270Q353 323 292 350Q223 372 159 325Q109 286 111 223Q111 145 205 106Z" fill="url(#skin)" ${line}/>
+      ${sideHair(spec)}${decoration}
+      <path d="M306 214Q323 200 337 211" fill="none" stroke="${shade(spec.hairColour, -8)}" stroke-width="10" stroke-linecap="round"/>
+      <ellipse cx="320" cy="252" rx="31" ry="43" fill="#fffefa" ${line}/>
+      <ellipse cx="332" cy="256" rx="19" ry="29" fill="${spec.eyeStyle === 'sparkle' ? '#4b2585' : '#40221d'}"/>
+      <ellipse cx="337" cy="259" rx="13" ry="23" fill="#171425"/>
+      <ellipse cx="324" cy="242" rx="8" ry="11" fill="#fff"/>
+      <circle cx="344" cy="268" r="4" fill="#fff"/>
+      <ellipse cx="375" cy="242" rx="12" ry="8" fill="${shade(spec.bodyColour, -56)}" ${line}/>
+      <path d="M323 295Q346 320 369 294" fill="none" stroke="#5d283e" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="277" cy="295" rx="18" ry="9" fill="#ff9fa6" opacity=".2"/>
+      <path d="M130 177Q132 146 161 133" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".25"/>
+    </g>
   </g>`);
 }
 

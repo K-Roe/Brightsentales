@@ -1,5 +1,6 @@
+import { generateBrightlingFrames, svgDataUrl, validateBrightlingSpec, type ModularAppearance } from './brightling';
 export type Template = 'male' | 'female';
-export type Brightling = { id: string; name: string; template: Template; body: string; hair: string; clothing: string };
+export type Brightling = { id: string; name: string; template: Template; body: string; hair: string; clothing: string; appearance?: ModularAppearance };
 export const LIBRARY_KEY = 'brightsenappstales.brightlings.v1';
 export const FRAMES = ['0', 'side-0', 'side-v3-1', 'side-v3-2', 'side-v3-3', 'side-v3-4', 'wave-1', 'wave-2', 'wave-3'] as const;
 export const PALETTES = {
@@ -19,7 +20,16 @@ export function validateBrightling(value: unknown): value is Brightling {
   return typeof item.id === 'string' && /^brightling-[a-f0-9-]{36}$/.test(item.id)
     && typeof item.name === 'string' && item.name.trim().length >= 1 && item.name.trim().length <= 32
     && (item.template === 'male' || item.template === 'female')
-    && hex(item.body) && hex(item.hair) && hex(item.clothing);
+    && hex(item.body) && hex(item.hair) && hex(item.clothing)
+    && (item.appearance === undefined || validModularAppearance(item.appearance));
+}
+function validModularAppearance(value: unknown): value is ModularAppearance {
+  if (!value || typeof value !== 'object') return false;
+  const appearance = value as Partial<ModularAppearance>;
+  return appearance.version === 2 && ['round', 'wide'].includes(appearance.headShape ?? '')
+    && ['round', 'sparkle'].includes(appearance.eyeStyle ?? '') && ['short', 'long'].includes(appearance.earShape ?? '')
+    && ['tuft', 'swoop'].includes(appearance.hairStyle ?? '') && ['none', 'star'].includes(appearance.headDecoration ?? '')
+    && ['standard', 'tall'].includes(appearance.bodyShape ?? '') && ['hoodie', 'jacket'].includes(appearance.clothingStyle ?? '');
 }
 export function nameAvailable(name: string, library: Brightling[], excludingId?: string): boolean {
   const normalised = name.trim().toLocaleLowerCase();
@@ -106,7 +116,24 @@ async function frameAssets(template: Template, frame: string) {
   })().catch(error => { sourceCache.delete(key); throw error; }));
   return sourceCache.get(key)!;
 }
-export async function makeFrame(spec: Pick<Brightling, 'template' | 'body' | 'hair' | 'clothing'>, frame: string): Promise<HTMLCanvasElement> {
+export async function makeFrame(spec: Pick<Brightling, 'template' | 'body' | 'hair' | 'clothing' | 'appearance'>, frame: string): Promise<HTMLCanvasElement> {
+  if (spec.appearance) {
+    const generated = generateBrightlingFrames({ id: 'brightling-maker', name: 'Brightling', bodyColour: spec.body,
+      hairStyle: spec.appearance.hairStyle, hairColour: spec.hair, eyeStyle: spec.appearance.eyeStyle,
+      clothingStyle: spec.appearance.clothingStyle, clothingColour: spec.clothing,
+      headShape: spec.appearance.headShape, earShape: spec.appearance.earShape,
+      bodyShape: spec.appearance.bodyShape, headDecoration: spec.appearance.headDecoration });
+    const svg = frame === '0' ? generated.idle : frame === 'side-0' ? generated.side[0]
+      : frame.startsWith('side-v3-') ? generated.side[Number(frame.slice(-1))]
+        : frame.startsWith('wave-') ? generated.wave[Number(frame.slice(-1)) - 1] : undefined;
+    if (!svg) throw new Error(`Unsupported Brightling frame: ${frame}`);
+    const artwork = await image(svgDataUrl(svg));
+    const canvas = document.createElement('canvas'); canvas.width = artwork.naturalWidth; canvas.height = artwork.naturalHeight;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas is unavailable');
+    context.drawImage(artwork, 0, 0);
+    return canvas;
+  }
   const { source, masks } = await frameAssets(spec.template, frame);
   const canvas = document.createElement('canvas'); canvas.width = source.width; canvas.height = source.height;
   const context = canvas.getContext('2d');
@@ -114,7 +141,7 @@ export async function makeFrame(spec: Pick<Brightling, 'template' | 'body' | 'ha
   context.putImageData(recolourPixels(source, masks, spec), 0, 0);
   return canvas;
 }
-export async function makePack(spec: Pick<Brightling, 'template' | 'body' | 'hair' | 'clothing'>) {
+export async function makePack(spec: Pick<Brightling, 'template' | 'body' | 'hair' | 'clothing' | 'appearance'>) {
   const frames = await Promise.all(FRAMES.map(frame => makeFrame(spec, frame)));
   return { idle: frames[0], side: frames.slice(1, 6), wave: frames.slice(6, 9) };
 }

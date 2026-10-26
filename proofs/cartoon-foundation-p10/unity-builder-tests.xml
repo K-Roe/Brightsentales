@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 09:57:03Z" end-time="2026-10-26 09:57:06Z" duration="2.6730611">
+  <test-suite type="TestSuite" id="1046" name="BrightTalesUnityTest" fullname="BrightTalesUnityTest" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-10-26 09:57:03Z" end-time="2026-10-26 09:57:06Z" duration="2.673061" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1088" name="BrightTalesRigV1PlayTests.dll" fullname="C:/Users/karlr/repos/BrightTalesP10MakerUnity/Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-10-26 09:57:03Z" end-time="2026-10-26 09:57:06Z" duration="2.662279" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="58720" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestFixture" id="1049" name="BrightlingAutoBuilderPlayModeTest" fullname="BrightlingAutoBuilderPlayModeTest" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 09:57:03Z" end-time="2026-10-26 09:57:06Z" duration="2.659937" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1050" name="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" fullname="BrightlingAutoBuilderPlayModeTest.ImportValidatesBuildsUpdatesAndRegistersSupportedActions" methodname="ImportValidatesBuildsUpdatesAndRegistersSupportedActions" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" seed="548005170" result="Passed" start-time="2026-10-26 09:57:03Z" end-time="2026-10-26 09:57:05Z" duration="1.755215" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1051" name="ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" fullname="BrightlingAutoBuilderPlayModeTest.ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" methodname="ThreeDistinctModularBrightlingsConstructAndUpdateWithoutDuplication" classname="BrightlingAutoBuilderPlayModeTest" runstate="Runnable" seed="498072909" result="Passed" start-time="2026-10-26 09:57:05Z" end-time="2026-10-26 09:57:06Z" duration="0.884796" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,6 +1,10 @@
+# P10 Brightling Maker V2 - technical review (2026-10-26)
+
+P10 is implemented on isolated branches. Studio tests pass 337/337 and build passes. Unity focused builder 2/2, modular bridge import/update/actions 1/1 and custom scene/episode cast 1/1 pass. P8 scene/player regression class is 1/2: camera rejection and command safety pass; the browser-to-Unity test requires a live Studio send. P10 browser UI walkthrough and Studio screenshot are not captured. Karl's Studio and Unity visual acceptance is pending. Review the [P10 report](../proofs/cartoon-foundation-p10/REPORT.md). No merge is authorized.
+
 # P9 Brightling Auto-Builder V1 - technical review (2026-10-26)
 
-P9 is implemented on isolated Studio and Unity branches and is **not merged or visually accepted**. Studio 330 tests/build/service 12, Unity builder and real loopback bridge workflow, plus P8 Unity episode/camera 5, player 1 and audio 1 all pass. No Studio-browser-to-Unity Game-view visual run or screenshots were obtained; custom Brightlings are not available to saved Studio episode/scene casts yet. Read the [P9 report](../proofs/cartoon-foundation-p9/REPORT.md) for the contract, manual steps, evidence limits and commit IDs.
+P9 is implemented on isolated Studio and Unity branches and is **not merged or visually accepted**. Studio 330 tests/build/service 12, Unity builder and loopback bridge workflow, and P8 regressions pass. The real Studio Maker-to-Unity workflow has since been exercised: save/reopen, actual import/action/update acknowledgements, no duplicate on update and visual restore after Unity restart. Application screenshots are in the P9 proof folder. The post-restart bridge health and human visual review remain unverified/pending. Read the [P9 report](../proofs/cartoon-foundation-p9/REPORT.md) for exact results and manual steps.
 
 # P8 Verification and review gate (2026-10-26)
 

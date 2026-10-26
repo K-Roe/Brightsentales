@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { TimedLibrary } from './timedScenes';
-import { studioSceneCommand, studioSceneConfig } from './studioSceneBridge';
+import { prepareBrightlings, studioSceneCommand, studioSceneConfig } from './studioSceneBridge';
 import { transferStudioAudio } from './studioAudioTransfer';
 import type { AudioAsset } from './audio';
+import type { Brightling } from './maker';
 
 const friendlyPreviewError = (error: unknown) => {
   const detail = error instanceof Error ? error.message : String(error);
@@ -13,7 +14,7 @@ const friendlyPreviewError = (error: unknown) => {
 };
 
 /** Developer preview of saved Scene Maker data; the fixed approved V1.1 panel stays available. */
-export default function StudioSceneUnityPanel({ connected, library, audioAssets, requestedSceneId }: { connected: boolean; library: TimedLibrary; audioAssets: AudioAsset[]; requestedSceneId?: string | null }) {
+export default function StudioSceneUnityPanel({ connected, library, characters, audioAssets, requestedSceneId }: { connected: boolean; library: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; requestedSceneId?: string | null }) {
   const [selectedId, setSelectedId] = useState('');
   const [runId, setRunId] = useState(() => { try { return sessionStorage.getItem('brighttales.studio-scene.run') ?? ''; } catch { return ''; } });
   const [loadedId, setLoadedId] = useState(() => { try { return sessionStorage.getItem('brighttales.studio-scene.scene') ?? ''; } catch { return ''; } });
@@ -40,7 +41,8 @@ export default function StudioSceneUnityPanel({ connected, library, audioAssets,
     setMessage(action === 'load' ? 'Preparing your cartoon preview…' : action === 'play' ? 'Starting the performance…' : action === 'reset' ? 'Resetting the stage…' : 'Checking the performance…');
     try {
       const media = action === 'load' && scene.audio?.length ? await transferStudioAudio(scene, audioAssets, controller.signal) : undefined;
-      const config = action === 'load' ? studioSceneConfig(scene, media) : undefined;
+      const definitions = action === 'load' ? await prepareBrightlings(scene, characters) : [];
+      const config = action === 'load' ? studioSceneConfig(scene, media, definitions) : undefined;
       if (action === 'load') {
         setRunId(id); setLoadedId(scene.id); setPhase('unknown');
         try { sessionStorage.setItem('brighttales.studio-scene.run', id); sessionStorage.setItem('brighttales.studio-scene.scene', scene.id); } catch { /* Current tab still retains the run. */ }

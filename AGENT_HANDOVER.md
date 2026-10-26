@@ -1,3 +1,7 @@
+# P10 handover (2026-10-26)
+
+P9 was verified in real applications for direct Maker send/import/actions/update and Unity restart restoration; screenshots are in the P9 proof folder. P10 extends appearance controls and carries saved custom cast definitions through Studio scene/episode bridges into Unity's existing builder/player. Studio 337/337 and build pass. Unity focused Play Mode passes builder 2/2, bridge 1/1 and custom scene/episode cast 1/1. The P8 regression class passes its non-browser camera/command case; the browser-to-Unity scene send is not verified without a live Studio browser. P10 browser UI evidence and Karl visual acceptance are pending. P8/P9/P10 remain isolated/unmerged. Preserve Unity-generated settings diffs; do not stage them. See proofs/cartoon-foundation-p10/REPORT.md.
+
 # P9 Brightling Auto-Builder V1 handover (2026-10-26)
 
 P9 implementation is committed on isolated Studio and Unity branches. Studio transfer uses the existing Brightling Maker and bridge; Unity validates and builds a runtime whole-body actor with stable-ID update, persistence and four action commands. Studio 330 tests/build/service 12 pass; Unity builder/bridge tests and P8 Unity episode/camera 5, player 1, audio 1 regression tests pass. Exact details and manual steps are in `proofs/cartoon-foundation-p9/REPORT.md`.

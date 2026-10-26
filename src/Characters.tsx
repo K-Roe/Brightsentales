@@ -5,6 +5,8 @@ import { StudioBackup, validateStudioBackup } from './studioBackup';
 import { MAX_OUTFITS, MAXINE_OUTFITS, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
 import { playBrightlingActionInUnity, sendBrightlingToUnity, type BrightlingAction } from './brightlingTransfer';
 import { connectToUnity } from './unityBridge';
+import { generateBrightlingFrames, svgDataUrl, type ModularAppearance } from './brightling';
+import './brightlingMakerV2.css';
 
 type Colours = Pick<Brightling, 'body' | 'hair' | 'clothing'>;
 type Props = {
@@ -29,6 +31,8 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
   const [view, setView] = useState<'overview' | 'maker'>('overview');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [template, setTemplate] = useState<Template>('male');
+  const [modular, setModular] = useState(false);
+  const [appearance, setAppearance] = useState<ModularAppearance>({ version: 2, headShape: 'round', eyeStyle: 'round', earShape: 'short', hairStyle: 'tuft', headDecoration: 'none', bodyShape: 'standard', clothingStyle: 'hoodie' });
   const [name, setName] = useState('');
   const [colours, setColours] = useState<Colours>(DEFAULT_COLOURS.male);
   const [preview, setPreview] = useState('');
@@ -46,15 +50,21 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
     if (view !== 'maker') return;
     let active = true;
     setPreview(''); setPreviewError(false);
-    makeFrame({ template, ...colours }, '0').then(canvas => { if (active) setPreview(canvas.toDataURL('image/png')); }).catch(() => { if (active) setPreviewError(true); });
+    if (modular) {
+      try {
+        const frames = generateBrightlingFrames({ id: 'maker-preview', name: 'Brightling', bodyColour: colours.body,
+          hairColour: colours.hair, clothingColour: colours.clothing, ...appearance });
+        setPreview(svgDataUrl(frames.idle));
+      } catch { setPreviewError(true); }
+    } else makeFrame({ template, ...colours }, '0').then(canvas => { if (active) setPreview(canvas.toDataURL('image/png')); }).catch(() => { if (active) setPreviewError(true); });
     return () => { active = false; };
-  }, [view, template, colours]);
+  }, [view, template, colours, modular, appearance]);
 
-  const resetForm = () => { setView('overview'); setEditingId(null); setTemplate('male'); setName(''); setColours(DEFAULT_COLOURS.male); setMessage(''); };
-  const create = () => { setEditingId(null); setTemplate('male'); setName(''); setColours(DEFAULT_COLOURS.male); setMessage(''); setView('maker'); };
+  const resetForm = () => { setView('overview'); setEditingId(null); setTemplate('male'); setModular(false); setAppearance({ version: 2, headShape: 'round', eyeStyle: 'round', earShape: 'short', hairStyle: 'tuft', headDecoration: 'none', bodyShape: 'standard', clothingStyle: 'hoodie' }); setName(''); setColours(DEFAULT_COLOURS.male); setMessage(''); };
+  const create = () => { setEditingId(null); setTemplate('male'); setModular(false); setName(''); setColours(DEFAULT_COLOURS.male); setMessage(''); setView('maker'); };
   const edit = (item: Brightling) => {
     setView('maker');
-    setEditingId(item.id); setTemplate(item.template); setName(item.name);
+    setEditingId(item.id); setTemplate(item.template); setModular(!!item.appearance); if (item.appearance) setAppearance(item.appearance); setName(item.name);
     setColours({ body: item.body, hair: item.hair, clothing: item.clothing });
     setMessage(`Editing ${item.name}. Their scene placements will stay linked to this ID.`);
     requestAnimationFrame(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
@@ -64,7 +74,7 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
     if (!cleanName || cleanName.length > 32) { setMessage('Enter a name between 1 and 32 characters.'); return; }
     if (!nameAvailable(cleanName, library, editingId ?? undefined)) { setMessage('That name is already in use. Choose another.'); return; }
     setBusy(true);
-    const item: Brightling = { id: editingId ?? `brightling-${crypto.randomUUID()}`, name: cleanName, template, ...colours };
+    const item: Brightling = { id: editingId ?? `brightling-${crypto.randomUUID()}`, name: cleanName, template, ...colours, ...(modular ? { appearance } : {}) };
     const ok = await onSave(item);
     setBusy(false);
     if (ok) { resetForm(); setMessage(`${cleanName} ${editingId ? 'updated' : 'saved'}.`); }
@@ -159,7 +169,7 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
           <article className="portrait-card default-character"><div className="portrait-art"><img src={maxineSpriteSource(maxineOutfit, 'idle')} alt={`Maxine, front-facing in ${MAXINE_OUTFITS.find(option => option.id === maxineOutfit)?.label}`} /></div><div className="portrait-info"><span className="portrait-tag">Original · Protected</span><h3>Maxine</h3><p>Female · Maxine template</p><label className="max-outfit-choice" htmlFor="maxine-outfit">Outfit<select id="maxine-outfit" value={maxineOutfit} disabled={!!storageIssue || !!sceneIssue} onChange={event => { const outfit = event.target.value as MaxineOutfit; setMessage(onMaxineOutfitChange(outfit) ? `Maxine is wearing ${MAXINE_OUTFITS.find(option => option.id === outfit)?.label}. Outfit saved.` : 'Could not save Maxine’s outfit. Existing selection was kept.'); }}>{MAXINE_OUTFITS.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label><span className="portrait-presence">Always in Playground</span></div></article>
           {library.map(item => <article className="portrait-card" key={item.id}>
             <div className="portrait-art">{thumbnails[item.id] ? <img src={thumbnails[item.id]} alt={item.name + ', front-facing'} /> : <span className="art-missing">Artwork unavailable</span>}</div>
-            <div className="portrait-info"><span className="portrait-tag">Custom Brightling</span><h3>{item.name}</h3><p>{item.template === 'male' ? 'Male · Max template' : 'Female · Maxine template'}</p>
+            <div className="portrait-info"><span className="portrait-tag">{item.appearance ? 'Modular Brightling' : 'Custom Brightling'}</span><h3>{item.name}</h3><p>{item.appearance ? `${item.appearance.headShape} head · ${item.appearance.earShape} ears` : item.template === 'male' ? 'Male · Max template' : 'Female · Maxine template'}</p>
               <div className="portrait-actions"><button onClick={() => edit(item)}>Edit</button><button onClick={() => remove(item)}>Delete</button><button className="add-action" onClick={() => onAdd(item)} disabled={!thumbnails[item.id]}>{inScene.includes(item.id) ? 'Open in Playground' : 'Add to Playground'}</button><button onClick={() => void sendToUnity(item)} disabled={sendingId !== null}>{sendingId === item.id ? 'Sending…' : 'Send to Unity'}</button></div>
               {transferredIds.has(item.id) && <div className="portrait-actions" aria-label={`${item.name} Unity animations`}>{(['idle', 'blink', 'walk', 'wave'] as BrightlingAction[]).map(action => <button key={action} onClick={() => void playInUnity(item, action)} disabled={sendingId !== null}>{action[0].toUpperCase() + action.slice(1)}</button>)}</div>}
             </div>
@@ -179,8 +189,18 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
       <div className="maker-fields">
         <p className="eyebrow">{editingId ? 'EDIT CHARACTER' : 'NEW CHARACTER'}</p>
         <h2>{editingId ? 'Edit Brightling' : 'Create a Brightling'}</h2>
-        <p>Choose from the approved templates and colours. The animation artwork stays intact.</p>
-        <label htmlFor="template-choice">Template<select id="template-choice" value={template} onChange={event => { const value = event.target.value as Template; setTemplate(value); setColours(DEFAULT_COLOURS[value]); }}><option value="male">Male · Max template</option><option value="female">Female · Maxine template</option></select></label>
+        <p>Choose a familiar template or build a Brightling from modular shapes.</p>
+        <label htmlFor="character-style">Character style<select id="character-style" value={modular ? 'modular' : 'template'} onChange={event => setModular(event.target.value === 'modular')}><option value="template">Classic template</option><option value="modular">Modular Brightling</option></select></label>
+        {!modular && <label htmlFor="template-choice">Template<select id="template-choice" value={template} onChange={event => { const value = event.target.value as Template; setTemplate(value); setColours(DEFAULT_COLOURS[value]); }}><option value="male">Male · Max template</option><option value="female">Female · Maxine template</option></select></label>}
+        {modular && <div className="maker-shape-controls" aria-label="Brightling shapes">
+          <label>Head shape<select value={appearance.headShape} onChange={event => setAppearance({ ...appearance, headShape: event.target.value as ModularAppearance['headShape'] })}><option value="round">Round</option><option value="wide">Wide</option></select></label>
+          <label>Eyes<select value={appearance.eyeStyle} onChange={event => setAppearance({ ...appearance, eyeStyle: event.target.value as ModularAppearance['eyeStyle'] })}><option value="round">Round</option><option value="sparkle">Sparkle</option></select></label>
+          <label>Ears<select value={appearance.earShape} onChange={event => setAppearance({ ...appearance, earShape: event.target.value as ModularAppearance['earShape'] })}><option value="short">Short</option><option value="long">Long</option></select></label>
+          <label>Hair<select value={appearance.hairStyle} onChange={event => setAppearance({ ...appearance, hairStyle: event.target.value as ModularAppearance['hairStyle'] })}><option value="tuft">Tuft</option><option value="swoop">Swoop</option></select></label>
+          <label>Head decoration<select value={appearance.headDecoration} onChange={event => setAppearance({ ...appearance, headDecoration: event.target.value as ModularAppearance['headDecoration'] })}><option value="none">None</option><option value="star">Star clip</option></select></label>
+          <label>Body shape<select value={appearance.bodyShape} onChange={event => setAppearance({ ...appearance, bodyShape: event.target.value as ModularAppearance['bodyShape'] })}><option value="standard">Standard</option><option value="tall">Tall</option></select></label>
+          <label>Clothing style<select value={appearance.clothingStyle} onChange={event => setAppearance({ ...appearance, clothingStyle: event.target.value as ModularAppearance['clothingStyle'] })}><option value="hoodie">Hoodie</option><option value="jacket">Jacket</option></select></label>
+        </div>}
         <label htmlFor="brightling-name">Name<input id="brightling-name" value={name} maxLength={32} onChange={event => setName(event.target.value)} placeholder="e.g. Charlie" /></label>
         {(['body', 'hair', 'clothing'] as const).map(key => <fieldset className="colour-field" key={key}><legend>{key === 'clothing' ? 'Main clothing colour' : key[0].toUpperCase() + key.slice(1) + ' colour'}</legend><div className="swatches">{PALETTES[key].map(value => <button key={value} type="button" className={'swatch ' + (colours[key] === value ? 'chosen' : '')} style={{ background: value }} onClick={() => setColours({ ...colours, [key]: value })} aria-label={key + ' ' + value} aria-pressed={colours[key] === value} />)}</div></fieldset>)}
         <div className="form-actions"><button className="maker-save" disabled={!preview || busy || !!storageIssue} onClick={save}>{busy ? 'Preparing frames…' : editingId ? 'Update Brightling' : 'Save Brightling'}</button><button className="cancel-button" onClick={resetForm}>Cancel</button></div>
