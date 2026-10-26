@@ -3,6 +3,8 @@ import { Brightling, DEFAULT_COLOURS, LIBRARY_KEY, makeFrame, nameAvailable, PAL
 import { backupLibrary, ImportMode, validateLibrary } from './library';
 import { StudioBackup, validateStudioBackup } from './studioBackup';
 import { MAX_OUTFITS, MAXINE_OUTFITS, maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit } from './outfit';
+import { playBrightlingActionInUnity, sendBrightlingToUnity, type BrightlingAction } from './brightlingTransfer';
+import { connectToUnity } from './unityBridge';
 
 type Colours = Pick<Brightling, 'body' | 'hair' | 'clothing'>;
 type Props = {
@@ -33,6 +35,8 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
   const [previewError, setPreviewError] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [transferredIds, setTransferredIds] = useState<Set<string>>(() => new Set());
   const [importMode, setImportMode] = useState<ImportMode>('merge');
   const fileRef = useRef<HTMLInputElement>(null);
   const studioFileRef = useRef<HTMLInputElement>(null);
@@ -70,6 +74,24 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
     if (!window.confirm(`Delete ${item.name}? This also removes them from the saved living room scene.`)) return;
     if (onDelete(item.id)) { if (editingId === item.id) resetForm(); setMessage(`${item.name} deleted.`); }
     else setMessage('Delete failed. The character and scene were left unchanged.');
+  };
+  const sendToUnity = async (item: Brightling) => {
+    setSendingId(item.id); setMessage(`Preparing ${item.name} for Unity…`);
+    const controller = new AbortController();
+    try {
+      await connectToUnity(controller.signal);
+      setMessage(`Unity is connected. Sending ${item.name} and its pose artwork…`);
+      const reply = await sendBrightlingToUnity(item, controller.signal);
+      setTransferredIds(previous => new Set(previous).add(item.id));
+      setMessage(`${reply.name} ${reply.status === 'updated' ? 'updated' : 'imported'} in Unity (${reply.animations.join(', ')}).`);
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Unity could not import this Brightling.'); }
+    finally { setSendingId(null); }
+  };
+  const playInUnity = async (item: Brightling, action: BrightlingAction) => {
+    setSendingId(item.id);
+    try { await playBrightlingActionInUnity(item.id, action, new AbortController().signal); setMessage(`Unity started ${action} for ${item.name}.`); }
+    catch (error) { setMessage(error instanceof Error ? error.message : 'Unity could not start that action.'); }
+    finally { setSendingId(null); }
   };
   const exportLibrary = () => {
     try {
@@ -138,7 +160,8 @@ export default function Characters({ library, thumbnails, inScene, maxOutfit, on
           {library.map(item => <article className="portrait-card" key={item.id}>
             <div className="portrait-art">{thumbnails[item.id] ? <img src={thumbnails[item.id]} alt={item.name + ', front-facing'} /> : <span className="art-missing">Artwork unavailable</span>}</div>
             <div className="portrait-info"><span className="portrait-tag">Custom Brightling</span><h3>{item.name}</h3><p>{item.template === 'male' ? 'Male · Max template' : 'Female · Maxine template'}</p>
-              <div className="portrait-actions"><button onClick={() => edit(item)}>Edit</button><button onClick={() => remove(item)}>Delete</button><button className="add-action" onClick={() => onAdd(item)} disabled={!thumbnails[item.id]}>{inScene.includes(item.id) ? 'Open in Playground' : 'Add to Playground'}</button></div>
+              <div className="portrait-actions"><button onClick={() => edit(item)}>Edit</button><button onClick={() => remove(item)}>Delete</button><button className="add-action" onClick={() => onAdd(item)} disabled={!thumbnails[item.id]}>{inScene.includes(item.id) ? 'Open in Playground' : 'Add to Playground'}</button><button onClick={() => void sendToUnity(item)} disabled={sendingId !== null}>{sendingId === item.id ? 'Sending…' : 'Send to Unity'}</button></div>
+              {transferredIds.has(item.id) && <div className="portrait-actions" aria-label={`${item.name} Unity animations`}>{(['idle', 'blink', 'walk', 'wave'] as BrightlingAction[]).map(action => <button key={action} onClick={() => void playInUnity(item, action)} disabled={sendingId !== null}>{action[0].toUpperCase() + action.slice(1)}</button>)}</div>}
             </div>
           </article>)}
         </div>
