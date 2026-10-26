@@ -1,5 +1,13 @@
 ﻿# P8–P11 evening review guide
 
+## One-click episode preview and WebM export
+
+Open a saved episode, then click **Preview Episode in Unity**. Studio validates its saved scenes, camera targets, custom Brightling cast and audio references; it starts Play Mode only when needed, waits for the Unity Editor and runtime bridge, transfers the episode, waits for audio preparation, and starts playback from the beginning. The episode status reports each stage and Unity's playback confirmation. If Unity Editor is closed, start it with `Start-BrightTales-Review.cmd`; the episode action never chooses or opens another Unity project. Cancel is available while preparation is running. Existing manual Unity Connection controls remain for troubleshooting.
+
+For **Export WebM**, save the episode first. Progress reports preparation stages and measured rendered-frame counts, then encoding and final validation. The export includes supported episode/scene audio and stops on invalid or undecodable audio rather than dropping it. It renders the timeline end frame and validates the WebM container header before starting the browser download. The browser cannot confirm that the user accepted or saved the download; check Downloads, then watch and listen to the entire file through the ending. Automated checks do not replace Karl's visual or physical-audio review.
+
+The existing Unity player supports the episode features recorded in P11. Unity preview currently rejects intros and credits; use Studio playback/export for episodes containing them.
+
 ## Start Studio and Unity
 
 1. In File Explorer, open `C:\Users\karlr\repos\brightsenappstales`.

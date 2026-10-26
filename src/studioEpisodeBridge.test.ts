@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { studioEpisodeCommand, studioEpisodeConfig, studioEpisodeRevision } from './studioEpisodeBridge';
+import { studioEpisodeCommand, studioEpisodeConfig, studioEpisodeRevision, validateStudioEpisodeForUnity } from './studioEpisodeBridge';
 import type { TimedLibrary, TimedScene } from './timedScenes';
 import type { Episode } from './episodes';
 import type { Brightling } from './maker';
@@ -138,6 +138,14 @@ describe('P4 episode transfer', () => {
     expect(() => studioEpisodeConfig({ ...episode, sceneIds: [id(99)] }, scenes)).toThrow('missing saved scene');
     expect(() => studioEpisodeConfig({ ...episode, introId: id(98) }, scenes)).toThrow('intros or credits');
     expect(() => studioEpisodeConfig({ ...episode, audio: [music] }, scenes)).toThrow('Transfer every');
+  });
+
+  it('validates episode references and required media before Unity startup', async () => {
+    await expect(validateStudioEpisodeForUnity(episode, scenes, [])).resolves.toEqual([]);
+    await expect(validateStudioEpisodeForUnity({ ...episode, sceneIds: [id(99)] }, scenes, [])).rejects.toThrow('missing saved scene');
+    await expect(validateStudioEpisodeForUnity({ ...episode, camera: [{ id: id(31), start: 0, duration: 2, shot: 'close-up', target: 'other', movement: 'static' }] }, scenes, []))
+      .rejects.toThrow('not in this episode');
+    await expect(validateStudioEpisodeForUnity({ ...episode, audio: [music] }, scenes, [])).rejects.toThrow('missing');
   });
 
   it('sends a revisioned episode command and checks the acknowledgement', async () => {

@@ -1,6 +1,6 @@
-import type { AudioAsset } from './audio';
+import { AUDIO_MIMES, validAudioInfo, type AudioAsset } from './audio';
 import { episodePlaybackClips, type PlaybackClip } from './audioPlayback';
-import { episodeTimingIssue, missingSceneIds, productionBlocks, productionDuration, type Episode } from './episodes';
+import { episodeTimingIssue, missingSceneIds, productionBlocks, productionDuration, validateEpisodeLibrary, type Episode } from './episodes';
 import type { TimedLibrary } from './timedScenes';
 import { episodeCameraIssue } from './episodeCamera';
 import { studioSceneConfig, type StudioSceneConfig } from './studioSceneBridge';
@@ -79,10 +79,35 @@ export function studioEpisodeConfig(episode: Episode, library: TimedLibrary, med
 }
 
 export async function prepareStudioEpisode(episode: Episode, library: TimedLibrary, assets: AudioAsset[], signal: AbortSignal,
-  request: typeof fetch = fetch, origin = window.location.origin, characters: Brightling[] = []): Promise<StudioEpisodeConfig> {
+  request: typeof fetch = fetch, origin = window.location.origin, characters: Brightling[] = [], preparedDefinitions?: BrightlingDefinition[]): Promise<StudioEpisodeConfig> {
+  const definitions = preparedDefinitions ?? await validateStudioEpisodeForUnity(episode, library, assets, characters);
   const duration = productionDuration(episode, library);
   const clips = episodeClips(episode, library, duration);
-  // Package the unique custom cast before audio upload; no media transfers on invalid cast.
+  const media = await transferStudioAudioClips(clips, assets, signal, request, origin);
+  const config = studioEpisodeConfig(episode, library, media, definitions);
+  if (new TextEncoder().encode(JSON.stringify(config)).length > 7_800_000)
+    throw new Error('This episode and its custom Brightling artwork exceed Unity’s 8 MB transfer limit. Shorten it or reduce the number of scenes using custom characters.');
+  return config;
+}
+
+/** Validate the entire supported episode and its character/audio references before starting Unity. */
+export async function validateStudioEpisodeForUnity(episode: Episode, library: TimedLibrary, assets: AudioAsset[], characters: Brightling[] = []): Promise<BrightlingDefinition[]> {
+  const valid = validateEpisodeLibrary({ version: 1, episodes: [episode] });
+  if (!valid.ok) throw new Error(valid.error);
+  const duration = productionDuration(episode, library);
+  const clips = episodeClips(episode, library, duration);
+  const assetIds = [...new Set(clips.map(clip => clip.assetId))];
+  const available = new Map(assets.map(asset => [asset.id, asset]));
+  if (available.size !== assets.length) throw new Error('Audio library contains duplicate asset identities. Repair the library before previewing.');
+  for (const id of assetIds) {
+    const asset = available.get(id);
+    if (!asset) throw new Error(`Audio file for a clip is missing: ${id}`);
+    if (!validAudioInfo(asset) || !AUDIO_MIMES.includes(asset.blob?.type) || asset.blob.type !== asset.mime || asset.blob.size !== asset.size)
+      throw new Error(`Audio file for ${asset.name || id} is invalid.`);
+    if (clips.some(clip => clip.assetId === id && clip.trimEnd > asset.duration + .05))
+      throw new Error(`Audio clip for ${asset.name} exceeds its file duration.`);
+  }
+
   const blocks = productionBlocks(episode, library);
   const customIds = [...new Set(blocks.flatMap(block => Object.keys(block.scene.characters).filter(id => id.startsWith('brightling-'))))];
   if (customIds.length > 4) throw new Error('Unity episode preview supports up to four custom Brightlings.');
@@ -91,14 +116,8 @@ export async function prepareStudioEpisode(episode: Episode, library: TimedLibra
     if (!character) throw new Error(`Restore saved Brightling ${id} before sending this episode to Unity.`);
     return buildBrightlingDefinition(character);
   }));
-  // Validate all artwork/actions before uploading any media.
-  studioEpisodeConfig(episode, library, clips.map(clip => clip.assetId)
-    .filter((id, index, all) => all.indexOf(id) === index).map(id => ({ id } as StudioAudioAsset)), definitions);
-  const media = await transferStudioAudioClips(clips, assets, signal, request, origin);
-  const config = studioEpisodeConfig(episode, library, media, definitions);
-  if (new TextEncoder().encode(JSON.stringify(config)).length > 7_800_000)
-    throw new Error('This episode and its custom Brightling artwork exceed Unity’s 8 MB transfer limit. Shorten it or reduce the number of scenes using custom characters.');
-  return config;
+  studioEpisodeConfig(episode, library, assetIds.map(id => ({ id } as StudioAudioAsset)), definitions);
+  return definitions;
 }
 
 export async function studioEpisodeRevision(config: StudioEpisodeConfig): Promise<string> {

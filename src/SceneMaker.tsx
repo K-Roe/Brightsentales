@@ -13,7 +13,7 @@ import { maxSpriteSource, maxineSpriteSource, type MaxOutfit, type MaxineOutfit 
 import { placesIn, type PlaceOrganisation } from './placeFolders';
 import { advanceSceneTime, gestureFramesForScene, isFrameAction, isGesture, needsGreetingSideWave, stateAt, validateTimedLibrary, waveDurationSeconds, type ActionType, type TimedAction, type TimedLibrary, type TimedScene } from './timedScenes';
 import { livingWorldAt } from './livingWorld';
-import { renderSceneVideo } from './sceneVideoExport';
+import { renderSceneVideo, type VideoExportProgress } from './sceneVideoExport';
 import { drawScenePreview, previewPack, type PreviewPack } from './scenePreview';
 import { PHONE_MESSAGES, PHONE_POSITIONS, PHONE_RAISE_SECONDS, PHONE_SYMBOLS, PHONE_TAP_SECONDS, communicationMessage, phoneActionNames, phoneStateAt, syncPhoneClip, type PhoneAction, type PhoneActionType, type PhoneHand } from './phone';
 
@@ -164,7 +164,9 @@ export default function SceneMaker({ library, characters, places, maxOutfit, max
     setPlaying(false); setExporting(true); setExportProgress(0);
     try {
       if (Object.keys(scene.characters).some(id => needsGreetingSideWave(scene, id) && !packs[id]?.sideWave)) throw new Error('Greeting V2 side-wave artwork requires Max and Maxine in their original outfits.');
-      const blob = await renderSceneVideo(scene, room, packs, audioAssets, setExportProgress);
+      const blob = await renderSceneVideo(scene, room, packs, audioAssets, (progress: VideoExportProgress) => setExportProgress(
+        progress.stage === 'complete' ? 1 : progress.stage === 'rendering' && progress.completedFrames !== undefined && progress.totalFrames
+          ? progress.completedFrames / progress.totalFrames : 0));
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a'); link.href = url; link.download = `${scene.name.replace(/[^a-z0-9_-]/gi, '_') || 'scene'}.webm`; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 60000);

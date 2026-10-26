@@ -13,7 +13,7 @@ import { episodeHasUnsavedChanges, episodeSnapshot } from './episodeDraft';
 import { beginEpisodeEdit, recordEpisodeEdit, redoEpisodeEdit, undoEpisodeEdit, type EpisodeEditHistory } from './episodeEditHistory';
 import { introTitleOpacity, type IntroLibrary } from './introductions';
 import { type CreditsLibrary } from './credits';
-import { renderTimelineVideo } from './sceneVideoExport';
+import { renderTimelineVideo, type VideoExportProgress } from './sceneVideoExport';
 import EpisodeUnityPreview from './EpisodeUnityPreview';
 import EpisodeSequence from './EpisodeSequencePanel';
 import EpisodeInspector from './EpisodeInspector';
@@ -38,13 +38,14 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const [message, setMessage] = useState('Choose an episode or create one.');
   const [exporting, setExporting] = useState(false);
-  const [exportProgress, setExportProgress] = useState(0);
+  const [exportProgress, setExportProgress] = useState<VideoExportProgress>({ stage: 'validating' });
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const canvas = useRef<HTMLCanvasElement>(null);
   const leaveDialog = useRef<HTMLDialogElement>(null);
   const cancelLeave = useRef<HTMLButtonElement>(null);
   const last = useRef(0);
+  const exportAbort = useRef<AbortController | null>(null);
   const total = episode ? productionDuration(episode, scenes, intros, credits) : 0;
   const dirty = episodeHasUnsavedChanges(episode, savedSnapshot);
   const missing = episode ? missingSceneIds(episode, scenes) : [];
@@ -90,11 +91,13 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     return saved;
   };
   const exportVideo = async () => {
-    if (!episode || dirty || missing.length || missingIntro || missingCredits || timingIssue || cameraIssue || exporting) return;
-    setPlaying(false); setExporting(true); setExportProgress(0);
+    if (!episode || dirty || missing.length || missingIntro || missingCredits || timingIssue || cameraIssue || exporting || exportAbort.current) return;
+    const controller = new AbortController(); exportAbort.current = controller;
+    setPlaying(false); setExporting(true); setExportProgress({ stage: 'validating' });
     try {
       const blocks = productionBlocks(episode, scenes, intros, credits);
       if (!blocks.length) throw new Error('Add an intro, scene or credits before exporting.');
+      setExportProgress({ stage: 'preparing' }); setMessage('Preparing every scene, background, Brightling and audio cue.');
       const placesById = new Map(placesIn(places).map(place => [place.id, place]));
       const rooms = new Map<string, HTMLImageElement>();
       for (const block of blocks) {
@@ -117,13 +120,28 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
         else drawScenePreview(context, block.scene, Math.min(local, block.scene.duration), room, packsById, camera);
         drawEpisodeFade(context, episodeFadeAt(episode, scenes, at, intros, credits));
       };
-      const blob = await renderTimelineVideo(total, draw, episodePlaybackClips(episode, scenes, intros, credits), audioAssets, setExportProgress);
+      setMessage('Preparing scenes, artwork and audio for the complete episode.');
+      const blob = await renderTimelineVideo(total, draw, episodePlaybackClips(episode, scenes, intros, credits), audioAssets, progress => {
+        if (progress.stage === 'validating') return;
+        setExportProgress(progress);
+        setMessage(progress.stage === 'preparing' ? 'Preparing scenes, artwork and audio.' :
+          progress.stage === 'rendering' ? 'Rendering complete episode frames.' :
+          progress.stage === 'encoding' ? 'Encoding video and audio.' :
+          progress.stage === 'finalising' ? 'Checking and finalising the WebM file.' : 'WebM is complete and validated.');
+      }, controller.signal);
+      if (controller.signal.aborted) throw new DOMException('Export cancelled.', 'AbortError');
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a'); link.href = url; link.download = `${episode.name.replace(/[^a-z0-9_-]/gi, '_') || 'episode'}.webm`; link.click();
-      window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
-      setMessage(`Complete episode exported (${(blob.size / 1_000_000).toFixed(1)} MB). Check the downloaded video.`);
-    } catch (error) { setMessage(error instanceof Error ? error.message : 'Episode export failed.'); }
-    finally { setExporting(false); }
+      try {
+        const link = document.createElement('a'); link.href = url; link.download = `${episode.name.replace(/[^a-z0-9_-]/gi, '_') || 'episode'}.webm`; link.click();
+        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      } catch {
+        URL.revokeObjectURL(url);
+        throw new Error('The browser could not start the WebM download. Check download permissions and try again.');
+      }
+      setMessage(`Complete ${blob.type.split(';')[0]} file prepared (${(blob.size / 1_000_000).toFixed(1)} MB). The browser download was started; check Downloads to confirm the file was saved.`);
+    } catch (error) {
+      setMessage(error instanceof DOMException && error.name === 'AbortError' ? 'Episode export cancelled. Temporary recording resources were released.' : error instanceof Error ? error.message : 'Episode export failed.');
+    } finally { if (exportAbort.current === controller) exportAbort.current = null; setExporting(false); }
   };
 
   useEffect(() => {
@@ -232,7 +250,8 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
       {issue && <p role="alert" className="storage-alert">{issue}</p>}
       <div className="scene-library">{library.episodes.map(item => <article key={item.id}><h2>{item.name}</h2><p>{item.sceneIds.length} scenes · {clock(productionDuration(item, scenes, intros, credits))}</p>{missingSceneIds(item, scenes).length > 0 && <p role="alert" className="episode-warning">Missing saved scene. Open to repair the sequence.</p>}<div className="scene-actions"><button onClick={() => open(item)}>Open</button><button onClick={() => { open({ ...item, id: crypto.randomUUID(), name: `${item.name} copy` }); setMessage('Duplicate opened. Save to keep it.'); }}>Duplicate</button><button onClick={() => { if (window.confirm(`Delete “${item.name}”? The saved scenes will stay in your library.`)) setMessage(onSave({ version: 1, episodes: library.episodes.filter(other => other.id !== item.id) }) ? 'Episode deleted. Its scenes were kept.' : 'Episode could not be deleted.'); }}>Delete</button></div></article>)}</div>
       {library.episodes.length === 0 && <p className="scene-empty">No episodes yet. Create one to add your saved scenes.</p>}
-    </> : <><div className="scene-heading"><div><p className="eyebrow">EPISODE EDITOR</p><h1>{episode.name}</h1><p>{episode.sceneIds.length} scenes · Total duration <strong>{clock(total)}</strong></p><span className={`episode-save-indicator ${dirty ? 'unsaved' : 'saved'}`} role="status">{dirty ? 'Unsaved changes' : 'Saved'}</span></div><div className="scene-actions"><button onClick={() => requestLeave(() => { setHistory(null); setPlaying(false); }, 'return to Episodes')}>Back to Episodes</button><button aria-label="Undo episode edit" title="Undo (Ctrl+Z)" disabled={!history?.past.length} onClick={undo}>Undo</button><button aria-label="Redo episode edit" title="Redo (Ctrl+Y)" disabled={!history?.future.length} onClick={redo}>Redo</button><button className="scene-primary" onClick={save} disabled={!!issue}>Save Episode</button><button disabled={!!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue || total <= 0 || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => playFrom(0)}>Preview Episode</button><button title={dirty ? "Save episode before exporting" : "Download the complete episode as WebM"} disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue} onClick={() => void exportVideo()}>{exporting ? `Exporting ${Math.round(exportProgress * 100)}%` : "Export WebM"}</button></div></div>
+    </> : <><div className="scene-heading"><div><p className="eyebrow">EPISODE EDITOR</p><h1>{episode.name}</h1><p>{episode.sceneIds.length} scenes · Total duration <strong>{clock(total)}</strong></p><span className={`episode-save-indicator ${dirty ? 'unsaved' : 'saved'}`} role="status">{dirty ? 'Unsaved changes' : 'Saved'}</span></div><div className="scene-actions"><button onClick={() => requestLeave(() => { setHistory(null); setPlaying(false); }, 'return to Episodes')}>Back to Episodes</button><button aria-label="Undo episode edit" title="Undo (Ctrl+Z)" disabled={!history?.past.length} onClick={undo}>Undo</button><button aria-label="Redo episode edit" title="Redo (Ctrl+Y)" disabled={!history?.future.length} onClick={redo}>Redo</button><button className="scene-primary" onClick={save} disabled={!!issue}>Save Episode</button><button disabled={!!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue || total <= 0 || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => playFrom(0)}>Preview Episode</button><button title={dirty ? "Save episode before exporting" : "Download the complete episode as WebM"} disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue} onClick={() => void exportVideo()}>{exporting ? `Exporting ${exportProgress.stage}` : "Export WebM"}</button>{exporting && <button onClick={() => exportAbort.current?.abort()}>Cancel export</button>}</div></div>
+      {exporting && <div className="episode-export-progress" role="status" aria-live="polite"><p>{exportProgress.stage === 'validating' ? 'Validating episode' : exportProgress.stage === 'preparing' ? 'Preparing scenes and audio' : exportProgress.stage === 'rendering' ? 'Rendering frames' : exportProgress.stage === 'encoding' ? 'Encoding video and audio' : 'Finalising WebM'}{exportProgress.completedFrames !== undefined && exportProgress.totalFrames ? ` · ${exportProgress.completedFrames.toLocaleString()} / ${exportProgress.totalFrames.toLocaleString()} frames` : ''}</p>{exportProgress.stage === 'rendering' && exportProgress.completedFrames !== undefined && exportProgress.totalFrames ? <progress max={exportProgress.totalFrames} value={exportProgress.completedFrames} aria-label="Episode export frame progress" /> : <progress aria-label="Episode export stage progress" />}</div>}
       <label className="episode-name">Episode name<input aria-label="Episode name" maxLength={80} value={episode.name} onChange={event => change({ ...episode, name: event.target.value })} /></label>
       <div className="voice-fields"><label>Opening intro<select aria-label="Episode intro" value={episode.introId ?? ''} onChange={event => change({ ...episode, introId: event.target.value || undefined })}><option value="">No intro</option>{intros.intros.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label><label>Ending credits<select aria-label="Episode credits" value={episode.creditsId ?? ''} onChange={event => change({ ...episode, creditsId: event.target.value || undefined })}><option value="">No credits</option>{credits.credits.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label></div>
       {missing.length > 0 && <p role="alert" className="episode-warning">This episode refers to {missing.length} missing scene{missing.length === 1 ? '' : 's'}. Playback is paused until you remove the missing block or restore the scene from a backup.</p>}
@@ -247,7 +266,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
         <div id="episode-audio-editor"><AudioPanel label="Episode" clips={episode.audio ?? []} assets={audioAssets} speakers={[{ id: 'max', name: 'Max' }, { id: 'maxine', name: 'Maxine' }, ...characters.map(item => ({ id: item.id, name: item.name }))]} duration={total} time={time} onChange={clips => change({ ...episode, audio: clips })} onSeek={value => { setPlaying(false); setTime(value); }} /></div>
         <EpisodeUnityPreview episode={episode} scenes={scenes} characters={characters} audioAssets={audioAssets} saved={!dirty && library.episodes.some(item => item.id === episode.id)} /></div>
       <aside className="episode-production-sidebar"><EpisodeInspector episode={episode} scenes={scenes} intros={intros} credits={credits} characters={characters} selectedScene={selectedSceneIndex} selectedBoundary={selectedBoundary} selectedCamera={selectedCamera} onChange={change} onSelectScene={setSelectedSceneIndex} onSelectCamera={setSelectedCamera} onEditSource={id => requestLeave(() => onEditScene(id), 'open Scene Maker')} onPreviewTransition={(start, duration) => playFrom(Math.max(0, start - duration / 2 - .3))} /><section className="episode-scene-library"><h2>Saved scenes</h2><p>Add a scene to the end of your episode.</p>{scenes.scenes.map(item => <article key={item.id}>{placesIn(places).find(place => place.id === item.placeId)?.background && <img src={placesIn(places).find(place => place.id === item.placeId)?.background ?? undefined} alt="" loading="lazy" />}<strong>{item.name}</strong><span>{placeName(item.placeId)} · {clock(item.duration)}</span><div><button onClick={() => { change(appendEpisodeScene(episode, item.id)); setSelectedSceneIndex(episode.sceneIds.length); }}>Add Scene</button><button onClick={() => requestLeave(() => onEditScene(item.id), 'open Scene Maker')}>Edit Scene</button></div></article>)}{scenes.scenes.length === 0 && <p>Create a scene in Cartoon Editor first.</p>}</section></aside></div>
-      <p className="episode-export-note">Export WebM downloads the complete episode with its soundtrack. Save changes before exporting.</p>
+      <p className="episode-export-note">Export WebM renders every scene through the exact episode end and keeps the soundtrack. Save changes before exporting. The browser confirms a validated WebM was prepared; check Downloads to confirm it saved.</p>
       <p role="status" className="scene-status">{message}</p>
     </>}
   </section>;

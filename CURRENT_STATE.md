@@ -79,3 +79,7 @@ The approved 26-second V1.1 Living Room experiment is preserved at Studio `13721
 
 Karl supplied and authorised the P11 specification. It is recorded in `proofs/cartoon-foundation-p11/REPORT.md`. Continue on Studio and Unity `brighttales-active-development`; do not create milestone branches or merge protected branches. P11 extends existing Episode Maker, deterministic scene renderer/export, audio clips, episode camera track, Unity scene player and Brightling auto-builder. A two-modular-Brightling short demo must save/reopen, preview/scrub, transfer to Unity, play, and export. Preserve approved art and unrelated Unity settings/review files. P8–P11 manual acceptance remains Karl's gate. No P12.
 
+
+## One-click episode preview and export reliability V1 (2026-10-26)
+
+Studio `main` now prepares the current Unity Editor, waits for Play Mode and bridge confirmation, transfers the saved custom cast/audio episode, resets an earlier Studio episode/scene preview, and only reports playback after Unity confirms it. Export checks scene/audio references, reports actual stages/frame work, supports cancellation, draws an explicit final-time frame, preserves audio failures, and checks the WebM header before download. Full results and limits: `proofs/episode-preview-export-v1/REPORT.md`. Browser download persistence, decoded container duration/audio tracks and Karl's full human viewing/listening remain pending.

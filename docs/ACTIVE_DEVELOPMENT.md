@@ -1,5 +1,9 @@
 # BrightTales Active Development
 
+## One-click episode preview and export reliability V1 (2026-10-26)
+
+Episode Maker's **Preview Episode in Unity** validates the saved episode, starts the current Unity Editor through the existing authenticated control API when needed, waits for Play Mode and bridge health, transfers modular Brightlings/audio, resets a prior preview, and waits for Unity's playback acknowledgement. Unity source and the runtime bridge contract are unchanged. Full WebM export reports real stages and rendered-frame counts, supports cancellation, preserves audio failures as failures, samples the timeline end, and checks the WebM container header before download. Automated results and verification limits are in `proofs/episode-preview-export-v1/REPORT.md`; GUI playback and complete export-file viewing/listening remain Karl's review.
+
 ## Unity Editor Play Mode control V1 (2026-10-26)
 
 Current integration work is on Studio `main` and Unity `cartoon-foundation`; the P8–P11 baseline remains pushed. The Studio Unity Connection panel now has Start Unity and Stop Unity controls with separate Editor and runtime-bridge statuses. Unity's Editor-only loopback controller uses 17845; the existing Play Mode bridge remains on 17844. Studio waits for confirmed Play Mode and then the runtime health response before marking Connected. See [the review guide](P8_P11_REVIEW_GUIDE.md) and [Unity Editor control report](../../BrightTalesUnityFoundationIntegration/proofs/cartoon-foundation-unity-editor-control/REPORT.md).

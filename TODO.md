@@ -202,3 +202,7 @@ Rejected Greeting V1/V2 and Batch 3 remain REJECTED; chair/sofa sitting is DEFER
 - [ ] Capture actual disposable browser, Unity and export evidence; document limits and leave Karl's visual/audio review pending.
 - [ ] Commit/push only P11-owned changes to `brighttales-active-development` in both repositories. Do not merge protected branches or start P12.
 
+
+## One-click episode preview and export reliability V1 (2026-10-26)
+
+Technical work is on Studio `main`; no Unity code change was required. Remaining review: run the saved episode through **Preview Episode in Unity**, confirm the Game view/cast/camera/action/audio, export WebM, confirm the browser saved it, and watch/listen through its ending. See `proofs/episode-preview-export-v1/REPORT.md` for exact automated and live-workflow verification boundaries.
