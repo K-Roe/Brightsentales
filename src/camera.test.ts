@@ -8,7 +8,7 @@ const scene: TimedScene = { id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', name: 'C
   { id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc', characterId: 'maxine', type: 'appear', start: 0, duration: 0, point: { x: 1200, y: 790 } },
   { id: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd', characterId: 'max', type: 'walk', start: 0.5, duration: 2, point: { x: 650, y: 790 } },
 ] };
-const key = (id: string, shot: 'wide' | 'medium' | 'close-up', focus: 'max' | 'maxine' | 'point', start: number, duration: number) => ({ id, shot, focus, start, duration, ...(focus === 'point' ? { point: { x: WIDTH / 2, y: HEIGHT / 2 } } : {}) });
+const key = (id: string, shot: 'wide' | 'medium' | 'close-up' | 'custom', focus: 'max' | 'maxine' | 'point', start: number, duration: number) => ({ id, shot, focus, start, duration, ...(focus === 'point' ? { point: { x: WIDTH / 2, y: HEIGHT / 2 } } : {}) });
 
 describe('camera clock', () => {
   it('keeps scenes without camera data wide and validates their old format', () => {
@@ -32,5 +32,16 @@ describe('camera clock', () => {
     expect(scene.actions).toHaveLength(3);
     const fast = { ...scene, camera: [{ ...key('44444444-4444-4444-8444-444444444444', 'close-up', 'point', 3, .6), point: { x: WIDTH, y: HEIGHT } }] };
     expect(validateTimedLibrary({ version: 1, scenes: [fast] }).ok).toBe(false);
+  });
+  it('supports a custom shot zoom and any Brightling present in the scene', () => {
+    const custom = { ...key('66666666-6666-4666-8666-666666666666', 'custom', 'maxine', 0, 0), zoom: 3.2 };
+    const withCustom: TimedScene = { ...scene, camera: [custom] };
+    expect(validateTimedLibrary({ version: 1, scenes: [withCustom] }).ok).toBe(true);
+    expect(cameraAt(withCustom, 2).zoom).toBe(3.2);
+    expect(cameraAt(withCustom, 2).x).toBeCloseTo(1200);
+    const noZoom = { ...custom, zoom: undefined };
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...scene, camera: [noZoom] }] }).ok).toBe(false);
+    const strayZoom = { ...key('77777777-7777-4777-8777-777777777777', 'medium', 'max', 0, 0), zoom: 2 };
+    expect(validateTimedLibrary({ version: 1, scenes: [{ ...scene, camera: [strayZoom] }] }).ok).toBe(false);
   });
 });

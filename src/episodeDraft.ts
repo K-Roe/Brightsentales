@@ -1,6 +1,6 @@
 import type { Episode } from './episodes';
 
-/** Compare persisted episode fields; an absent audio array and an empty one render alike. */
+/** Compare persisted episode fields; omitted empty tracks render like empty tracks. */
 export function episodeSnapshot(episode: Episode): string {
   return JSON.stringify({
     id: episode.id,
@@ -9,6 +9,10 @@ export function episodeSnapshot(episode: Episode): string {
     sceneSettings: episode.sceneIds.map((_, index) => ({
       duration: episode.sceneSettings?.[index]?.duration ?? null,
       transition: episode.sceneSettings?.[index]?.transition ?? null,
+    })),
+    camera: [...(episode.camera ?? [])].sort((left, right) => left.start - right.start).map(shot => ({
+      id: shot.id, start: shot.start, duration: shot.duration, shot: shot.shot,
+      target: shot.target, movement: shot.movement, x: shot.x ?? null, y: shot.y ?? null, zoom: shot.zoom ?? null,
     })),
     introId: episode.introId ?? null,
     creditsId: episode.creditsId ?? null,

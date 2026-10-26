@@ -10,10 +10,27 @@ const DIST = path.join(ROOT, 'dist');
 const mode = process.argv[2] === 'dev' ? 'dev' : 'production';
 const manager = new VoiceServiceManager();
 const studioAudio = createStudioAudioRelay();
+const reviewHealthPath = '/__brighttales_review/health';
 let closeWeb = async () => {};
 let closing = false;
 
+function reviewHealth(request, response) {
+  if (request.method !== 'GET' || new URL(request.url, 'http://127.0.0.1').pathname !== reviewHealthPath) return false;
+  const local = request.socket.localAddress;
+  if (local !== '127.0.0.1' && local !== '::1' && local !== '::ffff:127.0.0.1') {
+    response.writeHead(403); response.end(); return true;
+  }
+  const body = JSON.stringify({
+    service: 'brighttales-studio', protocol: 1, workspace: ROOT, mode,
+    unityBridgePort: process.env.VITE_UNITY_BRIDGE_PORT === '17844' ? 17844 : 17843,
+  });
+  response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Content-Length': Buffer.byteLength(body) });
+  response.end(body);
+  return true;
+}
+
 function middleware(request, response, next) {
+  if (reviewHealth(request, response)) return;
   void studioAudio.handle(request, response).then(handled => handled || handleVoiceRequest(request, response, manager)).then(handled => { if (!handled) next(); }).catch(() => {
     if (!response.headersSent) response.writeHead(500);
     response.end('Local voice request failed.');
@@ -62,8 +79,15 @@ async function startProduction() {
 
 async function startDevelopment() {
   const { createServer } = await import('vite');
+  const configuredPort = process.env.BRIGHTTALES_STUDIO_PORT;
+  if (configuredPort !== undefined && (!/^\d+$/.test(configuredPort) || Number(configuredPort) < 1024 || Number(configuredPort) > 65535)) {
+    throw Error('BRIGHTTALES_STUDIO_PORT must be a TCP port between 1024 and 65535.');
+  }
   const server = await createServer({
-    server: { host: '127.0.0.1' },
+    server: {
+      host: '127.0.0.1',
+      ...(configuredPort === undefined ? {} : { port: Number(configuredPort), strictPort: true }),
+    },
     plugins: [{ name: 'brighttales-managed-voice', configureServer(vite) { vite.middlewares.use(middleware); } }],
   });
   await server.listen();

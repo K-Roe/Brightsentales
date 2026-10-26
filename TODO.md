@@ -1,8 +1,55 @@
+# Active P10 verification and review gates (2026-10-26)
+
+- P10 focused checks are complete: Unity builder 2/2, bridge import/update/actions 1/1, custom saved-scene/episode 1/1; Studio 337/337 and build pass. The broad Unity run's headless/config/browser failures are in the P10 report.
+- Still needed: Karl's P8 camera and physical audio review, P9 visual review, and P10 Maker/Unity visual review. P10 Studio UI/browser walkthrough and legible application screenshots are NOT VERIFIED.
+- Karl review order: P8 camera/audio, P9 direct auto-builder, P10 modular Maker. Keep all branches unmerged pending explicit decisions.
+- No P11.
+
+# Current P11 Episode Production & Polish review (2026-10-26)
+
+- [x] Record Karl's P11 specification on the active development branch before implementation.
+- [x] Extend the existing Episode Maker's modular camera-target labels, supported idle wording and Unity Preview help; add episode bridge/demo fixture regression coverage.
+- [x] Extend Unity episode camera target validation for present modular Brightling IDs and add two-character camera/action/replay Play Mode coverage.
+- [x] Studio full suite 342/342, production build and focused episode/camera/bridge tests 27/27 pass.
+- [x] Run the focused Unity modular episode/camera test 1/1 and existing episode timing/audio/camera regression class 5/5 with isolated Test Runner filters.
+- [ ] Complete disposable-browser authoring, save/reopen/replay, genuine episode transfer acknowledgement, Unity playback, and complete WebM export; retain real screenshots/logs.
+- [ ] Karl: review P8 Studio camera, Unity Game view and physical audio; then P9 transfer, P10 modular Maker, and P11 two-character episode workflow. Record each decision explicitly.
+- [ ] Commit/push P11 implementation and proof on Studio and Unity `brighttales-active-development`; keep protected integration branches unchanged.
+
+P11 is not yet end-to-end technically verified and has no human acceptance. See `proofs/cartoon-foundation-p11/REPORT.md`. No P12.
+
+# Current P9 Brightling Auto-Builder V1 review (historical, 2026-10-26)
+
+- [x] Create isolated Studio and Unity branches from the verified P8 development refs.
+- [x] Reuse the Brightling Maker, package a deterministic validated definition and artwork, and add acknowledged Unity transfer/action controls.
+- [x] Construct, update by stable ID, persist and restore a runtime Unity actor; verify Idle, Blink, Walk and Wave commands.
+- [x] Studio focused 5/5, complete suite 330/330, production build, service/relay 12/12; Unity builder/loopback tests; P8 regressions episode/camera 5/5, player 1/1, audio 1/1.
+- [ ] Karl: review Studio preview and Unity Game-view appearance/actions; attempt application restart and confirm restored character.
+- [ ] Extend Studio saved scene/episode cast validation and playback before claiming complete episode integration.
+- [ ] Decide whether the whole-body template and squash Blink are acceptable. Do not merge without explicit approval.
+
+The transferred template uses existing recolored Max/Maxine whole-body poses, not new anatomy. No application screenshots were captured; the browser-driven app-to-app workflow is not verified. See `proofs/cartoon-foundation-p9/REPORT.md`.
+
+---
+
+# Current P8 review task (2026-10-26)
+
+- [x] Reverify Studio 325/325, production build, and service/relay 12/12.
+- [x] Reverify Unity episode/camera 5/5, player 1/1, audio 1/1 and live browser-to-Unity V3 1/1.
+- [x] Recreate disposable browser save/reopen/replay/export evidence and decode the full WebM.
+- [ ] Karl: approve or request changes for Studio camera visuals.
+- [ ] Karl: approve or request changes for Unity Game-view camera visuals.
+- [ ] Karl: physically listen to the episode audio and approve or request changes.
+- [ ] Only after all three explicit approvals, recheck branches/worktrees and perform the conditional merge and post-merge verification.
+
+P8 remains unmerged. P9 is authorized on isolated branches and remains unmerged. Full P8 checklist: `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md`.
+
+---
 # Cartoon production foundation — takeover list
 
-## P7 technical checkpoint — 2026-10-25
+## P7 technical checkpoint — MERGED 2026-10-25
 
-The isolated P7 Studio editor polish is implemented and verified: zoom/scrub/audio overview, duration nudges, boundary preview, local Undo/Redo and shortcuts, Replay and direct WebM export. Studio 313/313, service/relay 12/12, build, disposable browser and complete WebM passed. Browser-to-Unity playback/replay/reset passed 1/1 against the Unity P7 head; Unity source is unchanged. See `proofs/cartoon-foundation-p7/REPORT.md`. Keep P7 unmerged. Remaining acceptance: Karl's visual/usability decision, Unity Game-view visual review and physical audio listening. Do not start Crossfade or another milestone without direction.
+Studio `main` is pushed at `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains at `0998a013fe5d33dd5c5d4c71a541564d49b28251`, with no P7 source delta. P7 technical verification is complete. Its historical merge and tests are recorded in the P7 proof. Current work is only the P8 manual review gate above.
 
 ## P7 Episode Production Polish — authorised 2026-10-25
 
@@ -122,3 +169,21 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 ## Excluded scope
 
 Rejected Greeting V1/V2 and Batch 3 remain REJECTED; chair/sofa sitting is DEFERRED. Portal V1 remains EXPERIMENTAL and outside this mission. Do not merge experimental work into production without Karl's visual approval.
+# Active development — 2026-10-26
+
+- [x] Consolidate P8–P10 ancestry on pushed Studio and Unity `brighttales-active-development` branches; preserve P8/P9/P10 backup refs and historical branches.
+- [x] Verify Studio full suite/build and focused Unity P10 builder tests on the active heads.
+- [ ] Karl: review P8 camera/audio, P9 transfer, and P10 modular characters; technical verification is not human acceptance.
+- [ ] Provide the P11 Episode Production & Polish acceptance checklist/scope; none was present in the repository docs or reports, so implementation has not started.
+- [ ] After P11 requirements are supplied, implement/test/document only that milestone on the active branches; do not merge protected branches or start P12.
+
+# P11 Episode Production & Polish — authorised (2026-10-26)
+
+- [x] Record Karl's approved P11 scope in `proofs/cartoon-foundation-p11/REPORT.md`.
+- [ ] Verify episode editor supports two modular cast members with IDs/appearances/actions through editing and save/reopen.
+- [ ] Verify/complete timeline arrangement, camera and audio timing across preview/scrub, Unity transfer/playback and supported export.
+- [ ] Create the short experimental demo episode with two different modular Brightlings, location, walk/wave, two shots, supported audio and beginning/ending; do not overwrite approved episodes.
+- [ ] Add focused coverage for gaps found in the existing paths; run full Studio tests/build and relevant Unity regressions.
+- [ ] Capture actual disposable browser, Unity and export evidence; document limits and leave Karl's visual/audio review pending.
+- [ ] Commit/push only P11-owned changes to `brighttales-active-development` in both repositories. Do not merge protected branches or start P12.
+

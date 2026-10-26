@@ -5,11 +5,51 @@ import { creditsAsScene, type Credits, type CreditsLibrary } from './credits';
 
 export const EPISODES_KEY = 'brightsenappstales.episodes.v1';
 export type EpisodeSceneSettings = { duration?: number; transition?: { type: 'fade-black'; duration: number } };
-export type Episode = { id: string; name: string; sceneIds: string[]; sceneSettings?: EpisodeSceneSettings[]; introId?: string; creditsId?: string; audio?: AudioClip[] };
+/** Optional episode-level directing track. Absent means the saved scene camera keeps its existing behaviour. */
+export type EpisodeCameraShot = {
+  id: string;
+  start: number;
+  duration: number;
+  shot: 'wide' | 'medium' | 'close-up' | 'custom';
+  target: string;
+  movement: 'static' | 'pan' | 'follow';
+  x?: number;
+  y?: number;
+  zoom?: number;
+};
+export type Episode = { id: string; name: string; sceneIds: string[]; sceneSettings?: EpisodeSceneSettings[]; camera?: EpisodeCameraShot[]; introId?: string; creditsId?: string; audio?: AudioClip[] };
 export type EpisodeLibrary = { version: 1; episodes: Episode[] };
 export const EMPTY_EPISODE_LIBRARY: EpisodeLibrary = { version: 1, episodes: [] };
 export type EpisodeResult = { ok: true; library: EpisodeLibrary } | { ok: false; error: string };
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+const finiteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+
+function validEpisodeCamera(camera: unknown): boolean {
+  if (camera === undefined) return true;
+  if (!Array.isArray(camera) || camera.length > 100) return false;
+  const ids = new Set<string>();
+  let end = 0;
+  for (const shot of camera) {
+    if (!shot || typeof shot !== 'object' || Array.isArray(shot)) return false;
+    const item = shot as EpisodeCameraShot;
+    if (typeof item.id !== 'string' || !uuid.test(item.id) || ids.has(item.id)) return false;
+    if (item.shot !== 'wide' && item.shot !== 'medium' && item.shot !== 'close-up' && item.shot !== 'custom') return false;
+    if (item.movement !== 'static' && item.movement !== 'pan' && item.movement !== 'follow') return false;
+    if (typeof item.target !== 'string' || !item.target) return false;
+    if (!finiteNumber(item.start) || item.start < 0 || !finiteNumber(item.duration) || item.duration < .5 || item.start + item.duration > 3600) return false;
+    if (item.start < end - 1e-7) return false;
+    if (item.shot === 'custom' && (!finiteNumber(item.zoom) || item.zoom < 1 || item.zoom > 4)) return false;
+    if (item.shot !== 'custom' && item.zoom !== undefined) return false;
+    if (item.x !== undefined && (!finiteNumber(item.x) || item.x < 0 || item.x > 1672)) return false;
+    if (item.y !== undefined && (!finiteNumber(item.y) || item.y < 0 || item.y > 941)) return false;
+    if (item.target === 'point' && (item.x === undefined || item.y === undefined)) return false;
+    if (item.target !== 'point' && (item.x !== undefined || item.y !== undefined)) return false;
+    if (item.movement === 'follow' && (item.target === 'point' || item.shot === 'wide')) return false;
+    ids.add(item.id);
+    end = item.start + item.duration;
+  }
+  return true;
+}
 
 export function validateEpisodeLibrary(value: unknown): EpisodeResult {
   if (!value || typeof value !== 'object' || (value as EpisodeLibrary).version !== 1 || !Array.isArray((value as EpisodeLibrary).episodes)) return { ok: false, error: 'Saved episodes are invalid.' };
@@ -17,7 +57,7 @@ export function validateEpisodeLibrary(value: unknown): EpisodeResult {
   if (episodes.length > 100) return { ok: false, error: 'Too many episodes.' };
   const ids = new Set<string>();
   for (const episode of episodes) {
-    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id)) || episode.introId !== undefined && !uuid.test(episode.introId) || episode.creditsId !== undefined && !uuid.test(episode.creditsId) || episode.audio !== undefined && !validAudioClips(episode.audio, 360000) || episode.sceneSettings !== undefined && (!Array.isArray(episode.sceneSettings) || episode.sceneSettings.length !== episode.sceneIds.length || episode.sceneSettings.some((setting, index) => !setting || typeof setting !== 'object' || Array.isArray(setting) || setting.duration !== undefined && (typeof setting.duration !== 'number' || !Number.isFinite(setting.duration) || setting.duration < .2 || setting.duration > 3600) || setting.transition !== undefined && (index === 0 || !setting.transition || typeof setting.transition !== 'object' || setting.transition.type !== 'fade-black' || typeof setting.transition.duration !== 'number' || !Number.isFinite(setting.transition.duration) || setting.transition.duration < .2 || setting.transition.duration > 2)))) return { ok: false, error: 'An episode has invalid details.' };
+    if (!episode || !uuid.test(episode.id) || ids.has(episode.id) || typeof episode.name !== 'string' || episode.name !== episode.name.trim() || !episode.name || episode.name.length > 80 || !Array.isArray(episode.sceneIds) || episode.sceneIds.length > 100 || episode.sceneIds.some(id => typeof id !== 'string' || !uuid.test(id)) || episode.introId !== undefined && !uuid.test(episode.introId) || episode.creditsId !== undefined && !uuid.test(episode.creditsId) || episode.audio !== undefined && !validAudioClips(episode.audio, 360000) || episode.camera !== undefined && !validEpisodeCamera(episode.camera) || episode.sceneSettings !== undefined && (!Array.isArray(episode.sceneSettings) || episode.sceneSettings.length !== episode.sceneIds.length || episode.sceneSettings.some((setting, index) => !setting || typeof setting !== 'object' || Array.isArray(setting) || setting.duration !== undefined && (typeof setting.duration !== 'number' || !Number.isFinite(setting.duration) || setting.duration < .2 || setting.duration > 3600) || setting.transition !== undefined && (index === 0 || !setting.transition || typeof setting.transition !== 'object' || setting.transition.type !== 'fade-black' || typeof setting.transition.duration !== 'number' || !Number.isFinite(setting.transition.duration) || setting.transition.duration < .2 || setting.transition.duration > 2)))) return { ok: false, error: 'An episode has invalid details.' };
     ids.add(episode.id);
   }
   return { ok: true, library: value as EpisodeLibrary };

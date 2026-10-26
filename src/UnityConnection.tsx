@@ -5,10 +5,11 @@ import CartoonEngineV1Panel from './CartoonEngineV1Panel';
 import StudioSceneUnityPanel from './StudioSceneUnityPanel';
 import type { AudioAsset } from './audio';
 import type { TimedLibrary } from './timedScenes';
+import type { Brightling } from './maker';
 
 type Status = 'disconnected' | 'connecting' | 'connected' | 'pinging' | 'commanding';
 
-export default function UnityConnection({ scenes, audioAssets, requestedSceneId, onStatusChange }: { scenes: TimedLibrary; audioAssets: AudioAsset[]; requestedSceneId?: string | null; onStatusChange?: (status: 'connected' | 'disconnected') => void }) {
+export default function UnityConnection({ scenes, characters, audioAssets, requestedSceneId, onStatusChange }: { scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; requestedSceneId?: string | null; onStatusChange?: (status: 'connected' | 'disconnected') => void }) {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Connection is off.');
   const [actor, setActor] = useState<ActingCharacter>('max');
@@ -115,7 +116,7 @@ export default function UnityConnection({ scenes, audioAssets, requestedSceneId,
       <button type="button" onClick={connect} disabled={status !== 'disconnected'}>Connect preview</button>
       <button type="button" onClick={disconnect} disabled={status === 'disconnected'}>Disconnect</button>
     </div>
-    <StudioSceneUnityPanel connected={status === 'connected'} library={scenes} audioAssets={audioAssets} requestedSceneId={requestedSceneId} />
+    <StudioSceneUnityPanel connected={status === 'connected'} library={scenes} characters={characters} audioAssets={audioAssets} requestedSceneId={requestedSceneId} />
     <details className="preview-diagnostics"><summary>Developer tools and earlier experiments</summary>
       <div className="unity-connection-actions"><button type="button" onClick={ping} disabled={status !== 'connected'}>Ping</button><button type="button" onClick={blinkMax} disabled={status !== 'connected'}>Blink Max</button></div>
     <section aria-labelledby="unity-director-controls-heading">

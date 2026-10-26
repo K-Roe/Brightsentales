@@ -1,5 +1,37 @@
+# P9 Brightling Auto-Builder V1 - architecture and verification (2026-10-26)
+
+Extend `Characters.tsx` and `maker.ts`; retain the existing name/template/palette editor and whole-body artwork generator. `brightlingTransfer.ts` serializes a deterministic schema v1 definition and nine embedded PNG pose assets with SHA-256 hashes, then uses the existing localhost `/command` bridge and validates Unity's completed identity/revision acknowledgement.
+
+Unity extends `BrightTalesBridgeV0` with bounded `brightling.import` and `brightling.action` commands. `BrightlingAutoBuilderV1` validates schema, allow-listed fields, IDs, templates, colors, supported frame/action names, PNG signatures/dimensions, size and hashes. It builds one runtime SpriteRenderer actor, updates by stable ID, persists the JSON definition and restores it when the builder starts. No executable payload or parallel renderer is introduced.
+
+Studio 330 tests, build and service/relay 12; Unity builder and HTTP loopback bridge tests; P8 Unity episode/camera 5, player 1 and audio 1 pass. Limitations: no browser-driven Studio-to-Unity visual run or screenshots; Unity visual output is not verified; Blink is a squash because no closed-eye artwork exists; custom Brightlings are not integrated into saved Studio scene/episode casts. See `proofs/cartoon-foundation-p9/REPORT.md`.
+
+# P8 Verification and review gate (2026-10-26)
+
+P7 checkpoints are unchanged and remote verified: Studio `main` `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P8 code remains isolated: Studio code commit `fb853de59407f0cd1732d8cba390336bd7a8640a` (branch tip before this documentation refresh `5722ed5aea738e9c9f364469524deaa77a7bd9d2`); Unity `52e79d72954ea071379abe498cfb80e4f383703f`. P8 refs matched their remotes.
+
+Reverification passed: Studio tests 325/325, build, service/relay 12/12; Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and browser-to-Unity V3 1/1. The fresh disposable browser workflow passed all nine stages, with no console exceptions or failed requests. FFmpeg decoded the exported VP9/Opus WebM. Fresh logs, XMLs, screenshots and video are under `proofs/cartoon-foundation-p8/reverification-2026-10-26/`.
+
+The earlier service-test hang was a slow 29.5-second busy-but-healthy case; the normal suite exited successfully in 46.97 seconds. `--test-force-exit` causes a Windows libuv assertion and is not a valid workaround. No production code change was needed.
+
+**Karl's Studio visual, Unity Game-view visual and physical audio approvals are all still pending. P8 is not merge eligible and remains unmerged. P9 development is authorized on isolated branches only.** See `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` for exact launch commands and the three acceptance checks. Unity's original five dirty settings files and `P8CameraReview/` remain untouched.
+
+---
+# P8 Camera & Directing V1 — previous handover (superseded 2026-10-26)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; P9 development is authorized on isolated branches only. Preserve the original Unity worktree's unrelated settings and `P8CameraReview/`.
+
+---
+
 # Application architecture
 
+## P8 episode camera direction (2026-10-26, technically verified; manual review pending)
+
+`Episode.camera` is an optional directing track on the existing occurrence clock. The Episode Maker uses the shared Canvas preview/export path for Wide, Medium, Close-Up and Custom shots with Static, Pan and Follow movement. Unity receives version 3 camera episodes through the existing bridge and player; camera-free episodes and payload versions 1/2 remain supported. Studio 325/325, build, service/relay 12/12, Unity camera 5/5, player/audio 1/1 each, browser save/reopen/replay/export and live bridge V3 passed. Manual Studio/Unity visual and physical audio approval remain pending. P8 stays isolated; P9 is active on separate isolated branches.
 ## P7 episode production controls (2026-10-25)
 
 `EpisodeSequencePanel.tsx` still renders `productionBlocks` from the canonical P6 occurrence clock. `episodeTimeline.ts` derives display width, ruler ticks and global audio clip positions for Fit/1x/2x/4x zoom; the scene and audio rows share horizontal scrolling and the same playhead. Audio data comes from `episodePlaybackClips`; the overview only seeks, while the existing `AudioPanel` retains moving, trimming, volume and fades.
@@ -148,3 +180,6 @@ Voice Maker retains Backup v8 and adds an optional validated `voiceSettings` fie
 ## Verification boundaries
 
 `npm test -- --run` and `npm run build` are baseline gates. Browser checks must use disposable profiles and report console errors and missing assets. Screenshots show layout; playback recordings show timing; audio-output capture shows whether sound was produced by the browser. None of these substitutes for Karl's visual and listening approval. The project evidence reports are under `proofs/`.
+# P10 modular Brightlings (2026-10-26; isolated, acceptance pending)
+
+The existing Brightling Maker and deterministic whole-body renderer support an optional version-2 appearance block for a small, validated set of head, eye, ear, hair, decoration, body and clothing choices. Modular entries use the existing library storage, render nine existing pose slots into PNG artwork, and transfer those frames and hashes through the P9 contract. Unity reuses the same runtime actor and frame actions. Saved scene and episode payloads may include definitions for referenced custom cast members; legacy Max/Maxine-only payloads remain accepted. Studio suite 337/337 and build pass; Unity focused builder 2/2, bridge 1/1 and custom saved-scene/episode 1/1 pass. A P8 scene/player regression class is 1/2 because its app-to-app case awaits a live Studio browser workflow. P10 visual comparison and Studio UI walkthrough are not verified; no approval is implied. See `proofs/cartoon-foundation-p10/REPORT.md`.

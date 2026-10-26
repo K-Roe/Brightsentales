@@ -3,17 +3,18 @@ import type { TimedScene } from './timedScenes';
 import { stateAt } from './timedScenes';
 import { livingWorldAt } from './livingWorld';
 
-export type CameraShot = 'wide' | 'medium' | 'close-up';
-export type CameraFocus = 'max' | 'maxine' | 'group' | 'point';
-export type CameraKeyframe = { id: string; shot: CameraShot; focus: CameraFocus; point?: Point; follow?: boolean; start: number; duration: number };
+export type CameraShot = 'wide' | 'medium' | 'close-up' | 'custom';
+export type CameraFocus = string;
+export type CameraKeyframe = { id: string; shot: CameraShot; focus: CameraFocus; point?: Point; follow?: boolean; start: number; duration: number; zoom?: number };
 export type CameraView = { x: number; y: number; zoom: number };
 export const WIDE_CAMERA: CameraView = { x: WIDTH / 2, y: HEIGHT / 2, zoom: 1 };
-const zoomFor = { wide: 1, medium: 1.4, 'close-up': 2.7 } satisfies Record<CameraShot, number>;
+const zoomFor = { wide: 1, medium: 1.4, 'close-up': 2.7 } satisfies Record<Exclude<CameraShot, 'custom'>, number>;
+export const cameraShotZoom = (key: Pick<CameraKeyframe, 'shot' | 'zoom'>): number => key.shot === 'custom' ? Math.max(1, Math.min(4, key.zoom ?? 2)) : zoomFor[key.shot];
 const smooth = (value: number) => { const t = Math.max(0, Math.min(1, value)); return t * t * (3 - 2 * t); };
 const clampView = ({ x, y, zoom }: CameraView): CameraView => ({ zoom, x: Math.max(WIDTH / (2 * zoom), Math.min(WIDTH - WIDTH / (2 * zoom), x)), y: Math.max(HEIGHT / (2 * zoom), Math.min(HEIGHT - HEIGHT / (2 * zoom), y)) });
 
 function target(scene: TimedScene, key: CameraKeyframe, time: number): CameraView {
-  const zoom = zoomFor[key.shot];
+  const zoom = cameraShotZoom(key);
   if (key.shot === 'wide') return WIDE_CAMERA;
   if (key.focus === 'point') return clampView({ ...key.point!, zoom });
   const at = key.follow ? time : key.start;
@@ -49,7 +50,7 @@ export function validCamera(scene: TimedScene): boolean {
   const prior: CameraKeyframe[] = [];
   let end = 0;
   for (const key of [...scene.camera].sort((a, b) => a.start - b.start)) {
-    if (!key || typeof key.id !== 'string' || !/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(key.id) || ids.has(key.id) || !['wide', 'medium', 'close-up'].includes(key.shot) || !['max', 'maxine', 'group', 'point'].includes(key.focus) || typeof key.start !== 'number' || !Number.isFinite(key.start) || key.start < end - 1e-7 || typeof key.duration !== 'number' || !Number.isFinite(key.duration) || key.duration < 0 || key.start > 0 && key.duration < .6 || key.duration > 15 || key.start + key.duration > scene.duration + 1e-7 || key.shot === 'close-up' && key.focus === 'group' || (key.focus === 'max' || key.focus === 'maxine') && !scene.characters[key.focus] || key.focus === 'group' && !Object.keys(scene.characters).length || key.focus === 'point' && (!key.point || !Number.isFinite(key.point.x) || !Number.isFinite(key.point.y) || key.point.x < 0 || key.point.x > WIDTH || key.point.y < 0 || key.point.y > HEIGHT) || key.focus !== 'point' && key.point !== undefined || key.follow !== undefined && typeof key.follow !== 'boolean' || key.follow && (key.focus === 'point' || key.shot === 'wide')) return false;
+    if (!key || typeof key.id !== 'string' || !/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(key.id) || ids.has(key.id) || !['wide', 'medium', 'close-up', 'custom'].includes(key.shot) || key.focus !== 'point' && key.focus !== 'group' && !scene.characters[key.focus] || key.shot === 'custom' && (typeof key.zoom !== 'number' || !Number.isFinite(key.zoom) || key.zoom < 1 || key.zoom > 4) || key.shot !== 'custom' && key.zoom !== undefined || typeof key.start !== 'number' || !Number.isFinite(key.start) || key.start < end - 1e-7 || typeof key.duration !== 'number' || !Number.isFinite(key.duration) || key.duration < 0 || key.start > 0 && key.duration < .6 || key.duration > 15 || key.start + key.duration > scene.duration + 1e-7 || key.shot === 'close-up' && key.focus === 'group' || key.focus === 'group' && !Object.keys(scene.characters).length || key.focus === 'point' && (!key.point || !Number.isFinite(key.point.x) || !Number.isFinite(key.point.y) || key.point.x < 0 || key.point.x > WIDTH || key.point.y < 0 || key.point.y > HEIGHT) || key.focus !== 'point' && key.point !== undefined || key.follow !== undefined && typeof key.follow !== 'boolean' || key.follow && (key.focus === 'point' || key.shot === 'wide')) return false;
     if (key.duration > 0) {
       const from = cameraAt({ ...scene, camera: prior }, key.start);
       const to = target(scene, key, key.start + key.duration);

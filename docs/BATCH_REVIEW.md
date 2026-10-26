@@ -1,8 +1,43 @@
+# P11 Episode Production & Polish - technical review (2026-10-26)
+
+P11 extends the existing Episode Maker and Unity bridge/player. Studio focused tests 27/27, complete suite 342/342 and production build pass. The Unity modular episode/camera test and existing episode timing/audio/camera regression class pass 1/1 and 5/5. A separate broad Test Runner stalled in an existing browser-transfer test awaiting Studio and produced no overall results XML. The two-character episode exists as a manifest fixture, not a live UI-authored saved episode. Disposable-browser save/reopen/replay, complete Unity transfer/playback, full WebM export, real application screenshots, Karl Studio/Unity visual acceptance and physical audio acceptance remain outstanding. Read `proofs/cartoon-foundation-p11/REPORT.md`. No protected-branch merge or P12.
+
+# P10 Brightling Maker V2 - technical review (historical, 2026-10-26)
+
+P10 is implemented on isolated branches. Studio tests pass 337/337 and build passes. Unity focused builder 2/2, modular bridge import/update/actions 1/1 and custom scene/episode cast 1/1 pass. P8 scene/player regression class is 1/2: camera rejection and command safety pass; the browser-to-Unity test requires a live Studio send. P10 browser UI walkthrough and Studio screenshot are not captured. Karl's Studio and Unity visual acceptance is pending. Review the [P10 report](../proofs/cartoon-foundation-p10/REPORT.md). No merge is authorized.
+
+# P9 Brightling Auto-Builder V1 - technical review (2026-10-26)
+
+P9 is implemented on isolated Studio and Unity branches and is **not merged or visually accepted**. Studio 330 tests/build/service 12, Unity builder and loopback bridge workflow, and P8 regressions pass. The real Studio Maker-to-Unity workflow has since been exercised: save/reopen, actual import/action/update acknowledgements, no duplicate on update and visual restore after Unity restart. Application screenshots are in the P9 proof folder. The post-restart bridge health and human visual review remain unverified/pending. Read the [P9 report](../proofs/cartoon-foundation-p9/REPORT.md) for exact results and manual steps.
+
+# P8 Verification and review gate (2026-10-26)
+
+P7 checkpoints are unchanged and remote verified: Studio `main` `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P8 code remains isolated: Studio code commit `fb853de59407f0cd1732d8cba390336bd7a8640a` (branch tip before this documentation refresh `5722ed5aea738e9c9f364469524deaa77a7bd9d2`); Unity `52e79d72954ea071379abe498cfb80e4f383703f`. P8 refs matched their remotes.
+
+Reverification passed: Studio tests 325/325, build, service/relay 12/12; Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and browser-to-Unity V3 1/1. The fresh disposable browser workflow passed all nine stages, with no console exceptions or failed requests. FFmpeg decoded the exported VP9/Opus WebM. Fresh logs, XMLs, screenshots and video are under `proofs/cartoon-foundation-p8/reverification-2026-10-26/`.
+
+The earlier service-test hang was a slow 29.5-second busy-but-healthy case; the normal suite exited successfully in 46.97 seconds. `--test-force-exit` causes a Windows libuv assertion and is not a valid workaround. No production code change was needed.
+
+**Karl's Studio visual, Unity Game-view visual and physical audio approvals are all still pending. P8 is not merge eligible and remains unmerged. P9 development is authorized on isolated branches only.** See `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` for exact launch commands and the three acceptance checks. The original Unity worktree's five dirty settings files and `P8CameraReview/` remain untouched.
+
+---
+# P8 Camera & Directing V1 — previous handover (superseded 2026-10-26)
+
+P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
+
+Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
+
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; P9 development is authorized on isolated branches only. Preserve the original Unity worktree's unrelated settings and `P8CameraReview/`.
+
+---
+
 # Batch review for Karl
 
-**P7 episode polish review (25 October 2026):** The isolated P7 branch adds timeline zoom/scrub, audio overview, timing nudges, boundary preview, local Undo/Redo, Replay and clearer WebM export. Review [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Studio tests/build and browser-to-Unity Play Mode are technical checks; Unity Game-view visual acceptance, physical audio listening and Karl's usability decision remain pending. P7 must not merge without Karl's approval.
+**P8 Camera & Directing V1 (26 October 2026): TECHNICALLY VERIFIED; MANUAL ACCEPTANCE PENDING.** See `proofs/cartoon-foundation-p8/REPORT.md` and `MANUAL_REVIEW.md`. Studio 325/325 tests, build and service/relay 12/12 pass; Unity episode/camera 5/5, player 1/1, audio 1/1 and real browser-to-Unity V3 1/1 pass. Fresh browser save/reopen/replay/export passes and the WebM fully decodes. Studio visuals, Unity Game-view visuals and physical audio are awaiting Karl. P8 remains unmerged; P9 is active on isolated branches only.
 
-**P6 integration update (25 October 2026):** Karl explicitly authorised P6 merging and P7 kickoff. P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending. P7 work is isolated and requires Karl's approval before merging. Earlier review gates below are historical.
+**P7 episode polish (25 October 2026): MERGED AND STUDIO REGRESSION VERIFIED.** Studio P7 is on `main` at `e483838085f4b2583bb5f90bc6bafb34680110eb`. Review the [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending.
+
+**P6 integration update (historical, 25 October 2026):** P6 merged at Studio `b3886fd6e48169524cdf14c307cf6fac4fcdda1f` and Unity `0998a013fe5d33dd5c5d4c71a541564d49b28251`; post-merge tests and build passed as recorded in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). P7 has since been merged under Karl's explicit authorisation.
 
 
 **P6 review (25 October 2026):** P5 is merged and pushed. The isolated P6 Scene Timing & Transitions milestone has browser screenshots, a walkthrough and complete exported WebM in [P6 proof](../proofs/cartoon-foundation-p6/REPORT.md). Different durations for repeated scenes and Fade Through Black are technically verified in Studio; Unity verification and its exact limits are recorded there. P6 is unmerged pending Karl's later visual/usability review. Earlier gates below are historical.
@@ -253,3 +288,11 @@ The notes below describe the earlier blocked attempt. The completion above super
 - **Limits:** Attribution is metadata only — no lip-sync or talking animation. Character speech must sit inside one scene; cross-scene character speech needs an episode-level clip. No in-app recording, text-to-speech or voice cleanup. Browser reload simulates interruption; subjective audio quality is unverified.
 - **Karl's check:** Import a real recorded voice as Speech & narration, attribute it to a Brightling and to the Narrator, then listen to [the recorded episode](../proofs/m6-4/dialogue-episode.mp4) for timing, trim and volume over music.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
+# Active branch review queue — 2026-10-26
+
+P8–P10 are consolidated on the pushed Studio/Unity `brighttales-active-development` branches; see [launch and verification handover](ACTIVE_DEVELOPMENT.md). Karl's review order is P8 camera plus physical audio, P9 automatic character construction, then P10 modular character creation. All visual/audio gates remain pending. The next development milestone is P11 Episode Production & Polish, but no P11 requirements or acceptance checklist were found in project documentation; obtain that checklist before implementation. Do not merge into protected integration branches or start P12.
+
+# P11 review queue — authorised (2026-10-26)
+
+Karl provided the P11 acceptance specification in `proofs/cartoon-foundation-p11/REPORT.md`. Implement and technically verify the complete short modular-Brightling episode workflow on the existing active branches. Karl's P8–P11 visual/audio review remains pending after delivery; tests and automated screenshots do not count as approval. No protected merges or P12.
+

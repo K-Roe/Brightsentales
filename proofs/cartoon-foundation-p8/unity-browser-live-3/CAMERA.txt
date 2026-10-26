@@ -1,0 +1,1 @@
+wide=5,mediumMin=3.57142854,closeMin=1.85185182,customFollow=2

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { studioSceneCommand, studioSceneConfig, studioSceneRevision } from './studioSceneBridge';
 import type { TimedScene } from './timedScenes';
+import type { Brightling } from './maker';
+import type { BrightlingDefinition } from './brightlingTransfer';
+import { DEFAULT_COLOURS } from './maker';
 
 const sceneId = '11111111-1111-4111-8111-111111111111';
 const actionId = '22222222-2222-4222-8222-222222222222';
@@ -20,6 +23,21 @@ describe('saved Scene Maker to Unity Phase 1 contract', () => {
     expect(config.sceneId).toBe(sceneId);
     expect(config.actions[0]).toMatchObject({ start: 4, x: 900, y: 790 });
     expect(config.characters.map(character => character.id)).toEqual(['max', 'maxine']);
+  });
+
+  it('transfers saved custom cast identity and appearance artwork references', () => {
+    const characterId = 'brightling-12345678-1234-4123-8123-123456789abc';
+    const custom: TimedScene = { ...scene, characters: { [characterId]: { x: 700, y: 790 } }, actions: [
+      { ...scene.actions[0], characterId, type: 'wave', start: 1, duration: 1.2, point: undefined },
+    ] };
+    const character: Brightling = { id: characterId, name: 'Nova', template: 'female', ...DEFAULT_COLOURS.female };
+    const definition = { schema: 'brighttales.brightling', version: 1, character, templateVersion: 1,
+      bodyPart: { kind: 'whole-body', layer: 0, pivot: { x: .5, y: 0 }, scale: 1 },
+      animations: ['idle', 'blink', 'walk', 'wave'], assets: [] } as unknown as BrightlingDefinition;
+    expect(() => studioSceneConfig(custom)).toThrow('Transfer the saved appearance');
+    expect(studioSceneConfig(custom, undefined, [definition])).toMatchObject({
+      characters: [{ id: characterId, x: 700 }], actions: [{ characterId }], brightlings: [{ character: { id: characterId } }],
+    });
   });
 
   it('changes the content revision when a saved timing or destination changes', async () => {

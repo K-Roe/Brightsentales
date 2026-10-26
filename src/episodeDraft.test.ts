@@ -33,4 +33,13 @@ describe('episode draft comparison', () => {
     expect(episodeHasUnsavedChanges({ ...episode, audio: [] }, saved)).toBe(true);
     expect(episodeHasUnsavedChanges(expanded, episodeSnapshot(expanded))).toBe(false);
   });
+  it('tracks camera shot creation and edits as persisted episode changes', () => {
+    const saved = episodeSnapshot(episode);
+    const shot = { id: '77777777-7777-4777-8777-777777777777', start: 0, duration: 3, shot: 'wide' as const, target: 'point', movement: 'static' as const, x: 836, y: 470 };
+    expect(episodeHasUnsavedChanges({ ...episode, camera: [shot] }, saved)).toBe(true);
+    expect(episodeSnapshot({ ...episode, camera: [] })).toBe(saved);
+    const directed = { ...episode, camera: [shot] };
+    expect(episodeHasUnsavedChanges({ ...directed, camera: [{ ...shot, duration: 2 }] }, episodeSnapshot(directed))).toBe(true);
+    expect(episodeHasUnsavedChanges(structuredClone(directed), episodeSnapshot(directed))).toBe(false);
+  });
 });

@@ -61,10 +61,11 @@ function drawToy(context: CanvasRenderingContext2D, x: number, y: number) {
   context.restore();
 }
 
-export function drawScenePreview(context: CanvasRenderingContext2D, scene: TimedScene, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
+/** An explicit episode camera override wins; `undefined` keeps the saved scene camera. */
+export function drawScenePreview(context: CanvasRenderingContext2D, scene: TimedScene, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>, camera?: { x: number; y: number; zoom: number }) {
   context.clearRect(0, 0, WIDTH, HEIGHT);
-  if (scene.camera?.length) {
-    const view = cameraAt(scene, time);
+  const view = camera ?? (scene.camera?.length ? cameraAt(scene, time) : null);
+  if (view) {
     context.save();
     context.translate(WIDTH / 2, HEIGHT / 2);
     context.scale(view.zoom, view.zoom);
@@ -175,7 +176,7 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
     const box = phonePopupBox(state.point.x, state.point.y, phone.popup.position);
     drawCommunicationPopup(context, phone.popup, { x: box.x, y: box.y, width: PHONE_POPUP_WIDTH, scale: PHONE_POPUP_SCALE });
   }
-  if (scene.camera?.length) context.restore();
+  if (view) context.restore();
 }
 
 /**
@@ -183,8 +184,8 @@ export function drawScenePreview(context: CanvasRenderingContext2D, scene: Timed
  * approved artwork selection, then overlays its own title text. The intro passes
  * itself as a `TimedScene` because it is one.
  */
-export function drawIntroPreview(context: CanvasRenderingContext2D, intro: TimedScene, seriesTitle: string, episodeTitle: string, titleStyle: 'plain' | 'banner', opacity: number, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>) {
-  drawScenePreview(context, intro, time, room, packs);
+export function drawIntroPreview(context: CanvasRenderingContext2D, intro: TimedScene, seriesTitle: string, episodeTitle: string, titleStyle: 'plain' | 'banner', opacity: number, time: number, room: HTMLImageElement, packs: Record<string, PreviewPack>, camera?: { x: number; y: number; zoom: number }) {
+  drawScenePreview(context, intro, time, room, packs, camera);
   if (opacity <= 0.002) return;
   const shrink = Math.min(1, 0.94 + 0.06 * opacity);
   context.save();
@@ -228,8 +229,8 @@ export function drawIntroPreview(context: CanvasRenderingContext2D, intro: Timed
  * background pass, so credits and scenes share one renderer and one audio clock.
  * Text is drawn onto a darkened band to keep contrast readable over any artwork.
  */
-export function drawCreditsPreview(context: CanvasRenderingContext2D, credits: TimedScene, title: string, lines: CreditLine[], mode: CreditsMode, scrollSpeed: number, time: number, room: HTMLImageElement) {
-  drawScenePreview(context, credits, time, room, {});
+export function drawCreditsPreview(context: CanvasRenderingContext2D, credits: TimedScene, title: string, lines: CreditLine[], mode: CreditsMode, scrollSpeed: number, time: number, room: HTMLImageElement, camera?: { x: number; y: number; zoom: number }) {
+  drawScenePreview(context, credits, time, room, {}, camera);
   const fade = Math.min(0.6, credits.duration / 4);
   const opacity = Math.max(0, Math.min(1, (credits.duration - time) / fade));
   if (opacity <= 0.002) return;

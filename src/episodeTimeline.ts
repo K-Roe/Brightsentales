@@ -1,5 +1,6 @@
 import { clipLength } from './audio';
 import type { PlaybackClip } from './audioPlayback';
+import type { EpisodeCameraShot } from './episodes';
 
 export type EpisodeZoom = 0 | 1 | 2 | 4;
 const PIXELS_PER_SECOND = 72;
@@ -26,5 +27,13 @@ export function episodeAudioSpan(clip: PlaybackClip, total: number): { left: num
   if (total <= 0 || clip.start >= total || clip.start + clipLength(clip) <= 0) return null;
   const start = Math.max(0, clip.start);
   const end = Math.min(total, clip.start + clipLength(clip));
+  return { left: start / total * 100, width: (end - start) / total * 100 };
+}
+
+/** Camera clips use the same episode clock and percentage geometry as scene and audio clips. */
+export function episodeCameraSpan(shot: EpisodeCameraShot, total: number): { left: number; width: number } | null {
+  if (total <= 0 || shot.start >= total || shot.start + shot.duration <= 0) return null;
+  const start = Math.max(0, shot.start);
+  const end = Math.min(total, shot.start + shot.duration);
   return { left: start / total * 100, width: (end - start) / total * 100 };
 }

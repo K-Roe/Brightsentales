@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 08:21:52Z" end-time="2026-10-26 08:22:07Z" duration="15.1685074">
+  <test-suite type="TestSuite" id="1043" name="BrightTalesUnityTest" fullname="BrightTalesUnityTest" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-26 08:21:52Z" end-time="2026-10-26 08:22:07Z" duration="15.168507" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1082" name="BrightTalesRigV1PlayTests.dll" fullname="C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity/Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-26 08:21:52Z" end-time="2026-10-26 08:22:07Z" duration="15.154659" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="67244" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestFixture" id="1064" name="StudioEpisodePlayModeTest" fullname="StudioEpisodePlayModeTest" classname="StudioEpisodePlayModeTest" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-26 08:21:52Z" end-time="2026-10-26 08:22:07Z" duration="15.152230" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1066" name="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" fullname="StudioEpisodePlayModeTest.EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" methodname="EpisodeMusicContinuesThroughCutsAndMissingMediaRejects" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="81606309" result="Passed" start-time="2026-10-26 08:21:52Z" end-time="2026-10-26 08:21:54Z" duration="1.506322" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1067" name="OccurrenceTimingAndFadeUseOneEpisodeClock" fullname="StudioEpisodePlayModeTest.OccurrenceTimingAndFadeUseOneEpisodeClock" methodname="OccurrenceTimingAndFadeUseOneEpisodeClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="520992163" result="Passed" start-time="2026-10-26 08:21:54Z" end-time="2026-10-26 08:21:56Z" duration="2.435947" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1065" name="OrderedScenesPauseStopAndReplayOnOneClock" fullname="StudioEpisodePlayModeTest.OrderedScenesPauseStopAndReplayOnOneClock" methodname="OrderedScenesPauseStopAndReplayOnOneClock" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1246973290" result="Passed" start-time="2026-10-26 08:21:56Z" end-time="2026-10-26 08:22:01Z" duration="5.279113" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1068" name="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" fullname="StudioEpisodePlayModeTest.Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" methodname="Version2MusicAndSceneAudioFollowEditedBoundaryWithoutDuplication" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="1942518652" result="Passed" start-time="2026-10-26 08:22:01Z" end-time="2026-10-26 08:22:03Z" duration="1.866458" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1069" name="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" fullname="StudioEpisodePlayModeTest.Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" methodname="Version3CameraCutsPanAndFollowAreDeterministicAndRejectMalformedTracks" classname="StudioEpisodePlayModeTest" runstate="Runnable" seed="53799639" result="Passed" start-time="2026-10-26 08:22:03Z" end-time="2026-10-26 08:22:07Z" duration="4.049426" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

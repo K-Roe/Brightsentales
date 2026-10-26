@@ -5,7 +5,8 @@ import type { CreditsLibrary } from './credits';
 import type { AudioAsset } from './audio';
 import type { PlaybackClip } from './audioPlayback';
 import { productionBlocks, type Episode } from './episodes';
-import { episodeAudioSpan, episodeTimelineTicks, episodeTimelineWidth, type EpisodeZoom } from './episodeTimeline';
+import { cameraMovementName, cameraShotName } from './episodeCamera';
+import { episodeAudioSpan, episodeCameraSpan, episodeTimelineTicks, episodeTimelineWidth, type EpisodeZoom } from './episodeTimeline';
 
 type Props = {
   episode: Episode;
@@ -19,15 +20,18 @@ type Props = {
   audioAssets: AudioAsset[];
   selected: number | null;
   selectedBoundary: number | null;
+  selectedCamera: string | null;
   onSelect: (index: number, start: number) => void;
   onBoundarySelect: (index: number, start: number) => void;
+  onSelectCamera: (id: string, start: number) => void;
+  onCreateCamera: () => void;
   onSeek: (time: number) => void;
   onReorder: (from: number, to: number) => void;
   placeName: (id: string) => string;
 };
 const clock = (time: number) => `${time.toFixed(1)}s`;
 
-export default function EpisodeSequence({ episode, scenes, intros, credits, time, total, playing, audioClips, audioAssets, selected, selectedBoundary, onSelect, onBoundarySelect, onSeek, onReorder, placeName }: Props) {
+export default function EpisodeSequence({ episode, scenes, intros, credits, time, total, playing, audioClips, audioAssets, selected, selectedBoundary, selectedCamera, onSelect, onBoundarySelect, onSelectCamera, onCreateCamera, onSeek, onReorder, placeName }: Props) {
   const [dragging, setDragging] = useState<number | null>(null);
   const [zoom, setZoom] = useState<EpisodeZoom>(0);
   const scroll = useRef<HTMLDivElement>(null);
@@ -74,6 +78,19 @@ export default function EpisodeSequence({ episode, scenes, intros, credits, time
       })}
       {sceneBlocks.filter(block => block.occurrenceIndex && block.occurrenceIndex > 0).map(block => <button key={`boundary-${block.occurrenceIndex}`} className={`episode-boundary ${selectedBoundary === block.occurrenceIndex ? 'selected' : ''}`} style={{ left: `${block.start / Math.max(total, 1) * 100}%` }} aria-label={`Transition before scene ${block.occurrenceIndex! + 1}`} aria-pressed={selectedBoundary === block.occurrenceIndex} title={`Transition before scene ${block.occurrenceIndex! + 1}: ${episode.sceneSettings?.[block.occurrenceIndex!]?.transition ? 'Fade Through Black' : 'Hard Cut'}`} onClick={() => onBoundarySelect(block.occurrenceIndex!, block.start)}>◆</button>)}
       {total > 0 && <span className="episode-playhead" style={{ left: `${Math.min(100, Math.max(0, time / total * 100))}%` }} aria-hidden="true" />}
+    </div>
+    <div className="episode-camera-lane" aria-label="Episode camera shots">
+      <div className="episode-camera-heading"><span>Camera</span><small>{(episode.camera ?? []).length} shot{(episode.camera ?? []).length === 1 ? '' : 's'}</small><button aria-label="Add camera shot at playhead" onClick={onCreateCamera}>+ Shot at {clock(time)}</button></div>
+      <div className="episode-camera-track">
+        {(episode.camera ?? []).length === 0 && <p className="episode-camera-empty">No episode camera yet. Saved scene cameras play as before.</p>}
+        {(episode.camera ?? []).map(shot => {
+          const span = episodeCameraSpan(shot, total);
+          if (!span) return null;
+          const target = shot.target === 'point' ? 'Fixed position' : shot.target === 'max' ? 'Max' : shot.target === 'maxine' ? 'Maxine' : shot.target;
+          return <button key={shot.id} className={`episode-camera-clip ${selectedCamera === shot.id ? 'selected' : ''} ${shot.shot}`} style={{ left: `${span.left}%`, width: `${span.width}%` }} aria-label={`Camera shot ${cameraShotName(shot.shot)} of ${target} at ${clock(shot.start)}`} aria-pressed={selectedCamera === shot.id} title={`${cameraShotName(shot.shot)} · ${target} · ${cameraMovementName(shot.movement)} · ${clock(shot.start)}`} onClick={() => onSelectCamera(shot.id, shot.start)}><strong>{cameraShotName(shot.shot)}</strong><small>{target} · {cameraMovementName(shot.movement)}</small></button>;
+        })}
+        {total > 0 && <span className="episode-camera-playhead" style={{ left: `${Math.min(100, Math.max(0, time / total * 100))}%` }} aria-hidden="true" />}
+      </div>
     </div>
     {audioClips.length > 0 && <div className="episode-audio-lanes" aria-label="Episode audio positions">{audioClips.map(clip => {
       const span = episodeAudioSpan(clip, total);

@@ -15,6 +15,16 @@ describe('Brightling Maker storage and artwork', () => {
     expect(nameAvailable('Ruby', [male])).toBe(true);
   });
 
+  it('saves and reopens modular appearance with stable identity and scene references', () => {
+    const modular = { ...male, appearance: { version: 2 as const, headShape: 'wide' as const, eyeStyle: 'sparkle' as const,
+      earShape: 'long' as const, hairStyle: 'swoop' as const, headDecoration: 'star' as const,
+      bodyShape: 'tall' as const, clothingStyle: 'jacket' as const } };
+    const decoded = decodeLibrary(JSON.stringify([modular]));
+    expect(decoded.ok).toBe(true);
+    if (decoded.ok) expect(decoded.characters[0]).toEqual(modular);
+    expect(validateBrightling({ ...modular, appearance: { ...modular.appearance, version: 1 as never } })).toBe(false);
+  });
+
   it('keeps an older Max and Maxine scene readable while retaining custom positions', () => {
     const old = { version: 1, characters: { max: { start: { x: 500, y: 750 }, destination: null }, maxine: { start: { x: 1000, y: 750 }, destination: null } } };
     expect(parseScene(JSON.stringify(old))?.characters.max.start.x).toBe(500);

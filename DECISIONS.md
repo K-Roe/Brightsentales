@@ -1,3 +1,16 @@
+# P10 decision record (2026-10-26)
+
+Extend the P9 Maker and transfer system with optional validated appearance metadata and deterministic vector-derived full-body frames. Studio-generated pose PNGs remain the shared rendered representation imported by Unity; reuse Unity's existing actor/player and stable-ID update. Keep legacy/classic characters and Max/Maxine art untouched. Support only the feature combinations listed in the P10 report. Human visual acceptance remains Karl's decision; P8/P9/P10 merges are not authorized.
+
+# P9 Auto-Builder V1 decisions (2026-10-26)
+
+Use the existing Brightling Maker, `makeFrame` artwork and localhost bridge. Version 1 transfers one bounded whole-body layer plus the existing nine poses, palette and supported Idle/Blink/Walk/Wave identifiers with SHA-256 hashes. Unity rejects unsupported fields/assets and acknowledges only after construction; stable IDs update the same runtime actor. Keep this experimental and isolated. No Max/Maxine source art changes, no new anatomy claims, no AI, no prefab/editor asset generation. Blink is a short squash because there is no closed-eye pose. Custom Brightlings are not yet integrated with saved Studio scene/episode cast validation.
+
+# P8 verification decision (2026-10-26)
+
+Reverification confirms the isolated P8 code and its P7 bases. Standard service lifecycle tests complete 12/12 in 46.97 seconds; the busy healthy test is slow, and `--test-force-exit` triggers a Windows libuv assertion. Leave P8 unmerged until Karl explicitly approves Studio visuals, Unity Game-view visuals and physical audio playback. Automated evidence does not substitute for those approvals. P9 is separately authorized on isolated branches only.
+
+---
 # Cartoon foundation decisions
 
 ## 2026-10-25 — P7 production polish
@@ -45,3 +58,7 @@ The Unity repository was created private at `https://github.com/K-Roe/BrightTale
 ## 2026-10-24 — Integration seam
 
 Reuse the existing localhost receiver and versioned command acknowledgements. Treat `TimedScene` and `Episode` as the Studio source of truth. Keep Cartoon Engine V1.1 fixed and isolated; a new versioned payload and experimental controller must read saved values. Reject unsupported actions and missing artwork explicitly. Keep the browser WebM path working while Unity MP4 output is built and verified separately.
+# P11 Episode Production & Polish — approved scope (2026-10-26)
+
+Use the existing Episode Maker and its saved-scene, episode camera, audio, deterministic preview/export and localhost Unity transfer paths. P11 must support two modular Brightlings in episode scenes with identity, appearance and action assignments preserved through save/reopen, preview/scrub, Unity playback and export. Unity reuses its existing auto-builder and scene/episode player to construct missing supported cast entries. Demonstrate two visibly distinct modular characters at an existing location with walk, wave, two shots, a supported audio cue, beginning and ending. Do not modify approved Max/Maxine art, create parallel renderer/animation systems, use Blender/Vue/AI, expand scope, merge protected branches or begin P12. See the full authorised spec in `proofs/cartoon-foundation-p11/REPORT.md`.
+

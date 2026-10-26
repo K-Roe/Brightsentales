@@ -2,6 +2,8 @@ import { clampPoint } from './scene';
 import { validateTimedLibrary, type TimedScene } from './timedScenes';
 import { UNITY_BRIDGE_URL, UnityBridgeTimeoutError } from './unityBridge';
 import type { StudioAudioAsset } from './studioAudioTransfer';
+import type { Brightling } from './maker';
+import { buildBrightlingDefinition, type BrightlingDefinition } from './brightlingTransfer';
 
 export type StudioSceneConfig = {
   version: 2 | 3;
@@ -9,10 +11,11 @@ export type StudioSceneConfig = {
   environment: 'living-room';
   duration: number;
   calmLife: boolean;
-  characters: { id: 'max' | 'maxine'; x: number; y: number; facing: 'front' | 'left' | 'right' }[];
-  actions: { id: string; characterId: 'max' | 'maxine'; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at'; start: number; duration: number; x: number; y: number; target: string; motion: 'gentle' | 'linear' }[];
-  camera: { id: string; shot: 'wide' | 'medium' | 'close-up'; focus: 'max' | 'maxine' | 'group' | 'point'; x: number; y: number; follow: boolean; start: number; duration: number }[];
+  characters: { id: string; x: number; y: number; facing: 'front' | 'left' | 'right' }[];
+  actions: { id: string; characterId: string; type: 'appear' | 'walk' | 'wait' | 'wave' | 'disappear' | 'look-at'; start: number; duration: number; x: number; y: number; target: string; motion: 'gentle' | 'linear' }[];
+  camera: { id: string; shot: 'wide' | 'medium' | 'close-up' | 'custom'; focus: string; x: number; y: number; follow: boolean; start: number; duration: number; zoom: number }[];
   audioAssets?: StudioAudioAsset[];
+  brightlings?: BrightlingDefinition[];
   audio?: { id: string; assetId: string; start: number; trimStart: number; trimEnd: number; volume: number; fadeIn: number; fadeOut: number }[];
 };
 
@@ -29,7 +32,17 @@ export async function studioSceneRevision(config: StudioSceneConfig): Promise<st
 }
 
 /** Transfers only artwork and actions with a faithful mapping in the isolated Unity scene. */
-export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[]): StudioSceneConfig {
+export async function prepareBrightlings(scene: TimedScene, characters: Brightling[]): Promise<BrightlingDefinition[]> {
+  const ids = Object.keys(scene.characters).filter(id => id.startsWith('brightling-'));
+  if (!ids.length) return [];
+  return Promise.all(ids.map(async id => {
+    const character = characters.find(item => item.id === id);
+    if (!character) throw new Error(`Add saved Brightling ${id} to the library before sending this scene to Unity.`);
+    return buildBrightlingDefinition(character);
+  }));
+}
+
+export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[], definitions: BrightlingDefinition[] = []): StudioSceneConfig {
   if (scene.placeId !== 'living-room') throw new Error('Unity currently supports the approved Living Room artwork only.');
   const validated = validateTimedLibrary({ version: 1, scenes: [scene] }, ['living-room']);
   if (!validated.ok) throw new Error(validated.error);
@@ -42,8 +55,13 @@ export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[])
   if (scene.life && (scene.life.mode !== 'v2' || scene.life.ambience !== false) || scene.livingWorld)
     throw new Error('For Unity preview, choose Calm Life without room ambience. Living World is not supported yet.');
   const ids = Object.keys(scene.characters);
-  if (!ids.length || ids.length > 2 || ids.some(id => id !== 'max' && id !== 'maxine'))
-    throw new Error('Unity saved-scene playback currently supports Max and Maxine only.');
+  const customIds = ids.filter(id => id.startsWith('brightling-'));
+  if (!ids.length || ids.length > 2 || ids.some(id => id !== 'max' && id !== 'maxine' && !/^brightling-[a-f0-9-]{36}$/.test(id)))
+    throw new Error('Unity saved-scene playback supports Max, Maxine and saved Brightlings (up to two characters).');
+  if (new Set(definitions.map(definition => definition.character.id)).size !== definitions.length ||
+      customIds.some(id => !definitions.some(definition => definition.character.id === id)) ||
+      definitions.some(definition => !customIds.includes(definition.character.id)))
+    throw new Error('Transfer the saved appearance for each Brightling in this scene.');
   if (scene.actions.length > 100) throw new Error('Unity saved-scene playback supports at most 100 actions.');
   for (const action of scene.actions) {
     if (!['appear', 'walk', 'wait', 'wave', 'disappear', 'look-at'].includes(action.type))
@@ -59,10 +77,10 @@ export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[])
       const point = scene.characters[id];
       if (clampPoint(point).x !== point.x || clampPoint(point).y !== point.y)
         throw new Error(`${id} starts outside the approved Unity stage.`);
-      return { id: id as 'max' | 'maxine', x: point.x, y: point.y, facing: 'front' as const };
+      return { id, x: point.x, y: point.y, facing: 'front' as const };
     }),
     actions: scene.actions.map(action => ({
-      id: action.id, characterId: action.characterId as 'max' | 'maxine',
+      id: action.id, characterId: action.characterId,
       type: action.type as StudioSceneConfig['actions'][number]['type'],
       start: action.start, duration: action.duration,
       x: action.point?.x ?? 0, y: action.point?.y ?? 0,
@@ -71,8 +89,9 @@ export function studioSceneConfig(scene: TimedScene, media?: StudioAudioAsset[])
     camera: (scene.camera ?? []).map(key => ({
       id: key.id, shot: key.shot, focus: key.focus,
       x: key.point?.x ?? 0, y: key.point?.y ?? 0, follow: !!key.follow,
-      start: key.start, duration: key.duration,
+      start: key.start, duration: key.duration, zoom: key.shot === 'custom' ? key.zoom ?? 2 : 0,
     })),
+    ...(definitions.length ? { brightlings: definitions } : {}),
     ...(scene.audio?.length ? { audioAssets: media, audio: scene.audio.map(clip => ({
       id: clip.id, assetId: clip.assetId, start: clip.start, trimStart: clip.trimStart,
       trimEnd: Math.min(clip.trimEnd, clip.trimStart + scene.duration - clip.start),
