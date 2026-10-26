@@ -1,4 +1,10 @@
-# P10 active state (2026-10-26)
+# P11 Episode Production & Polish (2026-10-26)
+
+P11 is implemented on the consolidated `brighttales-active-development` Studio and Unity branches, but the full live workflow is not yet technically verified. Studio tests pass 342/342 and the production build passes. Unity's focused modular episode/camera test passes 1/1; existing episode timing/audio/camera regressions pass 5/5. Studio now labels the canonical wait action as Idle / Wait, resolves saved modular character names in the episode camera Inspector, and preserves modular episode cast/camera/audio information in the bridge. The experimental Pip and Mallow two-scene episode manifest is `proofs/cartoon-foundation-p11/demo-episode.json`; it is not a live saved Studio episode or visual evidence.
+
+Unity's episode camera validator now accepts a modular stable-ID target only when that character belongs to the episode cast. The focused modular test and episode regression class have XML/log evidence under the P11 proof folder. A separate broad Play Mode run blocked in an existing browser-transfer test waiting for a Studio request; it was stopped with no overall results XML. No live browser-to-Unity P11 run, Unity Game-view review or complete WebM export was captured. The five unrelated Unity settings files' recorded pre/post hashes match and remain unstaged. P8–P11 visual/audio acceptance remains pending Karl; no protected integration merge is authorized. Full details: `proofs/cartoon-foundation-p11/REPORT.md`.
+
+# P10 active state (historical, 2026-10-26)
 
 P10 is implemented on isolated Studio and Unity branches. Studio full suite 337/337 and build pass. Unity focused Play Mode: builder 2/2, modular bridge import/update/actions 1/1, saved-scene custom cast 1/1 pass. P8 regression class: 1/2 pass; the remaining browser-to-Unity test needs a live Studio browser send. First broad `-nographics` run passed 6/23; its 17 failures include rendering, unconfigured bridge/proof directories, browser-dependent tests and P10 defects fixed by focused follow-up runs. Do not merge P8/P9/P10. Full facts: proofs/cartoon-foundation-p10/REPORT.md.
 

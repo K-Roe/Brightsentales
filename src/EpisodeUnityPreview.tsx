@@ -99,6 +99,6 @@ export default function EpisodeUnityPreview({ episode, scenes, characters, audio
       }}>Forget local run</button>}
     </div>
     <p role="status">{message} {run && `${elapsed.toFixed(1)}s · scene ${sceneIndex + 1}`}</p>
-    <p><small>Unity preview supports saved Living Room scenes with Max and Maxine. Intros, credits and Bright Speak remain available in browser playback.</small></p>
+    <p><small>Unity preview supports saved Living Room scenes with up to four saved modular Brightlings, Max or Maxine, plus supported scene and episode audio. Intros, credits and Bright Speak remain available in Studio playback.</small></p>
   </section>;
 }

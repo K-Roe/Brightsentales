@@ -1,4 +1,10 @@
-# P10 handover (2026-10-26)
+# P11 handover (2026-10-26)
+
+Karl authorized P11 on the existing Studio and Unity `brighttales-active-development` branches. The complete specification is recorded in `proofs/cartoon-foundation-p11/REPORT.md`. P11 extends the existing Episode Maker and episode bridge: camera target Inspector labels resolve saved modular Brightling names; the existing `wait` action is shown as Idle / Wait; Unity Preview scope text now accurately documents modular cast support; Unity episode validation accepts stable modular camera targets only when present in the episode cast. A Pip/Mallow demo manifest and focused Studio/Unity regression coverage were added.
+
+Studio focused tests 27/27, full suite 342/342 and production build pass. Unity modular episode/camera Play Mode test passes 1/1; existing episode/audio/camera regression class passes 5/5. The separate broad Test Runner stalled in an existing browser-transfer test awaiting Studio and stopped without an overall results XML. Browser-to-Unity episode authoring, complete WebM export, graphical review and physical audio listening are NOT VERIFIED. Five unrelated Unity settings files were hash-checked before/after and left unstaged. P11 is committed and pushed on both active branches; do not merge protected branches. Karl's P8–P11 visual/audio gates remain open. No P12.
+
+# P10 handover (historical, 2026-10-26)
 
 P9 was verified in real applications for direct Maker send/import/actions/update and Unity restart restoration; screenshots are in the P9 proof folder. P10 extends appearance controls and carries saved custom cast definitions through Studio scene/episode bridges into Unity's existing builder/player. Studio 337/337 and build pass. Unity focused Play Mode passes builder 2/2, bridge 1/1 and custom scene/episode cast 1/1. The P8 regression class passes its non-browser camera/command case; the browser-to-Unity scene send is not verified without a live Studio browser. P10 browser UI evidence and Karl visual acceptance are pending. P8/P9/P10 remain isolated/unmerged. Preserve Unity-generated settings diffs; do not stage them. See proofs/cartoon-foundation-p10/REPORT.md.
 

@@ -2,6 +2,7 @@ import { productionBlocks, productionDuration, type Episode, type EpisodeCameraS
 import type { TimedLibrary } from './timedScenes';
 import type { IntroLibrary } from './introductions';
 import type { CreditsLibrary } from './credits';
+import type { Brightling } from './maker';
 import { duplicateEpisodeOccurrence, moveEpisodeOccurrence, removeEpisodeOccurrence, updateEpisodeOccurrence } from './episodeSequence';
 import { cameraMovementName, cameraShotName, episodeCameraIssue, episodeCameraTargets, removeEpisodeCameraShot, updateEpisodeCameraShot } from './episodeCamera';
 
@@ -10,6 +11,7 @@ type Props = {
   scenes: TimedLibrary;
   intros: IntroLibrary;
   credits: CreditsLibrary;
+  characters: Brightling[];
   selectedScene: number | null;
   selectedBoundary: number | null;
   selectedCamera: string | null;
@@ -21,7 +23,7 @@ type Props = {
 };
 const clock = (time: number) => `${time.toFixed(1)}s`;
 
-export default function EpisodeInspector({ episode, scenes, intros, credits, selectedScene, selectedBoundary, selectedCamera, onChange, onSelectScene, onSelectCamera, onEditSource, onPreviewTransition }: Props) {
+export default function EpisodeInspector({ episode, scenes, intros, credits, characters, selectedScene, selectedBoundary, selectedCamera, onChange, onSelectScene, onSelectCamera, onEditSource, onPreviewTransition }: Props) {
   const blocks = productionBlocks(episode, scenes, intros, credits);
   const sceneBlock = blocks.find(block => block.kind === 'scene' && block.occurrenceIndex === selectedScene);
   const incoming = blocks.find(block => block.kind === 'scene' && block.occurrenceIndex === selectedBoundary);
@@ -36,7 +38,7 @@ export default function EpisodeInspector({ episode, scenes, intros, credits, sel
   };
   const total = productionDuration(episode, scenes, intros, credits);
   const camera = episode.camera?.find(shot => shot.id === selectedCamera) ?? null;
-  const targets = episodeCameraTargets(episode, scenes);
+  const targets = episodeCameraTargets(episode, scenes, characters);
   const cameraError = episodeCameraIssue(episode, scenes, total);
   const editCamera = (patch: Partial<EpisodeCameraShot>) => { if (camera) onChange(updateEpisodeCameraShot(episode, camera.id, patch)); };
   const changeShot = (shot: EpisodeCameraShot['shot']) => {

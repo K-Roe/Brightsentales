@@ -1,4 +1,8 @@
-# P10 Brightling Maker V2 - technical review (2026-10-26)
+# P11 Episode Production & Polish - technical review (2026-10-26)
+
+P11 extends the existing Episode Maker and Unity bridge/player. Studio focused tests 27/27, complete suite 342/342 and production build pass. The Unity modular episode/camera test and existing episode timing/audio/camera regression class pass 1/1 and 5/5. A separate broad Test Runner stalled in an existing browser-transfer test awaiting Studio and produced no overall results XML. The two-character episode exists as a manifest fixture, not a live UI-authored saved episode. Disposable-browser save/reopen/replay, complete Unity transfer/playback, full WebM export, real application screenshots, Karl Studio/Unity visual acceptance and physical audio acceptance remain outstanding. Read `proofs/cartoon-foundation-p11/REPORT.md`. No protected-branch merge or P12.
+
+# P10 Brightling Maker V2 - technical review (historical, 2026-10-26)
 
 P10 is implemented on isolated branches. Studio tests pass 337/337 and build passes. Unity focused builder 2/2, modular bridge import/update/actions 1/1 and custom scene/episode cast 1/1 pass. P8 scene/player regression class is 1/2: camera rejection and command safety pass; the browser-to-Unity test requires a live Studio send. P10 browser UI walkthrough and Studio screenshot are not captured. Karl's Studio and Unity visual acceptance is pending. Review the [P10 report](../proofs/cartoon-foundation-p10/REPORT.md). No merge is authorized.
 

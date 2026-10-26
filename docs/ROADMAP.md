@@ -1,4 +1,8 @@
-# P9 Brightling Auto-Builder V1 - active isolated milestone (2026-10-26)
+# P11 Episode Production & Polish (2026-10-26)
+
+Karl-authorized P11 is implemented on the active development branches. Studio focused tests 27/27, complete suite 342/342 and production build pass. Unity episode camera target validation accepts modular Brightling targets only when the character is present in the episode cast; the new two-character test plus the existing episode/audio/camera Play Mode class pass **1/1 and 5/5**. A separate broad Unity run stalled in an existing browser-transfer test awaiting an external Studio request and has no overall result XML. The two-character episode exists as a manifest fixture, not a live UI-authored/exported episode. Human visual/audio review remains pending. Do not merge to protected branches. See `proofs/cartoon-foundation-p11/REPORT.md`; no P12.
+
+# P9 Brightling Auto-Builder V1 - historical isolated milestone (2026-10-26)
 
 Karl authorized P9 from the P8 development branches. P9 remains isolated from Studio `main` and Unity `cartoon-foundation`; P8 remains unmerged pending Studio visual, Unity Game-view visual and physical audio review.
 
@@ -24,6 +28,10 @@ Studio's optional Episode v1 camera track supports wide/medium/close/custom shot
 P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; P9 development is authorized on isolated branches only. Preserve the original Unity worktree's unrelated settings and `P8CameraReview/`.
 
 ---
+
+# P11 Episode Production & Polish (2026-10-26)
+
+Karl-authorized P11 is implemented on the active development branches. Studio episode camera target labels and idle wording are clearer, Unity episode validation accepts present modular Brightling camera targets, and Studio bridge/demo tests preserve modular cast, action, camera, audio and occurrence timing. Studio suite 342/342 and production build pass. Unity Play Mode verification is incomplete because the broad runner stalled waiting for an external browser transfer; no Unity P11 XML, live episode workflow or full export was captured. Human Studio/Unity visual review and physical audio remain pending. Do not merge to protected branches. See `proofs/cartoon-foundation-p11/REPORT.md`; no P12.
 
 # BrightSenAppsTales development roadmap
 

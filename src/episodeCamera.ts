@@ -4,6 +4,7 @@ import { productionBlocks, productionDuration, type Episode, type EpisodeCameraS
 import type { IntroLibrary } from './introductions';
 import type { CreditsLibrary } from './credits';
 import { stateAt, type TimedLibrary, type TimedScene } from './timedScenes';
+import type { Brightling } from './maker';
 
 export type CameraView = { x: number; y: number; zoom: number };
 export const WIDE_CAMERA_VIEW: CameraView = { x: WIDTH / 2, y: HEIGHT / 2, zoom: 1 };
@@ -25,14 +26,14 @@ export const cameraShotName = (shot: EpisodeCameraShot['shot']) => shot === 'clo
 export const cameraMovementName = (movement: EpisodeCameraShot['movement']) => movement === 'pan' ? 'Pan' : movement === 'follow' ? 'Follow' : 'Static';
 
 /** Targets are the characters actually present anywhere in this episode, never a guessed substitute. */
-export function episodeCameraTargets(episode: Episode, scenes: TimedLibrary): EpisodeCameraTarget[] {
+export function episodeCameraTargets(episode: Episode, scenes: TimedLibrary, characters: Brightling[] = []): EpisodeCameraTarget[] {
   const ids = new Set<string>();
   for (const id of episode.sceneIds) {
     const scene = scenes.scenes.find(candidate => candidate.id === id);
     if (scene) for (const characterId of Object.keys(scene.characters)) ids.add(characterId);
   }
   return [...ids].filter(id => id !== 'point').sort((a, b) => (a === 'max' ? -1 : b === 'max' ? 1 : a === 'maxine' ? -1 : b === 'maxine' ? 1 : a.localeCompare(b)))
-    .map(id => ({ id, name: id === 'max' ? 'Max' : id === 'maxine' ? 'Maxine' : id }));
+    .map(id => ({ id, name: id === 'max' ? 'Max' : id === 'maxine' ? 'Maxine' : characters.find(character => character.id === id)?.name ?? 'Saved Brightling' }));
 }
 
 function blockAt(episode: Episode, scenes: TimedLibrary, intros: IntroLibrary | undefined, credits: CreditsLibrary | undefined, time: number) {

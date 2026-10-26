@@ -42,15 +42,25 @@ Unity's worktree still has five unrelated modified editor settings files. Leave 
 
 Automated checks do not constitute Karl's visual or audio acceptance. Studio visuals, Unity Game-view visuals, and physical audio remain pending for the applicable P8–P10 work. Review P8 camera/audio first, then P9 transfer, then P10 modular characters. Evidence and exact limits: `../proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` and the P8/P9/P10 reports.
 
-## P11 scope gate
+## P11 Episode Production & Polish (2026-10-26)
 
-No P11 report, requirements checklist, or acceptance criteria were found in the repositories or existing handover documents. The current project TODO says “No P11.” Because “Episode Production & Polish” alone does not define the required behavior or acceptance boundaries, P11 implementation is waiting for Karl to provide the existing checklist or an approved scope. The active branches remain ready for that work; no speculative P11 feature changes were made.
+Karl supplied and approved the full P11 specification; it is recorded in `../proofs/cartoon-foundation-p11/REPORT.md`. P11 extends the existing Episode Maker, canonical scene/episode clock, modular character definitions, camera director, audio cues, Unity bridge and scene player. Studio now displays saved modular Brightling names in camera targeting, labels the supported existing `wait` action as **Idle / Wait**, and clarifies Unity preview compatibility. Unity validates camera targets for modular cast IDs and its existing player builds the supported cast.
+
+Verification: Studio focused episode/camera/bridge/demo tests **27/27**, full suite **342/342**, production build passed. Unity P11 modular two-character episode camera/action/replay test **1/1** and existing episode/audio/camera regression class **5/5** passed. A separate broad Play Mode run stalled in an existing browser-transfer test waiting for Studio and has no overall XML. The live browser authoring/save/reopen/replay, genuine episode transfer, complete WebM export and actual application screenshots were not captured. The P11 demo currently is a reviewable manifest fixture in `../proofs/cartoon-foundation-p11/demo-episode.json`, not a Studio-saved or exported episode. Karl's P8–P11 visual and physical-audio reviews remain pending; no protected-branch merge or P12 is authorized.
+
+### Review sequence
+
+1. Review P8 camera in Studio and Unity Game view; physically listen to its episode audio.
+2. Review P9 automatic Brightling construction and the existing supported actions.
+3. Review P10 modular character creation, saving/reopening and Unity appearance.
+4. In Studio, create/select two modular Brightlings; add both to saved Living Room scenes, set positions, assign Idle / Wait, Walk and Wave, then compose an episode. Add two or more episode camera shots, target each character and choose supported movement. Add a supported episode/scene audio cue. Scrub, replay, save and reopen; then connect to Unity, send and play the episode; export the full WebM and verify it plays to the end.
+5. Record explicit APPROVE / CHANGES / REJECT / PAUSE / SKIP decisions separately for each milestone and each visual/audio gate. Do not infer review acceptance from these automated checks.
 
 ## Next review actions
 
 1. Review P8 Studio camera preview, Unity Game-view playback, and physically listen to its episode audio.
 2. Review P9 Brightling transfer and Unity construction/actions.
 3. Review P10 modular Brightling creation and Unity appearance/actions.
-4. Provide/confirm P11 acceptance requirements; then implement and verify P11 on these active branches.
+4. Follow the P11 episode workflow above and review its Studio/Unity behavior plus the exported episode.
 
-No approval of P8–P10 is implied by these tests. No P11 or P12 work is approved by silence.
+P8–P11 technical test results do not imply human approval. No protected integration merge or P12 is authorized.

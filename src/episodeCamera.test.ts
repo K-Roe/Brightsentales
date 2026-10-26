@@ -4,6 +4,7 @@ import type { Episode, EpisodeCameraShot } from './episodes';
 import { validateEpisodeLibrary } from './episodes';
 import { addEpisodeCameraShot, cameraZoom, episodeCameraIssue, episodeCameraTargets, episodeCameraView, removeEpisodeCameraShot, updateEpisodeCameraShot } from './episodeCamera';
 import { productionDuration } from './episodes';
+import type { Brightling } from './maker';
 
 const id = (n: number) => `11111111-1111-4111-8111-${String(n).padStart(12, '0')}`;
 const cameraId = (n: number) => `22222222-2222-4222-8222-${String(n).padStart(12, '0')}`;
@@ -82,6 +83,15 @@ describe('episode camera direction', () => {
     const lastSeen = episodeCameraView(following, onlyMax, 9.9)!;
     expect(episodeCameraView(following, onlyMax, 10.5)).toEqual(lastSeen);
     expect(episodeCameraView(following, onlyMax, 16)).toEqual(lastSeen);
+  });
+
+  it('shows saved modular character names while keeping their stable IDs as camera targets', () => {
+    const customId = 'brightling-12345678-1234-4123-8123-123456789abc';
+    const customScene = { ...scene(3, 5), characters: { [customId]: { x: 700, y: 790 } } };
+    const character: Brightling = { id: customId, name: 'Mallow', template: 'female', body: '#f7b788', hair: '#8740b6', clothing: '#d94b55' };
+    const targets = episodeCameraTargets({ ...episode, sceneIds: [customScene.id] }, { version: 1, scenes: [customScene] }, [character]);
+    expect(targets).toEqual([{ id: customId, name: 'Mallow' }]);
+    expect(episodeCameraIssue({ ...episode, sceneIds: [customScene.id], camera: [shot(9, { target: customId })] }, { version: 1, scenes: [customScene] })).toBeNull();
   });
 
   it('validates shot timing, overlap, targets and custom zoom', () => {

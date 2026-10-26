@@ -1,4 +1,8 @@
-# P9 Brightling Auto-Builder V1 (2026-10-26)
+# P11 Episode Production & Polish (2026-10-26)
+
+P11 implementation is committed on the active Studio/Unity development branches. Studio 342/342 tests and build pass; Unity modular episode/camera Play Mode passes 1/1 and existing episode/audio/camera regressions pass 5/5. The full browser-to-Unity author/save/reopen/replay/export workflow was not run, and the demo episode is a manifest fixture rather than an exported Studio episode. Review details and exact evidence are in [P11 report](../proofs/cartoon-foundation-p11/REPORT.md). P8–P11 visual/audio approvals are pending; protected branches are unchanged.
+
+# P9 Brightling Auto-Builder V1 (historical, 2026-10-26)
 
 Implementation is committed on isolated Studio `cartoon-foundation-p9-brightling-auto-builder` at `09d95d46a58dcf73d7e17076de94514eb63bf004` and Unity branch of the same name at `fe40c5282e5e03ab6cb858a749a63926dcee8e81`. Studio 330/330 tests, build, service/relay 12/12, Unity builder 1/1, bridge import/update/action 1/1, and P8 episode/camera 5/5, player 1/1 and audio 1/1 pass. No app-to-app browser walkthrough or visual capture was obtained; Unity Game-view and visual approval are pending. Imported characters are not yet integrated into saved Studio scene/episode casts. See `proofs/cartoon-foundation-p9/REPORT.md`. P9 is not merged.
 
@@ -25,7 +29,7 @@ P8 is **technically verified only**. Studio visual review, Unity Game-view visua
 
 # BrightTales Project Status
 
-**Active development workspace (2026-10-26):** P8–P10 history is consolidated on Studio `brighttales-active-development` (current pushed tip; see `git rev-parse HEAD`) and Unity `brighttales-active-development` at `cea276c32ea1a8e7dd1e0dfc6ce240b8e5cc9285`; both branches are pushed. Studio 337/337 and build pass; Unity P10 builder 2/2 passes. P8–P10 visual/audio review gates remain open. P11 Episode Production & Polish is not implemented because no P11 requirements/checklist were present; see [active development handover](ACTIVE_DEVELOPMENT.md). Protected integration branches are unchanged.
+**Active development workspace (2026-10-26):** P8–P11 work is on Studio and Unity `brighttales-active-development`; P11 changes are in progress and not yet pushed. Studio full suite passes 342/342 and build passes. Unity P11 runtime test is unverified because the broad Play Mode run stalled in an existing external-browser test. The P11 demo is currently a fixture, not a live Studio-authored/exported episode. P8–P11 visual/audio review gates remain open; protected integration branches remain unchanged. See [P11 report](../proofs/cartoon-foundation-p11/REPORT.md) and [active development handover](ACTIVE_DEVELOPMENT.md).
 
 **P9 Brightling Auto-Builder V1: IMPLEMENTED IN ISOLATION; FULL VISUAL WORKFLOW NOT VERIFIED.** The existing Maker can send saved palette-based characters to Unity; Unity constructs and persists a runtime actor, supports four actions, and updates by stable ID. Read the [P9 proof](../proofs/cartoon-foundation-p9/REPORT.md). Both P9 branches remain unmerged; Karl's Studio/Unity visual review is pending.
 

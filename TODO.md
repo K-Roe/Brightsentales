@@ -5,7 +5,20 @@
 - Karl review order: P8 camera/audio, P9 direct auto-builder, P10 modular Maker. Keep all branches unmerged pending explicit decisions.
 - No P11.
 
-# Current P9 Brightling Auto-Builder V1 review (2026-10-26)
+# Current P11 Episode Production & Polish review (2026-10-26)
+
+- [x] Record Karl's P11 specification on the active development branch before implementation.
+- [x] Extend the existing Episode Maker's modular camera-target labels, supported idle wording and Unity Preview help; add episode bridge/demo fixture regression coverage.
+- [x] Extend Unity episode camera target validation for present modular Brightling IDs and add two-character camera/action/replay Play Mode coverage.
+- [x] Studio full suite 342/342, production build and focused episode/camera/bridge tests 27/27 pass.
+- [x] Run the focused Unity modular episode/camera test 1/1 and existing episode timing/audio/camera regression class 5/5 with isolated Test Runner filters.
+- [ ] Complete disposable-browser authoring, save/reopen/replay, genuine episode transfer acknowledgement, Unity playback, and complete WebM export; retain real screenshots/logs.
+- [ ] Karl: review P8 Studio camera, Unity Game view and physical audio; then P9 transfer, P10 modular Maker, and P11 two-character episode workflow. Record each decision explicitly.
+- [ ] Commit/push P11 implementation and proof on Studio and Unity `brighttales-active-development`; keep protected integration branches unchanged.
+
+P11 is not yet end-to-end technically verified and has no human acceptance. See `proofs/cartoon-foundation-p11/REPORT.md`. No P12.
+
+# Current P9 Brightling Auto-Builder V1 review (historical, 2026-10-26)
 
 - [x] Create isolated Studio and Unity branches from the verified P8 development refs.
 - [x] Reuse the Brightling Maker, package a deterministic validated definition and artwork, and add acknowledged Unity transfer/action controls.

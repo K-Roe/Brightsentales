@@ -24,7 +24,7 @@ const initialPoint = (index: number): Point => ({ x: 520 + index * 230, y: 790 }
 const clone = (scene: TimedScene): TimedScene => structuredClone(scene);
 const newScene = (placeId: string): TimedScene => ({ id: crypto.randomUUID(), name: 'My Scene', duration: 30, placeId, characters: {}, actions: [], life: { enabled: true, mode: 'v2', ambience: false } });
 const actionNames: Record<ActionType, string> = {
-  appear: 'Appear', walk: 'Walk To', wait: 'Wait', wave: 'Wave', disappear: 'Disappear', 'look-at': 'Look toward',
+  appear: 'Appear', walk: 'Walk To', wait: 'Idle / Wait', wave: 'Wave', disappear: 'Disappear', 'look-at': 'Look toward',
   breathe: 'Breathe', point: 'Point', nod: 'Nod', shake: 'Shake head', smile: 'Smile',
   surprise: 'Surprise', clap: 'Clap', react: 'React', turn: 'Turn', jump: 'Jump', excited: 'Excited bounce',
   'sit-down': 'Sit down', 'stand-up': 'Stand up', 'pick-up': 'Pick up toy', 'put-down': 'Put down toy',

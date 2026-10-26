@@ -93,6 +93,47 @@ describe('P4 episode transfer', () => {
     expect(config.camera?.[0].target).toBe(characterId);
   });
 
+  it('keeps two modular identities, actions, camera targets and audio aligned in one episode payload', () => {
+    const pipId = 'brightling-12345678-1234-4123-8123-123456789abc';
+    const mallowId = 'brightling-22345678-1234-4123-8123-123456789abc';
+    const pip: Brightling = { id: pipId, name: 'Pip', template: 'male', ...DEFAULT_COLOURS.male,
+      appearance: { version: 2, headShape: 'round', eyeStyle: 'round', earShape: 'short', hairStyle: 'tuft', headDecoration: 'none', bodyShape: 'standard', clothingStyle: 'hoodie' } };
+    const mallow: Brightling = { id: mallowId, name: 'Mallow', template: 'female', body: '#f7b788', hair: '#8740b6', clothing: '#d94b55',
+      appearance: { version: 2, headShape: 'wide', eyeStyle: 'sparkle', earShape: 'long', hairStyle: 'swoop', headDecoration: 'star', bodyShape: 'tall', clothingStyle: 'jacket' } };
+    const firstScene: TimedScene = { ...first, characters: { [pipId]: { x: 500, y: 790 }, [mallowId]: { x: 1120, y: 790 } }, actions: [
+      { id: id(41), characterId: pipId, type: 'appear', start: 0, duration: 0, point: { x: 500, y: 790 } },
+      { id: id(42), characterId: pipId, type: 'wait', start: .1, duration: .5 },
+      { id: id(43), characterId: pipId, type: 'walk', start: .8, duration: 1, point: { x: 820, y: 790 }, motion: 'gentle' },
+      { id: id(44), characterId: mallowId, type: 'appear', start: 0, duration: 0, point: { x: 1120, y: 790 } },
+      { id: id(45), characterId: mallowId, type: 'wave', start: 1.8, duration: 1.2 },
+    ] };
+    const secondScene: TimedScene = { ...second, characters: { [pipId]: { x: 820, y: 790 }, [mallowId]: { x: 1120, y: 790 } }, actions: [
+      { id: id(46), characterId: pipId, type: 'appear', start: 0, duration: 0, point: { x: 820, y: 790 } },
+      { id: id(47), characterId: mallowId, type: 'appear', start: 0, duration: 0, point: { x: 1120, y: 790 } },
+      { id: id(48), characterId: mallowId, type: 'wave', start: .4, duration: 1.2 },
+    ] };
+    const library: TimedLibrary = { version: 1, scenes: [firstScene, secondScene] };
+    const episodeAudio = { ...music, start: 0, trimEnd: 5 };
+    const directed: Episode = { id: id(3), name: 'Pip and Mallow', sceneIds: [firstScene.id, secondScene.id], audio: [episodeAudio], camera: [
+      { id: id(51), start: 0, duration: 1, shot: 'wide', target: 'point', movement: 'static', x: 836, y: 470 },
+      { id: id(52), start: 1, duration: 2, shot: 'medium', target: pipId, movement: 'pan' },
+      { id: id(53), start: 3, duration: 2, shot: 'close-up', target: mallowId, movement: 'follow' },
+    ] };
+    const definition = (character: Brightling) => ({ schema: 'brighttales.brightling', version: 1, character,
+      templateVersion: 1, bodyPart: { kind: 'whole-body', layer: 0, pivot: { x: .5, y: 0 }, scale: 1 },
+      animations: ['idle', 'blink', 'walk', 'wave'], assets: [] }) as unknown as BrightlingDefinition;
+    const config = studioEpisodeConfig(directed, library, [media], [definition(pip), definition(mallow)]);
+    expect(config.version).toBe(3);
+    expect(config.scenes.map(item => item.scene.characters.map(character => character.id))).toEqual([[pipId, mallowId], [pipId, mallowId]]);
+    expect(config.scenes[0].scene.brightlings?.map(item => item.character.id)).toEqual([pipId, mallowId]);
+    expect(config.scenes[1].scene.brightlings?.map(item => item.character.id)).toEqual([pipId, mallowId]);
+    expect(config.scenes[0].scene.actions.map(action => [action.characterId, action.type])).toEqual([
+      [pipId, 'appear'], [pipId, 'wait'], [pipId, 'walk'], [mallowId, 'appear'], [mallowId, 'wave'],
+    ]);
+    expect(config.camera?.map(shot => shot.target)).toEqual(['point', pipId, mallowId]);
+    expect(config.audio).toMatchObject([{ source: 'episode', start: 0, assetId: media.id }]);
+  });
+
   it('rejects missing scenes and unsupported intro before transfer', () => {
     expect(() => studioEpisodeConfig({ ...episode, sceneIds: [id(99)] }, scenes)).toThrow('missing saved scene');
     expect(() => studioEpisodeConfig({ ...episode, introId: id(98) }, scenes)).toThrow('intros or credits');

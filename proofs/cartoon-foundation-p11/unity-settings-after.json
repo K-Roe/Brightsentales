@@ -1,0 +1,22 @@
+﻿[
+    {
+        "Path":  "Assets\\Settings\\UniversalRenderPipelineGlobalSettings.asset",
+        "Hash":  "6E193ED0D0734BA156391192EDB4CE4705C0649A0C57AD357A62B210A0990552"
+    },
+    {
+        "Path":  "ProjectSettings\\EditorBuildSettings.asset",
+        "Hash":  "37D3BA3252E7D7E994D22567B7B91263BBA0FB941061B2A2B47C00F4E9E1C559"
+    },
+    {
+        "Path":  "ProjectSettings\\Packages\\com.unity.learn.iet-framework\\Settings.json",
+        "Hash":  "0C692CE63564B3910AF12989E413530658899FB866A20AC3287D4040EB3EB4F8"
+    },
+    {
+        "Path":  "ProjectSettings\\ProjectAuditorSettings.asset",
+        "Hash":  "9E68444B9BDA981E2927A98DF9EDF69EA88362F0C6B7F3C81B39B9D515D2A416"
+    },
+    {
+        "Path":  "ProjectSettings\\ShaderGraphSettings.asset",
+        "Hash":  "5C432C9C73FDF73FEE91C8823EA02AB98E3B7A8EDF341B5AE6901D699CCE52A7"
+    }
+]
