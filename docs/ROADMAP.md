@@ -1,3 +1,7 @@
+# Walk animation speed correction (2026-10-26)
+
+Karl authorized a targeted correction to the existing Studio walk rendering; this does not add a character action or advance the blocked Greeting V3 artwork gate. Full-cycle stride calibration and optional walk-bob cadence were corrected without changing saved action durations or global timeline speed. Studio verification: 393/393 tests and build pass. **Karl visually reviewed and approved this gait. Preserve it as the accepted baseline; further changes require approval.** See `proofs/walk-animation-speed-v1/REPORT.md`.
+
 # Current milestone — Unity Editor Play Mode control V1 (2026-10-26)
 
 Implemented on Studio `main` and Unity `cartoon-foundation`. Studio's Unity Connection panel can request Start/Stop and displays actual Editor state; it waits for Unity's Playing acknowledgement and the existing runtime bridge readiness. Unity's controller is editor-only, authenticated and restricted to loopback port 17845 and the exact configured Studio origin. Runtime scene/character commands remain on port 17844. Studio 345/345, build and service/relay 17/17 pass; Unity compile and focused existing bridge/player regressions 2/2 pass. Headless Editor API evidence is in the Unity report. Studio visual click-through and Unity Game-view review remain pending Karl; no P12.

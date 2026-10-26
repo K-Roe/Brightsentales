@@ -37,6 +37,10 @@ P8 is **technically verified only**. Studio visual review, Unity Game-view visua
 
 # Application architecture
 
+## Walk cadence correction (2026-10-26)
+
+`TimedAction.duration` continues to drive each character's own movement progress in `stateAt`; destination distance remains the translation input. Native2D cycle frames are selected from that character's travelled distance using a full-cycle stride length (`STRIDE_PX`: Max 168 px, Maxine 186 px). Walk body bob in both optional life renderers now runs at 1.4 Hz instead of 4.5–5 Hz. Canvas scene preview and WebM export share `stateAt` / `drawScenePreview`, so no separate preview or export timing was added. Existing saved scene data needs no migration. Karl visually approved this gait as the accepted baseline; further changes require approval.
+
 ## P8 episode camera direction (2026-10-26, technically verified; manual review pending)
 
 `Episode.camera` is an optional directing track on the existing occurrence clock. The Episode Maker uses the shared Canvas preview/export path for Wide, Medium, Close-Up and Custom shots with Static, Pan and Follow movement. Unity receives version 3 camera episodes through the existing bridge and player; camera-free episodes and payload versions 1/2 remain supported. Studio 325/325, build, service/relay 12/12, Unity camera 5/5, player/audio 1/1 each, browser save/reopen/replay/export and live bridge V3 passed. Manual Studio/Unity visual and physical audio approval remain pending. P8 stays isolated; P9 is active on separate isolated branches.

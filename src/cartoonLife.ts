@@ -57,7 +57,9 @@ export function lifeMotionAt(scene: TimedScene, id: string, time: number, state:
   if (state.pose === 'side' && current?.type === 'walk') {
     const seconds = Math.max(0, time - current.start);
     const envelope = Math.min(1, seconds / .3, (end(current) - time) / .3);
-    const beat = Math.sin(seconds * Math.PI * 5);
+    // Keep the small body lift in step with a calm walk instead of the old
+    // 5 Hz bounce, which looked frantic beside the authored side frames.
+    const beat = Math.sin(seconds * Math.PI * 1.4);
     return { scaleX: 1, scaleY: 1, offsetY: -2.2 * beat * beat * Math.max(0, envelope) };
   }
   if (state.pose !== 'idle' || current && current.type !== 'wait') return null;

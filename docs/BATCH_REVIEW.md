@@ -35,6 +35,8 @@ P8 is **technically verified only**. Studio visual review, Unity Game-view visua
 
 # Batch review for Karl
 
+**Walk Animation Speed V1 (2026-10-26): APPROVED BY KARL; ACCEPTED BASELINE.** Karl visually reviewed the updated gait. The 1-second Max and 5-second Maxine actions retain independent timing and destinations. Native2D cycle length is 168/186 px; walk-only optional body bob is 1.4 Hz. Focused tests 22/22, full Studio tests 393/393 and production build pass. Do not change this gait or existing scene behavior without further approval. See [walk speed report](../proofs/walk-animation-speed-v1/REPORT.md).
+
 **P8 Camera & Directing V1 (26 October 2026): TECHNICALLY VERIFIED; MANUAL ACCEPTANCE PENDING.** See `proofs/cartoon-foundation-p8/REPORT.md` and `MANUAL_REVIEW.md`. Studio 325/325 tests, build and service/relay 12/12 pass; Unity episode/camera 5/5, player 1/1, audio 1/1 and real browser-to-Unity V3 1/1 pass. Fresh browser save/reopen/replay/export passes and the WebM fully decodes. Studio visuals, Unity Game-view visuals and physical audio are awaiting Karl. P8 remains unmerged; P9 is active on isolated branches only.
 
 **P7 episode polish (25 October 2026): MERGED AND STUDIO REGRESSION VERIFIED.** Studio P7 is on `main` at `e483838085f4b2583bb5f90bc6bafb34680110eb`. Review the [P7 screenshots, walkthrough and complete exported episode](../proofs/cartoon-foundation-p7/REPORT.md). Unity Game-view visual acceptance and physical audio listening remain pending.

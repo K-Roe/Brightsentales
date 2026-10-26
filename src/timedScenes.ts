@@ -264,7 +264,8 @@ export function stateAt(scene: TimedScene, character: string, time: number): Sce
       if (now < ends(action)) {
         const current = { x: origin.x + (destination.x - origin.x) * progress, y: origin.y + (destination.y - origin.y) * progress };
         const travelled = Math.hypot(current.x - origin.x, current.y - origin.y);
-        return { visible, point: current, pose: 'side', frame: progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled), direction, greetingV3: action.artwork === 'greeting-side-v3' };
+        const frame = progress === 0 ? 0 : frameForDistance(character as 'max' | 'maxine', travelled);
+        return { visible, point: current, pose: 'side', frame, direction, greetingV3: action.artwork === 'greeting-side-v3' };
       }
       position = { ...destination };
       facingSide = action.motion === 'gentle' || action.artwork === 'greeting-side-v2' || action.artwork === 'greeting-side-v3';

@@ -15,12 +15,14 @@ export const STOP_MS = 110;
 /** Legacy frame step distance kept for existing tests and procedural characters. */
 export const FRAME_DISTANCE = 29;
 
-/** Stride length in display pixels for one full walk cycle for the approved Native2D sprites.
- *  A cycle is two steps: left foot forward, then right foot forward.
- *  Tuned to the approved side sprites so feet appear to push off the ground
- *  rather than sliding across it.
+/** Display pixels travelled during one complete two-step walk cycle.
+ *  The previous values (56/62 px) advanced all four cycle frames over about
+ *  one sprite-width. At the usual 235 px/s this produced 3.8-4.2 full cycles
+ *  per second, which looked like running. These calibrated distances yield a
+ *  relaxed cadence while remaining tied to actual travel, so the feet do not
+ *  cycle independently of the character's movement.
  */
-export const STRIDE_PX: Record<'max' | 'maxine', number> = { max: 56, maxine: 62 };
+export const STRIDE_PX: Record<'max' | 'maxine', number> = { max: 168, maxine: 186 };
 
 /** Number of frames in one full Native2D walk cycle. */
 export const CYCLE_FRAMES = 4;

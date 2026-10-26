@@ -70,6 +70,22 @@ describe('timed scene schedule', () => {
     expect(validateTimedLibrary({ version: 1, scenes: [conflict] }).ok).toBe(false);
     expect(validateTimedLibrary({ version: 1, scenes: [{ ...scene, duration: 29 }] }).ok).toBe(false);
   });
+  it('keeps simultaneous walks on their own durations and uses a relaxed travel-matched cycle', () => {
+    const simultaneous: TimedScene = { ...scene, duration: 6, characters: { max: { x: 500, y: 780 }, maxine: { x: 500, y: 780 } }, actions: [
+      { id: id(120), characterId: 'max', type: 'walk', start: 0, duration: 1, point: { x: 700, y: 780 } },
+      { id: id(121), characterId: 'maxine', type: 'walk', start: 0, duration: 5, point: { x: 1500, y: 780 } },
+    ] };
+    const max = stateAt(simultaneous, 'max', .5);
+    const maxine = stateAt(simultaneous, 'maxine', .5);
+    expect(max.pose).toBe('side');
+    expect(maxine.pose).toBe('side');
+    expect(max.point.x).toBeGreaterThan(maxine.point.x);
+    expect(max.frame).not.toBe(maxine.frame);
+    expect(stateAt(simultaneous, 'max', 1).pose).toBe('idle');
+    expect(stateAt(simultaneous, 'max', 1).expression).toBeUndefined();
+    expect(stateAt(simultaneous, 'maxine', 1).pose).toBe('side');
+    expect(stateAt(simultaneous, 'maxine', 5).pose).toBe('idle');
+  });
   it('sequences walk, wave, jump and excited bounce on the existing scene timeline', () => {
     const actions: TimedScene['actions'] = [
       { id: id(21), characterId: 'max', type: 'appear', start: 0, duration: 0, point: { x: 500, y: 780 } },

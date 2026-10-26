@@ -59,7 +59,9 @@ export function characterLifeAt(scene: TimedScene, id: string, time: number, sta
   if (current?.type === 'walk') {
     const elapsed = time - current.start;
     const envelope = Math.min(1, elapsed / .25, (end(current) - time) / .25);
-    lift -= 1.5 * Math.sin(elapsed * Math.PI * 4.5 + phase) ** 2 * Math.max(0, envelope);
+    // Match the relaxed side-frame cadence. The previous 4.5 Hz bounce made
+    // even a correctly timed walk read as a run.
+    lift -= 1.5 * Math.sin(elapsed * Math.PI * 1.4 + phase) ** 2 * Math.max(0, envelope);
   }
   if (previous && time - end(previous) < .42 && !current) {
     const elapsed = time - end(previous);
