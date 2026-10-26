@@ -21,6 +21,11 @@ export function videoFrameCount(duration: number, fps = VIDEO_EXPORT_FPS): numbe
 
 export function validateVideoAudioReferences(duration: number, clips: AudioClip[], assets: AudioAsset[]): void {
   videoFrameCount(duration);
+  validateAudioReferences(clips, assets, duration);
+}
+
+/** Validates clip/file compatibility independently from whether a duration is exportable. */
+export function validateAudioReferences(clips: AudioClip[], assets: AudioAsset[], duration = Number.POSITIVE_INFINITY): void {
   if (clips.length > 200) throw new Error('Video export supports up to 200 audio clips.');
   const assetsById = new Map<string, AudioAsset>();
   for (const asset of assets) {

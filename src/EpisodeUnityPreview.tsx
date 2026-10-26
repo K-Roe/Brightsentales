@@ -7,6 +7,7 @@ import { prepareStudioEpisode, studioEpisodeCommand, studioEpisodeRevision, vali
 import { studioSceneCommand } from './studioSceneBridge';
 import { ensureEpisodeUnityReady, runEpisodePreviewWorkflow, type EpisodePreviewRun, type EpisodePreviewStage } from './episodeUnityOrchestration';
 import type { Brightling } from './maker';
+import { assertEpisodeReady, type EpisodeHealthReport } from './episodeHealthCheck';
 
 const storageKey = 'brighttales.studio-episode.preview';
 type Run = { runId: string; episodeId: string; revision: string };
@@ -36,8 +37,8 @@ const sleep = (ms: number, signal: AbortSignal) => new Promise<void>((resolve, r
   if (signal.aborted) abort();
 });
 
-export default function EpisodeUnityPreview({ episode, scenes, characters, audioAssets, saved }: {
-  episode: Episode; scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; saved: boolean;
+export default function EpisodeUnityPreview({ episode, scenes, characters, audioAssets, saved, health }: {
+  episode: Episode; scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; saved: boolean; health: EpisodeHealthReport;
 }) {
   const [run, setRun] = useState<Run | null>(storedRun);
   const [phase, setPhase] = useState<EpisodePreviewStage>('ready');
@@ -46,8 +47,8 @@ export default function EpisodeUnityPreview({ episode, scenes, characters, audio
   const [message, setMessage] = useState(saved ? 'Preview the saved episode in Unity with one click.' : 'Save the episode before previewing it in Unity.');
   const [busy, setBusy] = useState(false);
   const pending = useRef<AbortController | null>(null);
-  const current = useRef({ run, episode, scenes, characters, audioAssets, saved });
-  current.current = { run, episode, scenes, characters, audioAssets, saved };
+  const current = useRef({ run, episode, scenes, characters, audioAssets, saved, health });
+  current.current = { run, episode, scenes, characters, audioAssets, saved, health };
   useEffect(() => () => pending.current?.abort(), []);
 
   const updateRun = (next: Run | null) => {
@@ -79,7 +80,7 @@ export default function EpisodeUnityPreview({ episode, scenes, characters, audio
         signal: controller.signal,
         previousRun: state.run,
         onStage: reportStage,
-        validate: async () => { definitions = await validateStudioEpisodeForUnity(state.episode, state.scenes, state.audioAssets, state.characters); },
+        validate: async () => { assertEpisodeReady(state.health, 'preview'); definitions = await validateStudioEpisodeForUnity(state.episode, state.scenes, state.audioAssets, state.characters); },
         ensureReady: () => ensureEpisodeUnityReady({ signal: controller.signal, onStage: reportStage }),
         prepare: () => prepareStudioEpisode(state.episode, state.scenes, state.audioAssets, controller.signal, fetch, window.location.origin, state.characters, definitions),
         makeRun: async config => ({ runId: crypto.randomUUID().replaceAll('-', ''), episodeId: state.episode.id, revision: await studioEpisodeRevision(config) }),

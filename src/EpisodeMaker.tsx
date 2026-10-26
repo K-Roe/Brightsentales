@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import type { Brightling } from './maker';
 import { advanceSceneTime, gestureFramesForScene, needsGreetingSideWave, type TimedLibrary } from './timedScenes';
 import { HEIGHT, WIDTH } from './scene';
@@ -19,6 +19,8 @@ import EpisodeSequence from './EpisodeSequencePanel';
 import EpisodeInspector from './EpisodeInspector';
 import { appendEpisodeScene, moveEpisodeOccurrence } from './episodeSequence';
 import { addEpisodeCameraShot, cameraShotName, episodeCameraIssue, episodeCameraTargets, episodeCameraView } from './episodeCamera';
+import { assertEpisodeReady, checkEpisodeHealth, type EpisodeHealthFinding, type EpisodeHealthReport } from './episodeHealthCheck';
+import { getUnityEditorStatus } from './unityBridge';
 
 export type EpisodeLeaveGuard = (proceed: () => void) => void;
 type Props = { library: EpisodeLibrary; scenes: TimedLibrary; intros: IntroLibrary; credits: CreditsLibrary; characters: Brightling[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; issue: string | null; onSave: (next: EpisodeLibrary) => boolean; onEditScene: (id: string) => void; leaveGuardRef: RefObject<EpisodeLeaveGuard | null>; audioAssets?: AudioAsset[] };
@@ -39,6 +41,8 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
   const [message, setMessage] = useState('Choose an episode or create one.');
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState<VideoExportProgress>({ stage: 'validating' });
+  const [healthReport, setHealthReport] = useState<EpisodeHealthReport | null>(null);
+  const [checkingHealth, setCheckingHealth] = useState(false);
   const [room, setRoom] = useState<HTMLImageElement | null>(null);
   const [packs, setPacks] = useState<Record<string, PreviewPack>>({});
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -47,6 +51,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
   const last = useRef(0);
   const exportAbort = useRef<AbortController | null>(null);
   const total = episode ? productionDuration(episode, scenes, intros, credits) : 0;
+  const currentHealth = useMemo(() => episode ? checkEpisodeHealth({ episode, scenes, intros, credits, characters, places, audioAssets }) : null, [episode, scenes, intros, credits, characters, places, audioAssets]);
   const dirty = episodeHasUnsavedChanges(episode, savedSnapshot);
   const missing = episode ? missingSceneIds(episode, scenes) : [];
   const missingIntro = !!episode?.introId && !intros.intros.some(item => item.id === episode.introId);
@@ -59,6 +64,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
   const selectedCameraShot = episode?.camera?.find(shot => shot.id === selectedCamera);
   const audioClips = episode ? episodePlaybackClips(episode, scenes, intros, credits) : [];
   const audio = useAudioPlayback(audioClips, audioAssets, time, playing, setMessage);
+  useEffect(() => { setHealthReport(null); }, [currentHealth]);
   const placeName = (id: string) => placesIn(places).find(place => place.id === id)?.name ?? 'Place unavailable';
   const readyPlace = scene && placesIn(places).find(place => place.id === scene.placeId && place.artworkAvailable && place.background);
   const canPreview = !!episode && !missing.length && !missingIntro && !missingCredits && !timingIssue && !cameraIssue && total > 0 && !!room && !!readyPlace && !Object.keys(scene?.characters ?? {}).some(id => !packs[id]);
@@ -69,6 +75,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     else proceed();
   };
   const open = (item: Episode) => requestLeave(() => {
+    setHealthReport(null);
     setHistory(beginEpisodeEdit(item));
     setSelectedSceneIndex(null);
     setSelectedBoundary(null);
@@ -76,7 +83,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     setSavedSnapshot(library.episodes.some(saved => saved.id === item.id) ? episodeSnapshot(item) : null);
     setTime(0); setPlaying(false); setMessage('Add scenes from the library, then press Play.');
   }, 'open another episode');
-  const change = (next: Episode) => { setPlaying(false); setHistory(current => current ? recordEpisodeEdit(current, next) : current); setTime(value => Math.min(value, productionDuration(next, scenes, intros, credits))); };
+  const change = (next: Episode) => { setHealthReport(null); setPlaying(false); setHistory(current => current ? recordEpisodeEdit(current, next) : current); setTime(value => Math.min(value, productionDuration(next, scenes, intros, credits))); };
   const undo = () => { if (!history?.past.length) return; const next = undoEpisodeEdit(history); setPlaying(false); setHistory(next); setTime(value => Math.min(value, productionDuration(next.present, scenes, intros, credits))); };
   const redo = () => { if (!history?.future.length) return; const next = redoEpisodeEdit(history); setPlaying(false); setHistory(next); setTime(value => Math.min(value, productionDuration(next.present, scenes, intros, credits))); };
   const save = (): boolean => {
@@ -95,6 +102,8 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     const controller = new AbortController(); exportAbort.current = controller;
     setPlaying(false); setExporting(true); setExportProgress({ stage: 'validating' });
     try {
+      const report = checkEpisodeHealth({ episode, scenes, intros, credits, characters, places, audioAssets });
+      assertEpisodeReady(report, 'export');
       const blocks = productionBlocks(episode, scenes, intros, credits);
       if (!blocks.length) throw new Error('Add an intro, scene or credits before exporting.');
       setExportProgress({ stage: 'preparing' }); setMessage('Preparing every scene, background, Brightling and audio cue.');
@@ -142,6 +151,37 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
     } catch (error) {
       setMessage(error instanceof DOMException && error.name === 'AbortError' ? 'Episode export cancelled. Temporary recording resources were released.' : error instanceof Error ? error.message : 'Episode export failed.');
     } finally { if (exportAbort.current === controller) exportAbort.current = null; setExporting(false); }
+  };
+  const runHealthCheck = async () => {
+    if (!episode || checkingHealth) return;
+    setCheckingHealth(true);
+    try {
+      const report = checkEpisodeHealth({ episode, scenes, intros, credits, characters, places, audioAssets });
+      const findings = [...report.findings];
+      if (dirty) findings.push({ id: 'episode-unsaved', category: 'warning', scope: 'info', title: 'Unsaved changes', message: 'This check covers the current edits. Save the episode before Unity preview or WebM export.' });
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 3500);
+      try {
+        const unity = await getUnityEditorStatus(controller.signal);
+        if (unity.state === 'Error') findings.push({ id: 'unity-status', category: 'error', scope: 'preview', title: 'Unity Editor', message: unity.detail || 'Unity Editor control reported an error.' });
+        else if (unity.state === 'Editor Ready' || unity.state === 'Playing') findings.push({ id: 'unity-status', category: 'passed', scope: 'info', title: 'Unity Editor', message: unity.state === 'Playing' ? 'Unity Editor is already in Play Mode.' : 'Unity Editor is open. Preview can request Play Mode when needed.' });
+        else findings.push({ id: 'unity-status', category: 'warning', scope: 'info', title: 'Unity Editor', message: `Unity Editor currently reports ${unity.state}. Preview will wait for it to become ready.` });
+      } catch {
+        findings.push({ id: 'unity-status', category: 'warning', scope: 'info', title: 'Unity Editor', message: 'Unity readiness could not be checked. Open the BrightTales Unity project with Start-BrightTales-Review.cmd before previewing.' });
+      } finally { window.clearTimeout(timeout); }
+      setHealthReport({ ...report, findings, errors: findings.filter(item => item.category === 'error').length, warnings: findings.filter(item => item.category === 'warning').length, passed: findings.filter(item => item.category === 'passed').length });
+    } finally { setCheckingHealth(false); }
+  };
+  const jumpToFinding = (item: EpisodeHealthFinding) => {
+    if (!episode) return;
+    setPlaying(false);
+    if (item.cameraId) { setSelectedCamera(item.cameraId); setSelectedSceneIndex(null); setSelectedBoundary(null); }
+    else if (item.sceneIndex !== undefined) { setSelectedSceneIndex(item.sceneIndex); setSelectedCamera(null); setSelectedBoundary(null); }
+    const block = item.sceneIndex === undefined ? undefined : productionBlocks(episode, scenes, intros, credits).find(candidate => candidate.occurrenceIndex === item.sceneIndex);
+    const targetTime = item.start ?? block?.start;
+    if (targetTime !== undefined) setTime(Math.max(0, Math.min(total, targetTime)));
+    if (item.audioClipId && item.sceneIndex === undefined) window.setTimeout(() => document.getElementById('episode-audio-editor')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+    else if (item.sceneIndex !== undefined || item.cameraId) window.setTimeout(() => document.querySelector('.episode-workspace')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
   };
 
   useEffect(() => {
@@ -250,7 +290,8 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
       {issue && <p role="alert" className="storage-alert">{issue}</p>}
       <div className="scene-library">{library.episodes.map(item => <article key={item.id}><h2>{item.name}</h2><p>{item.sceneIds.length} scenes · {clock(productionDuration(item, scenes, intros, credits))}</p>{missingSceneIds(item, scenes).length > 0 && <p role="alert" className="episode-warning">Missing saved scene. Open to repair the sequence.</p>}<div className="scene-actions"><button onClick={() => open(item)}>Open</button><button onClick={() => { open({ ...item, id: crypto.randomUUID(), name: `${item.name} copy` }); setMessage('Duplicate opened. Save to keep it.'); }}>Duplicate</button><button onClick={() => { if (window.confirm(`Delete “${item.name}”? The saved scenes will stay in your library.`)) setMessage(onSave({ version: 1, episodes: library.episodes.filter(other => other.id !== item.id) }) ? 'Episode deleted. Its scenes were kept.' : 'Episode could not be deleted.'); }}>Delete</button></div></article>)}</div>
       {library.episodes.length === 0 && <p className="scene-empty">No episodes yet. Create one to add your saved scenes.</p>}
-    </> : <><div className="scene-heading"><div><p className="eyebrow">EPISODE EDITOR</p><h1>{episode.name}</h1><p>{episode.sceneIds.length} scenes · Total duration <strong>{clock(total)}</strong></p><span className={`episode-save-indicator ${dirty ? 'unsaved' : 'saved'}`} role="status">{dirty ? 'Unsaved changes' : 'Saved'}</span></div><div className="scene-actions"><button onClick={() => requestLeave(() => { setHistory(null); setPlaying(false); }, 'return to Episodes')}>Back to Episodes</button><button aria-label="Undo episode edit" title="Undo (Ctrl+Z)" disabled={!history?.past.length} onClick={undo}>Undo</button><button aria-label="Redo episode edit" title="Redo (Ctrl+Y)" disabled={!history?.future.length} onClick={redo}>Redo</button><button className="scene-primary" onClick={save} disabled={!!issue}>Save Episode</button><button disabled={!!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue || total <= 0 || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => playFrom(0)}>Preview Episode</button><button title={dirty ? "Save episode before exporting" : "Download the complete episode as WebM"} disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue} onClick={() => void exportVideo()}>{exporting ? `Exporting ${exportProgress.stage}` : "Export WebM"}</button>{exporting && <button onClick={() => exportAbort.current?.abort()}>Cancel export</button>}</div></div>
+    </> : <><div className="scene-heading"><div><p className="eyebrow">EPISODE EDITOR</p><h1>{episode.name}</h1><p>{episode.sceneIds.length} scenes · Total duration <strong>{clock(total)}</strong></p><span className={`episode-save-indicator ${dirty ? 'unsaved' : 'saved'}`} role="status">{dirty ? 'Unsaved changes' : 'Saved'}</span></div><div className="scene-actions"><button onClick={() => requestLeave(() => { setHistory(null); setPlaying(false); }, 'return to Episodes')}>Back to Episodes</button><button aria-label="Undo episode edit" title="Undo (Ctrl+Z)" disabled={!history?.past.length} onClick={undo}>Undo</button><button aria-label="Redo episode edit" title="Redo (Ctrl+Y)" disabled={!history?.future.length} onClick={redo}>Redo</button><button className="scene-primary" onClick={save} disabled={!!issue}>Save Episode</button><button onClick={() => void runHealthCheck()} disabled={checkingHealth || !episode}>{checkingHealth ? 'Checking…' : 'Check Episode'}</button><button disabled={!!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue || total <= 0 || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={() => playFrom(0)}>Preview Episode</button><button title={dirty ? "Save episode before exporting" : "Download the complete episode as WebM"} disabled={dirty || exporting || total <= 0 || !!missing.length || missingIntro || missingCredits || !!timingIssue || !!cameraIssue} onClick={() => void exportVideo()}>{exporting ? `Exporting ${exportProgress.stage}` : "Export WebM"}</button>{exporting && <button onClick={() => exportAbort.current?.abort()}>Cancel export</button>}</div></div>
+      {healthReport && <section className="episode-health" aria-labelledby="episode-health-title" aria-live="polite"><div className="episode-health-heading"><div><h2 id="episode-health-title">Episode Health Check</h2><p>{healthReport.errors === 0 ? 'No blocking problems were found.' : 'Fix the errors below before using the affected production step.'}</p></div><strong className={healthReport.errors ? 'has-errors' : 'all-clear'}>{healthReport.errors} errors · {healthReport.warnings} warnings</strong></div>{(['error', 'warning', 'passed'] as const).map(category => { const items = healthReport.findings.filter(item => item.category === category); if (!items.length) return null; const title = category === 'error' ? `Errors (${items.length})` : category === 'warning' ? `Warnings (${items.length})` : `Passed checks (${items.length})`; return <div className={`episode-health-group ${category}`} key={category}><h3>{title}</h3><ul>{items.map(item => <li key={item.id}><div><strong>{item.title}{item.location ? ` · ${item.location}` : ''}</strong><p>{item.message}</p></div>{(item.sceneIndex !== undefined || item.cameraId || item.audioClipId) && <button type="button" onClick={() => jumpToFinding(item)}>Go to {item.cameraId ? 'shot' : item.audioClipId ? 'cue' : `scene ${item.sceneIndex! + 1}`}</button>}</li>)}</ul></div>})}</section>}
       {exporting && <div className="episode-export-progress" role="status" aria-live="polite"><p>{exportProgress.stage === 'validating' ? 'Validating episode' : exportProgress.stage === 'preparing' ? 'Preparing scenes and audio' : exportProgress.stage === 'rendering' ? 'Rendering frames' : exportProgress.stage === 'encoding' ? 'Encoding video and audio' : 'Finalising WebM'}{exportProgress.completedFrames !== undefined && exportProgress.totalFrames ? ` · ${exportProgress.completedFrames.toLocaleString()} / ${exportProgress.totalFrames.toLocaleString()} frames` : ''}</p>{exportProgress.stage === 'rendering' && exportProgress.completedFrames !== undefined && exportProgress.totalFrames ? <progress max={exportProgress.totalFrames} value={exportProgress.completedFrames} aria-label="Episode export frame progress" /> : <progress aria-label="Episode export stage progress" />}</div>}
       <label className="episode-name">Episode name<input aria-label="Episode name" maxLength={80} value={episode.name} onChange={event => change({ ...episode, name: event.target.value })} /></label>
       <div className="voice-fields"><label>Opening intro<select aria-label="Episode intro" value={episode.introId ?? ''} onChange={event => change({ ...episode, introId: event.target.value || undefined })}><option value="">No intro</option>{intros.intros.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label><label>Ending credits<select aria-label="Episode credits" value={episode.creditsId ?? ''} onChange={event => change({ ...episode, creditsId: event.target.value || undefined })}><option value="">No credits</option>{credits.credits.map(item => <option key={item.id} value={item.id}>{item.name} · {clock(item.duration)}</option>)}</select></label></div>
@@ -264,7 +305,7 @@ export default function EpisodeMaker({ library, scenes, intros, credits, charact
         <div className="scene-playback episode-transport"><button aria-label="Restart episode" onClick={() => { setPlaying(false); setTime(0); }}>Restart</button><button className="scene-primary" disabled={!!missing.length || missingIntro || missingCredits || !!timingIssue || total <= 0 || !readyPlace || !room || Object.keys(scene?.characters ?? {}).some(id => !packs[id])} onClick={togglePlayback}>{playing ? 'Pause' : 'Play'}</button><button aria-label="Replay episode" disabled={!canPreview} onClick={() => playFrom(0)}>Replay</button><button disabled={!playing && time === 0} onClick={() => { setPlaying(false); setTime(0); }}>Stop</button><input aria-label="Episode time" type="range" min="0" max={total || 1} step="0.1" value={time} disabled={total <= 0 || !!missing.length || missingIntro || missingCredits || !!timingIssue} onChange={event => { setPlaying(false); setTime(Number(event.target.value)); }} /><strong>{clock(time)} / {clock(total)}</strong></div></section>
         <EpisodeSequence episode={episode} scenes={scenes} intros={intros} credits={credits} time={time} total={total} playing={playing} audioClips={audioClips} audioAssets={audioAssets} selected={selectedSceneIndex} selectedBoundary={selectedBoundary} selectedCamera={selectedCamera} placeName={placeName} onSelect={(index, start) => { setSelectedSceneIndex(index >= 0 ? index : null); setSelectedBoundary(null); setSelectedCamera(null); setPlaying(false); setTime(start); }} onBoundarySelect={(index, start) => { setSelectedBoundary(index); setSelectedSceneIndex(null); setSelectedCamera(null); setPlaying(false); setTime(start); }} onSelectCamera={(id, start) => { setSelectedCamera(id); setSelectedSceneIndex(null); setSelectedBoundary(null); setPlaying(false); setTime(start); }} onCreateCamera={createCamera} onSeek={value => { setPlaying(false); setTime(value); }} onReorder={(from, to) => { change(moveEpisodeOccurrence(episode, from, to)); setSelectedSceneIndex(to); setSelectedBoundary(null); }} />
         <div id="episode-audio-editor"><AudioPanel label="Episode" clips={episode.audio ?? []} assets={audioAssets} speakers={[{ id: 'max', name: 'Max' }, { id: 'maxine', name: 'Maxine' }, ...characters.map(item => ({ id: item.id, name: item.name }))]} duration={total} time={time} onChange={clips => change({ ...episode, audio: clips })} onSeek={value => { setPlaying(false); setTime(value); }} /></div>
-        <EpisodeUnityPreview episode={episode} scenes={scenes} characters={characters} audioAssets={audioAssets} saved={!dirty && library.episodes.some(item => item.id === episode.id)} /></div>
+        <EpisodeUnityPreview episode={episode} scenes={scenes} characters={characters} audioAssets={audioAssets} saved={!dirty && library.episodes.some(item => item.id === episode.id)} health={currentHealth!} /></div>
       <aside className="episode-production-sidebar"><EpisodeInspector episode={episode} scenes={scenes} intros={intros} credits={credits} characters={characters} selectedScene={selectedSceneIndex} selectedBoundary={selectedBoundary} selectedCamera={selectedCamera} onChange={change} onSelectScene={setSelectedSceneIndex} onSelectCamera={setSelectedCamera} onEditSource={id => requestLeave(() => onEditScene(id), 'open Scene Maker')} onPreviewTransition={(start, duration) => playFrom(Math.max(0, start - duration / 2 - .3))} /><section className="episode-scene-library"><h2>Saved scenes</h2><p>Add a scene to the end of your episode.</p>{scenes.scenes.map(item => <article key={item.id}>{placesIn(places).find(place => place.id === item.placeId)?.background && <img src={placesIn(places).find(place => place.id === item.placeId)?.background ?? undefined} alt="" loading="lazy" />}<strong>{item.name}</strong><span>{placeName(item.placeId)} · {clock(item.duration)}</span><div><button onClick={() => { change(appendEpisodeScene(episode, item.id)); setSelectedSceneIndex(episode.sceneIds.length); }}>Add Scene</button><button onClick={() => requestLeave(() => onEditScene(item.id), 'open Scene Maker')}>Edit Scene</button></div></article>)}{scenes.scenes.length === 0 && <p>Create a scene in Cartoon Editor first.</p>}</section></aside></div>
       <p className="episode-export-note">Export WebM renders every scene through the exact episode end and keeps the soundtrack. Save changes before exporting. The browser confirms a validated WebM was prepared; check Downloads to confirm it saved.</p>
       <p role="status" className="scene-status">{message}</p>
