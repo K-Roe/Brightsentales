@@ -267,7 +267,8 @@ function Get-BrightTalesReviewPreflight {
     $incompatibleStudios = @($studioInstances | Where-Object { -not $_.IdentityValid -or $_.BridgePort -ne $BridgePort })
     $existingStudioUrl = $null
     if (@($incompatibleStudios).Count -gt 0) {
-        Add-ReviewCheck $checks 'Studio instance' 'BLOCK' "A BrightTales Studio is already running with a different bridge configuration ($($incompatibleStudios[0].Url)). Close that Studio normally before retrying; no process was stopped."
+        $urls = (@($incompatibleStudios | ForEach-Object { $_.Url }) -join ', ')
+        Add-ReviewCheck $checks 'Studio instance' 'BLOCK' "BrightTales Studio server(s) need a normal close before reuse: $urls. At each server's own console press Ctrl+C; no process was stopped."
     } elseif (@($compatibleStudios).Count -gt 1) {
         Add-ReviewCheck $checks 'Studio instance' 'BLOCK' 'Multiple compatible Studio servers are already running. Close extra Studio windows normally and retry to avoid duplicate local services.'
     } elseif (@($compatibleStudios).Count -eq 1) {

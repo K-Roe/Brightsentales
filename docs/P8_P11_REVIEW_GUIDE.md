@@ -43,7 +43,7 @@ The launcher writes timestamped logs under `%LOCALAPPDATA%\BrightTales\ReviewLau
 
 ## Troubleshooting
 
-- **BLOCK: existing Studio has a different/unverified bridge configuration:** close that Studio server normally using its own console (Ctrl+C), then double-click the launcher again. The launcher intentionally will not reuse a server that cannot prove its repository and bridge port. It will not terminate the process.
+- **BLOCK: existing Studio has a different/unverified bridge configuration:** close every Studio URL listed by preflight normally using that server's own console (Ctrl+C), then double-click the launcher again. The current workspace has legacy servers at `http://127.0.0.1:4177/` and `http://127.0.0.1:5173/`; the launcher intentionally will not reuse a server that cannot prove its repository and bridge port. It will not terminate the processes.
 - **Port 17844 occupied by an unidentified process:** do not send episode data to it. Identify and close the owning app normally, then retry. A free port is expected before Unity Play mode starts the bridge.
 - **Missing Node/npm, Unity, project, scene or dependencies:** check the path shown in the preflight. The launcher does not install dependencies or change system PATH.
 - **Studio does not become ready:** inspect the timestamped launcher and Studio logs; close only the launched Studio console normally and retry.
