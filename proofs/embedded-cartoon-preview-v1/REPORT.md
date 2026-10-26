@@ -38,4 +38,4 @@ Review Studio appearance and physical audio separately. No human acceptance is i
 
 ## Git
 
-Studio canonical branch: `main`. Implementation commit: pending final commit. Unity canonical branch: `cartoon-foundation`; no Unity files changed.
+Studio canonical branch: `main`. Implementation commit: `cb9d546` (full hash recorded by Git). Unity canonical branch: `cartoon-foundation`; no Unity files changed.
