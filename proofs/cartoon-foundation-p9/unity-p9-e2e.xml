@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 08:13:19Z" end-time="2026-10-26 08:15:09Z" duration="110.2500502">
+  <test-suite type="TestSuite" id="1043" name="BrightTalesUnityTest" fullname="BrightTalesUnityTest" runstate="Runnable" testcasecount="22" result="Failed" site="Child" start-time="2026-10-26 08:13:19Z" end-time="2026-10-26 08:15:09Z" duration="110.250050" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1082" name="BrightTalesRigV1PlayTests.dll" fullname="C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity/Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll" runstate="Runnable" testcasecount="22" result="Failed" site="Child" start-time="2026-10-26 08:13:19Z" end-time="2026-10-26 08:15:09Z" duration="110.234982" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="108816" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestFixture" id="1044" name="BrightlingAutoBuilderBridgeWorkflowTest" fullname="BrightlingAutoBuilderBridgeWorkflowTest" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 08:13:19Z" end-time="2026-10-26 08:15:09Z" duration="110.229117" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-case id="1045" name="DisposableStudioTransferBuildsUpdatesAndAnimatesOnUnityMainThread" fullname="BrightlingAutoBuilderBridgeWorkflowTest.DisposableStudioTransferBuildsUpdatesAndAnimatesOnUnityMainThread" methodname="DisposableStudioTransferBuildsUpdatesAndAnimatesOnUnityMainThread" classname="BrightlingAutoBuilderBridgeWorkflowTest" runstate="Runnable" seed="1868629688" result="Failed" start-time="2026-10-26 08:13:19Z" end-time="2026-10-26 08:15:09Z" duration="110.208207" asserts="0">
+          <properties>
+            <property name="_JOINTYPE" value="UnityCombinatorial" />
+            <property name="Timeout" value="150000" />
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <failure>
+            <message><![CDATA[  The disposable Studio did not finish import and animation commands.
+  Expected: True
+  But was:  False
+]]></message>
+            <stack-trace><![CDATA[at BrightlingAutoBuilderBridgeWorkflowTest+<DisposableStudioTransferBuildsUpdatesAndAnimatesOnUnityMainThread>d__1.MoveNext () [0x001b0] in C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Assets\Tests\PlayMode\BrightlingAutoBuilderBridgeWorkflowTest.cs:33
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@ee3fe9477490\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+          </failure>
+          <output><![CDATA[BrightTales Bridge V0 listening on http://127.0.0.1:17844
+BrightTales Bridge V0 listening on http://127.0.0.1:17844
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

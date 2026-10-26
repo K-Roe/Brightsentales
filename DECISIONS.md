@@ -1,6 +1,10 @@
+# P9 Auto-Builder V1 decisions (2026-10-26)
+
+Use the existing Brightling Maker, `makeFrame` artwork and localhost bridge. Version 1 transfers one bounded whole-body layer plus the existing nine poses, palette and supported Idle/Blink/Walk/Wave identifiers with SHA-256 hashes. Unity rejects unsupported fields/assets and acknowledges only after construction; stable IDs update the same runtime actor. Keep this experimental and isolated. No Max/Maxine source art changes, no new anatomy claims, no AI, no prefab/editor asset generation. Blink is a short squash because there is no closed-eye pose. Custom Brightlings are not yet integrated with saved Studio scene/episode cast validation.
+
 # P8 verification decision (2026-10-26)
 
-Reverification confirms the isolated P8 code and its P7 bases. Standard service lifecycle tests complete 12/12 in 46.97 seconds; the busy healthy test is slow, and `--test-force-exit` triggers a Windows libuv assertion. Leave P8 unmerged until Karl explicitly approves Studio visuals, Unity Game-view visuals and physical audio playback. Automated evidence does not substitute for those approvals. No P9 work.
+Reverification confirms the isolated P8 code and its P7 bases. Standard service lifecycle tests complete 12/12 in 46.97 seconds; the busy healthy test is slow, and `--test-force-exit` triggers a Windows libuv assertion. Leave P8 unmerged until Karl explicitly approves Studio visuals, Unity Game-view visuals and physical audio playback. Automated evidence does not substitute for those approvals. P9 is separately authorized on isolated branches only.
 
 ---
 # Cartoon foundation decisions

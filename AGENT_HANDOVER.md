@@ -1,3 +1,9 @@
+# P9 Brightling Auto-Builder V1 handover (2026-10-26)
+
+P9 implementation is committed on isolated Studio and Unity branches. Studio transfer uses the existing Brightling Maker and bridge; Unity validates and builds a runtime whole-body actor with stable-ID update, persistence and four action commands. Studio 330 tests/build/service 12 pass; Unity builder/bridge tests and P8 Unity episode/camera 5, player 1, audio 1 regression tests pass. Exact details and manual steps are in `proofs/cartoon-foundation-p9/REPORT.md`.
+
+The complete browser-driven Studio-to-Unity workflow and visual appearance are **NOT VERIFIED**; no application screenshots were captured. Custom Brightlings are not yet integrated into saved Studio scene/episode casts. Unity editor-generated settings in the P9 worktree remain unstaged and uncommitted. The original P8 Unity dirty settings and `P8CameraReview/` were left untouched. P8 visual/audio gates and P9 visual review remain pending. Do not merge either milestone or start P10.
+
 # P8 Verification and review gate (2026-10-26)
 
 P7 checkpoints are unchanged and remote verified: Studio `main` `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P8 code remains isolated: Studio code commit `fb853de59407f0cd1732d8cba390336bd7a8640a` (branch tip before this documentation refresh `5722ed5aea738e9c9f364469524deaa77a7bd9d2`); Unity `52e79d72954ea071379abe498cfb80e4f383703f`. P8 refs matched their remotes.
@@ -6,7 +12,7 @@ Reverification passed: Studio tests 325/325, build, service/relay 12/12; Unity e
 
 The earlier service-test hang was a slow 29.5-second busy-but-healthy case; the normal suite exited successfully in 46.97 seconds. `--test-force-exit` causes a Windows libuv assertion and is not a valid workaround. No production code change was needed.
 
-**Karl's Studio visual, Unity Game-view visual and physical audio approvals are all still pending. P8 is not merge eligible and remains unmerged. Do not start P9.** See `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` for exact launch commands and the three acceptance checks. Unity's five existing dirty settings files and `P8CameraReview/` were left unchanged.
+**Karl's Studio visual, Unity Game-view visual and physical audio approvals are all still pending. P8 remains unmerged.** See `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` for exact launch commands and the three acceptance checks. Unity's original five existing dirty settings files and `P8CameraReview/` were left untouched.
 
 ---
 # P8 Camera & Directing V1 — previous handover (superseded 2026-10-26)
@@ -15,7 +21,7 @@ P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90
 
 Studio's optional Episode v1 camera track supports wide/medium/close/custom shots, targets, static/pan/follow movement, timeline editing, deterministic preview/scrub/replay and WebM export. Unity accepts camera episodes in bridge payload v3 and reuses the existing player; v1/v2 remain supported. Studio suite 325/325, service/relay 12/12 (completed clean run), build, Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and real browser-to-Unity Play Mode 1/1 passed. The browser workflow saved/reopened/replayed a 9-second episode and exported a fully decoded WebM.
 
-P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; do not merge or start P9. Unity worktree also has unrelated editor-modified settings and `P8CameraReview/`; preserve them.
+P8 is **technically verified only**. Studio visual review, Unity Game-view visual review and physical audio listening are pending. The report explains Unity target limits and unverified visual equivalence. P8 merge is not authorized; P9 development is authorized on isolated branches only. Preserve the original Unity worktree's unrelated settings and `P8CameraReview/`.
 
 ---
 

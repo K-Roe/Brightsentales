@@ -1,3 +1,17 @@
+# Current P9 Brightling Auto-Builder V1 review (2026-10-26)
+
+- [x] Create isolated Studio and Unity branches from the verified P8 development refs.
+- [x] Reuse the Brightling Maker, package a deterministic validated definition and artwork, and add acknowledged Unity transfer/action controls.
+- [x] Construct, update by stable ID, persist and restore a runtime Unity actor; verify Idle, Blink, Walk and Wave commands.
+- [x] Studio focused 5/5, complete suite 330/330, production build, service/relay 12/12; Unity builder/loopback tests; P8 regressions episode/camera 5/5, player 1/1, audio 1/1.
+- [ ] Karl: review Studio preview and Unity Game-view appearance/actions; attempt application restart and confirm restored character.
+- [ ] Extend Studio saved scene/episode cast validation and playback before claiming complete episode integration.
+- [ ] Decide whether the whole-body template and squash Blink are acceptable. Do not merge without explicit approval.
+
+The transferred template uses existing recolored Max/Maxine whole-body poses, not new anatomy. No application screenshots were captured; the browser-driven app-to-app workflow is not verified. See `proofs/cartoon-foundation-p9/REPORT.md`.
+
+---
+
 # Current P8 review task (2026-10-26)
 
 - [x] Reverify Studio 325/325, production build, and service/relay 12/12.
@@ -8,7 +22,7 @@
 - [ ] Karl: physically listen to the episode audio and approve or request changes.
 - [ ] Only after all three explicit approvals, recheck branches/worktrees and perform the conditional merge and post-merge verification.
 
-P8 remains unmerged. Do not start P9. Full checklist: `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md`.
+P8 remains unmerged. P9 is authorized on isolated branches and remains unmerged. Full P8 checklist: `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md`.
 
 ---
 # Cartoon production foundation — takeover list
