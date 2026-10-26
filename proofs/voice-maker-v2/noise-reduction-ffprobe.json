@@ -1,0 +1,42 @@
+{
+  "kind": "synthetic local FFmpeg smoke test; not a microphone or Studio UI recording",
+  "noiseReductionStrength": 0.5,
+  "input": {
+    "path": "noise-reduction-input-synthetic.wav",
+    "bytes": 176444,
+    "sha256": "617ed0b5d43608b5ae148e583ab69acbbaab5fe3ab100e69518335f9ee361a27",
+    "ffprobe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "44100",
+          "channels": 1
+        }
+      ],
+      "format": {
+        "duration": "2.000000"
+      }
+    }
+  },
+  "output": {
+    "path": "noise-reduction-output-synthetic.wav",
+    "bytes": 176204,
+    "sha256": "52b5c310d1a3ec791c0cd4bb00703ada1011540763ebce1b73c5e8b7a519e209",
+    "ffprobe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "pcm_s16le",
+          "sample_rate": "44100",
+          "channels": 1
+        }
+      ],
+      "format": {
+        "duration": "1.997279"
+      }
+    }
+  }
+}
