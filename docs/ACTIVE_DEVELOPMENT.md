@@ -64,3 +64,8 @@ Verification: Studio focused episode/camera/bridge/demo tests **27/27**, full su
 4. Follow the P11 episode workflow above and review its Studio/Unity behavior plus the exported episode.
 
 P8–P11 technical test results do not imply human approval. No protected integration merge or P12 is authorized.
+# P8-P11 review launcher (2026-10-26)
+
+A one-click Windows launcher and reusable PowerShell preflight are available at `Start-BrightTales-Review.cmd`, `Check-BrightTales-Review.cmd`, and `scripts/review/`. The human review steps are in `docs/P8_P11_REVIEW_GUIDE.md`. The launcher targets Studio/Unity active-development workspaces, bridge 17844 and the StudioLivingRoomExperimental scene; it logs under `%LOCALAPPDATA%\BrightTales\ReviewLauncher` and never terminates processes or changes Unity settings.
+
+Preflight checks workspace/tool/dependency/scene/branch/bridge identity, running app identity and local voice readiness. Existing Studio instances without the new health identity are blocked for manual close/retry rather than reused or killed. The live preflight passed 13 checks and found the pre-existing Studio process at port 4177 has no launcher health identity. Consequently full GUI startup was not attempted; close that server normally and retry. P8-P11 visual and physical audio approval remains pending.
