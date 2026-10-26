@@ -188,3 +188,7 @@ P10 is in isolated Studio/Unity branches based on P9 development heads. Scope is
 
 P8–P10 are available together on pushed `brighttales-active-development` branches in Studio and Unity. The latest verified Studio/Unity commits and evening startup commands are in [ACTIVE_DEVELOPMENT.md](ACTIVE_DEVELOPMENT.md). P8–P10 remain pending Karl's visual/audio review and are not merged to protected integration branches. P11 is authorized by the current request but its scope checklist was not found; implementation awaits those requirements. Do not begin P12.
 
+# P11 Episode Production & Polish — authorised (2026-10-26)
+
+Karl approved the detailed requirements in [`proofs/cartoon-foundation-p11/REPORT.md`](../proofs/cartoon-foundation-p11/REPORT.md). Implement on the already consolidated Studio and Unity `brighttales-active-development` branches. Extend existing episode authoring, camera, audio, preview/export, Unity bridge/player and Brightling auto-builder. Demonstrate two distinct modular Brightlings in a saved/reopened, previewed, Unity-played and exported short episode. Preserve protected baselines and unrelated workspace changes. P8–P11 human visual/audio acceptance remains pending; no P12.
+

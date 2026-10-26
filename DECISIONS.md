@@ -58,3 +58,7 @@ The Unity repository was created private at `https://github.com/K-Roe/BrightTale
 ## 2026-10-24 — Integration seam
 
 Reuse the existing localhost receiver and versioned command acknowledgements. Treat `TimedScene` and `Episode` as the Studio source of truth. Keep Cartoon Engine V1.1 fixed and isolated; a new versioned payload and experimental controller must read saved values. Reject unsupported actions and missing artwork explicitly. Keep the browser WebM path working while Unity MP4 output is built and verified separately.
+# P11 Episode Production & Polish — approved scope (2026-10-26)
+
+Use the existing Episode Maker and its saved-scene, episode camera, audio, deterministic preview/export and localhost Unity transfer paths. P11 must support two modular Brightlings in episode scenes with identity, appearance and action assignments preserved through save/reopen, preview/scrub, Unity playback and export. Unity reuses its existing auto-builder and scene/episode player to construct missing supported cast entries. Demonstrate two visibly distinct modular characters at an existing location with walk, wave, two shots, a supported audio cue, beginning and ending. Do not modify approved Max/Maxine art, create parallel renderer/animation systems, use Blender/Vue/AI, expand scope, merge protected branches or begin P12. See the full authorised spec in `proofs/cartoon-foundation-p11/REPORT.md`.
+

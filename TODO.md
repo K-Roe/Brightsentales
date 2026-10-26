@@ -164,3 +164,13 @@ Rejected Greeting V1/V2 and Batch 3 remain REJECTED; chair/sofa sitting is DEFER
 - [ ] Provide the P11 Episode Production & Polish acceptance checklist/scope; none was present in the repository docs or reports, so implementation has not started.
 - [ ] After P11 requirements are supplied, implement/test/document only that milestone on the active branches; do not merge protected branches or start P12.
 
+# P11 Episode Production & Polish — authorised (2026-10-26)
+
+- [x] Record Karl's approved P11 scope in `proofs/cartoon-foundation-p11/REPORT.md`.
+- [ ] Verify episode editor supports two modular cast members with IDs/appearances/actions through editing and save/reopen.
+- [ ] Verify/complete timeline arrangement, camera and audio timing across preview/scrub, Unity transfer/playback and supported export.
+- [ ] Create the short experimental demo episode with two different modular Brightlings, location, walk/wave, two shots, supported audio and beginning/ending; do not overwrite approved episodes.
+- [ ] Add focused coverage for gaps found in the existing paths; run full Studio tests/build and relevant Unity regressions.
+- [ ] Capture actual disposable browser, Unity and export evidence; document limits and leave Karl's visual/audio review pending.
+- [ ] Commit/push only P11-owned changes to `brighttales-active-development` in both repositories. Do not merge protected branches or start P12.
+

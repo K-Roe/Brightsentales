@@ -159,3 +159,5 @@ P10 is implemented on `cartoon-foundation-p10-brightling-maker-v2` in separate S
 # P9 application verification (2026-10-26)
 
 The P9 direct Maker workflow has now been exercised in the applications: save/reopen, genuine import/action/update acknowledgements, no duplicate on update, and character restore after Unity restart. Real application screenshots are in the P9 proof folder. Unity bridge health after restart and Studio/Unity human visual approval remain unverified/pending. P9 remains isolated; P10 extends its custom cast to saved scenes/episodes. See [P9 proof](../proofs/cartoon-foundation-p9/REPORT.md).
+**P11 Episode Production & Polish: AUTHORISED / IN PROGRESS (2026-10-26).** Karl supplied the approved specification after the initial scope gap; it is recorded in `proofs/cartoon-foundation-p11/REPORT.md`. Work is on the existing active Studio/Unity branches and must extend current episode, audio, camera, export, Unity player and Brightling auto-builder paths. Final visual/audio acceptance remains pending Karl.
+

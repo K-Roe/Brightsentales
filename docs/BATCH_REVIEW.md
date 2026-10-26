@@ -288,3 +288,7 @@ The notes below describe the earlier blocked attempt. The completion above super
 
 P8–P10 are consolidated on the pushed Studio/Unity `brighttales-active-development` branches; see [launch and verification handover](ACTIVE_DEVELOPMENT.md). Karl's review order is P8 camera plus physical audio, P9 automatic character construction, then P10 modular character creation. All visual/audio gates remain pending. The next development milestone is P11 Episode Production & Polish, but no P11 requirements or acceptance checklist were found in project documentation; obtain that checklist before implementation. Do not merge into protected integration branches or start P12.
 
+# P11 review queue — authorised (2026-10-26)
+
+Karl provided the P11 acceptance specification in `proofs/cartoon-foundation-p11/REPORT.md`. Implement and technically verify the complete short modular-Brightling episode workflow on the existing active branches. Karl's P8–P11 visual/audio review remains pending after delivery; tests and automated screenshots do not count as approval. No protected merges or P12.
+

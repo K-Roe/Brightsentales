@@ -131,3 +131,7 @@ Ask Karl to review `C:\Users\karlr\repos\BrightTalesCartoonFoundationUnity\Carto
 
 Use the consolidated `brighttales-active-development` Studio/Unity workspaces documented in [docs/ACTIVE_DEVELOPMENT.md](docs/ACTIVE_DEVELOPMENT.md). P8–P10 are present and pushed. Studio suite/build pass at the current Studio commit; Unity focused P10 builder tests pass. Unity's five modified editor settings files are unrelated and must remain untouched. P8–P10 visual/audio gates are pending Karl. No P11 checklist was found, so do not invent P11 scope; ask for the documented requirements and continue once provided. No protected branch merge or P12.
 
+# Current work — P11 Episode Production & Polish
+
+Karl supplied the missing approved P11 requirements. Full specification: `proofs/cartoon-foundation-p11/REPORT.md`. Work directly on `brighttales-active-development` in both repositories, reusing the existing episode, camera, audio, export, auto-builder and Unity player systems. Build the specified short experimental two-modular-Brightling episode and verify the Studio-to-Unity/export path. Keep P8–P11 acceptance pending Karl; no protected merges or P12. Unity's five pre-existing modified settings files must not be staged or changed.
+
