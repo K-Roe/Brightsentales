@@ -1,4 +1,10 @@
-# P11 handover (2026-10-26)
+# Current handover — Unity Editor Play Mode control V1 (2026-10-26)
+
+Continue on Studio `main` and Unity `cartoon-foundation`; P8–P11 are integrated and pushed. The Unity Connection panel now controls the open Editor's Start/Stop state through an Editor-only, authenticated loopback controller on port 17845; the existing runtime bridge on 17844 is unchanged. Studio waits for confirmed Playing and runtime health, and reports Editor Ready after Stop. The controller rejects other origins/commands and port conflicts, and it does not run in built Players or AssetImportWorker processes.
+
+Studio 345/345 tests, build and service/relay 17/17 pass. Unity Editor compile passes; the headless Editor API sequence and 2 focused existing bridge/player regressions pass. A GUI-level Studio click-through was not completed because the disposable Unity window displayed an Administrator Privileges dialog. Keep that review pending. Exact evidence and manual review steps: `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration\proofs\cartoon-foundation-unity-editor-control\REPORT.md` and `docs/P8_P11_REVIEW_GUIDE.md`. Preserve the two pre-existing modified settings files in this Unity integration checkout. Do not start P12.
+
+# P11 handover (historical, 2026-10-26)
 
 Karl authorized P11 on the existing Studio and Unity `brighttales-active-development` branches. The complete specification is recorded in `proofs/cartoon-foundation-p11/REPORT.md`. P11 extends the existing Episode Maker and episode bridge: camera target Inspector labels resolve saved modular Brightling names; the existing `wait` action is shown as Idle / Wait; Unity Preview scope text now accurately documents modular cast support; Unity episode validation accepts stable modular camera targets only when present in the episode cast. A Pip/Mallow demo manifest and focused Studio/Unity regression coverage were added.
 

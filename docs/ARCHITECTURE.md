@@ -1,3 +1,11 @@
+# Unity Editor Play Mode control V1 (2026-10-26)
+
+`UnityConnection.tsx` exposes Start Unity and Stop Unity and reports Editor state separately from the runtime bridge state. Studio obtains a short-lived-per-Editor random session token through its own same-origin local endpoint; that endpoint is loopback-only and does not enable CORS. `scripts/studio.cjs` publishes the exact running Studio origin in the per-user `BrightTales/UnityEditorControl/studio-origin.json` file and withdraws its own record at shutdown.
+
+Unity's `Assets/Editor/BrightTalesUnityEditorController.cs` binds only to `127.0.0.1:17845`. It permits authenticated status, Start and Stop requests only, accepts browser origins matching the currently configured Studio origin, and queues all `EditorApplication` access onto the Editor update thread. It is an Editor assembly and is not included in built Players. AssetImportWorker processes do not start listeners. Assembly reload and Editor shutdown close the listener and remove its session. Port conflicts publish an explicit Error state. Runtime scene/character/audio commands remain on the existing Play Mode bridge at port 17844.
+
+After Start, Studio waits for Unity to report Playing, then polls the existing `/health` endpoint before marking the bridge connected. Stop waits for the confirmed Editor Ready state. Repeated commands are idempotent; Unity compilation/import failures are surfaced. The live headless Editor API smoke test confirmed Start/Stop, repeated commands, 17844 runtime readiness, invalid-token rejection, origin rejection and unsupported-command rejection. Unity's graphical window and Studio button click-through remain for Karl's review. See `proofs/cartoon-foundation-unity-editor-control/REPORT.md` in the Unity repository.
+
 # P9 Brightling Auto-Builder V1 - architecture and verification (2026-10-26)
 
 Extend `Characters.tsx` and `maker.ts`; retain the existing name/template/palette editor and whole-body artwork generator. `brightlingTransfer.ts` serializes a deterministic schema v1 definition and nine embedded PNG pose assets with SHA-256 hashes, then uses the existing localhost `/command` bridge and validates Unity's completed identity/revision acknowledgement.

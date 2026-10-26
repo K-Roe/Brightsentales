@@ -1,4 +1,10 @@
-# P8-P11 integration checkpoint (2026-10-26)
+# Current state — Unity Editor Play Mode control V1 (2026-10-26)
+
+P8–P11 and the review launcher are pushed to Studio `main` and Unity `cartoon-foundation`. Unity Editor Play Mode Control V1 adds Start/Stop to Studio's existing Unity Connection panel. Unity's editor-only controller binds `127.0.0.1:17845`; the existing runtime bridge remains on 17844. Studio requires a random token, exact configured loopback origin and actual Editor status acknowledgement, then waits for runtime bridge health. No general Unity command is exposed.
+
+Verification: Studio 345/345 tests, production build and service/relay 17/17 pass. Unity Editor compiles cleanly; a disposable headless Editor verified Start, confirmed Playing, runtime health, Stop, confirmed Editor Ready, repeated commands, rejected token/origin/command and port conflict. Focused existing bridge and player regressions passed 2/2. The Studio UI click-through and Unity Game view were not visually inspected; Karl's manual review remains pending. See `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration\proofs\cartoon-foundation-unity-editor-control\REPORT.md` and `docs/P8_P11_REVIEW_GUIDE.md`.
+
+# P8-P11 integration checkpoint (historical, 2026-10-26)
 
 P8-P11 and the review launcher are integrated locally into Studio `main` (`a68d58772a54a93682b204a87ccf34bcd49aa013`) and Unity `cartoon-foundation` (`fa532c22d27e3cf71d4f539c911251b766dabb1d`). Studio post-merge verification passed: 342/342 tests, build, service/relay 12/12, launcher tests 17/17 and integrated preflight 13 pass / 1 warning / 0 blockers. Unity focused builder, bridge, modular-scene, episode, camera, player and audio tests passed 12/12 with graphics enabled. No broad Unity-suite pass is claimed. Karl's P8-P11 visual, Unity Game-view and physical-audio acceptance remains pending; P11's full live workflow remains unverified. See `proofs/cartoon-foundation-integration/REPORT.md`.
 

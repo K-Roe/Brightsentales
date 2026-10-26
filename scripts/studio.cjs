@@ -1,9 +1,10 @@
 const http = require('node:http');
-const { readFile, stat } = require('node:fs/promises');
+const { readFile, stat, mkdir, writeFile, unlink, rename } = require('node:fs/promises');
 const { existsSync } = require('node:fs');
 const path = require('node:path');
 const { VoiceServiceManager, handleVoiceRequest } = require('./voice-lifecycle.cjs');
 const { createStudioAudioRelay } = require('./studio-audio-relay.cjs');
+const { handleUnityControlSession } = require('./unity-editor-control.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
@@ -11,8 +12,29 @@ const mode = process.argv[2] === 'dev' ? 'dev' : 'production';
 const manager = new VoiceServiceManager();
 const studioAudio = createStudioAudioRelay();
 const reviewHealthPath = '/__brighttales_review/health';
+const unityControlRoot = path.join(process.env.LOCALAPPDATA || path.join(require('node:os').homedir(), 'AppData', 'Local'), 'BrightTales', 'UnityEditorControl');
+const unityControlTokenPath = path.join(unityControlRoot, 'session.json');
+const unityStudioOriginPath = path.join(unityControlRoot, 'studio-origin.json');
 let closeWeb = async () => {};
 let closing = false;
+let studioOriginRecord = null;
+
+async function publishStudioOrigin(port) {
+  const origin = `http://127.0.0.1:${port}`;
+  await mkdir(unityControlRoot, { recursive: true });
+  studioOriginRecord = { origin, processId: process.pid, workspace: ROOT };
+  const temporary = `${unityStudioOriginPath}.${process.pid}.tmp`;
+  await writeFile(temporary, JSON.stringify(studioOriginRecord), { encoding: 'utf8' });
+  await rename(temporary, unityStudioOriginPath);
+}
+
+async function withdrawStudioOrigin() {
+  try {
+    const current = JSON.parse(await readFile(unityStudioOriginPath, 'utf8'));
+    if (current.processId === process.pid) await unlink(unityStudioOriginPath);
+  } catch { /* A newer Studio process may own the record, or it may already be gone. */ }
+  studioOriginRecord = null;
+}
 
 function reviewHealth(request, response) {
   if (request.method !== 'GET' || new URL(request.url, 'http://127.0.0.1').pathname !== reviewHealthPath) return false;
@@ -31,6 +53,7 @@ function reviewHealth(request, response) {
 
 function middleware(request, response, next) {
   if (reviewHealth(request, response)) return;
+  if (handleUnityControlSession(request, response, unityControlTokenPath)) return;
   void studioAudio.handle(request, response).then(handled => handled || handleVoiceRequest(request, response, manager)).then(handled => { if (!handled) next(); }).catch(() => {
     if (!response.headersSent) response.writeHead(500);
     response.end('Local voice request failed.');
@@ -74,6 +97,7 @@ async function startProduction() {
     } catch (error) { if (error.code !== 'EADDRINUSE' || candidate === 4181) throw error; }
   }
   closeWeb = () => new Promise(resolve => server.close(resolve));
+  await publishStudioOrigin(port);
   console.log(`BrightTales Studio: http://127.0.0.1:${port}/`);
 }
 
@@ -91,6 +115,9 @@ async function startDevelopment() {
     plugins: [{ name: 'brighttales-managed-voice', configureServer(vite) { vite.middlewares.use(middleware); } }],
   });
   await server.listen();
+  const address = server.httpServer.address();
+  if (!address || typeof address === 'string') throw Error('Studio did not expose a loopback listener address.');
+  await publishStudioOrigin(address.port);
   server.printUrls();
   closeWeb = () => server.close();
 }
@@ -98,7 +125,7 @@ async function startDevelopment() {
 async function shutdown(signal) {
   if (closing) return;
   closing = true;
-  try { await closeWeb(); } finally { await manager.close(); }
+  try { await closeWeb(); } finally { await withdrawStudioOrigin(); await manager.close(); }
   process.exitCode = signal === 'SIGINT' ? 130 : 0;
 }
 

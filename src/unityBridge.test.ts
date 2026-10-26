@@ -1,5 +1,42 @@
 import { describe, expect, it, vi } from 'vitest';
-import { blinkMaxInUnity, connectToUnity, livingRoomUnityConfig, livingRoomUnityPolishedConfig, pingUnity, portalCommand, sendActingCommandToUnity, unitySceneCommand, UnityBridgeTimeoutError, UnityBridgeUnavailableError, UNITY_BRIDGE_URL } from './unityBridge';
+import { blinkMaxInUnity, connectToUnity, getUnityEditorStatus, livingRoomUnityConfig, livingRoomUnityPolishedConfig, pingUnity, portalCommand, sendActingCommandToUnity, startUnityEditor, stopUnityEditor, unitySceneCommand, UnityBridgeTimeoutError, UnityBridgeUnavailableError, UNITY_BRIDGE_URL, UNITY_EDITOR_CONTROL_URL } from './unityBridge';
+
+describe('Unity Editor Play Mode controller', () => {
+  const token = 'a'.repeat(64);
+  it('reads a Studio session token and confirms Editor Ready status with authentication', async () => {
+    const request = vi.fn(async (url: string, init: RequestInit) => url === '/__brighttales_unity_control/session'
+      ? ({ ok: true, status: 200, json: async () => ({ token, controllerState: 'ready', detail: '' }) })
+      : ({ ok: true, status: 200, json: async () => ({ source: 'unity-editor', version: 1, state: 'Editor Ready', isPlaying: false }) })) as unknown as typeof fetch;
+    await expect(getUnityEditorStatus(new AbortController().signal, request)).resolves.toMatchObject({ state: 'Editor Ready', isPlaying: false });
+    expect(request).toHaveBeenNthCalledWith(1, '/__brighttales_unity_control/session', expect.objectContaining({ method: 'GET', cache: 'no-store' }));
+    expect(request).toHaveBeenNthCalledWith(2, `${UNITY_EDITOR_CONTROL_URL}/status`, expect.objectContaining({ headers: { Authorization: `Bearer ${token}` } }));
+  });
+
+  it('sends only Start and Stop and requires the matching Unity Editor acknowledgement', async () => {
+    const request = vi.fn(async (url: string) => url === '/__brighttales_unity_control/session'
+      ? ({ ok: true, status: 200, json: async () => ({ token, controllerState: 'ready' }) })
+      : ({ ok: true, status: 202, json: async () => ({ source: 'unity-editor', version: 1, state: 'Starting', isPlaying: false }) })) as unknown as typeof fetch;
+    await expect(startUnityEditor(new AbortController().signal, request)).resolves.toMatchObject({ state: 'Starting' });
+    expect(request).toHaveBeenNthCalledWith(2, `${UNITY_EDITOR_CONTROL_URL}/command`, expect.objectContaining({ method: 'POST', body: '{"command":"start"}' }));
+    const stopped = vi.fn(async (url: string) => url === '/__brighttales_unity_control/session'
+      ? ({ ok: true, status: 200, json: async () => ({ token, controllerState: 'ready' }) })
+      : ({ ok: true, status: 202, json: async () => ({ source: 'unity-editor', version: 1, state: 'Stopping', isPlaying: true }) })) as unknown as typeof fetch;
+    await expect(stopUnityEditor(new AbortController().signal, stopped)).resolves.toMatchObject({ state: 'Stopping' });
+    expect(stopped).toHaveBeenNthCalledWith(2, `${UNITY_EDITOR_CONTROL_URL}/command`, expect.objectContaining({ method: 'POST', body: '{"command":"stop"}' }));
+  });
+
+  it('explains a missing Editor session and rejects authentication or malformed status replies', async () => {
+    const closed = vi.fn(async () => ({ ok: false, status: 503, json: async () => ({ error: 'Unity Editor is not available. Start the Unity project with the BrightTales review launcher first.' }) })) as unknown as typeof fetch;
+    await expect(startUnityEditor(new AbortController().signal, closed)).rejects.toThrow('review launcher');
+    const session = async () => ({ ok: true, status: 200, json: async () => ({ token, controllerState: 'ready' }) });
+    const denied = vi.fn(async (url: string) => url === '/__brighttales_unity_control/session' ? session() : ({ ok: false, status: 401, json: async () => ({ error: 'authentication failed' }) })) as unknown as typeof fetch;
+    await expect(getUnityEditorStatus(new AbortController().signal, denied)).rejects.toThrow('authentication failed');
+    const invalid = vi.fn(async (url: string) => url === '/__brighttales_unity_control/session' ? session() : ({ ok: true, status: 200, json: async () => ({ source: 'other', version: 1, state: 'Playing', isPlaying: true }) })) as unknown as typeof fetch;
+    await expect(getUnityEditorStatus(new AbortController().signal, invalid)).rejects.toThrow('unexpected status');
+    const controllerError = vi.fn(async () => ({ ok: true, status: 200, json: async () => ({ token, controllerState: 'Error', detail: 'Unity Editor control port 17845 is unavailable.' }) })) as unknown as typeof fetch;
+    await expect(getUnityEditorStatus(new AbortController().signal, controllerError)).rejects.toThrow('port 17845 is unavailable');
+  });
+});
 
 describe('Cartoon Engine V1 scene transfer', () => {
   const id = '0123456789abcdef0123456789abcdef';

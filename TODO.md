@@ -1,3 +1,11 @@
+# Unity Editor Play Mode control V1 (2026-10-26)
+
+- [x] Add secure Editor-only Play Mode Start/Stop control on port 17845; retain the runtime bridge on 17844.
+- [x] Add Studio Editor/runtime status, startup confirmation, runtime readiness wait and Stop confirmation.
+- [x] Studio tests 345/345, build and service/relay 17/17; Unity compile, headless Editor API smoke and focused bridge/player 2/2 passed.
+- [ ] Karl: inspect Studio controls and Unity Game view. P8–P11 visual/audio acceptance remains pending.
+- Report: `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration\proofs\cartoon-foundation-unity-editor-control\REPORT.md`.
+
 # P8-P11 integration follow-up (2026-10-26)
 
 - [x] Integrate active P8-P11 and review-launcher heads into Studio `main` and Unity `cartoon-foundation`; preserve milestone history, backups and unrelated worktree changes.

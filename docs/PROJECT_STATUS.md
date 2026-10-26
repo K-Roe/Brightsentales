@@ -1,3 +1,7 @@
+# Current technical update — Unity Editor Play Mode control V1 (2026-10-26)
+
+Studio `main` and Unity `cartoon-foundation` contain the integrated P8–P11 work. V1 adds Start/Stop controls to Studio's Unity Connection panel and a separate editor-only Unity controller on 17845; the unchanged runtime bridge remains on 17844. Studio uses a random local session token, exact configured Studio origin and Editor status acknowledgement. Automated Studio checks pass (345/345, production build, service/relay 17/17); Unity controller compile, real headless Editor API smoke and focused bridge/player regressions (2/2) pass. Studio button click-through and Game-view visuals remain unverified for Karl's review. See the [review guide](P8_P11_REVIEW_GUIDE.md) and Unity report at `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration\proofs\cartoon-foundation-unity-editor-control\REPORT.md`.
+
 # P8-P11 integration update (2026-10-26)
 
 P8-P11 and the review launcher are integrated on Studio `main` (`a68d58772a54a93682b204a87ccf34bcd49aa013`) and Unity `cartoon-foundation` (`fa532c22d27e3cf71d4f539c911251b766dabb1d`). Studio tests/build/service and launcher checks pass; Unity's focused six-fixture suite passes 12/12 with graphics enabled. `proofs/cartoon-foundation-integration/REPORT.md` records commits, the launcher fix, exact checks and the null-graphics limitation. Human visual and physical-audio approvals remain pending, and P11's full live workflow is unverified.

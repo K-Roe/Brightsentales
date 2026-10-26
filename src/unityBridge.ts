@@ -1,6 +1,53 @@
 // The alternate port is reserved for an isolated Unity Play mode verification run.
 export const UNITY_BRIDGE_URL = import.meta.env.VITE_UNITY_BRIDGE_PORT === '17844'
   ? 'http://127.0.0.1:17844' : 'http://127.0.0.1:17843';
+export const UNITY_EDITOR_CONTROL_URL = 'http://127.0.0.1:17845';
+
+export type UnityEditorStatus = 'Editor Ready' | 'Starting' | 'Playing' | 'Stopping' | 'Error';
+type UnityEditorControlReply = { source: 'unity-editor'; version: 1; state: UnityEditorStatus; isPlaying: boolean; detail?: string };
+export class UnityEditorControlError extends Error {}
+
+async function unityEditorSession(signal: AbortSignal, request: typeof fetch): Promise<string> {
+  const response = await request('/__brighttales_unity_control/session', { method: 'GET', cache: 'no-store', signal });
+  let data: unknown;
+  try { data = await response.json(); } catch { throw new Error('Studio could not read the Unity Editor control session. Restart Studio with the review launcher.'); }
+  if (!response.ok) {
+    const detail = data && typeof data === 'object' && typeof (data as Record<string, unknown>).error === 'string'
+      ? String((data as Record<string, unknown>).error) : `Unity Editor control session returned HTTP ${response.status}.`;
+    throw new Error(detail);
+  }
+  if (!data || typeof data !== 'object') throw new Error('Unity Editor control session response is invalid.');
+  const session = data as Record<string, unknown>;
+  if (session.controllerState === 'Error') throw new UnityEditorControlError(typeof session.detail === 'string' ? session.detail : 'Unity Editor control is unavailable.');
+  if (!/^[a-f0-9]{64}$/.test(String(session.token || ''))) throw new Error('Unity Editor session token is invalid. Restart Unity and Studio using the review launcher.');
+  return String(session.token);
+}
+
+async function unityEditorControl(path: '/status' | '/command', signal: AbortSignal, request: typeof fetch, body?: { command: 'start' | 'stop' }): Promise<UnityEditorControlReply> {
+  const token = await unityEditorSession(signal, request);
+  const response = await request(`${UNITY_EDITOR_CONTROL_URL}${path}`, {
+    method: path === '/status' ? 'GET' : 'POST', cache: 'no-store', signal,
+    headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  let data: unknown;
+  try { data = await response.json(); } catch { throw new Error('Unity Editor control returned an invalid response. Confirm the BrightTales Unity project is open.'); }
+  if (!data || typeof data !== 'object') throw new Error('Unity Editor control returned an invalid response.');
+  const reply = data as Record<string, unknown>;
+  if (!response.ok) {
+    const detail = typeof reply.detail === 'string' ? reply.detail : typeof reply.error === 'string' ? reply.error : `Unity Editor control returned HTTP ${response.status}.`;
+    throw new UnityEditorControlError(detail);
+  }
+  if (reply.source !== 'unity-editor' || reply.version !== 1 ||
+      !['Editor Ready', 'Starting', 'Playing', 'Stopping', 'Error'].includes(String(reply.state)) || typeof reply.isPlaying !== 'boolean') {
+    throw new Error('Unity Editor control returned an unexpected status. Check that the active project is BrightTales Unity.');
+  }
+  return reply as UnityEditorControlReply;
+}
+
+export const getUnityEditorStatus = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/status', signal, request);
+export const startUnityEditor = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/command', signal, request, { command: 'start' });
+export const stopUnityEditor = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/command', signal, request, { command: 'stop' });
 
 type BridgeReply = { source: 'unity'; version: 0; status?: 'ready'; type?: 'pong' };
 

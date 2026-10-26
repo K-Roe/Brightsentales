@@ -10,6 +10,12 @@
 
 The launcher expects Studio `main` and Unity `cartoon-foundation`; it opens `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`. It writes timestamped logs under `%LOCALAPPDATA%\BrightTales\ReviewLauncher`. `Check-BrightTales-Review.cmd` runs preflight only and does not start applications. Normal review needs no command line or environment setup.
 
+## Unity Play Mode controls
+
+Unity opens in Edit Mode when the launcher starts it. In Studio's Unity Connection panel, click **Start Unity**. Studio shows **Starting**, waits for Unity to confirm **Playing**, then waits for the existing runtime bridge to become **Connected**. Click **Stop Unity** to leave Play Mode; wait for **Editor Ready** and a disconnected runtime bridge. The Editor status and runtime bridge status are shown separately. If Unity is closed, start it with the review launcher first. A port conflict, authentication failure or Unity compile/import problem is shown as an actionable **Error**; the control never sends arbitrary Unity commands.
+
+The editor control endpoint is loopback-only at `127.0.0.1:17845`, separate from the runtime bridge on `127.0.0.1:17844`. Studio and Unity must be opened using the documented loopback Studio URL and the integrated Unity project. Restart is intentionally omitted; Start and Stop are idempotent.
+
 ## P8 — Camera and audio
 
 - Open the camera episode in Studio. Choose Wide, Medium, Close-Up or Custom shots; change targets and Static, Pan or Follow movement.
