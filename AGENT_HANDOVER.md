@@ -127,3 +127,7 @@ Supported through the isolated Phase 1 Unity scene: real saved Studio scenes wit
 ## Next task
 
 Ask Karl to review `C:\Users\karlr\repos\BrightTalesCartoonFoundationUnity\CartoonFoundationP2Review\phase2-review.mp4` and the Studio screenshots in `proofs/cartoon-foundation-phase2/`. Check walk arrival, Look At direction, wave transition, camera framing and editing clarity. It is a composite of actual browser screenshots and two continuous Unity Game-camera clips, not a continuous desktop recording. Await **APPROVE / CHANGES / REJECT / PAUSE / SKIP** under the roadmap gate. Do not start P3, promote the foundation or merge before that visual decision. If Karl requests changes, stay within this experimental branch, rerun the real browser and Unity proof, and preserve approved baselines.
+# Active development handover — 2026-10-26
+
+Use the consolidated `brighttales-active-development` Studio/Unity workspaces documented in [docs/ACTIVE_DEVELOPMENT.md](docs/ACTIVE_DEVELOPMENT.md). P8–P10 are present and pushed. Studio suite/build pass at the current Studio commit; Unity focused P10 builder tests pass. Unity's five modified editor settings files are unrelated and must remain untouched. P8–P10 visual/audio gates are pending Karl. No P11 checklist was found, so do not invent P11 scope; ask for the documented requirements and continue once provided. No protected branch merge or P12.
+

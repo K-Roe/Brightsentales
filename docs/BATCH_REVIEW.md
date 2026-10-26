@@ -284,3 +284,7 @@ The notes below describe the earlier blocked attempt. The completion above super
 - **Limits:** Attribution is metadata only — no lip-sync or talking animation. Character speech must sit inside one scene; cross-scene character speech needs an episode-level clip. No in-app recording, text-to-speech or voice cleanup. Browser reload simulates interruption; subjective audio quality is unverified.
 - **Karl's check:** Import a real recorded voice as Speech & narration, attribute it to a Brightling and to the Narrator, then listen to [the recorded episode](../proofs/m6-4/dialogue-episode.mp4) for timing, trim and volume over music.
 - **Approval status:** **AWAITING KARL'S REVIEW**.
+# Active branch review queue — 2026-10-26
+
+P8–P10 are consolidated on the pushed Studio/Unity `brighttales-active-development` branches; see [launch and verification handover](ACTIVE_DEVELOPMENT.md). Karl's review order is P8 camera plus physical audio, P9 automatic character construction, then P10 modular character creation. All visual/audio gates remain pending. The next development milestone is P11 Episode Production & Polish, but no P11 requirements or acceptance checklist were found in project documentation; obtain that checklist before implementation. Do not merge into protected integration branches or start P12.
+

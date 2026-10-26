@@ -184,3 +184,7 @@ During Karl's temporary batch authorisation, work on one milestone at a time: in
 # P10 Brightling Maker V2 (2026-10-26)
 
 P10 is in isolated Studio/Unity branches based on P9 development heads. Scope is deterministic modular Brightling appearance in the existing Maker and same-ID Unity transfer; no merge is authorized. Studio suite 337/337 and build pass. Unity focused Play Mode passes: builder 2/2, bridge 1/1 and custom saved-scene/episode cast 1/1. P8 regression class passes 1/2; its second case requires a live Studio browser send. Browser UI walkthrough and P10 Studio screenshot are unavailable, and Karl's Studio/Unity visual review remains pending. Review P8, P9 and P10 separately. No P11.
+# Active development checkpoint — 2026-10-26
+
+P8–P10 are available together on pushed `brighttales-active-development` branches in Studio and Unity. The latest verified Studio/Unity commits and evening startup commands are in [ACTIVE_DEVELOPMENT.md](ACTIVE_DEVELOPMENT.md). P8–P10 remain pending Karl's visual/audio review and are not merged to protected integration branches. P11 is authorized by the current request but its scope checklist was not found; implementation awaits those requirements. Do not begin P12.
+

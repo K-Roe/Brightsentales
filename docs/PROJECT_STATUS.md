@@ -25,6 +25,8 @@ P8 is **technically verified only**. Studio visual review, Unity Game-view visua
 
 # BrightTales Project Status
 
+**Active development workspace (2026-10-26):** P8–P10 history is consolidated on Studio `brighttales-active-development` at `63940ebc07413f17ea98aa5fa65e354ce929b56f` and Unity `brighttales-active-development` at `cea276c32ea1a8e7dd1e0dfc6ce240b8e5cc9285`; both branches are pushed. Studio 337/337 and build pass; Unity P10 builder 2/2 passes. P8–P10 visual/audio review gates remain open. P11 Episode Production & Polish is not implemented because no P11 requirements/checklist were present; see [active development handover](ACTIVE_DEVELOPMENT.md). Protected integration branches are unchanged.
+
 **P9 Brightling Auto-Builder V1: IMPLEMENTED IN ISOLATION; FULL VISUAL WORKFLOW NOT VERIFIED.** The existing Maker can send saved palette-based characters to Unity; Unity constructs and persists a runtime actor, supports four actions, and updates by stable ID. Read the [P9 proof](../proofs/cartoon-foundation-p9/REPORT.md). Both P9 branches remain unmerged; Karl's Studio/Unity visual review is pending.
 
 **P8 Camera & Directing V1 (26 October 2026): TECHNICALLY VERIFIED; MANUAL ACCEPTANCE PENDING.** See `proofs/cartoon-foundation-p8/REPORT.md` and `MANUAL_REVIEW.md`. Studio 325/325 tests, build and service/relay 12/12 pass; Unity episode/camera 5/5, player 1/1, audio 1/1 and real browser-to-Unity V3 1/1 pass. Fresh browser save/reopen/replay/export passes and the WebM fully decodes. Studio visuals, Unity Game-view visuals and physical audio are awaiting Karl. P8 remains unmerged; P9 is active on isolated branches.

@@ -156,3 +156,11 @@ Updated 2026-10-24. Work in the two `cartoon-foundation` worktrees named in `AGE
 ## Excluded scope
 
 Rejected Greeting V1/V2 and Batch 3 remain REJECTED; chair/sofa sitting is DEFERRED. Portal V1 remains EXPERIMENTAL and outside this mission. Do not merge experimental work into production without Karl's visual approval.
+# Active development — 2026-10-26
+
+- [x] Consolidate P8–P10 ancestry on pushed Studio and Unity `brighttales-active-development` branches; preserve P8/P9/P10 backup refs and historical branches.
+- [x] Verify Studio full suite/build and focused Unity P10 builder tests on the active heads.
+- [ ] Karl: review P8 camera/audio, P9 transfer, and P10 modular characters; technical verification is not human acceptance.
+- [ ] Provide the P11 Episode Production & Polish acceptance checklist/scope; none was present in the repository docs or reports, so implementation has not started.
+- [ ] After P11 requirements are supplied, implement/test/document only that milestone on the active branches; do not merge protected branches or start P12.
+
