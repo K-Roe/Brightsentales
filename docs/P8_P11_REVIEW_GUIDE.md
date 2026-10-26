@@ -18,11 +18,15 @@ The existing Unity player supports the episode features recorded in P11. Unity p
 
 The launcher expects Studio `main` and Unity `cartoon-foundation`; it opens `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`. It writes timestamped logs under `%LOCALAPPDATA%\BrightTales\ReviewLauncher`. `Check-BrightTales-Review.cmd` runs preflight only and does not start applications. Normal review needs no command line or environment setup.
 
-## Unity Play Mode controls
+## Automatic Cartoon Preview startup
 
-Unity opens in Edit Mode when the launcher starts it. In Studio's Unity Connection panel, click **Start Unity**. Studio shows **Starting**, waits for Unity to confirm **Playing**, then waits for the existing runtime bridge to become **Connected**. Click **Stop Unity** to leave Play Mode; wait for **Editor Ready** and a disconnected runtime bridge. The Editor status and runtime bridge status are shown separately. If Unity is closed, start it with the review launcher first. A port conflict, authentication failure or Unity compile/import problem is shown as an actionable **Error**; the control never sends arbitrary Unity commands.
+In Studio's **Cartoon Preview** connection panel, click **Start Unity**. The status proceeds through **Launching Unity**, **Loading Project**, **Opening Scene**, **Entering Play Mode**, **Connecting** and **Ready**. The trusted local launcher reuses the correct Unity project if it is already open or starts the installed Editor with the BrightTales project. The Editor-side controller opens `Assets/Scenes/StudioLivingRoomExperimental.unity`, enters Play Mode, then Studio connects automatically after Unity confirms the runtime bridge on port 17844.
 
-The editor control endpoint is loopback-only at `127.0.0.1:17845`, separate from the runtime bridge on `127.0.0.1:17844`. Studio and Unity must be opened using the documented loopback Studio URL and the integrated Unity project. Restart is intentionally omitted; Start and Stop are idempotent.
+If a loaded Unity scene has unsaved changes, startup stops and asks you to save in Unity. It never replaces dirty scenes. If Unity is compiling or importing, Studio waits and retries the scene-open request; startup timeout or port conflicts show an error and a **Retry** action. The Editor control endpoint is loopback-only at `127.0.0.1:17845`, separate from the runtime bridge at `127.0.0.1:17844`. Legacy port 17843 is not used by automatic Cartoon Preview startup.
+
+The **Stop Unity** button remains available after Play Mode starts. The manual **Connect preview**, **Disconnect**, Ping and other troubleshooting controls remain below. If automatic startup is unavailable, start Unity with `Start-BrightTales-Review.cmd`, open the review scene and use the manual connection controls.
+
+For manual acceptance, verify that an already-open correct project is reused, a closed Unity Editor opens the correct workspace and scene, Play Mode starts, and Studio reports **Ready** only after the 17844 bridge health response succeeds. Also test once with a dirty Unity scene and confirm it remains open and unchanged while Studio displays the save-first error.
 
 ## P8 — Camera and audio
 
