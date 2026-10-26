@@ -4,6 +4,9 @@ import { createUnityPreviewStarter, UNITY_REVIEW_SCENE, type UnityPreviewStartup
 import PortalV1Panel from './PortalV1Panel';
 import CartoonEngineV1Panel from './CartoonEngineV1Panel';
 import StudioSceneUnityPanel from './StudioSceneUnityPanel';
+import EmbeddedCartoonPreview from './EmbeddedCartoonPreview';
+import type { PlaceOrganisation } from './placeFolders';
+import type { MaxOutfit, MaxineOutfit } from './outfit';
 import type { AudioAsset } from './audio';
 import type { TimedLibrary } from './timedScenes';
 import type { Brightling } from './maker';
@@ -19,7 +22,7 @@ function waitForSignal(ms: number, signal: AbortSignal): Promise<void> {
   });
 }
 
-export default function UnityConnection({ scenes, characters, audioAssets, requestedSceneId, onStatusChange }: { scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; requestedSceneId?: string | null; onStatusChange?: (status: 'connected' | 'disconnected') => void }) {
+export default function UnityConnection({ scenes, characters, audioAssets, places, maxOutfit, maxineOutfit, requestedSceneId, onStatusChange }: { scenes: TimedLibrary; characters: Brightling[]; audioAssets: AudioAsset[]; places: PlaceOrganisation; maxOutfit: MaxOutfit; maxineOutfit: MaxineOutfit; requestedSceneId?: string | null; onStatusChange?: (status: 'connected' | 'disconnected') => void }) {
   const [status, setStatus] = useState<Status>('disconnected');
   const [message, setMessage] = useState('Connection is off.');
   const [actor, setActor] = useState<ActingCharacter>('max');
@@ -256,10 +259,12 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
     }
   };
 
-  return <section className="unity-connection" aria-labelledby="unity-connection-heading">
-    <p className="eyebrow">CARTOON PREVIEW · EXPERIMENTAL</p>
-    <h1 id="unity-connection-heading">Watch your cartoon</h1>
-    <p>Start the isolated preview stage, then connect and send a saved scene. Your scene stays editable in Scene Maker.</p>
+  return <section className="unity-connection cartoon-preview-page" aria-labelledby="unity-connection-heading">
+    <p className="eyebrow">CARTOON PREVIEW · IN STUDIO</p>
+    <h1 id="unity-connection-heading">Cartoon Preview</h1>
+    <p>Choose a saved scene and watch it here. Preview playback does not change your saved scene.</p>
+    <EmbeddedCartoonPreview scenes={scenes} characters={characters} places={places} audioAssets={audioAssets} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} requestedSceneId={requestedSceneId} />
+    <details className="preview-diagnostics"><summary>Unity Editor and bridge tools (development and testing)</summary>
     <p className="unity-connection-status" role="status"><strong>Unity Editor:</strong> {editorStatus}</p>
     <p className="unity-connection-status" role="status"><strong>Cartoon Preview startup:</strong> {startupStage}{startupStage === 'Failed' && startupDetail ? ` — ${startupDetail}` : ''}</p>
     <div className="unity-connection-actions">
@@ -292,6 +297,7 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
     <PortalV1Panel connected={status === 'connected'} />
     <CartoonEngineV1Panel connected={status === 'connected'} />
     <small>Loopback address: {UNITY_BRIDGE_URL}. The connection is off until you press Connect.</small>
+    </details>
     </details>
   </section>;
 }

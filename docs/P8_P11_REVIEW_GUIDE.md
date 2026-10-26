@@ -1,4 +1,4 @@
-﻿# P8–P11 evening review guide
+# P8–P11 evening review guide
 
 ## One-click episode preview and WebM export
 
@@ -84,3 +84,6 @@ Keep these unchecked until Karl reviews the applications and exported media:
 - [ ] P11 complete episode authoring, Unity playback and complete WebM
 
 Automated checks, screenshots and successful exports are technical evidence only. P8–P11 human acceptance remains pending.
+# Embedded Studio Cartoon Preview
+
+Open **Cartoon Preview**, select a saved scene, and press **Play** to watch it inside Studio. Use **Pause**, **Restart**, or the scene-position slider to control playback. Existing scene camera moves and saved audio cues run on the same timeline. Scenes remain unchanged by preview. Unity Editor and bridge controls are under **Unity Editor and bridge tools (development and testing)**.
