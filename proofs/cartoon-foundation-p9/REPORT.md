@@ -1,13 +1,14 @@
 ﻿# Brightling Auto-Builder V1 — P9 technical report
 
-**State (2026-10-26):** isolated P9 implementation and automated verification complete for the supported whole-body template path. P9 is not merged. Karl's visual acceptance is pending. This report does not claim the Definition of Done: the full Studio browser to Unity Game-view workflow could not be completed in this session.
+**State (2026-10-26):** P9 direct Maker-to-Unity import, update, action commands and Unity application restart were exercised in the real applications, in addition to the automated checks. P9 remains isolated and unmerged. Karl's visual acceptance is pending; application screenshots are technical evidence, not human approval.
 
 ## Branches and bases
 
 - Studio branch: `cartoon-foundation-p9-brightling-auto-builder`, based directly on P8 Studio `80f42abdb8f3c892d50fafe0672b16ca10ca6fed`.
 - Unity branch: `cartoon-foundation-p9-brightling-auto-builder`, based directly on P8 Unity `52e79d72954ea071379abe498cfb80e4f383703f`.
 - P8 remains unmerged; P7 integration remains Studio `main` `e483838085f4b2583bb5f90bc6bafb34680110eb` and Unity `cartoon-foundation` `0998a013fe5d33dd5c5d4c71a541564d49b28251`.
-- Final P9 commit hashes are recorded below after implementation commits.
+- Studio implementation: `c026d83d185ecac250939389b65993b6e74ae5b7`.
+- Unity implementation: `fe40c5282e5e03ab6cb858a749a63926dcee8e81` (identical to P9 base because P9 Unity source was already committed).
 
 ## Implementation
 
@@ -47,15 +48,20 @@ The five editor-generated settings modifications in the P9 Unity worktree are un
 
 One earlier external-browser bridge test attempt timed out and is retained as `unity-p9-e2e.xml`/`.log`; it is superseded by the successful self-contained real HTTP loopback bridge test above. It is not counted as a pass.
 
-## Evidence and verification limits
+## Application workflow and evidence
 
-No Studio or Unity Game-view screenshots/recording were captured. The configured Browser-control skill required a Node REPL integration unavailable in this session; a fallback disposable CDP attempt stalled before interaction. Unity automated tests ran headless. Consequently:
+Using disposable Studio origin `http://localhost:4177`, the existing P9 Studio branch, Unity Editor 6.6 and bridge port 17844, the full direct Maker transfer path was exercised:
 
-- Full one-click Studio-to-Unity app workflow: **NOT VERIFIED**.
-- Actual appearance/colors in Unity Game view: **NOT VERIFIED**.
-- Restarting the Unity application and reviewing the restored result visually: **NOT VERIFIED**. Automated coverage recreates the builder and confirms persistence/restore within the test lifecycle.
-- P9 custom Brightlings in saved Studio scene/episode cast validation and playback: **NOT IMPLEMENTED**. The feature sends a character to the existing Unity runtime scene and action adapter; it does not make the new character available in saved episode authoring.
-- Unity comparison with Studio rendering / human visual acceptance: **PENDING KARL**.
+1. Created `P9 Testling` from the existing Maxine template and changed body, hair and clothing colours.
+2. Saved, edited, and reopened the saved card in Studio.
+3. Unity acknowledged `imported`; the character appeared in the Unity Game view.
+4. Studio sent Idle, Blink, Walk and Wave commands; Unity returned matching action acknowledgements.
+5. Changed body/clothing colours, saved and transferred again. Unity acknowledged `updated`, the same ID remained represented by one card, and the Game view showed the updated colours.
+6. Restarted the Unity application. Its Game view showed the persisted `P9 Testling` with its updated appearance. The restart application's Unity bridge was not available after editor startup, so the post-restart bridge health check is **NOT VERIFIED**.
+
+Real application screenshots are `studio-maker-preview.png`, `studio-saved-reopened.png`, `unity-game-view-p9.png`, `unity-game-view-p9-actions.png`, `unity-game-view-p9-updated.png`, and `unity-restart-after-warning.png`. The restart warning screenshot is retained as context in `unity-restart-blocker.png`; it was Unity's administrator warning, dismissed with **Ignore Warning**. Screenshots include actual Studio/Unity windows and are not synthetic illustrations.
+
+P9 custom Brightlings are supported by existing Studio library, timed-scene validation, preview, backup and export paths. **Unity saved-scene/episode transfer still rejects custom cast members**; the Unity saved-scene contract currently only admits Max and Maxine. This is an explicit remaining integration limitation and is addressed as P10 work, not represented as complete P9 support. Exact Studio/Unity visual parity and Karl's visual acceptance remain **PENDING KARL**.
 
 The supported template is a recolored Max/Maxine whole-body artwork set, not a new anatomical design. Available customization is limited to the existing template, name and three palette colors. There are no independently assembled body parts. Source art has no closed-eye frame, so Blink is a short deterministic squash and must be judged visually. The Unity actor uses a single body SpriteRenderer; it does not create an editor asset, prefab, or saved-scene character hierarchy. Imported runtime data is persisted in Unity's application data folder and reconstructed when the builder starts.
 
@@ -78,7 +84,7 @@ These steps use the isolated P9 worktrees; they do not merge either branch. This
    & 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe' -projectPath 'C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity'
    ```
 
-   Open `Assets/Scenes/StudioLivingRoomExperimental.unity` in Unity and press the toolbar **Play** button. Keep Play mode active.
+   Open `Assets/Scenes/StudioLivingRoomExperimental.unity` in Unity and press the toolbar **Play** button. Keep Play mode active. Unity may show an Administrator Privileges Detected dialog in elevated sessions; use **Ignore Warning** to continue this review run.
 
 3. In Studio, open **Characters** and choose **Create Brightling**. Select a template; enter a new name; choose body, hair and clothing colors; inspect the preview; **Save**. Edit the saved card, change a color, save again, and confirm it reopens with the same ID and settings.
 4. On that saved character card, press **Send to Unity**. Wait for the explicit `imported`/`updated` success message. The new character should appear in the Unity Game view without creating Unity objects manually. If it fails, retain the exact error; a sent HTTP request alone is not success.
@@ -89,9 +95,9 @@ Record Studio appearance and Unity appearance/action feedback separately as **AP
 
 ## Git and remaining work
 
-- Studio implementation commit: `09d95d46a58dcf73d7e17076de94514eb63bf004`.
+- Studio implementation commit: `09d95d46a58dcf73d7e17076de94514eb63bf004`; original P9 branch checkpoint `c026d83d185ecac250939389b65993b6e74ae5b7`.
 - Unity implementation commit: `58bd1dcd371bc9c51bedde2b5dcab0254004c8be`; validation test follow-up: `fe40c5282e5e03ab6cb858a749a63926dcee8e81`.
-- Documentation and proof are committed on the Studio P9 branch; the final branch tip is reported in the handover/final response.
-- Both P9 branches will be pushed to `origin`; neither will be merged.
+- This report's application verification and screenshots are being added to the Studio P9 branch. Unity source has no new P9 change; editor-generated settings remain unstaged and excluded.
+- Both P9 branches remain unmerged. P10 is authorized on new isolated branches from these P9 development heads.
 
 Remaining actions: Karl manually review the Studio preview and Unity Game view/actions; verify the actual app-to-app workflow and Unity application restart; decide whether the limited whole-body Blink and palette template meet expectations; and review the known saved-scene/episode integration gap. P8's three explicit approvals also remain outstanding. No P9 or P8 merge is authorized by this report.
