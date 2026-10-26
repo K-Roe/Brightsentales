@@ -1,6 +1,6 @@
 # Cartoon Preview Automatic Unity Startup V1
 
-**Date:** 2026-10-26  
+**Date:** 2026-10-26
 **Status:** Implemented; Studio automation and launcher tests pass. Unity Editor GUI startup, scene rendering, and Game-view acceptance remain for Karl.
 
 ## Repositories and commits
@@ -8,7 +8,7 @@
 - Studio: `C:\Users\karlr\repos\brightsenappstales`, branch `main`, implementation commit `be5df2bdd8f57131d0319deec025cd6de27f7704`.
 - Unity: `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`, branch `cartoon-foundation`, implementation commit `3ebb70b6bc9289fbb09f40281a25bacd3d52c1ad`.
 - Verified remotes before changes: Studio `K-Roe/Brightsentales` (`origin/main` at `4aa85eaa37632d41e95af4add279a31cbef7fbbe`); Unity `K-Roe/BrightTalesUnityTest` (`origin/cartoon-foundation` at `46e2b30a4807e699f81d42cea45132780c93c8c6`). Both local branches matched their remote checkpoints and were not divergent.
-- Pushes and final remote parity are to be recorded after publication.
+- The implementation commits above are the source commits; the final branch heads also include this report and the associated review-guide/state update.
 
 ## Implementation
 
