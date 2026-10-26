@@ -21,5 +21,10 @@ describe('Voice Maker settings', () => {
     expect(validVoiceSettings({ ...state, presets: [{ ...state.presets[0], effect: { ...effect, pitch: 99 } }] })).toBe(false);
     expect(validVoiceSettings({ ...state, presets: [{ ...state.presets[0], effect: { ...effect, cuts: [[0, 1]] } }] })).toBe(false);
     expect(validVoiceEffect({ ...naturalEffect(2), cuts: [[1, .5]] })).toBe(false);
+    expect(naturalEffect(2).noiseReduction).toBe(0);
+    expect(validVoiceEffect({ ...naturalEffect(2), noiseReduction: .65 })).toBe(true);
+    expect(validVoiceEffect({ ...naturalEffect(2), noiseReduction: 1.1 })).toBe(false);
+    const legacyPreset = { ...state, presets: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Older preset', effect: Object.fromEntries(Object.entries(effect).filter(([key]) => key !== 'noiseReduction')) as typeof effect }] };
+    expect(validVoiceSettings(legacyPreset)).toBe(true);
   });
 });

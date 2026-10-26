@@ -2,13 +2,14 @@ export const VOICE_SETTINGS_KEY = 'brightsenappstales.voice-settings.v1';
 export type VoiceEffect = {
   trimStart: number; trimEnd: number; cuts: [number, number][];
   pitch: number; speed: number; tone: number; volume: number;
+  noiseReduction: number;
   normalize: boolean; fadeIn: number; fadeOut: number;
   echo: boolean; reverb: boolean; robot: boolean;
 };
 export type VoicePreset = { id: string; name: string; effect: Omit<VoiceEffect, 'trimStart' | 'trimEnd' | 'cuts'> };
 export type VoiceSettings = { version: 1; presets: VoicePreset[]; defaults: Record<string, { voice: string | null; presetId: string | null; speed?: number }> };
 export const emptyVoiceSettings = (): VoiceSettings => ({ version: 1, presets: [], defaults: {} });
-export const naturalEffect = (duration: number): VoiceEffect => ({ trimStart: 0, trimEnd: Math.floor(duration * 100) / 100, cuts: [], pitch: 0, speed: 1, tone: 0, volume: 1, normalize: false, fadeIn: .03, fadeOut: .08, echo: false, reverb: false, robot: false });
+export const naturalEffect = (duration: number): VoiceEffect => ({ trimStart: 0, trimEnd: Math.floor(duration * 100) / 100, cuts: [], pitch: 0, speed: 1, tone: 0, volume: 1, noiseReduction: 0, normalize: false, fadeIn: .03, fadeOut: .08, echo: false, reverb: false, robot: false });
 export const BUILTIN_VOICE_PRESETS: VoicePreset[] = [
   { id: 'natural', name: 'Natural', effect: { ...naturalEffect(1) } },
   { id: 'high-cartoon', name: 'High-Pitched Cartoon', effect: { ...naturalEffect(1), pitch: 5, tone: .3 } },
@@ -24,7 +25,7 @@ export const validVoiceEffect = (value: unknown): value is VoiceEffect => {
   if (!value || typeof value !== 'object') return false;
   const e = value as VoiceEffect;
   return numberIn(e.trimStart, 0, 600) && numberIn(e.trimEnd, e.trimStart + .01, 600) && Array.isArray(e.cuts) && e.cuts.length <= 20 && e.cuts.every(cut => Array.isArray(cut) && cut.length === 2 && numberIn(cut[0], 0, 600) && numberIn(cut[1], cut[0] + .01, 600))
-    && numberIn(e.pitch, -12, 12) && numberIn(e.speed, .5, 2) && numberIn(e.tone, -1, 1) && numberIn(e.volume, 0, 2)
+    && numberIn(e.pitch, -12, 12) && numberIn(e.speed, .5, 2) && numberIn(e.tone, -1, 1) && numberIn(e.volume, 0, 2) && (e.noiseReduction === undefined || numberIn(e.noiseReduction, 0, 1))
     && numberIn(e.fadeIn, 0, 10) && numberIn(e.fadeOut, 0, 10)
     && ['normalize', 'echo', 'reverb', 'robot'].every(key => typeof e[key as keyof VoiceEffect] === 'boolean');
 };

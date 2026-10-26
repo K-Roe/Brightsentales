@@ -77,6 +77,18 @@ class VoiceProcessingTests(unittest.TestCase):
         hashes = [hashlib.sha256(process_audio(source, {**base, **effect})).hexdigest() for effect in variants]
         self.assertEqual(len(set(hashes)), len(variants))
 
+    def test_noise_reduction_is_optional_bounded_and_preserves_duration(self):
+        source = tone(2)
+        original_hash = hashlib.sha256(source).hexdigest()
+        base = {"trimStart": 0, "trimEnd": 2}
+        untouched = process_audio(source, base)
+        cleaned = process_audio(source, {**base, "noiseReduction": .5})
+        self.assertAlmostEqual(duration(cleaned), duration(untouched), delta=.04)
+        self.assertNotEqual(hashlib.sha256(cleaned).hexdigest(), hashlib.sha256(untouched).hexdigest())
+        self.assertEqual(hashlib.sha256(source).hexdigest(), original_hash)
+        with self.assertRaisesRegex(ValueError, "Noise reduction"):
+            process_audio(source, {**base, "noiseReduction": 1.1})
+
 
 if __name__ == "__main__":
     unittest.main()

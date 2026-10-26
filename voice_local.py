@@ -127,6 +127,7 @@ def process_audio(audio: bytes, options: dict) -> bytes:
     tone = _bounded(options.get("tone", 0), -1, 1, "Tone")
     fade_in = _bounded(options.get("fadeIn", 0), 0, 10, "Fade in")
     fade_out = _bounded(options.get("fadeOut", 0), 0, 10, "Fade out")
+    noise_reduction = _bounded(options.get("noiseReduction", 0), 0, 1, "Noise reduction")
     echo = bool(options.get("echo", False)); reverb = bool(options.get("reverb", False))
     robot = bool(options.get("robot", False))
     cuts = options.get("cuts", [])
@@ -168,6 +169,10 @@ def process_audio(audio: bytes, options: dict) -> bytes:
         cursor = right
     if len(selected) < 441: raise ValueError("The cuts leave less than 0.01 seconds of voice.")
     chain = []
+    if noise_reduction > 0:
+        # FFmpeg's local afftdn filter uses a dB strength; keep the user
+        # control bounded and leave the source bytes untouched.
+        chain.append(f"afftdn=nr={0.01 + noise_reduction * 24:.2f}:nf=-50:tn=1")
     factor = 2 ** (pitch / 12)
     chain += ["aresample=48000", f"asetrate={round(48000 * factor)}", "aresample=48000", f"atempo={1 / factor:.7f}", f"atempo={speed}"]
     if tone > .02: chain.append(f"highshelf=f=2500:g={tone * 10:.2f}")
