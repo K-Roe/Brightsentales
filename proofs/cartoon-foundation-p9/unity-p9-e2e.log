@@ -1,0 +1,748 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 69048)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 70500)
+VBCSCompiler prewarm took 24.80 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.7f1 (b22767f04f04) revision 11675495'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Core' Language: 'en' Physical Memory: 16179 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+[Licensing::IpcConnector] Channel LicenseClient-karlr doesn't exist
+Process architecture: x64
+Date: 2026-10-26T08:12:38Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 65604)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-karlr" at "2026-10-26T08:12:38.8394768Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 65604, path: "C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              9d7f6ec6136c4c9e9975168066ef3af8
+  Correlation Id:          7b1433d95d4815c39f6e2b2d7bdafbb1
+  External correlation Id: 304580234263962050
+  Machine Id:              KlM9agON0vVChAKpZ9jLh3zNuuE=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-karlr" (connect: 0.37s, validation: 0.13s, handshake: 0.05s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-karlr-notifications" at "2026-10-26T08:12:39.0150841Z"
+[Licensing::Module] Connected to LicensingClient (PId: 65604, launch time: 0.01, total connection time: 0.55s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 5773841880655-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.02
+[Licensing::Module] Licensing Background thread has ended after 0.62s
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity
+-runTests
+-testPlatform
+PlayMode
+-testFilter
+BrightlingAutoBuilderBridgeWorkflowTest
+-testResults
+C:\Users\karlr\repos\BrightTalesP9AutoBuilderStudio\proofs\cartoon-foundation-p9\unity-p9-e2e.xml
+-logFile
+C:\Users\karlr\repos\BrightTalesP9AutoBuilderStudio\proofs\cartoon-foundation-p9\unity-p9-e2e.log
+Successfully changed project path to: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity
+C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [103688]  Target information:
+
+Player connection [103688]  * "[IP] 192.168.0.208 [Port] 55504 [Flags] 2 [Guid] 923854939 [EditorId] 923854939 [Version] 1048832 [Id] WindowsEditor(7,Karl) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [103688] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [103688] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-108816" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Initialising UDS system complete:
+  - System type: Client
+  - Resource namespace: fbde2b4203f652b2fc37290f50aa7eb3
+  - Shared memory size: 1073741824
+  - Command buffer id: 1052576
+  - Command buffer size: 8192
+  - Hashmap size: 4194304
+  - Service connected: false
+Launching Unity Data Store - C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnityUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.7f1 (b22767f04f04)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=262144, entitiesPerBlock=1024, blocksPerSlotPage=0, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56816
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.7f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002467 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:False
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.962 seconds
+Domain Reload Profiling: 1756ms
+	BeginReloadAssembly (204ms)
+		CreateAndSetChildDomain (12ms)
+	RebuildCommonClasses (12ms)
+	RebuildNativeTypeToScriptingClass (20ms)
+	initialDomainReloadingComplete (101ms)
+	LoadAllAssembliesAndSetupDomain (457ms)
+		LoadAssemblies (186ms)
+		TypeCache.Refresh (310ms)
+			TypeCache.ScanAssembly (290ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (964ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (4ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (151ms)
+			ProcessInitializeOnLoadAttributes (164ms)
+			ProcessInitializeOnLoadMethodAttributes (343ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 71 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.2d.animation@16.0.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.animation@899988b542b9)
+    com.unity.2d.aseprite@6.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.aseprite@ab909e3e9b5f)
+    com.unity.2d.psdimporter@15.0.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.psdimporter@e02a9153d8d9)
+    com.unity.2d.spriteshape@16.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.spriteshape@42798c9d35d3)
+    com.unity.2d.tilemap.extras@9.0.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.tilemap.extras@9446f3c60919)
+    com.unity.2d.tooling@4.0.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.tooling@4e93af4036ee)
+    com.unity.collab-proxy@2.13.6 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.collab-proxy@4628d2ba6ea4)
+    com.unity.ide.rider@3.1.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.ide.rider@570989d4a882)
+    com.unity.ide.visualstudio@2.0.26 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+    com.unity.inputsystem@1.20.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.inputsystem@2436e68c60c4)
+    com.unity.learn.iet-framework@6.0.7 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.learn.iet-framework@96330db47073)
+    com.unity.visualscripting@1.9.12 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.visualscripting@4edfcc09512f)
+    com.unity.settings-manager@2.1.1 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.settings-manager@0b8638c5ce86)
+    com.unity.2d.common@15.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.common@b779c433ed47)
+    com.unity.searcher@4.9.5 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.searcher@a463122f2c00)
+    com.unity.profiling.core@1.0.3 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.profiling.core@8a49f7027d06)
+    com.unity.nuget.mono-cecil@1.11.6 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.sprite@752945c75a6f)
+    com.unity.2d.tilemap@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.2d.tilemap@f4c7bd71ac8a)
+    com.unity.render-pipelines.universal@17.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.render-pipelines.universal@ffe395a3a1d1)
+    com.unity.test-framework@1.8.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.test-framework@ee3fe9477490)
+    com.unity.timeline@6.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.timeline@5aa4cbea9cc5)
+    com.unity.ugui@2.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.ugui@eb824e41fbc7)
+    com.unity.modules.accessibility@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.ext.nunit@2.1.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+    com.unity.render-pipelines.core@17.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.render-pipelines.core@13460d8ea9e5)
+    com.unity.shadergraph@17.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.shadergraph@8b7e693cdbfe)
+    com.unity.render-pipelines.universal-config@17.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.render-pipelines.universal-config@561422b74439)
+    com.unity.editorcoroutines@6.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.editorcoroutines@8cd72baa102a)
+    com.unity.mathematics@1.4.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.mathematics@8306a64d0cd6)
+    com.unity.collections@6.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.collections@4920e8897b5a)
+    com.unity.graph-authoring@1.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.graph-authoring@cfd2588851ee)
+    com.unity.burst@2.0.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.burst@626e66ab421b)
+    com.unity.test-framework.performance@6.6.0 (location: C:\Users\karlr\repos\BrightTalesP9AutoBuilderUnity\Library\PackageCache\com.unity.test-framework.performance@e8b39e3ef3d9)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.04 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 1s546ms
+[1024/1344  0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[1340/1344  0s] Csc Library/Bee/artifacts/1900b0aE.dag/BrightTalesRigV1PlayTests.dll (+2 others)
+Assets\Tests\PlayMode\MaxNoticesMaxinePlayModeTest.cs(24,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(41,91): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(41,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Tests\PlayMode\MaxNoticesMaxineV1_1PlayModeTest.cs(20,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(75,94): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(75,31): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(19,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(20,21): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(21,20): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\V1_2\DirectorControlsBridgeV2PlayModeTest.cs(29,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Tests\PlayMode\V1_2\DirectorControlsBridgeV2PlayModeTest.cs(30,20): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[1341/1344  0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/BrightTalesRigV1PlayTests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/BrightTalesRigV1PlayTests.dll, with 149 defines and 297 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[1342/1344  0s] CopyFiles Library/ScriptAssemblies/BrightTalesRigV1PlayTests.pdb
+[1343/1344  0s] CopyFiles Library/ScriptAssemblies/BrightTalesRigV1PlayTests.dll
+*** Tundra build success (1.49 seconds), 5 items updated, 1344 evaluated
+Assets\Tests\PlayMode\MaxNoticesMaxinePlayModeTest.cs(24,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(41,91): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(41,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Tests\PlayMode\MaxNoticesMaxineV1_1PlayModeTest.cs(20,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(75,94): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Tests\PlayMode\BrightlingAutoBuilderPlayModeTest.cs(75,31): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(19,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(20,21): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\V1_2\CharacterActingV1_2PlayModeTest.cs(21,20): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\V1_2\DirectorControlsBridgeV2PlayModeTest.cs(29,24): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Tests\PlayMode\V1_2\DirectorControlsBridgeV2PlayModeTest.cs(30,20): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+AssetDatabase: script compilation time: 2.484920s
+Begin MonoManager ReloadAssembly
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Refreshing native plugins compatible for Editor in 132.47 ms, found 5 plugins.
+Native extension for WindowsStandalone target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:False
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.678 seconds
+Domain Reload Profiling: 22615ms
+	BeginReloadAssembly (633ms)
+		DisableScriptedObjects (44ms)
+		CreateAndSetChildDomain (243ms)
+	RebuildCommonClasses (16ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (17395ms)
+	LoadAllAssembliesAndSetupDomain (2871ms)
+		LoadAssemblies (2494ms)
+		TypeCache.Refresh (245ms)
+			TypeCache.ScanAssembly (226ms)
+		AnalyzeDomain (128ms)
+			BuildScriptInfoCaches (114ms)
+			ResolveRequiredComponents (12ms)
+	FinalizeReload (1679ms)
+		SetupLoadedEditorAssemblies (0ms)
+			BeforeProcessingInitializeOnLoad (155ms)
+			ProcessInitializeOnLoadAttributes (572ms)
+			ProcessInitializeOnLoadMethodAttributes (521ms)
+			AfterProcessingInitializeOnLoad (11ms)
+			EditorAssembliesLoaded (5ms)
+		AwakeInstancesAfterBackupRestoration (36ms)
+Starting new worker id: 0 with log in C:/Users/karlr/repos/BrightTalesP9AutoBuilderUnity/Logs/AssetImportWorkerHW0.log
+Refreshing native plugins compatible for Editor in 3.27 ms, found 5 plugins.
+
+Asset Pipeline Refresh (id=41235c54d5a49c64a926421fa703216c): Total: 27.165 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=3037 ms
+		Asset DB Callback time: managed=345 ms, native=50 ms
+		Scripting: domain reloads=1, domain reload time=21070 ms, compile time=2521 ms, other=140 ms
+		Project Asset Count: scripts=1704, non-scripts=3320
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 68.417ms
+	ApplyChangesToAssetFolders: 0.957ms
+	Scan: 322.372ms
+	Collect global state as custom dependencies: 40.385ms
+	OnSourceAssetsModified: 0.906ms
+	CategorizeScriptCompilationAssets: 74.973ms
+	ProcessAssetsWithTransientArtifactChanges: 123.939ms
+	CategorizeAssets: 80.494ms
+	CompileScripts: 2521.240ms
+	ImportOutOfDateAssets: 1927.182ms (1833.725ms without children)
+		UnloadImportedAssets: 0.727ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.001ms
+		ImportSchedulerStart: 91.678ms
+	PostProcessAllAssets: 347.985ms
+		XRBuildSystem.XRAssetImported 1.002ms
+		VCAutoAddAssetPostprocess 0.983ms
+		PostProcessCallbackCreateDeferredMaterials 0.059ms
+		MonoPostProcessAllAssets: 345.258ms
+			AssetPostprocessor.OnPostprocessAllAssets 199.471ms
+			SyncVS.PostprocessSyncProject 37.393ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 31.722ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 19.203ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 11.153ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 3.375ms
+			SpriteSlicePostprocessor.OnPostprocessAllAssets 2.712ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 2.312ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.106ms
+			AssetChangedListener.OnPostprocessAllAssets 1.812ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.589ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.507ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.898ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.799ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.781ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.589ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.583ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 0.509ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.403ms
+			SpriteShapeAssetPostProcessor.OnPostprocessAllAssets 0.391ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.383ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.360ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.356ms
+			PostProcessor.OnPostprocessAllAssets 0.356ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.312ms
+			AssetEvents.OnPostprocessAllAssets 0.305ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.302ms
+			AssetProcessor.OnPostprocessAllAssets 0.293ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.290ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.245ms
+			SpriteLibraryAssetPostprocessor.OnPostprocessAllAssets 0.241ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.223ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.213ms
+			AssetReloadNotifier.OnPostprocessAllAssets 0.197ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.174ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.172ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.169ms
+			PSDImportPostProcessor.OnPostprocessAllAssets 0.167ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.158ms
+			PSDImporterAssetPostProcessor.OnPostprocessAllAssets 0.118ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.089ms
+	PostAssetChangesProfiler: 5.012ms
+	UnloadStreamsBegin: 2.182ms
+	PersistCurrentRevisions: 0.142ms
+	GenerateScriptTypeHashes: 3.308ms
+	GenerateScriptTypeSerializationHashes: 4.798ms
+	Untracked: 21593.446ms
+
+Application.AssetDatabase Initial Refresh End
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
+Scanning for USB devices : 4.995ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-BrightTalesUnityTest
+Unloading 28 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7583 unused Assets / (4.3 MB). Loaded Objects now: 8583.
+Memory consumption went from 421.3 MB to 417.0 MB.
+Total: 10.903600 ms (FindLiveObjects: 0.595000 ms CreateObjectMapping: 0.349900 ms MarkObjects: 8.216800 ms  DeleteObjects: 1.538300 ms)
+
+Unity is not designed to run with Administrator privileges.
+
+With elevated access, scripts in your project can modify system files, registry settings, or protected areas, even accidentally.
+This could make your system unstable or unbootable.
+
+Restart as a standard user for the safest experience.
+Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
+[Project] Loading completed in 31.784 seconds
+	Project init time: 				30.785 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.344 seconds
+		Asset Database init time: 		0.443 seconds
+		Global illumination init time: 	0.003 seconds
+		Assemblies load time: 			1.831 seconds
+		Unity extensions init time: 	0.027 seconds
+		Asset Database refresh time: 	27.165 seconds
+	Scene opening time: 			0.222 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793002390208,"processId":108816,"projectLoad":31.7844759,"projectInit":30.7849851,"templateInit":0.0,"packageManagerInit":0.3439396,"assetDatabaseInit":0.4432152,"globalIlluminationInit":0.0025345,"assembliesLoad":1.8314822,"unityExtensionsInit":0.0267146,"assetDatabaseRefresh":27.1651743,"sceneOpening":0.2224173}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793002390208,"processId":108816,"editorVersion":"6000.6.7f1 (b22767f04f04)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
+[Licensing::Client] Successfully resolved entitlement details
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = PlayMode
+   targetPlatform = 
+   testNames = null
+   groupNames = BrightlingAutoBuilderBridgeWorkflowTest
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+Reloading assemblies due to reload request.
+Reloading assemblies after forced synchronous recompile.
+Begin MonoManager ReloadAssembly
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
+Refreshing native plugins compatible for Editor in 3.99 ms, found 5 plugins.
+Native extension for WindowsStandalone target not found
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:False
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.922 seconds
+Domain Reload Profiling: 3153ms
+	BeginReloadAssembly (524ms)
+		DisableScriptedObjects (77ms)
+		CreateAndSetChildDomain (220ms)
+	RebuildCommonClasses (14ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (297ms)
+	LoadAllAssembliesAndSetupDomain (371ms)
+		LoadAssemblies (218ms)
+		TypeCache.Refresh (10ms)
+		AnalyzeDomain (39ms)
+			ResolveRequiredComponents (35ms)
+	FinalizeReload (1926ms)
+		SetupLoadedEditorAssemblies (0ms)
+			BeforeProcessingInitializeOnLoad (325ms)
+			ProcessInitializeOnLoadAttributes (472ms)
+			ProcessInitializeOnLoadMethodAttributes (404ms)
+			AfterProcessingInitializeOnLoad (11ms)
+			EditorAssembliesLoaded (3ms)
+		AwakeInstancesAfterBackupRestoration (84ms)
+No restricted APIs configured; Validation skipped.
+Checking 18 assemblies for restricted APIs found 0 usage(s) in 5 ms
+Refreshing native plugins compatible for Editor in 3.56 ms, found 5 plugins.
+
+Asset Pipeline Refresh (id=948cf90eb571da743b02457e32726a77): Total: 6.470 seconds - Initiated by StopAssetImportingV2(ForceSynchronousImport | ForceDomainReload)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=2822 ms
+		Asset DB Callback time: managed=1100 ms, native=1226 ms
+		Scripting: domain reloads=1, domain reload time=1315 ms, compile time=5 ms, other=0 ms
+		Project Asset Count: scripts=1704, non-scripts=3320
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 3.331ms
+	ApplyChangesToAssetFolders: 0.444ms
+	Collect global state as custom dependencies: 6.843ms
+	ProcessAssetsWithTransientArtifactChanges: 327.342ms
+	CategorizeAssets: 212.465ms
+	CompileScripts: 4.586ms
+	ImportOutOfDateAssets: 1948.720ms (1943.069ms without children)
+		CollectScriptTypesHashes: 1.791ms
+		ReloadNativeAssets: 2.040ms
+		UnloadImportedAssets: 1.065ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 1.911ms
+		ImportSchedulerStart: 0.395ms
+	PostProcessAllAssets: 2319.200ms
+		ComputeShaderImportPostprocess 58.722ms
+		PostProcessCallbackCreateDeferredMaterials 55.380ms
+		AssemblyValidation.PostprocessAllAssets 52.688ms
+		SpriteAtlasDatabase.OnAssetPostprocessCallback 40.975ms
+		RaytracingShaderImportPostprocess 32.162ms
+		ShaderAssetModifiedCallback 30.839ms
+		SpeedTreeImporter.PostprocessAllAssets 27.051ms
+		LocalizationDatabase.AssetDatabasePostprocessCallback 11.125ms
+		BlockShaderImporter.PostprocessAllAssets 6.341ms
+		XRBuildSystem.XRAssetImported 1.801ms
+		MonoPostProcessAllAssets: 1098.715ms
+			SyncVS.PostprocessSyncProject 396.198ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 235.937ms
+			PostProcessor.OnPostprocessAllAssets 61.791ms
+			AssetPostprocessor.OnPostprocessAllAssets 47.220ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 41.623ms
+			MaterialPostprocessor.OnPostprocessAllAssets 41.100ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 39.071ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 31.443ms
+			SpriteSlicePostprocessor.OnPostprocessAllAssets 27.873ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 24.260ms
+			AssetChangedListener.OnPostprocessAllAssets 21.050ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 19.926ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 10.021ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 9.052ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 7.976ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.700ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 2.247ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 1.574ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 1.167ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.064ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.849ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.790ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.673ms
+			SpriteEditorTexturePostprocessor.OnPostprocessAllAssets 0.651ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.617ms
+			SpriteShapeAssetPostProcessor.OnPostprocessAllAssets 0.498ms
+			UVCSAssetPostprocessor.OnPostprocessAllAssets 0.360ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.351ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.338ms
+			AssetEvents.OnPostprocessAllAssets 0.295ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.240ms
+			SpriteLibraryAssetPostprocessor.OnPostprocessAllAssets 0.236ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.201ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.175ms
+			SamplePostprocessor.OnPostprocessAllAssets 0.171ms
+			PSDImportPostProcessor.OnPostprocessAllAssets 0.154ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.143ms
+			AssetReloadNotifier.OnPostprocessAllAssets 0.122ms
+			PSDImporterAssetPostProcessor.OnPostprocessAllAssets 0.109ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.101ms
+			AssetProcessor.OnPostprocessAllAssets 0.065ms
+	PostAssetChangesProfiler: 6.697ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.193ms
+	UnloadStreamsBegin: 1.400ms
+	PersistCurrentRevisions: 0.214ms
+	GenerateScriptTypeHashes: 9.146ms
+	GenerateScriptTypeSerializationHashes: 14.730ms
+	Untracked: 1547.469ms
+
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at C:/Users/karlr/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.026s, timestamps: [31.787 - 31.813]
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 6828 unused Assets / (3.2 MB). Loaded Objects now: 8738.
+Memory consumption went from 427.7 MB to 424.5 MB.
+Total: 20.471800 ms (FindLiveObjects: 3.960300 ms CreateObjectMapping: 1.194500 ms MarkObjects: 11.144300 ms  DeleteObjects: 3.947900 ms)
+
+Importing 'GUID: f957db1a0029dfb4296e9452372957c2 - Path: Assets/InitTestScened2a34886-fcfb-466b-b6af-0375effc77a6.unity' with importer (DefaultImporter)
+Imported 'GUID: f957db1a0029dfb4296e9452372957c2' -> (Import Result ID: 'bf3eb703e81cab2e1590e245db295f13') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=f984826fbb126e186dbc84a2940d3ba3 DependenciesID=7b5b6280af3e9350b6ea8cb9673a010c StaticDependenciesID=d494486934dd5dd294f4ca9730764d4a 
+Refreshing native plugins compatible for Editor in 3.87 ms, found 5 plugins.
+Asset Pipeline Refresh (id=da0b0cae907dedc4f961ece8f6e1f147): Total: 0.074 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.TestRun.Tasks.BuildActionTaskBase`1/<ExecuteMethods>d__8<UnityEngine.TestTools.IPrebuildSetup>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs:48)
+UnityEditor.TestTools.TestRunner.TestRun.Tasks.BuildActionTaskBase`1/<Execute>d__7<UnityEngine.TestTools.IPrebuildSetup>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs:34)
+UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
+UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs Line: 48)
+
+SpriteAtlasPacking completed in 0.009571 sec
+Entering Playmode with Reload Domain disabled.
+If you experience any issues, please disable "Enter Play Mode Options" in Editor Settings
+Worker ready: AssetImportWorkerHW0 0
+BrightTales Bridge V0 listening on http://127.0.0.1:17844
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+BrightTalesBridgeV0:OnEnable () (at Assets/BrightTalesBridgeV0.cs:410)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+UnityEngine.GameObject:AddComponent<BrightTalesBridgeV0> ()
+BrightTalesBridgeV0:StartBridge () (at Assets/BrightTalesBridgeV0.cs:93)
+
+(Filename: Assets/BrightTalesBridgeV0.cs Line: 410)
+
+Loaded scene 'Temp/__Backupscenes/0.backup'
+	Deserialize:            1.400 ms
+	Integration:            751.776 ms
+	Integration of assets:  0.001 ms
+	Thread Wait Time:       0.016 ms
+	Total Operation Time:   753.193 ms
+Unloading 46 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 9.368200 ms
+Loaded scene 'Assets/Scenes/StudioLivingRoomExperimental.unity'
+	Deserialize:            82.128 ms
+	Integration:            52.519 ms
+	Integration of assets:  0.596 ms
+	Thread Wait Time:       0.602 ms
+	Total Operation Time:   135.845 ms
+Unloading 174 unused Assets / (4.0 MB). Loaded Objects now: 8826.
+Memory consumption went from 472.2 MB to 468.2 MB.
+Total: 28.444600 ms (FindLiveObjects: 1.691600 ms CreateObjectMapping: 1.116100 ms MarkObjects: 24.282300 ms  DeleteObjects: 1.058000 ms)
+
+BrightTales Bridge V0 listening on http://127.0.0.1:17844
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+BrightTalesBridgeV0:OnEnable () (at Assets/BrightTalesBridgeV0.cs:410)
+UnityEngine.GameObject:Internal_AddComponentWithType (System.Type)
+UnityEngine.GameObject:AddComponent (System.Type)
+BrightlingAutoBuilderBridgeWorkflowTest/<DisposableStudioTransferBuildsUpdatesAndAnimatesOnUnityMainThread>d__1:MoveNext () (at Assets/Tests/PlayMode/BrightlingAutoBuilderBridgeWorkflowTest.cs:26)
+UnityEngine.TestTools.TestEnumerator/<Execute>d__8:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Attributes/TestEnumerator.cs:52)
+UnityEngine.TestTools.EnumerableTestMethodCommand/<ExecuteEnumerableAndRecordExceptions>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/EnumerableTestMethodCommand.cs:85)
+UnityEngine.TestTools.EnumerableTestMethodCommand:AdvanceEnumerator (System.Collections.IEnumerator) (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/EnumerableTestMethodCommand.cs:64)
+UnityEngine.TestTools.EnumerableTestMethodCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/EnumerableTestMethodCommand.cs:47)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand/<ExecuteEnumerable>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:66)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<NUnit.Framework.ITestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
+UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
+UnityEngine.TestTools.EnumerableApplyChangesToContextCommand/<ExecuteEnumerable>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/EnumerableApplyChangesToContextCommand.cs:23)
+UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
+UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
+UnityEngine.TestTools.Utils.CoroutineRunner/<WrapEnumeratorForChecks>d__8:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEngine.TestRunner/Utils/CoroutineRunner.cs:58)
+UnityEngine.SetupCoroutine:InvokeMoveNext (System.Collections.IEnumerator,intptr)
+
+(Filename: Assets/BrightTalesBridgeV0.cs Line: 410)
+
+TrimDiskCacheJob: Current cache size 0mb
+Saving results to: C:/Users/karlr/AppData/LocalLow/DefaultCompany/BrightTalesUnityTest\TestResults.xml
+Saving results to: C:\Users\karlr\repos\BrightTalesP9AutoBuilderStudio\proofs\cartoon-foundation-p9\unity-p9-e2e.xml
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Temp/__Backupscenes/0.backup'
+	Deserialize:            0.543 ms
+	Integration:            17.399 ms
+	Integration of assets:  0.001 ms
+	Thread Wait Time:       0.012 ms
+	Total Operation Time:   17.956 ms
+Unloading 40 unused Assets / (27.0 MB). Loaded Objects now: 8748.
+Memory consumption went from 464.5 MB to 437.5 MB.
+Total: 27.979200 ms (FindLiveObjects: 1.215100 ms CreateObjectMapping: 0.573400 ms MarkObjects: 25.806400 ms  DeleteObjects: 0.141600 ms)
+
+[Licensing::Client] Successfully resolved entitlement details
+Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.TestRun.Tasks.BuildActionTaskBase`1/<ExecuteMethods>d__8<UnityEngine.TestTools.IPostBuildCleanup>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs:48)
+UnityEditor.TestTools.TestRunner.TestRun.Tasks.BuildActionTaskBase`1/<Execute>d__7<UnityEngine.TestTools.IPostBuildCleanup>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs:34)
+UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
+UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs Line: 48)
+
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 8750.
+Memory consumption went from 437.5 MB to 437.5 MB.
+Total: 21.214500 ms (FindLiveObjects: 0.906300 ms CreateObjectMapping: 0.157100 ms MarkObjects: 19.860400 ms  DeleteObjects: 0.034200 ms)
+
+Refreshing native plugins compatible for Editor in 4.94 ms, found 5 plugins.
+Asset Pipeline Refresh (id=29016568e1ec9b54c93c811a1a172a8f): Total: 0.080 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 2 (Failed). One or more tests failed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@ee3fe9477490/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+MonoPathRemapper: Attempts to remap: 421568; Successful remaps: 868
+Serialized file version minimum: 22, current 23
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-karlr-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-karlr channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+Shut down UDS service system complete
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+VBCSCompilerPreWarmer: requested VBCSCompiler shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+[Package Manager] Server process was shutdown
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793002511363,"processId":108816,"allocatedMemory":15556775,"memoryLabels":[{"Default":181109},{"Permanent":15516},{"NewDelete":69759},{"Thread":4197520},{"Manager":33213},{"VertexData":8},{"Geometry":824},{"Texture":24},{"Shader":851309},{"Material":132},{"GfxDevice":55968},{"Animation":952},{"Audio":320},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":17056},{"Input":42840},{"JobScheduler":256},{"TextLib":336},{"Mono":48},{"MonoCode":64},{"ScriptingNativeRuntime":1307568},{"BaseObject":49472},{"Resource":1444},{"Renderer":2504},{"Transform":4781},{"File":19293},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":361898},{"StaticString":3808},{"Utility":2674262},{"Curl":2559},{"PoolAlloc":2264},{"AI":80},{"TypeTree":14869},{"ScriptManager":18984},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":432},{"WebRequest":592},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14456},{"Identifiers":7152},{"EntityIdStore":33088},{"Gui":128},{"EditorUtility":115978},{"VersionControl":8},{"Undo":931},{"AssetDatabase":4940515},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":260},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3226},{"Windowing":456},{"Licensing":12572},{"AssetReference":32},{"IPCStream":32}]}
