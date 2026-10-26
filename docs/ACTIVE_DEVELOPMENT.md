@@ -6,10 +6,10 @@ Updated 2026-10-26.
 
 | Repository | Branch | Commit | Remote |
 | --- | --- | --- | --- |
-| Studio | `brighttales-active-development` | `63940ebc07413f17ea98aa5fa65e354ce929b56f` | `origin/brighttales-active-development` |
+| Studio | `brighttales-active-development` | `8b692eb937637b59c91897ed6ac613b8b0d8d56f` | `origin/brighttales-active-development` |
 | Unity | `brighttales-active-development` | `cea276c32ea1a8e7dd1e0dfc6ce240b8e5cc9285` | `origin/brighttales-active-development` |
 
-P8, P9 and P10 are already in the P10 development ancestry. No duplicate merges or cherry-picks were needed. Backup refs for each P8/P9/P10 head are retained under `refs/backup/brighttales-active-development/` in both repositories. Historical milestone branches and protected integration branches remain unchanged. P8–P10 are not merged to Studio `main` or Unity `cartoon-foundation`.
+P8, P9 and P10 are already in the P10 development ancestry. No duplicate merges or cherry-picks were needed. Studio's P10 implementation base is `63940ebc07413f17ea98aa5fa65e354ce929b56f`; the current Studio head adds this documentation/evidence commit. Backup refs for each P8/P9/P10 head are retained under `refs/backup/brighttales-active-development/` in both repositories. Historical milestone branches and protected integration branches remain unchanged. P8–P10 are not merged to Studio `main` or Unity `cartoon-foundation`.
 
 ## Launch tonight
 
