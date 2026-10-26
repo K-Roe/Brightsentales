@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { blinkMaxInUnity, connectToUnity, getUnityEditorStatus, pingUnity, sendActingCommandToUnity, startUnityEditor, stopUnityEditor, UnityBridgeUnavailableError, UnityEditorControlError, UNITY_BRIDGE_URL, type ActingCharacter, type ActingCommand, type UnityEditorStatus } from './unityBridge';
+import { blinkMaxInUnity, connectToUnity, getUnityEditorStatus, launchUnityReview, openUnityPreviewScene, pingUnity, sendActingCommandToUnity, startUnityEditor, stopUnityEditor, UnityBridgeUnavailableError, UnityEditorControlError, UNITY_BRIDGE_URL, type ActingCharacter, type ActingCommand, type UnityEditorStatus } from './unityBridge';
+import { createUnityPreviewStarter, UNITY_REVIEW_SCENE, type UnityPreviewStartupStage } from './unityPreviewStartup';
 import PortalV1Panel from './PortalV1Panel';
 import CartoonEngineV1Panel from './CartoonEngineV1Panel';
 import StudioSceneUnityPanel from './StudioSceneUnityPanel';
@@ -26,7 +27,28 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
   const [target, setTarget] = useState<ActingCharacter>('maxine');
   const [editorStatus, setEditorStatus] = useState<UnityEditorStatus | 'Disconnected'>('Disconnected');
   const [editorBusy, setEditorBusy] = useState(false);
+  const [startupStage, setStartupStage] = useState<UnityPreviewStartupStage>('Idle');
+  const [startupDetail, setStartupDetail] = useState('');
   const pending = useRef<AbortController | null>(null);
+  const previewStarter = useRef<ReturnType<typeof createUnityPreviewStarter> | null>(null);
+
+  if (!previewStarter.current) {
+    previewStarter.current = createUnityPreviewStarter({
+      launch: signal => launchUnityReview(signal),
+      getEditorStatus: signal => getUnityEditorStatus(signal),
+      openScene: async signal => {
+        const reply = await openUnityPreviewScene(signal);
+        if (reply.activeScenePath !== UNITY_REVIEW_SCENE) throw new Error(`Unity did not confirm the ${UNITY_REVIEW_SCENE} scene. No preview was sent.`);
+      },
+      startPlayMode: async signal => { await startUnityEditor(signal); },
+      connectBridge: async signal => {
+        if (UNITY_BRIDGE_URL !== 'http://127.0.0.1:17844') throw new Error('Cartoon Preview requires bridge port 17844. Start Studio with Start-BrightTales-Review.cmd; legacy port 17843 is not used.');
+        await connectToUnity(signal);
+      },
+      sleep: waitForSignal,
+      now: () => Date.now(),
+    });
+  }
 
   useEffect(() => () => { pending.current?.abort(); pending.current = null; }, []);
   useEffect(() => { onStatusChange?.(status === 'connected' ? 'connected' : 'disconnected'); }, [status, onStatusChange]);
@@ -63,54 +85,45 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
     throw new Error(wanted === 'Playing' ? 'Unity did not confirm Play Mode within 45 seconds.' : 'Unity did not confirm that it left Play Mode within 45 seconds.');
   };
 
-  const waitForRuntimeBridge = async (signal: AbortSignal) => {
-    const end = Date.now() + 30000;
-    let lastError: unknown;
-    while (Date.now() < end) {
-      if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
-      try { await connectToUnity(signal); return; }
-      catch (error) {
-        lastError = error;
-        if (!(error instanceof TypeError || error instanceof UnityBridgeUnavailableError)) throw error;
-      }
-      await waitForSignal(750, signal);
-    }
-    throw new Error(lastError instanceof Error ? `Unity entered Play Mode, but its runtime bridge did not become ready: ${lastError.message}` : 'Unity entered Play Mode, but its runtime bridge did not become ready within 30 seconds.');
-  };
-
   const startEditor = async () => {
     const controller = new AbortController();
     pending.current?.abort();
     pending.current = controller;
     setEditorBusy(true);
     setEditorStatus('Starting');
-    setMessage('Waiting for the open Unity Editor, then asking it to enter Play Mode…');
+    setStartupDetail('');
+    setMessage('Starting the trusted BrightTales Unity launcher.');
     try {
-      let accepted: Awaited<ReturnType<typeof startUnityEditor>> | undefined;
-      const controllerDeadline = Date.now() + 30000;
-      while (!accepted) {
-        try { accepted = await startUnityEditor(controller.signal); }
-        catch (error) {
-          const waitingForEditor = error instanceof TypeError || (error instanceof Error && error.message.includes('Unity Editor is not available'));
-          if (!waitingForEditor || Date.now() >= controllerDeadline) throw error;
-          await waitForSignal(1000, controller.signal);
-        }
-      }
-      if (accepted.state === 'Error') throw new Error(accepted.detail || 'Unity could not start Play Mode.');
-      await waitForEditor('Playing', controller.signal);
-      setMessage('Unity confirmed Play Mode. Waiting for the runtime bridge…');
-      setStatus('connecting');
-      await waitForRuntimeBridge(controller.signal);
+      await previewStarter.current!.start(controller.signal, (stage, detail) => {
+        if (pending.current !== controller) return;
+        setStartupStage(stage);
+        setStartupDetail(detail || '');
+        if (stage === 'Connecting') setStatus('connecting');
+        if (stage === 'Ready') { setEditorStatus('Playing'); setStatus('connected'); }
+        const messages: Record<UnityPreviewStartupStage, string> = {
+          Idle: 'Ready to start Cartoon Preview.',
+          'Launching Unity': 'Checking for the correct Unity project and launching it if needed…',
+          'Loading Project': detail || 'Unity is loading or compiling the BrightTales project…',
+          'Opening Scene': 'Opening StudioLivingRoomExperimental in Unity…',
+          'Entering Play Mode': 'Unity confirmed the preview scene. Entering Play Mode…',
+          Connecting: 'Play Mode is confirmed. Connecting to the 17844 runtime bridge…',
+          Ready: 'Cartoon Preview is ready. Studio is connected to Unity.',
+          Failed: detail || 'Unity startup failed. Check the message and retry.',
+        };
+        setMessage(messages[stage]);
+      });
       if (pending.current !== controller) return;
       setEditorStatus('Playing');
       setStatus('connected');
-      setMessage('Unity confirmed Play Mode and the runtime bridge is ready.');
+      setStartupStage('Ready');
+      setMessage('Cartoon Preview is ready. Studio is connected to Unity.');
     } catch (error) {
       if (pending.current !== controller) return;
       setStatus('disconnected');
-      setMessage(error instanceof TypeError
-        ? 'Unity Editor control is unavailable. Start the Unity project with the review launcher, then try again.'
-        : error instanceof Error ? error.message : String(error));
+      const detail = error instanceof Error ? error.message : String(error);
+      setStartupStage('Failed');
+      setStartupDetail(detail);
+      setMessage(detail);
       try {
         const latest = await getUnityEditorStatus(new AbortController().signal);
         setEditorStatus(latest.state);
@@ -123,7 +136,6 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
       setEditorBusy(false);
     }
   };
-
   const stopEditor = async () => {
     const controller = new AbortController();
     pending.current?.abort();
@@ -138,6 +150,8 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
       if (pending.current !== controller) return;
       setStatus('disconnected');
       setEditorStatus('Editor Ready');
+      setStartupStage('Idle');
+      setStartupDetail('');
       setMessage('Unity confirmed Edit Mode. The runtime bridge has stopped.');
     } catch (error) {
       if (pending.current !== controller) return;
@@ -247,11 +261,12 @@ export default function UnityConnection({ scenes, characters, audioAssets, reque
     <h1 id="unity-connection-heading">Watch your cartoon</h1>
     <p>Start the isolated preview stage, then connect and send a saved scene. Your scene stays editable in Scene Maker.</p>
     <p className="unity-connection-status" role="status"><strong>Unity Editor:</strong> {editorStatus}</p>
+    <p className="unity-connection-status" role="status"><strong>Cartoon Preview startup:</strong> {startupStage}{startupStage === 'Failed' && startupDetail ? ` — ${startupDetail}` : ''}</p>
     <div className="unity-connection-actions">
-      <button type="button" onClick={() => void startEditor()} disabled={editorBusy || editorStatus === 'Starting' || editorStatus === 'Playing' || editorStatus === 'Stopping'}>Start Unity</button>
+      <button type="button" onClick={() => void startEditor()} disabled={editorBusy || editorStatus === 'Stopping'}>{startupStage === 'Failed' ? 'Retry Start Unity' : 'Start Unity'}</button>
       <button type="button" onClick={() => void stopEditor()} disabled={editorBusy || (editorStatus !== 'Playing' && editorStatus !== 'Starting')}>Stop Unity</button>
     </div>
-    <p><small>Unity must be open in the BrightTales project. If it is closed, start it with the review launcher first.</small></p>
+    <p><small>Start Unity reuses the BrightTales Editor or launches it through the trusted review launcher, opens {UNITY_REVIEW_SCENE}, enters Play Mode, and connects through port 17844. Dirty Unity scenes are never replaced.</small></p>
     <p className="unity-connection-status" role="status"><strong>Runtime bridge:</strong> {status === 'connecting' ? 'Connecting' : status === 'pinging' ? 'Waiting for Pong' : status === 'commanding' ? 'Waiting for command response' : status === 'connected' ? 'Connected' : 'Disconnected'}</p>
     <p className="unity-connection-status" role="status"><strong>Bridge workflow:</strong> {status === 'connecting' ? 'Connecting' : status === 'pinging' ? 'Waiting for Pong' : status === 'commanding' ? 'Waiting for command response' : status === 'connected' ? 'Connected' : 'Disconnected'}</p>
     <p role="status">{message}</p>

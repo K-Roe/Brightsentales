@@ -5,16 +5,22 @@ const path = require('node:path');
 const { VoiceServiceManager, handleVoiceRequest } = require('./voice-lifecycle.cjs');
 const { createStudioAudioRelay } = require('./studio-audio-relay.cjs');
 const { handleUnityControlSession } = require('./unity-editor-control.cjs');
+const { createUnityStartupControl } = require('./unity-startup-control.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const mode = process.argv[2] === 'dev' ? 'dev' : 'production';
+const unityWorkspace = path.resolve(process.env.BRIGHTTALES_UNITY_PROJECT_PATH || 'C:/Users/karlr/repos/BrightTalesUnityFoundationIntegration');
 const manager = new VoiceServiceManager();
 const studioAudio = createStudioAudioRelay();
 const reviewHealthPath = '/__brighttales_review/health';
 const unityControlRoot = path.join(process.env.LOCALAPPDATA || path.join(require('node:os').homedir(), 'AppData', 'Local'), 'BrightTales', 'UnityEditorControl');
 const unityControlTokenPath = path.join(unityControlRoot, 'session.json');
 const unityStudioOriginPath = path.join(unityControlRoot, 'studio-origin.json');
+const unityStartup = createUnityStartupControl({
+  launcherPath: path.join(ROOT, 'scripts', 'review', 'Start-BrightTalesReview.ps1'),
+  isConfigured: () => process.env.VITE_UNITY_BRIDGE_PORT === '17844' && unityWorkspace === path.resolve('C:/Users/karlr/repos/BrightTalesUnityFoundationIntegration'),
+});
 let closeWeb = async () => {};
 let closing = false;
 let studioOriginRecord = null;
@@ -22,7 +28,7 @@ let studioOriginRecord = null;
 async function publishStudioOrigin(port) {
   const origin = `http://127.0.0.1:${port}`;
   await mkdir(unityControlRoot, { recursive: true });
-  studioOriginRecord = { origin, processId: process.pid, workspace: ROOT };
+  studioOriginRecord = { origin, processId: process.pid, workspace: ROOT, unityWorkspace };
   const temporary = `${unityStudioOriginPath}.${process.pid}.tmp`;
   await writeFile(temporary, JSON.stringify(studioOriginRecord), { encoding: 'utf8' });
   await rename(temporary, unityStudioOriginPath);
@@ -44,6 +50,7 @@ function reviewHealth(request, response) {
   }
   const body = JSON.stringify({
     service: 'brighttales-studio', protocol: 1, workspace: ROOT, mode,
+    unityWorkspace,
     unityBridgePort: process.env.VITE_UNITY_BRIDGE_PORT === '17844' ? 17844 : 17843,
   });
   response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Content-Length': Buffer.byteLength(body) });
@@ -53,6 +60,7 @@ function reviewHealth(request, response) {
 
 function middleware(request, response, next) {
   if (reviewHealth(request, response)) return;
+  if (unityStartup.handle(request, response)) return;
   if (handleUnityControlSession(request, response, unityControlTokenPath)) return;
   void studioAudio.handle(request, response).then(handled => handled || handleVoiceRequest(request, response, manager)).then(handled => { if (!handled) next(); }).catch(() => {
     if (!response.headersSent) response.writeHead(500);

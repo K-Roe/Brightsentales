@@ -4,8 +4,33 @@ export const UNITY_BRIDGE_URL = import.meta.env.VITE_UNITY_BRIDGE_PORT === '1784
 export const UNITY_EDITOR_CONTROL_URL = 'http://127.0.0.1:17845';
 
 export type UnityEditorStatus = 'Editor Ready' | 'Starting' | 'Playing' | 'Stopping' | 'Error';
-type UnityEditorControlReply = { source: 'unity-editor'; version: 1; state: UnityEditorStatus; isPlaying: boolean; detail?: string };
+type UnityEditorControlReply = { source: 'unity-editor'; version: 1; state: UnityEditorStatus; isPlaying: boolean; activeScenePath?: string; detail?: string };
 export class UnityEditorControlError extends Error {}
+
+type UnityReviewLaunchReply = { status: 'started' | 'reused'; processId: number };
+export async function launchUnityReview(signal: AbortSignal, request: typeof fetch = fetch): Promise<UnityReviewLaunchReply> {
+  const sessionResponse = await request('/__brighttales_unity_startup/session', { method: 'GET', cache: 'no-store', signal });
+  let session: unknown;
+  try { session = await sessionResponse.json(); } catch { throw new Error('Studio could not prepare the trusted Unity launcher. Restart Studio with Start-BrightTales-Review.cmd.'); }
+  if (!sessionResponse.ok || !session || typeof session !== 'object' || !/^[a-f0-9]{64}$/.test(String((session as Record<string, unknown>).token || '')))
+    throw new Error(session && typeof session === 'object' && typeof (session as Record<string, unknown>).error === 'string'
+      ? String((session as Record<string, unknown>).error) : 'The trusted Unity launcher session is unavailable. Start Studio with Start-BrightTales-Review.cmd.');
+  const token = String((session as Record<string, unknown>).token);
+  const response = await request('/__brighttales_unity_startup/start', {
+    method: 'POST', cache: 'no-store', signal,
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ command: 'start' }),
+  });
+  let value: unknown;
+  try { value = await response.json(); } catch { throw new Error('The trusted Unity launcher returned an invalid response.'); }
+  if (!response.ok) throw new Error(value && typeof value === 'object' && typeof (value as Record<string, unknown>).error === 'string'
+    ? String((value as Record<string, unknown>).error) : `The trusted Unity launcher returned HTTP ${response.status}.`);
+  if (!value || typeof value !== 'object') throw new Error('The trusted Unity launcher returned an invalid response.');
+  const result = value as Record<string, unknown>;
+  if (!['started', 'reused'].includes(String(result.status)) || !Number.isSafeInteger(result.processId) || Number(result.processId) <= 0)
+    throw new Error('Unity startup was not confirmed by the trusted launcher.');
+  return result as UnityReviewLaunchReply;
+}
 
 async function unityEditorSession(signal: AbortSignal, request: typeof fetch): Promise<string> {
   const response = await request('/__brighttales_unity_control/session', { method: 'GET', cache: 'no-store', signal });
@@ -23,7 +48,7 @@ async function unityEditorSession(signal: AbortSignal, request: typeof fetch): P
   return String(session.token);
 }
 
-async function unityEditorControl(path: '/status' | '/command', signal: AbortSignal, request: typeof fetch, body?: { command: 'start' | 'stop' }): Promise<UnityEditorControlReply> {
+async function unityEditorControl(path: '/status' | '/command', signal: AbortSignal, request: typeof fetch, body?: { command: 'start' | 'stop' | 'openPreviewScene' }): Promise<UnityEditorControlReply> {
   const token = await unityEditorSession(signal, request);
   const response = await request(`${UNITY_EDITOR_CONTROL_URL}${path}`, {
     method: path === '/status' ? 'GET' : 'POST', cache: 'no-store', signal,
@@ -39,7 +64,8 @@ async function unityEditorControl(path: '/status' | '/command', signal: AbortSig
     throw new UnityEditorControlError(detail);
   }
   if (reply.source !== 'unity-editor' || reply.version !== 1 ||
-      !['Editor Ready', 'Starting', 'Playing', 'Stopping', 'Error'].includes(String(reply.state)) || typeof reply.isPlaying !== 'boolean') {
+      !['Editor Ready', 'Starting', 'Playing', 'Stopping', 'Error'].includes(String(reply.state)) || typeof reply.isPlaying !== 'boolean' ||
+      (reply.activeScenePath !== undefined && typeof reply.activeScenePath !== 'string')) {
     throw new Error('Unity Editor control returned an unexpected status. Check that the active project is BrightTales Unity.');
   }
   return reply as UnityEditorControlReply;
@@ -48,6 +74,7 @@ async function unityEditorControl(path: '/status' | '/command', signal: AbortSig
 export const getUnityEditorStatus = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/status', signal, request);
 export const startUnityEditor = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/command', signal, request, { command: 'start' });
 export const stopUnityEditor = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/command', signal, request, { command: 'stop' });
+export const openUnityPreviewScene = (signal: AbortSignal, request: typeof fetch = fetch) => unityEditorControl('/command', signal, request, { command: 'openPreviewScene' });
 
 type BridgeReply = { source: 'unity'; version: 0; status?: 'ready'; type?: 'pong' };
 

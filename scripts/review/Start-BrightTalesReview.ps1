@@ -2,10 +2,11 @@
 param(
     [switch]$PreflightOnly,
     [switch]$StudioOnly,
+    [switch]$UnityOnly,
     [switch]$NoBrowser,
     [string]$StudioPath,
-    [string]$UnityPath = 'C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration',
-    [string]$UnityExePath = 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe',
+    [string]$UnityPath = $(if ($env:BRIGHTTALES_UNITY_PROJECT_PATH) { $env:BRIGHTTALES_UNITY_PROJECT_PATH } else { 'C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration' }),
+    [string]$UnityExePath = $(if ($env:BRIGHTTALES_UNITY_EDITOR_PATH) { $env:BRIGHTTALES_UNITY_EDITOR_PATH } else { 'C:\Program Files\Unity\Hub\Editor\6000.6.7f1\Editor\Unity.exe' }),
     [string]$ExpectedStudioBranch = 'main',
     [string]$ExpectedUnityBranch = 'cartoon-foundation',
     [int]$BridgePort = 17844,
@@ -13,6 +14,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+if ($StudioOnly -and $UnityOnly) { throw 'Choose either -StudioOnly or -UnityOnly, not both.' }
 if ([string]::IsNullOrWhiteSpace($StudioPath)) { $StudioPath = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent }
 Import-Module (Join-Path $PSScriptRoot 'BrightTalesReview.psm1') -Force
 $logRoot = Join-Path $env:LOCALAPPDATA 'BrightTales/ReviewLauncher'
@@ -44,17 +46,22 @@ try {
 
     $plan = Get-BrightTalesReviewLaunchPlan -Preflight $preflight
     if ($StudioOnly) { $plan.StartUnity = $false }
+    if ($UnityOnly) { $plan.StartStudio = $false; $plan.OpenBrowser = $false }
     $studioUrl = $preflight.StudioUrl
     if ($plan.StartStudio) {
         $runnerPath = Join-Path $logRoot "start-studio-$stamp.ps1"
         $studioLog = Join-Path $logRoot "studio-$stamp.log"
         $quotedStudioPath = $StudioPath.Replace("'","''")
         $quotedStudioLog = $studioLog.Replace("'","''")
+        $quotedUnityPath = $UnityPath.Replace("'","''")
+        $quotedUnityExePath = $UnityExePath.Replace("'","''")
         $runner = @"
 `$ErrorActionPreference = 'Continue'
 `$Host.UI.RawUI.WindowTitle = 'BrightTales Studio - Review'
 `$env:VITE_UNITY_BRIDGE_PORT = '$BridgePort'
 `$env:BRIGHTTALES_STUDIO_PORT = '$StudioPort'
+`$env:BRIGHTTALES_UNITY_PROJECT_PATH = '$quotedUnityPath'
+`$env:BRIGHTTALES_UNITY_EDITOR_PATH = '$quotedUnityExePath'
 `$env:BRIGHTTALES_REVIEW_LOG = '$quotedStudioLog'
 Set-Location -LiteralPath '$quotedStudioPath'
 Start-Transcript -Path `$env:BRIGHTTALES_REVIEW_LOG -Append | Out-Null
@@ -84,6 +91,14 @@ Stop-Transcript | Out-Null
     }
 
     if ($plan.StartUnity) {
+        if ($preflight.UnityProcess.State -eq 'unknown') {
+            Write-Host 'Unity process identity could not be checked. Nothing was launched to avoid opening a duplicate Editor.' -ForegroundColor Red
+            exit 1
+        }
+        if ($preflight.UnityProcess.State -ne 'running' -and $preflight.UnityBridge.State -in @('ready','unity-not-ready')) {
+            Write-Host 'Port 17844 responds as a Unity bridge, but the expected project process was not found. Close or identify the other Unity preview normally before retrying; nothing was launched.' -ForegroundColor Red
+            exit 1
+        }
         $unityLog = Join-Path $logRoot "unity-$stamp.log"
         $oldUnityPort = $env:BRIGHTTALES_UNITY_BRIDGE_PORT
         try {
@@ -91,6 +106,8 @@ Stop-Transcript | Out-Null
             $unityArgs = @('-projectPath',$UnityPath,'-logFile',$unityLog)
             $unityArgumentLine = ($unityArgs | ForEach-Object { ConvertTo-BrightTalesNativeArgument ([string]$_) }) -join ' '
             $unityProcess = Start-Process -FilePath $UnityExePath -ArgumentList $unityArgumentLine -WorkingDirectory $UnityPath -WindowStyle Normal -PassThru
+            $unityAction = 'started'
+            $unityProcessId = $unityProcess.Id
             Write-Host "Started Unity Editor (PID $($unityProcess.Id)) with the review bridge port configured. Log: $unityLog" -ForegroundColor Green
         } catch {
             Write-Host "Unity failed to start: $($_.Exception.Message)" -ForegroundColor Red
@@ -101,6 +118,8 @@ Stop-Transcript | Out-Null
             else { $env:BRIGHTTALES_UNITY_BRIDGE_PORT = $oldUnityPort }
         }
     } elseif (-not $StudioOnly) {
+        $unityAction = 'reused'
+        $unityProcessId = $preflight.UnityProcess.ProcessId
         Write-Host "Reusing Unity project process: $($preflight.UnityProcess.Detail)" -ForegroundColor Green
     } else {
         Write-Host 'Studio-only smoke mode: Unity was not launched.' -ForegroundColor Yellow
@@ -118,6 +137,12 @@ Stop-Transcript | Out-Null
     if (-not $NoBrowser -and $studioUrl) {
         try { Start-Process -FilePath $studioUrl | Out-Null; Write-Host "Opened the default browser at $studioUrl" -ForegroundColor Green }
         catch { Write-Host "Could not open the browser automatically. Open $studioUrl manually." -ForegroundColor Yellow }
+    }
+
+    if ($UnityOnly) {
+        $result = [pscustomobject]@{ status = $unityAction; processId = [int]$unityProcessId }
+        Write-Output ('BRIGHTTALES_UNITY_START=' + ($result | ConvertTo-Json -Compress))
+        exit 0
     }
 
     Write-Host ''
