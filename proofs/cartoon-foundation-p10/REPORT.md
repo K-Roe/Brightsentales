@@ -40,7 +40,9 @@ Studio/Unity visual parity is expected from identical transferred pose PNGs, but
 - P9 Unity branch: `cartoon-foundation-p9-brightling-auto-builder`; `fe40c5282e5e03ab6cb858a749a63926dcee8e81`.
 - P10 Studio branch: `cartoon-foundation-p10-brightling-maker-v2`, based on P9 Studio `6a471a133490d4b32ac3d1e6d9a725f4d0c709a8`.
 - P10 Unity branch: `cartoon-foundation-p10-brightling-maker-v2`, based on P9 Unity `fe40c5282e5e03ab6cb858a749a63926dcee8e81`.
-- P10 Studio and Unity final commits will be added here after isolated commits and pushes complete.
+- P10 Studio implementation and proof commit: `a8cf0f3f83175c7a22b07d43cec083f8c9aefe74`.
+- P10 Unity implementation commit: `cea276c32ea1a8e7dd1e0dfc6ce240b8e5cc9285`.
+- Branch heads remain isolated and are not merged. The P10 Studio report/hash follow-up commit will be recorded in the final delivery note.
 
 ## Manual review sequence
 
