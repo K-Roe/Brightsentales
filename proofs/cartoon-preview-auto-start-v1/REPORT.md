@@ -27,7 +27,7 @@ The Unity Editor-only controller on `127.0.0.1:17845` accepts an authenticated `
 - PowerShell parser check for `Start-BrightTalesReview.ps1`: passed.
 - `npm run build`: passed. Vite retains its existing advisory that the main JavaScript bundle exceeds 500 kB.
 - `git diff --check`: passed before commits.
-- Unity 6000.6.7f1 and `Assets/Scenes/StudioLivingRoomExperimental.unity` were confirmed at their expected paths. The Unity Editor was not launched for this verification, so the changed C# controller has not been compiled in Unity in this run and no live GUI/button, Game-view, dirty-scene, or bridge startup was claimed.
+- Unity 6000.6.7f1 and `Assets/Scenes/StudioLivingRoomExperimental.unity` were confirmed at their expected paths. Unity batch import/compile ran in a detached verification worktree at `3ebb70b6bc9289fbb09f40281a25bacd3d52c1ad` with `-batchmode -nographics -quit`; it exited 0 with `Exiting batchmode successfully now!` and no C# compiler errors. First import logged URP Terrain shader dependency warnings and existing `CS0618` obsolete API warnings. The captured log is `%LOCALAPPDATA%\Temp\BrightTalesAutoStartupUnityVerify.log`. This was a non-graphical compile check: no live GUI/button, Game-view appearance, dirty-scene behavior, or end-to-end bridge startup was claimed.
 
 ## Manual review for Karl
 
