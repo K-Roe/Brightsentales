@@ -206,3 +206,11 @@ Rejected Greeting V1/V2 and Batch 3 remain REJECTED; chair/sofa sitting is DEFER
 ## One-click episode preview and export reliability V1 (2026-10-26)
 
 Technical work is on Studio `main`; no Unity code change was required. Remaining review: run the saved episode through **Preview Episode in Unity**, confirm the Game view/cast/camera/action/audio, export WebM, confirm the browser saved it, and watch/listen through its ending. See `proofs/episode-preview-export-v1/REPORT.md` for exact automated and live-workflow verification boundaries.
+
+## Episode Health Check V1
+
+- [x] Add Check Episode categories, counts and issue navigation in the existing Episode Maker.
+- [x] Reuse existing validators and gate Unity preview/WebM export with the same scoped report.
+- [x] Focused tests 24/24, full Studio tests 370/370 and production build.
+- [ ] Karl: click through Check Episode on a saved episode and review issue navigation and message clarity. Browser visual review was unavailable during implementation.
+- [ ] Karl: preserve existing P8-P11 visual, Unity Game-view and physical-audio acceptance gates until individually reviewed.

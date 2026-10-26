@@ -64,6 +64,10 @@ The editor control endpoint is loopback-only at `127.0.0.1:17845`, separate from
 - **Unity opened but bridge is unavailable:** open the specified scene, press Play, then Connect from Studio. Confirm Unity is in Play mode and the bridge shows port 17844.
 - **Voice service warning:** Studio owns and starts its local voice service. Wait for readiness or inspect the Studio console; other review features can be checked separately.
 
+## Episode Health Check V1
+
+Open a saved episode and click **Check Episode** in the Episode Maker. Read the Errors, Warnings and Passed checks groups and use **Go to scene/shot/cue** where shown. Fix blocking errors in the existing scene, camera or audio editors, save, and run the check again. Scene audio extending past a scene cut is shortened by the current episode clock; move it to episode audio if it must continue across scenes. A closed/unreachable Unity Editor is reported without starting Play Mode; start it using this guide's launcher instructions before Unity preview. The check inspects saved references and metadata but does not decode every asset or replace a real preview/export. See [Episode Health Check proof](../proofs/episode-health-check-v1/REPORT.md).
+
 ## Manual approval record
 
 Keep these unchecked until Karl reviews the applications and exported media:

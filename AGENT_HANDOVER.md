@@ -161,3 +161,7 @@ Full evidence and limits: `proofs/cartoon-foundation-integration/REPORT.md`. The
 ## One-click episode preview and export reliability V1 (2026-10-26)
 
 Continue on Studio `main`; Unity remains on `cartoon-foundation` with no Unity source changes in this task. Episode Maker's one-click preview uses the existing authenticated Editor controller and episode bridge. The shared WebM recorder now provides measured frame progress, cancellation, input/audio checks, exact-end sampling and WebM header validation. See `proofs/episode-preview-export-v1/REPORT.md`; GUI and full-media human review are not implied by automated checks.
+
+# Episode Health Check V1 handover (2026-10-26)
+
+Studio `main` implementation commit: `d3777bdfec8852b7459803fef4618ce8d7763509`. The new `src/episodeHealthCheck.ts` composes the existing episode/scene/camera/audio/export validators and supplies the same scoped report to the Check Episode UI, Unity preview preflight and WebM export preflight. User changes are never repaired automatically. Unity branch `cartoon-foundation` is unchanged by this task; its pre-existing settings modifications remain untouched. Tests: focused 24/24; Studio 370/370; build passed. The UI has not been clicked through in a real browser; Karl should perform the manual review in `docs/P8_P11_REVIEW_GUIDE.md` and check `proofs/episode-health-check-v1/REPORT.md`.

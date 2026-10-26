@@ -298,3 +298,5 @@ P8–P10 are consolidated on the pushed Studio/Unity `brighttales-active-develop
 
 Karl provided the P11 acceptance specification in `proofs/cartoon-foundation-p11/REPORT.md`. Implement and technically verify the complete short modular-Brightling episode workflow on the existing active branches. Karl's P8–P11 visual/audio review remains pending after delivery; tests and automated screenshots do not count as approval. No protected merges or P12.
 
+
+**Episode Health Check V1 (2026-10-26): TECHNICALLY VERIFIED; MANUAL UI REVIEW PENDING.** Studio `main` adds a grouped episode readiness report and uses the same report to gate Unity preview and WebM export. Full Studio suite 370/370 and production build pass. The real UI, result navigation and saved episode have not been reviewed in a browser session. See [the report](../proofs/episode-health-check-v1/REPORT.md). This is not visual acceptance and does not close P8-P11 review gates.

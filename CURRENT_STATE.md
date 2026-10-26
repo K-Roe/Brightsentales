@@ -83,3 +83,7 @@ Karl supplied and authorised the P11 specification. It is recorded in `proofs/ca
 ## One-click episode preview and export reliability V1 (2026-10-26)
 
 Studio `main` now prepares the current Unity Editor, waits for Play Mode and bridge confirmation, transfers the saved custom cast/audio episode, resets an earlier Studio episode/scene preview, and only reports playback after Unity confirms it. Export checks scene/audio references, reports actual stages/frame work, supports cancellation, draws an explicit final-time frame, preserves audio failures, and checks the WebM header before download. Full results and limits: `proofs/episode-preview-export-v1/REPORT.md`. Browser download persistence, decoded container duration/audio tracks and Karl's full human viewing/listening remain pending.
+
+# Episode Health Check V1 (2026-10-26)
+
+Implemented on Studio `main` at `d3777bdfec8852b7459803fef4618ce8d7763509`. Episode Maker now provides Check Episode with categorized and navigable findings, an authenticated Unity status check that does not start Play Mode, and shared report gates for Unity preview and WebM export. Focused tests 24/24, full Studio suite 370/370 and production build pass. Real browser interaction is unverified; asset reference checks do not decode all media. See `proofs/episode-health-check-v1/REPORT.md`.

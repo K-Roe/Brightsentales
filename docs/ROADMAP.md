@@ -204,3 +204,7 @@ P8–P10 are available together on pushed `brighttales-active-development` branc
 
 Karl approved the detailed requirements in [`proofs/cartoon-foundation-p11/REPORT.md`](../proofs/cartoon-foundation-p11/REPORT.md). Implement on the already consolidated Studio and Unity `brighttales-active-development` branches. Extend existing episode authoring, camera, audio, preview/export, Unity bridge/player and Brightling auto-builder. Demonstrate two distinct modular Brightlings in a saved/reopened, previewed, Unity-played and exported short episode. Preserve protected baselines and unrelated workspace changes. P8–P11 human visual/audio acceptance remains pending; no P12.
 
+
+# Episode Health Check V1 (2026-10-26)
+
+Studio `main` adds **Check Episode** to the current Episode Maker. It reuses saved-episode, scene/action, camera, audio and WebM timing validators; errors, warnings and passed checks include counts and navigable scene/shot/cue locations. The shared health report also gates one-click Unity preview and WebM export before their existing specialized checks. The authenticated Unity Editor status is observed without starting Play Mode. Implementation: `d3777bdfec8852b7459803fef4618ce8d7763509`; full Studio tests 370/370 and build pass. Real UI click-through remains unverified. See `proofs/episode-health-check-v1/REPORT.md`.
