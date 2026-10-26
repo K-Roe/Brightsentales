@@ -1,6 +1,6 @@
 # Walk Animation Speed V1
 
-**Date:** 2026-10-26  
+**Date:** 2026-10-26
 **Status:** Code and automated verification complete; Karl visually reviewed and approved this gait as the accepted baseline.
 
 ## Root cause
