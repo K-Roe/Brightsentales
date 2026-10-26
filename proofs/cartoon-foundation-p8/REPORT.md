@@ -12,6 +12,26 @@ P8 branches are `cartoon-foundation-p8-camera-directing` in both repositories, c
 - Unity: full hash `52e79d72954ea071379abe498cfb80e4f383703f`.
 - Studio proof/documentation follow-up: recorded after the first P8 implementation commit in Git history.
 
+## Re-verification on 2026-10-26
+
+All checks below were rerun against the P8 branches recorded above. Remote P8 refs matched the local branch tips before this documentation refresh; P7 integration refs remained unchanged.
+
+- Studio `npm test -- --run`: 47 files / 325 tests passed.
+- Studio `$env:VITE_UNITY_BRIDGE_PORT='17844'; npm run build`: passed. Vite emitted the existing large-chunk advisory.
+- Studio `npm run test:service`: 12/12 passed, exit 0, 46.97 seconds. The slow healthy-service case took 29.5 seconds; it was not a hang. A forced-exit experiment caused a Windows libuv assertion, so the normal package command is the valid verification.
+- Unity `StudioEpisodePlayModeTest`: 5/5 passed; `StudioScenePlayerPlayModeTest`: 1/1 passed; `StudioSceneAudioPlayModeTest`: 1/1 passed. The player fixture requires `BRIGHTTALES_UNITY_BRIDGE_PORT=17844`; the default 17843 correctly has no listener in this isolated test setup. Fresh XML results are under `reverification-2026-10-26/`.
+- Unity `StudioEpisodeBrowserWorkflowTest`: 1/1 passed with a disposable browser profile and actual Studio version 3 episode transfer, playback, replay and reset. Camera telemetry: wide 5, medium minimum 3.5714, close-up minimum 1.8519, custom follow 2.0.
+- Fresh browser workflow: all stages passed (create/import, camera authoring, scrub/preview, replay/reset, export, close/reopen/replay and Unity transfer); zero browser exceptions and zero failed requests. It ran in `C:\Users\karlr\AppData\Local\Temp\brighttales-p8-camera-SWHGGt`.
+- Fresh WebM: VP9 1672x941 video plus 48 kHz Opus audio; FFmpeg decoded the full 3,263,151-byte file without error. WebM duration metadata is `N/A`; packet/frame timing represents the nominal 9-second episode.
+- The five pre-existing modified Unity settings files had matching SHA-256 values before and after the Unity checks. `P8CameraReview/` was not written.
+
+The repeatable-evaluation assertion is in `src/episodeCamera.test.ts`; the live browser run scrubbed every framing and exported the full episode. Neither that test nor the export establishes visual or listening approval.
+
+Fresh screenshots, exported media, browser stage JSON and Unity XML results are in [`reverification-2026-10-26/`](reverification-2026-10-26/).
+
+## Manual acceptance checklist
+
+Follow [`MANUAL_REVIEW.md`](MANUAL_REVIEW.md) to launch Studio and Unity, inspect the saved test episode in Studio, review the transferred episode in Unity Game view, and physically listen to its audio. The episode contains a generated low-level 220 Hz test tone, not production narration/music.
 ## Implementation
 
 Studio adds optional camera shots to Episode v1 and its existing scene/episode renderer. The Episode Maker camera lane supports create, select, edit and remove; the contextual Inspector edits timing, shot, target, movement, position and zoom. Wide, Medium, Close-Up and Custom framing are available. Static, Pan and Follow evaluate from the episode clock for scrubbing, replay and WebM export. A missing character target holds the last valid view; it does not retarget another character. Camera-free legacy episodes keep their prior rendering path.
@@ -21,7 +41,7 @@ The existing Unity bridge sends camera episodes as version 3 while retaining ver
 ## Automated verification
 
 - Studio full suite: `npm test -- --run` — 325/325 passed.
-- Service and relay: `npm run test:service` — a completed clean run passed 12/12. A subsequent normal rerun emitted passing cases but left Node lingering; a `--test-force-exit` attempt triggered a Windows libuv assertion in the relay worker. Those reruns are not counted as clean evidence; the earlier clean 12/12 run is the reported result.
+- Service and relay: `npm run test:service` — reverified 2026-10-26: 12/12 passed, exit 0, 46.97 seconds. The busy-but-healthy lifecycle case took 29.5 seconds, which explained the earlier apparent hang. Do not use `--test-force-exit`: it triggers a Windows libuv assertion in the relay worker.
 - Production build: `npm run build` passed with `VITE_UNITY_BRIDGE_PORT=17844`; Vite reported its existing large-chunk advisory.
 - Unity episode/camera regression: 5/5 passed (`unity-episode-regression.xml`).
 - Unity saved-scene player regression: 1/1 passed (`unity-scene-player-regression.xml`).

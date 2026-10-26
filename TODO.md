@@ -1,8 +1,21 @@
+# Current P8 review task (2026-10-26)
+
+- [x] Reverify Studio 325/325, production build, and service/relay 12/12.
+- [x] Reverify Unity episode/camera 5/5, player 1/1, audio 1/1 and live browser-to-Unity V3 1/1.
+- [x] Recreate disposable browser save/reopen/replay/export evidence and decode the full WebM.
+- [ ] Karl: approve or request changes for Studio camera visuals.
+- [ ] Karl: approve or request changes for Unity Game-view camera visuals.
+- [ ] Karl: physically listen to the episode audio and approve or request changes.
+- [ ] Only after all three explicit approvals, recheck branches/worktrees and perform the conditional merge and post-merge verification.
+
+P8 remains unmerged. Do not start P9. Full checklist: `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md`.
+
+---
 # Cartoon production foundation — takeover list
 
-## P7 technical checkpoint — 2026-10-25
+## P7 technical checkpoint — MERGED 2026-10-25
 
-The isolated P7 Studio editor polish is implemented and verified: zoom/scrub/audio overview, duration nudges, boundary preview, local Undo/Redo and shortcuts, Replay and direct WebM export. Studio 313/313, service/relay 12/12, build, disposable browser and complete WebM passed. Browser-to-Unity playback/replay/reset passed 1/1 against the Unity P7 head; Unity source is unchanged. See `proofs/cartoon-foundation-p7/REPORT.md`. Keep P7 unmerged. Remaining acceptance: Karl's visual/usability decision, Unity Game-view visual review and physical audio listening. Do not start Crossfade or another milestone without direction.
+Studio `main` is pushed at `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains at `0998a013fe5d33dd5c5d4c71a541564d49b28251`, with no P7 source delta. P7 technical verification is complete. Its historical merge and tests are recorded in the P7 proof. Current work is only the P8 manual review gate above.
 
 ## P7 Episode Production Polish — authorised 2026-10-25
 

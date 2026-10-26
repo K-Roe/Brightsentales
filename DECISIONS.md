@@ -1,3 +1,8 @@
+# P8 verification decision (2026-10-26)
+
+Reverification confirms the isolated P8 code and its P7 bases. Standard service lifecycle tests complete 12/12 in 46.97 seconds; the busy healthy test is slow, and `--test-force-exit` triggers a Windows libuv assertion. Leave P8 unmerged until Karl explicitly approves Studio visuals, Unity Game-view visuals and physical audio playback. Automated evidence does not substitute for those approvals. No P9 work.
+
+---
 # Cartoon foundation decisions
 
 ## 2026-10-25 — P7 production polish

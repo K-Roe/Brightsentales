@@ -1,4 +1,15 @@
-# P8 Camera & Directing V1 — current handover (2026-10-25)
+# P8 Verification and review gate (2026-10-26)
+
+P7 checkpoints are unchanged and remote verified: Studio `main` `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` `0998a013fe5d33dd5c5d4c71a541564d49b28251`. P8 code remains isolated: Studio code commit `fb853de59407f0cd1732d8cba390336bd7a8640a` (branch tip before this documentation refresh `5722ed5aea738e9c9f364469524deaa77a7bd9d2`); Unity `52e79d72954ea071379abe498cfb80e4f383703f`. P8 refs matched their remotes.
+
+Reverification passed: Studio tests 325/325, build, service/relay 12/12; Unity episode/camera 5/5, scene player 1/1, scene audio 1/1, and browser-to-Unity V3 1/1. The fresh disposable browser workflow passed all nine stages, with no console exceptions or failed requests. FFmpeg decoded the exported VP9/Opus WebM. Fresh logs, XMLs, screenshots and video are under `proofs/cartoon-foundation-p8/reverification-2026-10-26/`.
+
+The earlier service-test hang was a slow 29.5-second busy-but-healthy case; the normal suite exited successfully in 46.97 seconds. `--test-force-exit` causes a Windows libuv assertion and is not a valid workaround. No production code change was needed.
+
+**Karl's Studio visual, Unity Game-view visual and physical audio approvals are all still pending. P8 is not merge eligible and remains unmerged. Do not start P9.** See `proofs/cartoon-foundation-p8/MANUAL_REVIEW.md` for exact launch commands and the three acceptance checks. Unity's five existing dirty settings files and `P8CameraReview/` were left unchanged.
+
+---
+# P8 Camera & Directing V1 — previous handover (superseded 2026-10-26)
 
 P7 is merged and technically verified: Studio `main` is `e483838085f4b2583bb5f90bc6bafb34680110eb`; Unity `cartoon-foundation` remains `0998a013fe5d33dd5c5d4c71a541564d49b28251` with no P7 source delta. P8 is complete on isolated branch `cartoon-foundation-p8-camera-directing`: Studio implementation `fb853de59407f0cd1732d8cba390336bd7a8640a`, Unity implementation `52e79d72954ea071379abe498cfb80e4f383703f`. The report and full review evidence are in `proofs/cartoon-foundation-p8/REPORT.md`.
 
@@ -10,7 +21,7 @@ P8 is **technically verified only**. Studio visual review, Unity Game-view visua
 
 # Cartoon foundation current state — 2026-10-25
 
-**P8 Camera & Directing V1 (25 October 2026): IN PROGRESS on `cartoon-foundation-p8-camera-directing`, based on P7 merge `e483838085f4b2583bb5f90bc6bafb34680110eb`.** Studio adds an optional episode camera track, camera timeline and contextual Inspector controls, deterministic camera evaluation in preview/export, and version 3 Unity payloads while retaining Episode v1 and legacy behavior. Studio tests pass 324/324, service/relay 12/12 and build. Unity episode playback/camera tests pass 5/5, saved scene player/bridge 1/1 and audio regression 1/1. The disposable-browser save/reopen/replay/export workflow and real browser-to-Unity camera transfer remain pending. No P8 merge is authorised. Visual acceptance and physical audio listening remain pending.
+**P8 Camera & Directing V1 (26 October 2026): TECHNICALLY VERIFIED; MANUAL ACCEPTANCE PENDING.** See `proofs/cartoon-foundation-p8/REPORT.md` and `MANUAL_REVIEW.md`. Studio 325/325 tests, build and service/relay 12/12 pass; Unity episode/camera 5/5, player 1/1, audio 1/1 and real browser-to-Unity V3 1/1 pass. Fresh browser save/reopen/replay/export passes and the WebM fully decodes. Studio visuals, Unity Game-view visuals and physical audio are awaiting Karl. P8 remains unmerged; do not start P9.
 
 **P7 merged (25 October 2026):** Studio merge `e483838085f4b2583bb5f90bc6bafb34680110eb` is pushed to `main`; P7 `961501ffa85e58a54ae2d4367b38dcd88aa0102b` is in its ancestry. Post-merge Studio main tests pass 313/313, service/relay 12/12 and build. The P7 report records browser/export and browser-to-Unity evidence. Unity Game-view visual acceptance and physical audio listening remain pending.
 
