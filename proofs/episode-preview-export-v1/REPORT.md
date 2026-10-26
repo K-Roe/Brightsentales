@@ -5,8 +5,8 @@
 
 ## Repositories
 
-- Studio: `C:\Users\karlr\repos\brightsenappstales`, branch `main`, baseline `79dda614c313ecd0e075bf7f0d5daff13c47d0b1`; implementation commit to be recorded after commit.
-- Unity: `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`, branch `cartoon-foundation`, current `66d8b5a05d00c1dc18b5ee0d68b4682dd91e6cf5`; no Unity source changes were required. This task adds only a review-support note there.
+- Studio: `C:\Users\karlr\repos\brightsenappstales`, branch `main`, baseline `79dda614c313ecd0e075bf7f0d5daff13c47d0b1`; implementation commit `1eaa01e` (full hash: `1eaa01e` pending final documentation commit).
+- Unity: `C:\Users\karlr\repos\BrightTalesUnityFoundationIntegration`, branch `cartoon-foundation`, current `66d8b5a05d00c1dc18b5ee0d68b4682dd91e6cf5`; no Unity source changes were required. This task adds only a review-support note there (commit `46e2b30`).
 - The two pre-existing modified Unity integration settings files retained their recorded SHA-256 hashes. No settings or P8-P11 code was staged.
 
 ## Changes
