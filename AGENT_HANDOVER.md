@@ -1,3 +1,6 @@
+# Final integration verification (2026-10-26)
+
+Studio `main` and Unity `cartoon-foundation` already contain all approved completed work; no additional merge was needed. Their verified heads before this documentation update were Studio `8d21f3346d8ea7516b49687b24154c80e5e64ed2` and Unity `46e2b30a4807e699f81d42cea45132780c93c8c6`, both matching origin. Studio tests 370/370, build, service tests 17/17, launcher 17/17, preflight 13 pass / 1 warning / 0 blockers; focused graphics-enabled Unity tests 12/12. No full Unity suite or live GUI workflow is claimed. P8-P11 visual and physical-audio acceptance remains pending. Unity modified settings and Studio untracked evidence were preserved. See `proofs/final-integration/REPORT.md`.
 # Current handover — Unity Editor Play Mode control V1 (2026-10-26)
 
 Continue on Studio `main` and Unity `cartoon-foundation`; P8–P11 are integrated and pushed. The Unity Connection panel now controls the open Editor's Start/Stop state through an Editor-only, authenticated loopback controller on port 17845; the existing runtime bridge on 17844 is unchanged. Studio waits for confirmed Playing and runtime health, and reports Editor Ready after Stop. The controller rejects other origins/commands and port conflicts, and it does not run in built Players or AssetImportWorker processes.
