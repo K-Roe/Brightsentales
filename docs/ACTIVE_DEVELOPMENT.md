@@ -6,8 +6,8 @@ Updated 2026-10-26.
 
 | Repository | Branch | Commit | Remote |
 | --- | --- | --- | --- |
-| Studio | `brighttales-active-development` | Current pushed tip (verify with `git rev-parse HEAD`) | `origin/brighttales-active-development` |
-| Unity | `brighttales-active-development` | `cea276c32ea1a8e7dd1e0dfc6ce240b8e5cc9285` | `origin/brighttales-active-development` |
+| Studio | `brighttales-active-development` | P11 implementation `5d2ba8ad3231fad7bc0b9cf1e05df852c4490835` (plus a later state-document refresh) | `origin/brighttales-active-development` |
+| Unity | `brighttales-active-development` | P11 implementation `623a2651acd4a37c236467f8201a97d5454c0a48` | `origin/brighttales-active-development` |
 
 P8, P9 and P10 are already in the P10 development ancestry. No duplicate merges or cherry-picks were needed. Studio's P10 implementation base is `63940ebc07413f17ea98aa5fa65e354ce929b56f`; the current Studio branch adds documentation/evidence commits. Backup refs for each P8/P9/P10 head are retained under `refs/backup/brighttales-active-development/` in both repositories. Historical milestone branches and protected integration branches remain unchanged. P8–P10 are not merged to Studio `main` or Unity `cartoon-foundation`.
 
@@ -33,7 +33,7 @@ In Unity open `Assets/Scenes/StudioLivingRoomExperimental.unity`, then press **P
 
 Unity's worktree still has five unrelated modified editor settings files. Leave those files alone. The original P8 review worktree and `P8CameraReview/` are also preserved.
 
-## Technical verification checkpoint
+## P10 verification baseline (historical)
 
 - Studio `npm test -- --run`: **337/337 passed** (49 test files).
 - Studio `npm run build`: **passed**. Vite reports the existing large-chunk advisory (main JS ~656 kB); build completes successfully.

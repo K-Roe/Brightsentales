@@ -42,4 +42,9 @@ The demonstration episode fixture is [`demo-episode.json`](demo-episode.json), t
 
 P11 has focused technical verification in Studio and Unity but its full definition of done is **not yet established** because the live end-to-end workflow did not complete. Karl should run the launch instructions in [`docs/ACTIVE_DEVELOPMENT.md`](../../docs/ACTIVE_DEVELOPMENT.md), then review P8 camera/audio, P9 auto-builder, P10 modular Maker and this P11 episode workflow. Studio visual approval, Unity Game-view visual approval and physical audio listening remain pending; automated tests do not grant acceptance. Do not merge the active branch into protected integration branches.
 
-Exact P11 implementation commit hashes will be recorded after the Studio proof commit. Unity is committed and pushed on `brighttales-active-development` at `623a2651acd4a37c236467f8201a97d5454c0a48`; the Studio proof and implementation commit is pending.
+P11 implementation commits are pushed on the authorized active branches:
+
+- Studio `brighttales-active-development`: implementation and evidence `5d2ba8ad3231fad7bc0b9cf1e05df852c4490835`.
+- Unity `brighttales-active-development`: source and focused Play Mode coverage `623a2651acd4a37c236467f8201a97d5454c0a48`.
+
+The subsequent Studio state-document refresh is recorded in the branch history after the implementation commit. Neither protected integration branch was changed.
