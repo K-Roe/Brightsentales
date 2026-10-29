@@ -1,0 +1,104 @@
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [aria-hidden] [ref=f1e6]: ✦
+      - generic [ref=f1e197]:
+        - strong [ref=f1e198]: BrightTales
+        - generic [ref=f1e199]: UNITY STUDIO 3.0
+    - generic [ref=f1e7]:
+      - paragraph [ref=f1e200]: WORKSPACE
+      - navigation "Unity Studio navigation" [ref=f1e8]:
+        - button "Projects" [ref=f1e9] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e10]: ▦
+        - button "Cartoon Editor" [ref=f1e11] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e12]: ▣
+        - button "Asset Library" [ref=f1e13] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e14]: ✦
+        - button "Audio Studio" [ref=f1e15] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e16]: ♫
+        - button "Episode Maker" [ref=f1e17] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e18]: ▤
+      - paragraph [ref=f1e206]: YOUR TOOLS
+      - navigation "Creative tools" [ref=f1e19]:
+        - button "Places" [ref=f1e20] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e21]: ▧
+        - button "Voice Maker" [ref=f1e22] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e23]: ♬
+        - button "Audio Library" [ref=f1e24] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e25]: ♪
+        - button "Playground" [ref=f1e26] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e27]: ▶
+        - button "Intros" [ref=f1e28] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e29]: ★
+        - button "Credits" [ref=f1e30] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e31]: ❖
+        - button "Cartoon Preview" [ref=f1e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e33]: ◇
+    - generic [ref=f1e34]:
+      - button "Settings" [ref=f1e35] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e36]: ⚙
+        - text: Settings
+      - paragraph [ref=f1e214]: Local workspace
+  - main [ref=f1e37]:
+    - generic [ref=f1e38]:
+      - generic [ref=f1e39]:
+        - generic [ref=f1e40]: UNITY STUDIO 3.0 / ASSET LIBRARY
+        - strong [ref=f1e41]: Asset Library
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]: Unity not connected
+        - generic [ref=f1e45]: Local workspace
+        - button "Classic Studio" [ref=f1e47] [cursor=pointer]
+    - generic [ref=f1e216]:
+      - generic [ref=f1e217]:
+        - paragraph [ref=f1e218]: CHARACTER STUDIO
+        - heading [level=1] [ref=f1e219]:
+          - text: Meet your
+          - emphasis [ref=f1e220]: Brightlings.
+        - paragraph [ref=f1e221]: Your cast lives here. Choose a character to play, or create someone new.
+      - region "Brightling Maker" [ref=f1e290]:
+        - generic [ref=f1e291]:
+          - paragraph [ref=f1e292]: EDIT CHARACTER
+          - heading "Edit Brightling" [level=2] [ref=f1e293]
+          - paragraph [ref=f1e294]: Choose from the approved templates and colours. The animation artwork stays intact.
+          - generic [ref=f1e295]:
+            - text: Template
+            - combobox "Template" [ref=f1e296]:
+              - option "Male · Max template"
+              - option "Female · Maxine template" [selected]
+          - generic [ref=f1e297]:
+            - text: Name
+            - textbox "Name" [ref=f1e298]:
+              - /placeholder: e.g. Charlie
+              - text: P9 Testling
+          - group "Body colour" [ref=f1e299]:
+            - generic [ref=f1e301]:
+              - 'button "body #66DCAA" [ref=f1e302] [cursor=pointer]'
+              - 'button "body #91D9F1" [ref=f1e303] [cursor=pointer]'
+              - 'button "body #F7B788" [active] [pressed] [ref=f1e304] [cursor=pointer]'
+              - 'button "body #F4B6CE" [ref=f1e305] [cursor=pointer]'
+              - 'button "body #F4B486" [ref=f1e306] [cursor=pointer]'
+              - 'button "body #A6DCF2" [ref=f1e307] [cursor=pointer]'
+          - group "Hair colour" [ref=f1e308]:
+            - generic [ref=f1e310]:
+              - 'button "hair #8740B6" [pressed] [ref=f1e311] [cursor=pointer]'
+              - 'button "hair #274B9C" [ref=f1e312] [cursor=pointer]'
+              - 'button "hair #87502E" [ref=f1e313] [cursor=pointer]'
+              - 'button "hair #8851B6" [ref=f1e314] [cursor=pointer]'
+              - 'button "hair #A55235" [ref=f1e315] [cursor=pointer]'
+              - 'button "hair #B73979" [ref=f1e316] [cursor=pointer]'
+          - group "Main clothing colour" [ref=f1e317]:
+            - generic [ref=f1e319]:
+              - 'button "clothing #F18A3A" [ref=f1e320] [cursor=pointer]'
+              - 'button "clothing #46B869" [ref=f1e321] [cursor=pointer]'
+              - 'button "clothing #D94B55" [ref=f1e322] [cursor=pointer]'
+              - 'button "clothing #BBA5E8" [ref=f1e323] [cursor=pointer]'
+              - 'button "clothing #43B9B0" [pressed] [ref=f1e324] [cursor=pointer]'
+              - 'button "clothing #EBCB53" [ref=f1e325] [cursor=pointer]'
+          - generic [ref=f1e326]:
+            - button "Update Brightling" [ref=f1e327] [cursor=pointer]
+            - button "Cancel" [ref=f1e328] [cursor=pointer]
+        - generic [ref=f1e329]:
+          - strong [ref=f1e330]: Live preview
+          - img "P9 Testling front-facing preview" [ref=f1e331]
+          - generic [ref=f1e332]: The saved character uses this same artwork and colours.
+      - status [ref=f1e282]: Editing P9 Testling. Their scene placements will stay linked to this ID.

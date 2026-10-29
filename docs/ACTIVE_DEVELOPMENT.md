@@ -1,5 +1,9 @@
 # BrightTales Active Development
 
+## Episode Library V1 (2026-10-26)
+
+The Episode Maker has local folders, search, rename/duplicate/move/delete, explicit save state, scoped native Backup v8 copies, additive local recovery and read-only playable visual snapshots. Managed Studio creates private ignored directories under `.brighttales-local/`; an optimistic revision protects PC copies against stale overwrites. Episode 1 can be added from its existing local backup through **Episodes → Saved on this PC → Add local copy to My Episodes**, without a user-managed JSON import. Browser profile state remains the working cache. Studio full suite 398/398, service suite 25/25, focused local-store 3/3 and build pass. UI workflow needs Karl's browser review after restarting Studio. See `docs/EPISODE_LIBRARY.md` and `proofs/episode-library-v1/REPORT.md`.
+
 ## One-click episode preview and export reliability V1 (2026-10-26)
 
 Episode Maker's **Preview Episode in Unity** validates the saved episode, starts the current Unity Editor through the existing authenticated control API when needed, waits for Play Mode and bridge health, transfers modular Brightlings/audio, resets a prior preview, and waits for Unity's playback acknowledgement. Unity source and the runtime bridge contract are unchanged. Full WebM export reports real stages and rendered-frame counts, supports cancellation, preserves audio failures as failures, samples the timeline end, and checks the WebM container header before download. Automated results and verification limits are in `proofs/episode-preview-export-v1/REPORT.md`; GUI playback and complete export-file viewing/listening remain Karl's review.

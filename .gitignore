@@ -38,3 +38,15 @@ proofs/m6-6a/downloads/
 proofs/m6-6a/*-frame-*.png
 proofs/m6-6a/*-inspect.wav
 
+# Local BrightTales projects and generated review media. Keep source assets and
+# intentional proof fixtures elsewhere in the repository version-controlled.
+/.brighttales-local/episode-projects/
+/.brighttales-local/exports/
+/.brighttales-local/test-previews/
+/.brighttales-local/recordings/
+/.brighttales-local/temp/
+/.brighttales-local/media-cache/
+
+# Episode 1 is Karl's local editable production project and generated audio.
+/proofs/episode-1-hello-max/
+

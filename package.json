@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node scripts/studio.cjs dev",
     "start": "node scripts/studio.cjs production",
-    "test:service": "node --test test_voice_service.cjs test_studio_audio_relay.cjs test_unity_editor_control.cjs test_unity_startup_control.cjs",
+    "test:service": "node --test test_voice_service.cjs test_studio_audio_relay.cjs test_unity_editor_control.cjs test_unity_startup_control.cjs test_episode_local_store.cjs",
     "build": "tsc -b && vite build",
     "test": "vitest run"
   },

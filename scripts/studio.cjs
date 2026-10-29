@@ -6,6 +6,7 @@ const { VoiceServiceManager, handleVoiceRequest } = require('./voice-lifecycle.c
 const { createStudioAudioRelay } = require('./studio-audio-relay.cjs');
 const { handleUnityControlSession } = require('./unity-editor-control.cjs');
 const { createUnityStartupControl } = require('./unity-startup-control.cjs');
+const { createEpisodeLocalStore } = require('./episode-local-store.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
@@ -13,6 +14,7 @@ const mode = process.argv[2] === 'dev' ? 'dev' : 'production';
 const unityWorkspace = path.resolve(process.env.BRIGHTTALES_UNITY_PROJECT_PATH || 'C:/Users/karlr/repos/BrightTalesUnityFoundationIntegration');
 const manager = new VoiceServiceManager();
 const studioAudio = createStudioAudioRelay();
+const episodeLocalStore = createEpisodeLocalStore(ROOT);
 const reviewHealthPath = '/__brighttales_review/health';
 const unityControlRoot = path.join(process.env.LOCALAPPDATA || path.join(require('node:os').homedir(), 'AppData', 'Local'), 'BrightTales', 'UnityEditorControl');
 const unityControlTokenPath = path.join(unityControlRoot, 'session.json');
@@ -60,6 +62,7 @@ function reviewHealth(request, response) {
 
 function middleware(request, response, next) {
   if (reviewHealth(request, response)) return;
+  if (request.url.startsWith('/__brighttales_local/')) { void episodeLocalStore.handle(request, response); return; }
   if (unityStartup.handle(request, response)) return;
   if (handleUnityControlSession(request, response, unityControlTokenPath)) return;
   void studioAudio.handle(request, response).then(handled => handled || handleVoiceRequest(request, response, manager)).then(handled => { if (!handled) next(); }).catch(() => {
@@ -142,6 +145,7 @@ process.once('SIGTERM', () => { void shutdown('SIGTERM'); });
 
 void (async () => {
   try {
+    await episodeLocalStore.initialize();
     if (mode === 'dev') await startDevelopment(); else await startProduction();
     void manager.start();
   } catch (error) {

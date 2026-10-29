@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Brightling, LIBRARY_KEY, makeFrame, makePack } from './maker';
-import { decodeLibrary, ImportMode, prepareImport, pruneScene, withoutCharacter } from './library';
+import { decodeLibrary, ImportMode, prepareImport, pruneScene, validateLibrary, withoutCharacter } from './library';
 import Characters from './Characters';
 import Places from './Places';
 import SceneMaker, { type SceneLeaveGuard } from './SceneMaker';
@@ -10,7 +10,7 @@ import VoiceMaker from './VoiceMaker';
 import { emptyVoiceSettings, readVoiceSettings, validVoiceSettings, VOICE_SETTINGS_KEY, type VoiceSettings } from './voiceSettings';
 import { type AudioAsset, type AudioKind } from './audio';
 import { audioBackupAssets, decodeAudioBackup, importAudioFile, listAudioAssets, removeAudioAsset, saveAudioAsset } from './audioStore';
-import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, speechFitsEpisode, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
+import { decodeEpisodeLibrary, EMPTY_EPISODE_LIBRARY, EPISODES_KEY, speechFitsEpisode, type Episode, type EpisodeLibrary, validateEpisodeLibrary } from './episodes';
 import { decodeTimedLibrary, EMPTY_TIMED_LIBRARY, pruneTimedScenes, TIMED_SCENES_KEY, TimedLibrary, validateTimedLibrary } from './timedScenes';
 import IntroMaker from './IntroMaker';
 import { decodeIntroLibrary, EMPTY_INTRO_LIBRARY, INTROS_KEY, validateIntroLibrary, type IntroLibrary } from './introductions';
@@ -30,6 +30,8 @@ import { maxOutfitFrom, maxineOutfitFrom, maxSpriteSource, maxineSpriteSource, t
 import { readAppearance, resolveAppearance, saveAppearance, type Appearance } from './appearance';
 import { readWorkspace, saveWorkspace, type Workspace } from './workspacePreference';
 import { Studio3Projects, Studio3Sidebar, WorkspaceSettings, studioTabLabel, type StudioTab } from './Studio3Shell';
+import { PLACES } from './placeCatalog';
+import { makeLocalEpisodeBackup } from './episodeLocalProject';
 
 const SPRITE_HEIGHT = 355;
 const SPRITE_WIDTH = 213;
@@ -40,6 +42,34 @@ const emptyMotion = (): Motion => ({ direction: 1, distance: 0, turnUntil: 0, st
 const readScene = (): Scene => { try { return parseScene(localStorage.getItem(STORAGE_KEY)) ?? structuredClone(DEFAULT_SCENE); } catch { return structuredClone(DEFAULT_SCENE); } };
 const readLibrary = () => { try { return decodeLibrary(localStorage.getItem(LIBRARY_KEY)); } catch { return { ok: false as const, error: 'Browser storage is unavailable.' }; } };
 const placesInReady = (organisation: PlaceOrganisation) => placesIn(organisation).filter(place => place.artworkAvailable && place.background).map(place => place.id);
+function mergeEpisodePlaces(current: PlaceOrganisation, incoming: PlaceOrganisation, requiredIds: string[]): PlaceOrganisation | null {
+  const removedDefaultPlaceIds = current.removedDefaultPlaceIds.filter(id => !requiredIds.includes(id));
+  const customPlaces = [...current.customPlaces];
+  for (const place of incoming.customPlaces) {
+    const existing = customPlaces.find(item => item.id === place.id);
+    if (existing) { if (existing.name !== place.name) return null; continue; }
+    if (customPlaces.some(item => item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase()) || PLACES.some(item => item.name.toLocaleLowerCase() === place.name.toLocaleLowerCase())) return null;
+    customPlaces.push(place);
+  }
+  const folders = [...current.folders], folderRemap = new Map<string, string>();
+  for (const folder of incoming.folders) {
+    const sameId = folders.find(item => item.id === folder.id);
+    if (sameId) { folderRemap.set(folder.id, sameId.id); continue; }
+    const sameName = folders.find(item => item.name.toLocaleLowerCase() === folder.name.toLocaleLowerCase());
+    if (sameName) { folderRemap.set(folder.id, sameName.id); continue; }
+    folders.push(folder); folderRemap.set(folder.id, folder.id);
+  }
+  const placeIds = [...PLACES.filter(place => !removedDefaultPlaceIds.includes(place.id)).map(place => place.id), ...customPlaces.map(place => place.id)];
+  const assignments = Object.fromEntries(placeIds.map(id => {
+    const local = current.assignments[id];
+    const saved = incoming.assignments[id];
+    const folder = local ?? (saved ? folderRemap.get(saved) : null) ?? null;
+    return [id, folder];
+  }));
+  const merged = { version: 1 as const, folders, assignments, customPlaces, removedDefaultPlaceIds, artwork: { ...incoming.artwork, ...current.artwork } };
+  const checked = validatePlaceOrganisation(merged);
+  return checked.ok ? checked.organisation : null;
+}
 const spriteSource = (id: string, pose: 'idle' | 'side' | 'wave', frame = 0, maxOutfit: MaxOutfit = 'original', maxineOutfit: MaxineOutfit = 'original'): string => {
   if (id === 'max') return maxSpriteSource(maxOutfit, pose, frame);
   if (id === 'maxine') return maxineSpriteSource(maxineOutfit, pose, frame);
@@ -389,6 +419,112 @@ export default function App() {
     try { localStorage.setItem(EPISODES_KEY, JSON.stringify(checked.library)); setEpisodes(checked.library); return true; }
     catch { return false; }
   };
+  const saveLocalEpisodeCopy = async (episode: Episode, folderId: string, updatedAt: string, expectedUpdatedAt: string | null): Promise<boolean> => {
+    try {
+      const backup = await exportStudio();
+      if (!backup) return false;
+      const scoped = makeLocalEpisodeBackup(backup, episode);
+      if (!scoped.ok) { setNotice(scoped.error); return false; }
+      const response = await fetch(`/__brighttales_local/episode-projects/${encodeURIComponent(episode.id)}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ version: 1, episodeId: episode.id, folderId, updatedAt, expectedUpdatedAt, backup: scoped.backup }),
+      });
+      return response.ok;
+    } catch { return false; }
+  };
+  const deleteLocalEpisodeCopy = async (episodeId: string): Promise<boolean> => {
+    try { const response = await fetch(`/__brighttales_local/episode-projects/${encodeURIComponent(episodeId)}`, { method: 'DELETE' }); return response.ok || response.status === 404; }
+    catch { return false; }
+  };
+  const recoverLocalEpisode = async (episodeId: string): Promise<boolean> => {
+    try {
+      if (episodes.episodes.some(item => item.id === episodeId)) { setNotice('This episode is already in My Episodes. Open it there; no data was replaced.'); return true; }
+      const response = await fetch(`/__brighttales_local/episode-projects/${encodeURIComponent(episodeId)}`);
+      if (!response.ok) throw new Error((await response.json().catch(() => null))?.error ?? 'The local episode copy could not be read.');
+      const project = await response.json();
+      const checked = validateStudioBackup(project.backup);
+      if (!checked.ok || !checked.backup.episodes || !checked.backup.timedScenes) throw new Error(checked.ok ? 'The local backup is missing episode data.' : checked.error);
+      const backup = checked.backup;
+      const backupEpisodes = backup.episodes;
+      const backupTimedScenes = backup.timedScenes;
+      if (!backupEpisodes || !backupTimedScenes) throw new Error('The local backup is missing episode data.');
+      const incomingIntros = backup.intros ?? structuredClone(EMPTY_INTRO_LIBRARY);
+      const incomingCredits = backup.credits ?? structuredClone(EMPTY_CREDITS_LIBRARY);
+      const episode = backupEpisodes.episodes.find(item => item.id === episodeId);
+      if (!episode) throw new Error('The saved local copy does not contain the requested episode.');
+      const requiredScenes = episode.sceneIds.map(id => backupTimedScenes.scenes.find(item => item.id === id));
+      if (requiredScenes.some(item => !item)) throw new Error('A scene referenced by this local episode is missing. Nothing was imported.');
+      const sceneCopies = requiredScenes.filter((item): item is NonNullable<typeof item> => !!item);
+      const currentCharacters = decodeLibrary(localStorage.getItem(LIBRARY_KEY));
+      const currentPlaces = decodePlaceOrganisation(localStorage.getItem(PLACE_FOLDERS_KEY));
+      const currentTimed = decodeTimedLibrary(localStorage.getItem(TIMED_SCENES_KEY), placesInReady(currentPlaces.ok ? currentPlaces.organisation : places));
+      const currentEpisodes = decodeEpisodeLibrary(localStorage.getItem(EPISODES_KEY));
+      const currentIntros = decodeIntroLibrary(localStorage.getItem(INTROS_KEY), placesInReady(currentPlaces.ok ? currentPlaces.organisation : places));
+      const currentCredits = decodeCreditsLibrary(localStorage.getItem(CREDITS_KEY), placesInReady(currentPlaces.ok ? currentPlaces.organisation : places));
+      if (!currentCharacters.ok || !currentPlaces.ok || !currentTimed.ok || !currentEpisodes.ok || !currentIntros.ok || !currentCredits.ok) throw new Error('Existing Studio data could not be validated. It was left untouched.');
+      const requiredPlaceIds = [...new Set(sceneCopies.map(item => item.placeId))];
+      const mergedPlaces = mergeEpisodePlaces(currentPlaces.organisation, backup.places, requiredPlaceIds);
+      if (!mergedPlaces) throw new Error('A saved place or character conflicts with this browser profile. Existing projects were kept.');
+      const unresolvedPlace = requiredPlaceIds.find(id => !placesIn(mergedPlaces).some(place => place.id === id && place.artworkAvailable && place.background));
+      if (unresolvedPlace) throw new Error(`The saved background for “${unresolvedPlace}” is unavailable.`);
+      const customCharacterIds = [...new Set(sceneCopies.flatMap(item => Object.keys(item.characters).filter(id => id.startsWith('brightling-'))))];
+      const incomingCharacters = backup.characters.filter(item => customCharacterIds.includes(item.id));
+      for (const existing of incomingCharacters) {
+        const sameId = currentCharacters.characters.find(item => item.id === existing.id);
+        if (sameId && JSON.stringify(sameId) !== JSON.stringify(existing)) throw new Error(`Brightling “${existing.name}” has a different saved definition in this browser. Existing projects were kept.`);
+      }
+      const mergedCharacters = [...currentCharacters.characters, ...incomingCharacters.filter(item => !currentCharacters.characters.some(existing => existing.id === item.id))];
+      const checkedCharacters = validateLibrary(mergedCharacters);
+      if (!checkedCharacters.ok) throw new Error(checkedCharacters.error);
+      for (const item of incomingCharacters.filter(character => !currentCharacters.characters.some(existing => existing.id === character.id))) await makePack(item);
+      const mergedTimed = { version: 1 as const, scenes: [...currentTimed.library.scenes] };
+      for (const item of sceneCopies) {
+        const current = mergedTimed.scenes.find(scene => scene.id === item.id);
+        if (current && JSON.stringify(current) !== JSON.stringify(item)) throw new Error(`Scene “${item.name}” has a different saved version in this browser. Existing projects were kept.`);
+        if (!current) mergedTimed.scenes.push(item);
+      }
+      const checkedTimed = validateTimedLibrary(mergedTimed, placesInReady(mergedPlaces));
+      if (!checkedTimed.ok) throw new Error(checkedTimed.error);
+      const mergedEpisodes = { version: 1 as const, episodes: [...currentEpisodes.library.episodes, episode] };
+      const checkedEpisodes = validateEpisodeLibrary(mergedEpisodes);
+      if (!checkedEpisodes.ok) throw new Error(checkedEpisodes.error);
+      const intro = episode.introId ? incomingIntros.intros.find(item => item.id === episode.introId) : undefined;
+      const credit = episode.creditsId ? incomingCredits.credits.find(item => item.id === episode.creditsId) : undefined;
+      const mergedIntros = { version: 1 as const, intros: [...currentIntros.library.intros, ...(intro && !currentIntros.library.intros.some(item => item.id === intro.id) ? [intro] : [])] };
+      const mergedCredits = { version: 1 as const, credits: [...currentCredits.library.credits, ...(credit && !currentCredits.library.credits.some(item => item.id === credit.id) ? [credit] : [])] };
+      if (episode.introId && !intro && !currentIntros.library.intros.some(item => item.id === episode.introId)) throw new Error('The local episode’s saved intro is unavailable.');
+      if (episode.creditsId && !credit && !currentCredits.library.credits.some(item => item.id === episode.creditsId)) throw new Error('The local episode’s saved credits are unavailable.');
+      if (!validateIntroLibrary(mergedIntros, placesInReady(mergedPlaces)).ok || !validateCreditsLibrary(mergedCredits, placesInReady(mergedPlaces)).ok) throw new Error('The saved intro or credits are incompatible with this Studio profile.');
+      if (!speechFitsEpisode(episode, checkedTimed.library, mergedIntros, mergedCredits)) throw new Error('A saved speech cue no longer fits this episode.');
+      const neededAudio = new Set([
+        ...(episode.audio ?? []).map(clip => clip.assetId), ...sceneCopies.flatMap(item => (item.audio ?? []).map(clip => clip.assetId)),
+        ...(intro?.audio ?? []).map(clip => clip.assetId), ...(credit?.audio ?? []).map(clip => clip.assetId),
+      ]);
+      const decodedAudio = backup.audioAssets ? await decodeAudioBackup(backup.audioAssets) : [];
+      const currentlySavedAudio = await listAudioAssets();
+      const audioToAdd = decodedAudio.filter(asset => neededAudio.has(asset.id) && !currentlySavedAudio.some(existing => existing.id === asset.id));
+      if ([...neededAudio].some(id => !backup.audioAssets?.some(asset => asset.id === id) && !currentlySavedAudio.some(asset => asset.id === id))) throw new Error('A voice or music file used by this episode is missing.');
+      for (const asset of audioToAdd) await saveAudioAsset(asset);
+      const keys = [LIBRARY_KEY, PLACE_FOLDERS_KEY, TIMED_SCENES_KEY, EPISODES_KEY, INTROS_KEY, CREDITS_KEY];
+      const before = new Map(keys.map(key => [key, localStorage.getItem(key)]));
+      try {
+        localStorage.setItem(LIBRARY_KEY, JSON.stringify(checkedCharacters.characters));
+        localStorage.setItem(PLACE_FOLDERS_KEY, JSON.stringify(mergedPlaces));
+        localStorage.setItem(TIMED_SCENES_KEY, JSON.stringify(checkedTimed.library));
+        localStorage.setItem(EPISODES_KEY, JSON.stringify(checkedEpisodes.library));
+        localStorage.setItem(INTROS_KEY, JSON.stringify(mergedIntros));
+        localStorage.setItem(CREDITS_KEY, JSON.stringify(mergedCredits));
+      } catch {
+        for (const [key, value] of before) { if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value); }
+        throw new Error('Browser storage could not save this episode. Existing project data was restored.');
+      }
+      setLibrary(checkedCharacters.characters); setLibraryIssue(null); setPlaces(mergedPlaces); setPlacesIssue(null);
+      setTimedScenes(checkedTimed.library); setTimedIssue(null); setEpisodes(checkedEpisodes.library); setEpisodeIssue(null);
+      setIntros(mergedIntros); setIntroIssue(null); setCredits(mergedCredits); setCreditsIssue(null);
+      setAudioAssets(currentlySavedAudio.filter(asset => !audioToAdd.some(incoming => incoming.id === asset.id)).concat(audioToAdd)); setNotice(`“${episode.name}” was added from its local PC copy. Other episodes and assets were preserved.`);
+      return true;
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'The local episode could not be restored. Existing data was kept.'); return false; }
+  };
   const saveIntros = (next: IntroLibrary): boolean => {
     if (!recovery.ok || introIssue) return false;
     const checked = validateIntroLibrary(next, placesInReady(places));
@@ -502,7 +638,7 @@ export default function App() {
       {activeTab === 'scenes' && <SceneMaker library={timedScenes} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={timedIssue} onSave={saveTimedScenes} onRenderPreview={id => { setRequestedPreviewSceneId(id); navigate('unity'); }} onProjects={() => navigate('projects')} onClassic={() => chooseWorkspace('classic')} requestedSceneId={requestedSceneId} audioAssets={audioAssets} professional={workspace === 'studio3'} leaveGuardRef={sceneLeaveGuard} onDirtyChange={setSceneDirty} />}
       {activeTab === 'intros' && <IntroMaker library={intros} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={introIssue} onSave={saveIntros} audioAssets={audioAssets} />}
       {activeTab === 'credits' && <CreditsMaker library={credits} places={places} issue={creditsIssue} onSave={saveCredits} audioAssets={audioAssets} leaveGuardRef={creditsLeaveGuard} />}
-      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onEditScene={id => navigate('scenes', id)} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
+      {activeTab === 'episodes' && <EpisodeMaker library={episodes} scenes={timedScenes} intros={intros} credits={credits} characters={library} places={places} maxOutfit={maxOutfit} maxineOutfit={maxineOutfit} issue={episodeIssue} onSave={saveEpisodes} onSaveLocal={saveLocalEpisodeCopy} onDeleteLocal={deleteLocalEpisodeCopy} onRecoverLocal={recoverLocalEpisode} onEditScene={id => navigate('scenes', id)} leaveGuardRef={episodeLeaveGuard} audioAssets={audioAssets} />}
       {activeTab === 'music' && <MusicStudio projects={projects} issue={projectsIssue} audioAssets={audioAssets} onSaveProjects={saveProjects} onAddAsset={addRenderedAsset} theme={resolvedTheme} onThemeChange={chooseAppearance} />}
       {activeTab === 'voice' && <VoiceMaker assets={audioAssets} characters={library} settings={voiceSettings} issue={voiceSettingsIssue} onSettingsChange={saveVoiceSettings} onSaveAsset={saveVoiceAsset} onDeleteAsset={deleteAudio} />}
       {activeTab === 'audio' && <AudioLibrary assets={audioAssets} issue={audioIssue} onImport={addAudio} onDelete={deleteAudio} />}

@@ -1,0 +1,133 @@
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [aria-hidden] [ref=f1e6]: ✦
+      - generic [ref=f1e197]:
+        - strong [ref=f1e198]: BrightTales
+        - generic [ref=f1e199]: UNITY STUDIO 3.0
+    - generic [ref=f1e7]:
+      - paragraph [ref=f1e200]: WORKSPACE
+      - navigation "Unity Studio navigation" [ref=f1e8]:
+        - button "Projects" [ref=f1e9] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e10]: ▦
+        - button "Cartoon Editor" [ref=f1e11] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e12]: ▣
+        - button "Asset Library" [ref=f1e13] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e14]: ✦
+        - button "Audio Studio" [ref=f1e15] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e16]: ♫
+        - button "Episode Maker" [ref=f1e17] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e18]: ▤
+      - paragraph [ref=f1e206]: YOUR TOOLS
+      - navigation "Creative tools" [ref=f1e19]:
+        - button "Places" [ref=f1e20] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e21]: ▧
+        - button "Voice Maker" [ref=f1e22] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e23]: ♬
+        - button "Audio Library" [ref=f1e24] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e25]: ♪
+        - button "Playground" [ref=f1e26] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e27]: ▶
+        - button "Intros" [ref=f1e28] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e29]: ★
+        - button "Credits" [ref=f1e30] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e31]: ❖
+        - button "Cartoon Preview" [ref=f1e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e33]: ◇
+    - generic [ref=f1e34]:
+      - button "Settings" [ref=f1e35] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e36]: ⚙
+        - text: Settings
+      - paragraph [ref=f1e214]: Local workspace
+  - main [ref=f1e37]:
+    - generic [ref=f1e38]:
+      - generic [ref=f1e39]:
+        - generic [ref=f1e40]: UNITY STUDIO 3.0 / ASSET LIBRARY
+        - strong [ref=f1e41]: Asset Library
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]: Unity not connected
+        - generic [ref=f1e45]: Local workspace
+        - button "Classic Studio" [ref=f1e47] [cursor=pointer]
+    - generic [ref=f1e216]:
+      - generic [ref=f1e217]:
+        - paragraph [ref=f1e218]: CHARACTER STUDIO
+        - heading [level=1] [ref=f1e219]:
+          - text: Meet your
+          - emphasis [ref=f1e220]: Brightlings.
+        - paragraph [ref=f1e221]: Your cast lives here. Choose a character to play, or create someone new.
+      - generic [ref=f1e333]:
+        - generic [ref=f1e334]:
+          - paragraph [ref=f1e335]: YOUR CHARACTERS
+          - heading "Character Library 1 custom" [level=2] [ref=f1e336]:
+            - text: Character Library
+            - generic [ref=f1e337]: 1 custom
+          - paragraph [ref=f1e338]: Max and Maxine are protected originals. Your saved Brightlings appear beside them.
+        - button "Create Brightling" [ref=f1e339] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e340]: ＋
+          - text: Create Brightling
+      - region "Brightling library" [ref=f1e341]:
+        - generic [ref=f1e342]:
+          - article [ref=f1e343]:
+            - img "Max, front-facing in Original Hoodie" [ref=f1e345]
+            - generic [ref=f1e346]:
+              - generic [ref=f1e347]: Original · Protected
+              - heading "Max" [level=3] [ref=f1e348]
+              - paragraph [ref=f1e349]: Male · Max template
+              - generic [ref=f1e350]:
+                - text: Outfit
+                - combobox "Outfit" [ref=f1e351]:
+                  - option "Original Hoodie" [selected]
+                  - option "T-Shirt & Trousers"
+              - generic [ref=f1e352]: Always in Playground
+          - article [ref=f1e353]:
+            - img "Maxine, front-facing in Original Hoodie & Skirt" [ref=f1e355]
+            - generic [ref=f1e356]:
+              - generic [ref=f1e357]: Original · Protected
+              - heading "Maxine" [level=3] [ref=f1e358]
+              - paragraph [ref=f1e359]: Female · Maxine template
+              - generic [ref=f1e360]:
+                - text: Outfit
+                - combobox "Outfit" [ref=f1e361]:
+                  - option "Original Hoodie & Skirt" [selected]
+                  - option "T-Shirt & Leggings"
+              - generic [ref=f1e362]: Always in Playground
+          - article [ref=f1e363]:
+            - img "P9 Testling, front-facing" [ref=f1e365]
+            - generic [ref=f1e366]:
+              - generic [ref=f1e367]: Custom Brightling
+              - heading "P9 Testling" [level=3] [ref=f1e368]
+              - paragraph [ref=f1e369]: Female · Maxine template
+              - generic [ref=f1e370]:
+                - button "Edit" [ref=f1e371] [cursor=pointer]
+                - button "Delete" [ref=f1e372] [cursor=pointer]
+                - button "Add to Playground" [ref=f1e373] [cursor=pointer]
+                - button "Send to Unity" [ref=f1e374] [cursor=pointer]
+              - generic "P9 Testling Unity animations" [ref=f1e375]:
+                - button "Idle" [ref=f1e376] [cursor=pointer]
+                - button "Blink" [ref=f1e377] [cursor=pointer]
+                - button "Walk" [ref=f1e378] [cursor=pointer]
+                - button "Wave" [ref=f1e379] [cursor=pointer]
+      - region "Library backup" [ref=f1e380]:
+        - generic [ref=f1e381]:
+          - heading "Keep a copy of your characters" [level=3] [ref=f1e382]
+          - paragraph [ref=f1e383]: Export and import custom Brightlings. A library export does not include the saved scene or Max and Maxine’s outfits; use Studio Backup for both.
+        - generic [ref=f1e384]:
+          - button "Export Library" [ref=f1e385] [cursor=pointer]
+          - generic [ref=f1e386]:
+            - text: Import as
+            - combobox "Import as" [ref=f1e387]:
+              - option "Merge with library" [selected]
+              - option "Replace library"
+          - generic [ref=f1e388] [cursor=pointer]:
+            - text: Import Library
+            - button "Import Library" [ref=f1e389]
+      - region "Studio backup" [ref=f1e390]:
+        - generic [ref=f1e391]:
+          - heading "Back up the whole Studio" [level=3] [ref=f1e392]
+          - paragraph [ref=f1e393]: Includes custom Brightlings, timed scenes, episodes, audio files, the saved Playground scene, Places folders and uploaded artwork. Keep the downloaded file somewhere safe; clearing browser data removes local copies.
+        - generic [ref=f1e394]:
+          - button "Export Studio Backup" [ref=f1e395] [cursor=pointer]
+          - generic [ref=f1e396] [cursor=pointer]:
+            - text: Import Studio Backup
+            - button "Import Studio Backup" [ref=f1e397]
+      - status [ref=f1e282]: P9 Testling updated.
